@@ -10,23 +10,35 @@ import { rendererConfig } from './webpack.renderer.config';
 
 const config: ForgeConfig = {
   packagerConfig: {
-    // Add any specific packager configuration here
-  },
-  rebuildConfig: {
-    // Add any specific rebuild configuration here
+    name: 'Black Citadel'
   },
   makers: [
-    new MakerSquirrel({
-      // Add any specific configuration for Windows installer
-    }),
-    new MakerZIP({}, ['darwin']), // ZIP for macOS
-    new MakerRpm({
-      // Add any specific configuration for RPM
-    }),
-    new MakerDeb({
-      // Add any specific configuration for DEB
-    }),
+    {
+      name: '@electron-forge/maker-deb',
+      config: {
+        options: {
+          icon: './icons/linux/icon.png'
+        }
+      }
+    }
+
+    // {
+    //   name: '@electron-forge/maker-dmg',
+    //   config: {
+    //     format: 'ULFO'
+    //   }
+    // }
+
   ],
+  // publishers: [
+  //   {
+  //     name: '@electron-forge/publisher-s3',
+  //     config: {
+  //       bucket: 'my-bucket',
+  //       public: true
+  //     }
+  //   }
+  // ],
   plugins: [
     new WebpackPlugin({
       mainConfig,
