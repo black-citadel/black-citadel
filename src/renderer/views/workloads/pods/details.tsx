@@ -77,7 +77,7 @@ export const PodsDetailsView = (): JSX.Element => {
 
             <Field className="grid gap-x-8 gap-y-6 grid-cols-2 my-8">
               <div className='px-4'>
-                <Label>Phase <HelpButton title={helpObjects.pod.phase.title} content={helpObjects.pod.phase.help} /></Label>
+                <Label>Phase <HelpButton title="Phase" content={helpObjects.pod.phase.help} /></Label>
                 <Description>
                   The phase of a Pod is a simple, high-level summary of where the Pod is in its lifecycle.
                 </Description>

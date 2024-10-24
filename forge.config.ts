@@ -9,9 +9,24 @@ import { mainConfig } from './webpack.main.config';
 import { rendererConfig } from './webpack.renderer.config';
 
 const config: ForgeConfig = {
-  packagerConfig: {},
-  rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  packagerConfig: {
+    // Add any specific packager configuration here
+  },
+  rebuildConfig: {
+    // Add any specific rebuild configuration here
+  },
+  makers: [
+    new MakerSquirrel({
+      // Add any specific configuration for Windows installer
+    }),
+    new MakerZIP({}, ['darwin']), // ZIP for macOS
+    new MakerRpm({
+      // Add any specific configuration for RPM
+    }),
+    new MakerDeb({
+      // Add any specific configuration for DEB
+    }),
+  ],
   plugins: [
     new WebpackPlugin({
       mainConfig,
@@ -19,11 +34,11 @@ const config: ForgeConfig = {
         config: rendererConfig,
         entryPoints: [
           {
-            html: './src/renderer/index.html',
-            js: './src/renderer/index.ts',
+            html: './src/renderer/index.html', // Ensure this path is correct
+            js: './src/renderer/index.ts',     // Ensure this path is correct
             name: 'main_window',
             preload: {
-              js: './src/preload/index.ts',
+              js: './src/preload/index.ts',    // Ensure this path is correct
             },
           },
         ],

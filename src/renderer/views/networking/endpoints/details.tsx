@@ -13,7 +13,7 @@ import { EndpointSubsets } from '@components/networking/endpoint/endpoint-subset
 export const EndpointsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [endpoints, setEndpoints] = useState<k8s.V1Endpoints>();
+  const [endpoints, setEndpoints] = useState<k8s.V1Endpoint>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {
@@ -51,19 +51,8 @@ export const EndpointsDetailsView = (): JSX.Element => {
       </Navbar>
 
       {activeTab === ResourceTabs.Details && endpoints && (
-        <div className="grid grid-cols-2 gap-4">
-          <div className='m-2'>
-            <DetailsName name={endpoints.metadata.name} />
-            <DetailsNamespace name={endpoints.metadata.namespace} />
-            <DetailsLabels labels={endpoints.metadata.labels} />
-            <DetailsAnnotations annotations={endpoints.metadata.annotations} />
-          </div>
+        <div className="m-2">
 
-          <div className='m-2'>
-            <DetailsItem label="Subsets">
-              <EndpointSubsets subsets={endpoints.subsets} />
-            </DetailsItem>
-          </div>
         </div>
       )}
 

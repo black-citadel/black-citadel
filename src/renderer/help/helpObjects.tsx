@@ -76,7 +76,6 @@ const helpObjects: Record<string, Record<string, HelpObject>> = {
   },
   service: {
     selector: {
-      title: "Selector",
       help: <Text>
         Route service traffic to pods with label keys and values matching this selector. 
         If empty or not present, the service is assumed to have an external process managing its endpoints, 

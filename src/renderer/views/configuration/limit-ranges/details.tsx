@@ -68,10 +68,10 @@ const renderLimitRangeItem = (item: k8s.V1LimitRangeItem) => {
   return (
     <div className="mb-4 p-2">
       <div className="font-semibold mb-2">Type: {item.type}</div>
-      {item.default && (
+      {item._default && (
         <div className="mb-2">
           <div className="font-medium">Default:</div>
-          {Object.entries(item.default).map(([key, value]) => (
+          {Object.entries(item._default).map(([key, value]) => (
             <div key={key} className="ml-2">
               {key}: {value}
             </div>

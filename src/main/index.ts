@@ -201,7 +201,7 @@ ipcMain.handle('listIngressForAllNamespaces', async () => (await k8sNetworkingV1
 ipcMain.handle('listIngressClass', async () => (await k8sNetworkingV1Api.listIngressClass()).body);
 ipcMain.handle('listNetworkPolicyForAllNamespaces', async () => (await k8sNetworkingV1Api.listNetworkPolicyForAllNamespaces()).body);
 ipcMain.handle('readNamespacedIngress', async (event, name, namespace) => (await k8sNetworkingV1Api.readNamespacedIngress(name, namespace)).body);
-ipcMain.handle('readIngressClass', async (event, name, namespace) => (await k8sNetworkingV1Api.readIngressClass(name, namespace)).body);
+ipcMain.handle('readIngressClass', async (event, name) => (await k8sNetworkingV1Api.readIngressClass(name)).body);
 ipcMain.handle('readNamespacedNetworkPolicy', async (event, name, namespace) => (await k8sNetworkingV1Api.readNamespacedNetworkPolicy(name, namespace)).body);
 
 
@@ -228,16 +228,16 @@ ipcMain.handle('readNamespacedPodDisruptionBudget', async (event, name, namespac
 
 
 ipcMain.handle('listPriorityClass', async () => (await k8sSchedulingV1Api.listPriorityClass()).body);
-ipcMain.handle('readPriorityClass', async (event, name, namespace) => (await k8sSchedulingV1Api.readPriorityClass(name, namespace)).body);
+ipcMain.handle('readPriorityClass', async (event, name) => (await k8sSchedulingV1Api.readPriorityClass(name)).body);
 
 
 ipcMain.handle('listRuntimeClass', async () => (await k8sNodeV1Api.listRuntimeClass()).body);
-ipcMain.handle('readRuntimeClass', async (event, name, namespace) => (await k8sNodeV1Api.readRuntimeClass(name, namespace)).body);
+ipcMain.handle('readRuntimeClass', async (event, name) => (await k8sNodeV1Api.readRuntimeClass(name)).body);
 
 
 ipcMain.handle('listMutatingWebhookConfiguration', async () => (await k8sAdmissionregistrationV1Api.listMutatingWebhookConfiguration()).body);
 ipcMain.handle('listValidatingWebhookConfiguration', async () => (await k8sAdmissionregistrationV1Api.listValidatingWebhookConfiguration()).body);
-ipcMain.handle('readMutatingWebhookConfiguration', async (event, name, namespace) => (await k8sAdmissionregistrationV1Api.readMutatingWebhookConfiguration(name, namespace)).body);
+ipcMain.handle('readMutatingWebhookConfiguration', async (event, name) => (await k8sAdmissionregistrationV1Api.readMutatingWebhookConfiguration(name)).body);
 ipcMain.handle('readValidatingWebhookConfiguration', async (event, name, namespace) => (await k8sAdmissionregistrationV1Api.readValidatingWebhookConfiguration(name, namespace)).body);
 
 
@@ -245,7 +245,7 @@ ipcMain.handle('listRoleForAllNamespaces', async () => (await k8sRbacAuthorizati
 ipcMain.handle('listRoleBindingForAllNamespaces', async () => (await k8sRbacAuthorizationV1Api.listRoleBindingForAllNamespaces()).body);
 ipcMain.handle('listClusterRole', async () => (await k8sRbacAuthorizationV1Api.listClusterRole()).body);
 ipcMain.handle('listClusterRoleBinding', async () => (await k8sRbacAuthorizationV1Api.listClusterRoleBinding()).body);
-ipcMain.handle('readClusterRoleBinding', async (event, name, namespace) => (await k8sRbacAuthorizationV1Api.readClusterRoleBinding(name, namespace)).body);
-ipcMain.handle('readClusterRole', async (event, name, namespace) => (await k8sRbacAuthorizationV1Api.readClusterRole(name, namespace)).body);
+ipcMain.handle('readClusterRoleBinding', async (event, name) => (await k8sRbacAuthorizationV1Api.readClusterRoleBinding(name)).body);
+ipcMain.handle('readClusterRole', async (event, name) => (await k8sRbacAuthorizationV1Api.readClusterRole(name)).body);
 ipcMain.handle('readNamespacedRoleBinding', async (event, name, namespace) => (await k8sRbacAuthorizationV1Api.readNamespacedRoleBinding(name, namespace)).body);
 ipcMain.handle('readNamespacedRole', async (event, name, namespace) => (await k8sRbacAuthorizationV1Api.readNamespacedRole(name, namespace)).body);

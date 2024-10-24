@@ -3,6 +3,12 @@ import { Resources } from "./enums";
 export const ResourceHelp: { [key in Resources]: string } = {
     // Cluster
     Contexts: "Defines a cluster, user, and namespace for the kubectl command-line tool to interact with the Kubernetes cluster.",
+    Preferences: "Specifies user preferences for the kubectl command-line tool.",
+    License: "Describes the licensing information for the cluster.",
+    Nodes: "Represents a worker node in the Kubernetes cluster.",
+    Events: "Provides a record of events that occur within the cluster.",
+    "Custom Resource Definitions": "Allows you to define custom resources in Kubernetes.",
+    Lease: "Represents a lease for a resource in the cluster.",
     Namespaces: "Provides a way to divide cluster resources between multiple users or projects.",
     
     // Workloads

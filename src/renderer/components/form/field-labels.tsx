@@ -38,7 +38,7 @@ export function FieldLabels({ labels, setLabels }: FieldLabelsProps) {
       <Field className="my-8">
         <Label>
           Labels (optional)
-          <HelpButton title={helpObjects.metadata.labels.title} content={helpObjects.metadata.labels.help} />
+          <HelpButton title="Labels" content={helpObjects.metadata.labels.help} />
         </Label>
         <Description>
           Add labels to help with organization and filtering.

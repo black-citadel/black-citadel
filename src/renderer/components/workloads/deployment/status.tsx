@@ -1,8 +1,6 @@
 import k8s = require('@kubernetes/client-node');
 import { Subheading } from '@components/base/heading';
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from '@components/base/table';
-import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@components/base/description-list';
-import { Tooltip } from '@components/tooltip';
 import { DetailsItem } from '@components/details-item';
 
 interface Props {

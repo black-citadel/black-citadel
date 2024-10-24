@@ -14,21 +14,21 @@ interface PersistentVolumeSourceProps {
         'quobyte', 'rbd', 'scaleIO', 'storageos', 'vsphereVolume'
       ];
   
-      for (const type of sourceTypes) {
-        if (source[type]) {
-          return { type, details: source[type] };
-        }
-      }
+      // for (const type of sourceTypes) {
+      //   if (source[type]) {
+      //     return { type, details: source[type] };
+      //   }
+      // }
   
-      return { type: 'Unknown', details: null };
+      return { type: 'Unknown' };
     };
   
-    const { type, details } = getSourceType();
+    const { type } = getSourceType();
   
     return (
       <DetailsItem label="Volume Source">
         <div>Type: {type}</div>
-        {details && <pre className="text-sm overflow-auto">{JSON.stringify(details, null, 2)}</pre>}
+        {/* {details && <pre className="text-sm overflow-auto">{JSON.stringify(details, null, 2)}</pre>} */}
       </DetailsItem>
     );
   };

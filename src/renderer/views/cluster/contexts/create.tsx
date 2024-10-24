@@ -24,7 +24,7 @@ export const ContextsCreateView = (): JSX.Element => {
         }
       };
 
-      await window.electronAPI.addContext(context);
+      // await window.electronAPI.addContext(context);
 
       setViewContext({
         resource: Resources.Contexts,

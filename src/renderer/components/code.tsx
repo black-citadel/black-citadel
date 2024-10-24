@@ -260,11 +260,8 @@ function usePreventLayoutShift() {
 }
 
 function useTabGroupProps(availableLanguages: Array<string>) {
-  let { preferredLanguages, addPreferredLanguage } = usePreferredLanguageStore()
   let [selectedIndex, setSelectedIndex] = useState(0)
-  let activeLanguage = [...availableLanguages].sort(
-    (a, z) => preferredLanguages.indexOf(z) - preferredLanguages.indexOf(a),
-  )[0]
+  let activeLanguage = availableLanguages[0] // Default to the first language
   let languageIndex = availableLanguages.indexOf(activeLanguage)
   let newSelectedIndex = languageIndex === -1 ? selectedIndex : languageIndex
   if (newSelectedIndex !== selectedIndex) {
@@ -278,9 +275,9 @@ function useTabGroupProps(availableLanguages: Array<string>) {
     ref: positionRef,
     selectedIndex,
     onChange: (newSelectedIndex: number) => {
-      preventLayoutShift(() =>
-        addPreferredLanguage(availableLanguages[newSelectedIndex]),
-      )
+      preventLayoutShift(() => {
+        // Removed addPreferredLanguage
+      })
     },
   }
 }

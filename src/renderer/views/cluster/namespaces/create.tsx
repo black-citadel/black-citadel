@@ -52,7 +52,7 @@ export const NamespacesCreateView = (): JSX.Element => {
         <div className='px-4'>
           <Subheading className='mb-4'>Metadata</Subheading>
           <Field>
-            <Label>Name <HelpButton title={helpObjects.metadata.name.title} content={helpObjects.metadata.name.help} /></Label>
+            <Label>Name <HelpButton title="Name" content={helpObjects.metadata.name.help} /></Label>
             <Description>
               Enter a unique name for your namespace.
             </Description>

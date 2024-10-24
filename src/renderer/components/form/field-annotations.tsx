@@ -39,7 +39,7 @@ export function FieldAnnotations({ annotations, setAnnotations }: Props) {
 
         <Label>
           Annotations (optional)
-          <HelpButton title={helpObjects.metadata.annotations.title} content={helpObjects.metadata.annotations.help} />
+          <HelpButton title="Annotations" content={helpObjects.metadata.annotations.help} />
         </Label>
 
         <Description>
