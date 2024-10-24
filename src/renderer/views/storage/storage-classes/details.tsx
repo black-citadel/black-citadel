@@ -1,0 +1,87 @@
+import k8s = require('@kubernetes/client-node');
+import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
+import { useView } from '@context/viewProvider'
+import { ResourceTabs } from "@utils/enums";
+import { useEffect, useState } from "react";
+import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName } from '@components/details-item';
+import { Editor } from '@components/editor';
+import { dump } from 'js-yaml';
+import { DetailsHeader } from '@components/details-header';
+import { StorageClassBadge } from '@components/storage/storage-class/badge';
+import { Parameters } from '@components/storage/storage-class/parameters';
+import { AllowedTopologies } from '@components/storage/storage-class/allowed-topologies';
+import { Heading, Subheading } from '@components/base/heading';
+import { MetadataDetails } from '@components/metadata';
+
+export const StorageClassesDetailsView = (): JSX.Element => {
+  const { viewContext } = useView()
+  const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
+  const [storageClass, setStorageClass] = useState<k8s.V1StorageClass>();
+  const [error, setError] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const data = await window.electronAPI.readStorageClass(viewContext.name);
+      setStorageClass(data);
+      setError(null);
+    } catch (e) {
+      console.error("Failed to fetch storage class:", e);
+      setError("Failed to fetch storage class.");
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const yamlContent = dump(storageClass);
+
+  return (
+    <>
+      <DetailsHeader error={error}>
+        <Heading>
+          <StorageClassBadge />{viewContext.name}
+        </Heading>
+
+        <Navbar>
+          <NavbarSection>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
+          </NavbarSection>
+        </Navbar>
+      </DetailsHeader>
+
+      {activeTab === ResourceTabs.Details && storageClass && (
+        <div className='m-2'>
+          <MetadataDetails metadata={storageClass.metadata} />
+
+          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
+          <DetailsItem label="Provisioner">
+            {storageClass.provisioner}
+          </DetailsItem>
+          <DetailsItem label="Reclaim Policy">
+            {storageClass.reclaimPolicy || 'Delete'}
+          </DetailsItem>
+          <DetailsItem label="Volume Binding Mode">
+            {storageClass.volumeBindingMode || 'Immediate'}
+          </DetailsItem>
+          <DetailsItem label="Allow Volume Expansion">
+            {storageClass.allowVolumeExpansion?.toString() || 'false'}
+          </DetailsItem>
+          <Parameters parameters={storageClass.parameters} />
+          <AllowedTopologies allowedTopologies={storageClass.allowedTopologies} />
+        </div>
+      )}
+
+      {activeTab === ResourceTabs.YAML && (
+        <Editor content={yamlContent} />
+      )}
+    </>
+  );
+};

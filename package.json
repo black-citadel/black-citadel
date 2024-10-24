@@ -1,0 +1,62 @@
+{
+  "name": "black-citadel",
+  "version": "1.0.0",
+  "description": "Kubernetes GUI",
+  "main": ".webpack/main",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "eslint --ext .ts,.tsx ."
+  },
+  "keywords": [],
+  "author": {
+    "name": "Jeroen Herczeg",
+    "email": "jeroen@herczeg.be"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@electron-forge/cli": "^6.2.1",
+    "@electron-forge/maker-deb": "^6.2.1",
+    "@electron-forge/maker-rpm": "^6.2.1",
+    "@electron-forge/maker-squirrel": "^6.2.1",
+    "@electron-forge/maker-zip": "^6.2.1",
+    "@electron-forge/plugin-webpack": "^6.2.1",
+    "@headlessui/react": "^2.1.9",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
+    "@vercel/webpack-asset-relocator-loader": "1.7.3",
+    "axios": "^1.7.7",
+    "css-loader": "^6.8.1",
+    "electron": "^25.9.8",
+    "eslint": "^8.45.0",
+    "eslint-plugin-import": "^2.27.5",
+    "fork-ts-checker-webpack-plugin": "^8.0.0",
+    "node-loader": "^2.0.0",
+    "postcss-loader": "^7.3.3",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.4",
+    "ts-node": "^10.9.1",
+    "typescript": "~5.1.6"
+  },
+  "dependencies": {
+    "@emotion/is-prop-valid": "^1.3.1",
+    "@fontsource/inter": "^5.1.0",
+    "@heroicons/react": "^2.1.5",
+    "@kubernetes/client-node": "^0.22.0",
+    "@reduxjs/toolkit": "^2.2.8",
+    "autoprefixer": "^10.4.14",
+    "clsx": "^2.1.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "framer-motion": "^11.11.7",
+    "js-yaml": "^4.1.0",
+    "postcss": "^8.4.35",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.1.2",
+    "tailwindcss": "3.3.3"
+  }
+}

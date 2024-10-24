@@ -1,0 +1,88 @@
+import k8s = require('@kubernetes/client-node');
+import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
+import { useView } from '@context/viewProvider'
+import { ResourceTabs } from "@utils/enums";
+import { useEffect, useState } from "react";
+import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
+import { Editor } from '@components/editor';
+import { dump } from 'js-yaml';
+import { DetailsHeader } from '@components/details-header';
+import { PersistentVolumeClaimBadge } from '@components/storage/persistent-volume-claim/badge';
+import { VolumeMode } from '@components/storage/persistent-volume-claim/volume-mode';
+import { AccessModes } from '@components/storage/persistent-volume-claim/access-modes';
+import { StorageDetails } from '@components/storage/persistent-volume-claim/storage-details';
+import { PVCStatus } from '@components/storage/persistent-volume-claim/status';
+import { Heading, Subheading } from '@components/base/heading';
+import { MetadataDetails } from '@components/metadata';
+
+export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
+  const { viewContext } = useView()
+  const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
+  const [pvc, setPVC] = useState<k8s.V1PersistentVolumeClaim>();
+  const [error, setError] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const data = await window.electronAPI.readNamespacedPersistentVolumeClaim(viewContext.name, viewContext.namespace);
+      setPVC(data);
+      setError(null);
+    } catch (e) {
+      console.error("Failed to fetch persistent volume claim:", e);
+      setError("Failed to fetch persistent volume claim.");
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const yamlContent = dump(pvc);
+
+  return (
+    <>
+      <DetailsHeader error={error}>
+        <Heading>
+          <PersistentVolumeClaimBadge />{viewContext.name}
+        </Heading>
+
+        <Navbar>
+          <NavbarSection>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
+          </NavbarSection>
+        </Navbar>
+      </DetailsHeader>
+
+      {activeTab === ResourceTabs.Details && pvc && (
+        <div className='m-2'>
+          <MetadataDetails metadata={pvc.metadata} />
+
+          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
+          <DetailsItem label="Storage Class">
+            {pvc.spec.storageClassName || 'Default'}
+          </DetailsItem>
+          <VolumeMode volumeMode={pvc.spec.volumeMode} />
+          <AccessModes accessModes={pvc.spec.accessModes} />
+          <StorageDetails
+            requests={pvc.spec.resources?.requests}
+            limits={pvc.spec.resources?.limits}
+          />
+          <DetailsItem label="Volume Name">
+            {pvc.spec.volumeName || 'Not bound'}
+          </DetailsItem>
+          <PVCStatus status={pvc.status} />
+        </div>
+      )}
+
+      {activeTab === ResourceTabs.YAML && (
+        <Editor content={yamlContent} />
+      )}
+    </>
+  );
+};

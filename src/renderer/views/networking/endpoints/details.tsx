@@ -1,0 +1,75 @@
+import k8s = require('@kubernetes/client-node');
+import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
+import { useView } from '@context/viewProvider'
+import { ResourceTabs } from "@utils/enums";
+import { useEffect, useState } from "react";
+import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
+import { Editor } from '@components/editor';
+import { dump } from 'js-yaml';
+import { DetailsHeader } from '@components/details-header';
+import { EndpointBadge } from '@components/networking/endpoint/badge';
+import { EndpointSubsets } from '@components/networking/endpoint/endpoint-subsets';
+
+export const EndpointsDetailsView = (): JSX.Element => {
+  const { viewContext } = useView()
+  const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
+  const [endpoints, setEndpoints] = useState<k8s.V1Endpoints>();
+  const [error, setError] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const data = await window.electronAPI.readNamespacedEndpoints(viewContext.name, viewContext.namespace);
+      setEndpoints(data);
+      setError(null);
+    } catch (e) {
+      console.error("Failed to fetch endpoints:", e);
+      setError("Failed to fetch endpoints.");
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const yamlContent = dump(endpoints);
+
+  return (
+    <>
+      <DetailsHeader error={error}><EndpointBadge />{viewContext.name}</DetailsHeader>
+
+      <Navbar>
+        <NavbarSection>
+          <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+          <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
+        </NavbarSection>
+      </Navbar>
+
+      {activeTab === ResourceTabs.Details && endpoints && (
+        <div className="grid grid-cols-2 gap-4">
+          <div className='m-2'>
+            <DetailsName name={endpoints.metadata.name} />
+            <DetailsNamespace name={endpoints.metadata.namespace} />
+            <DetailsLabels labels={endpoints.metadata.labels} />
+            <DetailsAnnotations annotations={endpoints.metadata.annotations} />
+          </div>
+
+          <div className='m-2'>
+            <DetailsItem label="Subsets">
+              <EndpointSubsets subsets={endpoints.subsets} />
+            </DetailsItem>
+          </div>
+        </div>
+      )}
+
+      {activeTab === ResourceTabs.YAML && (
+        <Editor content={yamlContent} />
+      )}
+    </>
+  );
+};

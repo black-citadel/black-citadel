@@ -1,0 +1,345 @@
+import { SidebarLayout } from '@components/base/sidebar-layout'
+import { DeploymentsListView, DeploymentsDetailsView } from '@views/workloads/deployments'
+import { PodsListView, PodsDetailsView, PodsCreateView } from '@views/workloads/pods'
+import { ReplicaSetsListView, ReplicaSetsDetailsView } from '@views/workloads/replicasets';
+import { StatefulSetsListView, StatefulSetsDetailsView } from '@views/workloads/statefulsets';
+import { DaemonSetsDetailsView, DaemonSetsListView } from '@views/workloads/daemonsets';
+import { JobsDetailsView, JobsListView } from '@views/workloads/jobs';
+import { CronJobsListView, CronJobsDetailsView } from '@views/workloads/cronjobs';
+import { ServicesListView, ServicesDetailsView } from '@views/networking/services';
+import { IngressesDetailsView, IngressesListView } from '@views/networking/ingresses';
+import { IngressClassesDetailsView, IngressClassesListView } from '@views/networking/ingress-classes';
+import { EndpointsDetailsView, EndpointsListView } from '@views/networking/endpoints';
+import { EndpointSlicesDetailsView, EndpointSlicesListView } from '@views/networking/endpoint-slices';
+import { NetworkPoliciesDetailsView, NetworkPoliciesListView } from '@views/networking/network-policies';
+import { ConfigMapsCreateView, ConfigMapsDetailsView, ConfigMapsListView } from '@views/configuration/config-maps';
+import { SecretsDetailsView, SecretsListView } from '@views/configuration/secrets';
+import { ResourceQuotasDetailsView, ResourceQuotasListView } from '@views/configuration/resource-quotas';
+import { LimitRangesDetailsView, LimitRangesListView } from '@views/configuration/limit-ranges';
+import { HorizontalPodAutoscalersDetailsView, HorizontalPodAutoscalersListView } from '@views/configuration/horizontal-pod-autoscalers';
+import { PodDisruptionBudgetsDetailsView, PodDisruptionBudgetsListView } from '@views/configuration/pod-disruption-budgets';
+import { PersistentVolumeClaimsDetailsView, PersistentVolumeClaimsListView } from '@views/storage/persistent-volume-claims';
+import { PersistentVolumesDetailsView, PersistentVolumesListView } from '@views/storage/persistent-volumes';
+import { VolumeAttachmentsDetailsView, VolumeAttachmentsListView } from '@views/storage/volume-attachments';
+import { StorageClassesDetailsView, StorageClassesListView } from '@views/storage/storage-classes';
+import { CSIDriversDetailsView, CSIDriversListView } from '@views/storage/csi-drivers';
+import { CSINodesDetailsView, CSINodesListView } from '@views/storage/csi-nodes';
+import { ServiceAccountsDetailsView, ServiceAccountsListView } from '@views/access-control/service-accounts';
+import { RolesDetailsView, RolesListView } from '@views/access-control/roles';
+import { RoleBindingsDetailsView, RoleBindingsListView } from '@views/access-control/role-bindings';
+import { ClusterRolesDetailsView, ClusterRolesListView } from '@views/access-control/cluster-roles';
+import { ClusterRoleBindingsDetailsView, ClusterRoleBindingsListView } from '@views/access-control/cluster-role-bindings';
+import { PriorityClassesDetailsView, PriorityClassesListView } from '@views/administration/priority-classes';
+import { RuntimeClassesDetailsView, RuntimeClassesListView } from '@views/administration/runtime-classes';
+import { MutatingWebhookConfigurationsDetailsView, MutatingWebhookConfigurationsListView } from '@views/administration/mutating-webhook-configuration';
+import { ValidatingWebhookConfigurationsDetailsView, ValidatingWebhookConfigurationsListView } from '@views/administration/validating-webhook-configuration';
+import { NamespacesListView, NamespacesDetailsView, NamespacesCreateView } from '@views/cluster/namespaces';
+import { useView } from './context/viewProvider'
+import { Resources, ResourceAction } from '@utils/enums';
+import { Sidebar, SidebarBody, SidebarItem, SidebarLabel, SidebarSection, SidebarHeading, SidebarHeader } from '@components/base/sidebar'
+import { ContextsListView, ContextsDetailsView, ContextsCreateView } from '@views/cluster/contexts';
+import { ContextDropdown } from '@components/context-dropdown';
+import { Badge } from '@components/base/badge';
+import { Drawer } from '@components/base/drawer';
+import { NodeDetailsView, NodesListView } from '@views/cluster/nodes';
+
+export const Layout = () => {
+  const { viewContext, setViewContext, drawerOpen, setDrawerOpen, helpTitle, helpContent } = useView()
+
+  return (
+    <SidebarLayout
+      sidebar={
+        <Sidebar>
+          <SidebarHeader>
+            <SidebarSection>
+              <ContextDropdown />
+            </SidebarSection>
+          </SidebarHeader>
+
+          <SidebarBody>
+            <SidebarSection>
+              <SidebarHeading>Cluster</SidebarHeading>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Namespaces, action: ResourceAction.List })} current={viewContext.resource === Resources.Namespaces}>
+                <SidebarLabel>{Resources.Namespaces}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Nodes, action: ResourceAction.List })} current={viewContext.resource === Resources.Nodes} disabled>
+                <SidebarLabel>{Resources.Nodes} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Nodes, action: ResourceAction.List })} current={viewContext.resource === Resources.Nodes} disabled>
+                <SidebarLabel>{Resources.Events} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Nodes, action: ResourceAction.List })} current={viewContext.resource === Resources.Nodes} disabled>
+                <SidebarLabel>{Resources.CustomResourceDefinitions} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+            </SidebarSection>
+            <SidebarSection>
+              <SidebarHeading>Workloads</SidebarHeading>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Deployments, action: ResourceAction.List })} current={viewContext.resource == Resources.Deployments}>
+                <SidebarLabel>{Resources.Deployments}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Pods, action: ResourceAction.List })} current={viewContext.resource === Resources.Pods}>
+                <SidebarLabel>{Resources.Pods}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.ReplicaSets, action: ResourceAction.List })} current={viewContext.resource === Resources.ReplicaSets}>
+                <SidebarLabel>{Resources.ReplicaSets}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.StatefulSets, action: ResourceAction.List })} current={viewContext.resource === Resources.StatefulSets} disabled>
+                <SidebarLabel>{Resources.StatefulSets} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.DaemonSets, action: ResourceAction.List })} current={viewContext.resource === Resources.DaemonSets} disabled>
+                <SidebarLabel>{Resources.DaemonSets} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Jobs, action: ResourceAction.List })} current={viewContext.resource === Resources.Jobs} disabled>
+                <SidebarLabel>{Resources.Jobs} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.CronJobs, action: ResourceAction.List })} current={viewContext.resource === Resources.CronJobs} disabled>
+                <SidebarLabel>{Resources.CronJobs} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+            </SidebarSection>
+
+            <SidebarSection>
+              <SidebarHeading>Networking</SidebarHeading>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Services, action: ResourceAction.List })} current={viewContext.resource === Resources.Services}>
+                <SidebarLabel>{Resources.Services}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Ingresses, action: ResourceAction.List })} current={viewContext.resource === Resources.Ingresses} disabled>
+                <SidebarLabel>{Resources.Ingresses} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.IngressClasses, action: ResourceAction.List })} current={viewContext.resource === Resources.IngressClasses} disabled>
+                <SidebarLabel>{Resources.IngressClasses} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Endpoints, action: ResourceAction.List })} current={viewContext.resource === Resources.Endpoints} disabled>
+                <SidebarLabel>{Resources.Endpoints} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.EndpointSlices, action: ResourceAction.List })} current={viewContext.resource === Resources.EndpointSlices} disabled>
+                <SidebarLabel>{Resources.EndpointSlices} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.NetworkPolicies, action: ResourceAction.List })} current={viewContext.resource === Resources.NetworkPolicies} disabled>
+                <SidebarLabel>{Resources.NetworkPolicies} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+            </SidebarSection>
+
+            <SidebarSection>
+              <SidebarHeading>Configuration</SidebarHeading>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.ConfigMaps, action: ResourceAction.List })} current={viewContext.resource === Resources.ConfigMaps}>
+                <SidebarLabel>{Resources.ConfigMaps}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Secrets, action: ResourceAction.List })} current={viewContext.resource === Resources.Secrets}>
+                <SidebarLabel>{Resources.Secrets}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.ResourceQuotas, action: ResourceAction.List })} current={viewContext.resource === Resources.ResourceQuotas} disabled>
+                <SidebarLabel>{Resources.ResourceQuotas} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.LimitRanges, action: ResourceAction.List })} current={viewContext.resource === Resources.LimitRanges} disabled>
+                <SidebarLabel>{Resources.LimitRanges} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.HorizontalPodAutoscalers, action: ResourceAction.List })} current={viewContext.resource === Resources.HorizontalPodAutoscalers} disabled>
+                <SidebarLabel>{Resources.HorizontalPodAutoscalers} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.PodDisruptionBudgets, action: ResourceAction.List })} current={viewContext.resource === Resources.PodDisruptionBudgets} disabled>
+                <SidebarLabel>{Resources.PodDisruptionBudgets} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+            </SidebarSection>
+
+            <SidebarSection>
+              <SidebarHeading>Storage</SidebarHeading>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.PersistentVolumeClaims, action: ResourceAction.List })} current={viewContext.resource === Resources.PersistentVolumeClaims}>
+                <SidebarLabel>{Resources.PersistentVolumeClaims}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.PersistentVolumes, action: ResourceAction.List })} current={viewContext.resource === Resources.PersistentVolumes}>
+                <SidebarLabel>{Resources.PersistentVolumes}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.StorageClasses, action: ResourceAction.List })} current={viewContext.resource === Resources.StorageClasses}>
+                <SidebarLabel>{Resources.StorageClasses}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.VolumeAttachments, action: ResourceAction.List })} current={viewContext.resource === Resources.VolumeAttachments} disabled>
+                <SidebarLabel>{Resources.VolumeAttachments} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.CSIDrivers, action: ResourceAction.List })} current={viewContext.resource === Resources.CSIDrivers} disabled>
+                <SidebarLabel>{Resources.CSIDrivers} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.CSINodes, action: ResourceAction.List })} current={viewContext.resource === Resources.CSINodes} disabled>
+                <SidebarLabel>{Resources.CSINodes} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+            </SidebarSection>
+
+            <SidebarSection>
+              <SidebarHeading>Access Control</SidebarHeading>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.ServiceAccounts, action: ResourceAction.List })} current={viewContext.resource === Resources.ServiceAccounts} disabled>
+                <SidebarLabel>{Resources.ServiceAccounts} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Roles, action: ResourceAction.List })} current={viewContext.resource === Resources.Roles} disabled>
+                <SidebarLabel>{Resources.Roles} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.RoleBindings, action: ResourceAction.List })} current={viewContext.resource === Resources.RoleBindings} disabled>
+                <SidebarLabel>{Resources.RoleBindings} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.ClusterRoles, action: ResourceAction.List })} current={viewContext.resource === Resources.ClusterRoles} disabled>
+                <SidebarLabel>{Resources.ClusterRoles} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.ClusterRoleBindings, action: ResourceAction.List })} current={viewContext.resource === Resources.ClusterRoleBindings} disabled>
+                <SidebarLabel>{Resources.ClusterRoleBindings} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+            </SidebarSection>
+
+            <SidebarSection>
+              <SidebarHeading>Administration</SidebarHeading>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.PriorityClasses, action: ResourceAction.List })} current={viewContext.resource === Resources.PriorityClasses} disabled>
+                <SidebarLabel>{Resources.PriorityClasses} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.RuntimeClasses, action: ResourceAction.List })} current={viewContext.resource === Resources.RuntimeClasses} disabled>
+                <SidebarLabel>{Resources.RuntimeClasses} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.MutatingWebhookConfigurations, action: ResourceAction.List })} current={viewContext.resource === Resources.MutatingWebhookConfigurations} disabled>
+                <SidebarLabel>{Resources.MutatingWebhookConfigurations} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.ValidatingWebhookConfigurations, action: ResourceAction.List })} current={viewContext.resource === Resources.ValidatingWebhookConfigurations} disabled>
+                <SidebarLabel>{Resources.ValidatingWebhookConfigurations} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+              </SidebarItem>
+            </SidebarSection>
+
+            <SidebarSection>
+              <SidebarHeading>Settings</SidebarHeading>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Contexts, action: ResourceAction.List })} current={viewContext.resource === Resources.Contexts}>
+                <SidebarLabel>{Resources.Contexts}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Preferences, action: ResourceAction.List })} current={viewContext.resource === Resources.Preferences}>
+                <SidebarLabel>{Resources.Preferences}</SidebarLabel>
+              </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.License, action: ResourceAction.List })} current={viewContext.resource === Resources.License}>
+                <SidebarLabel>{Resources.License}</SidebarLabel>
+              </SidebarItem>
+            </SidebarSection>
+          </SidebarBody>
+        </Sidebar>
+      }
+    >
+      <div className="w-full mx-auto">
+        {/* Cluster */}
+        {viewContext.resource == Resources.Contexts && viewContext.action === ResourceAction.List && <ContextsListView />}
+        {viewContext.resource == Resources.Contexts && viewContext.action === ResourceAction.Details && <ContextsDetailsView />}
+        {viewContext.resource == Resources.Contexts && viewContext.action === ResourceAction.Create && <ContextsCreateView />}
+
+        {viewContext.resource == Resources.Nodes && viewContext.action === ResourceAction.List && <NodesListView />}
+        {viewContext.resource == Resources.Nodes && viewContext.action === ResourceAction.Details && <NodeDetailsView />}
+
+        {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.List && <NamespacesListView />}
+        {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.Details && <NamespacesDetailsView />}
+        {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.Create && <NamespacesCreateView />}
+
+        {/* Workloads */}
+        {viewContext.resource == Resources.Deployments && viewContext.action === ResourceAction.List && <DeploymentsListView />}
+        {viewContext.resource == Resources.Deployments && viewContext.action === ResourceAction.Details && <DeploymentsDetailsView />}
+
+        {viewContext.resource == Resources.Pods && viewContext.action === ResourceAction.List && <PodsListView />}
+        {viewContext.resource == Resources.Pods && viewContext.action === ResourceAction.Details && <PodsDetailsView />}
+        {viewContext.resource == Resources.Pods && viewContext.action === ResourceAction.Create && <PodsCreateView />}
+
+        {viewContext.resource == Resources.ReplicaSets && viewContext.action === ResourceAction.List && <ReplicaSetsListView />}
+        {viewContext.resource == Resources.ReplicaSets && viewContext.action === ResourceAction.Details && <ReplicaSetsDetailsView />}
+
+        {viewContext.resource == Resources.StatefulSets && viewContext.action === ResourceAction.List && <StatefulSetsListView />}
+        {viewContext.resource == Resources.StatefulSets && viewContext.action === ResourceAction.Details && <StatefulSetsDetailsView />}
+
+        {viewContext.resource == Resources.DaemonSets && viewContext.action === ResourceAction.List && <DaemonSetsListView />}
+        {viewContext.resource == Resources.DaemonSets && viewContext.action === ResourceAction.Details && <DaemonSetsDetailsView />}
+
+        {viewContext.resource == Resources.Jobs && viewContext.action === ResourceAction.List && <JobsListView />}
+        {viewContext.resource == Resources.Jobs && viewContext.action === ResourceAction.Details && <JobsDetailsView />}
+
+        {viewContext.resource == Resources.CronJobs && viewContext.action === ResourceAction.List && <CronJobsListView />}
+        {viewContext.resource == Resources.CronJobs && viewContext.action === ResourceAction.Details && <CronJobsDetailsView />}
+
+
+        {/* Networking */}
+        {viewContext.resource === Resources.Services && viewContext.action === ResourceAction.List && <ServicesListView />}
+        {viewContext.resource === Resources.Services && viewContext.action === ResourceAction.Details && <ServicesDetailsView />}
+
+        {viewContext.resource === Resources.Ingresses && viewContext.action === ResourceAction.List && <IngressesListView />}
+        {viewContext.resource === Resources.Ingresses && viewContext.action === ResourceAction.Details && <IngressesDetailsView />}
+
+        {viewContext.resource === Resources.IngressClasses && viewContext.action === ResourceAction.List && <IngressClassesListView />}
+        {viewContext.resource === Resources.IngressClasses && viewContext.action === ResourceAction.Details && <IngressClassesDetailsView />}
+
+        {viewContext.resource === Resources.Endpoints && viewContext.action === ResourceAction.List && <EndpointsListView />}
+        {viewContext.resource === Resources.Endpoints && viewContext.action === ResourceAction.Details && <EndpointsDetailsView />}
+
+        {viewContext.resource === Resources.EndpointSlices && viewContext.action === ResourceAction.List && <EndpointSlicesListView />}
+        {viewContext.resource === Resources.EndpointSlices && viewContext.action === ResourceAction.Details && <EndpointSlicesDetailsView />}
+
+        {viewContext.resource === Resources.NetworkPolicies && viewContext.action === ResourceAction.List && <NetworkPoliciesListView />}
+        {viewContext.resource === Resources.NetworkPolicies && viewContext.action === ResourceAction.Details && <NetworkPoliciesDetailsView />}
+
+        {/* Configuration */}
+        {viewContext.resource === Resources.ConfigMaps && viewContext.action === ResourceAction.List && <ConfigMapsListView />}
+        {viewContext.resource === Resources.ConfigMaps && viewContext.action === ResourceAction.Details && <ConfigMapsDetailsView />}
+        {viewContext.resource === Resources.ConfigMaps && viewContext.action === ResourceAction.Create && <ConfigMapsCreateView />}
+
+        {viewContext.resource === Resources.Secrets && viewContext.action === ResourceAction.List && <SecretsListView />}
+        {viewContext.resource === Resources.Secrets && viewContext.action === ResourceAction.Details && <SecretsDetailsView />}
+
+        {viewContext.resource === Resources.ResourceQuotas && viewContext.action === ResourceAction.List && <ResourceQuotasListView />}
+        {viewContext.resource === Resources.ResourceQuotas && viewContext.action === ResourceAction.Details && <ResourceQuotasDetailsView />}
+
+        {viewContext.resource === Resources.LimitRanges && viewContext.action === ResourceAction.List && <LimitRangesListView />}
+        {viewContext.resource === Resources.LimitRanges && viewContext.action === ResourceAction.Details && <LimitRangesDetailsView />}
+
+        {viewContext.resource === Resources.HorizontalPodAutoscalers && viewContext.action === ResourceAction.List && <HorizontalPodAutoscalersListView />}
+        {viewContext.resource === Resources.HorizontalPodAutoscalers && viewContext.action === ResourceAction.Details && <HorizontalPodAutoscalersDetailsView />}
+
+        {viewContext.resource === Resources.PodDisruptionBudgets && viewContext.action === ResourceAction.List && <PodDisruptionBudgetsListView />}
+        {viewContext.resource === Resources.PodDisruptionBudgets && viewContext.action === ResourceAction.Details && <PodDisruptionBudgetsDetailsView />}
+
+        {/* Storage */}
+        {viewContext.resource === Resources.PersistentVolumeClaims && viewContext.action === ResourceAction.List && <PersistentVolumeClaimsListView />}
+        {viewContext.resource === Resources.PersistentVolumeClaims && viewContext.action === ResourceAction.Details && <PersistentVolumeClaimsDetailsView />}
+
+        {viewContext.resource === Resources.PersistentVolumes && viewContext.action === ResourceAction.List && <PersistentVolumesListView />}
+        {viewContext.resource === Resources.PersistentVolumes && viewContext.action === ResourceAction.Details && <PersistentVolumesDetailsView />}
+
+        {viewContext.resource === Resources.VolumeAttachments && viewContext.action === ResourceAction.List && <VolumeAttachmentsListView />}
+        {viewContext.resource === Resources.VolumeAttachments && viewContext.action === ResourceAction.Details && <VolumeAttachmentsDetailsView />}
+
+        {viewContext.resource === Resources.StorageClasses && viewContext.action === ResourceAction.List && <StorageClassesListView />}
+        {viewContext.resource === Resources.StorageClasses && viewContext.action === ResourceAction.Details && <StorageClassesDetailsView />}
+
+        {viewContext.resource === Resources.CSIDrivers && viewContext.action === ResourceAction.List && <CSIDriversListView />}
+        {viewContext.resource === Resources.CSIDrivers && viewContext.action === ResourceAction.Details && <CSIDriversDetailsView />}
+
+        {viewContext.resource === Resources.CSINodes && viewContext.action === ResourceAction.List && <CSINodesListView />}
+        {viewContext.resource === Resources.CSINodes && viewContext.action === ResourceAction.Details && <CSINodesDetailsView />}
+
+        {/* Access Control */}
+        {viewContext.resource === Resources.ServiceAccounts && viewContext.action === ResourceAction.List && <ServiceAccountsListView />}
+        {viewContext.resource === Resources.ServiceAccounts && viewContext.action === ResourceAction.Details && <ServiceAccountsDetailsView />}
+
+        {viewContext.resource === Resources.Roles && viewContext.action === ResourceAction.List && <RolesListView />}
+        {viewContext.resource === Resources.Roles && viewContext.action === ResourceAction.Details && <RolesDetailsView />}
+
+        {viewContext.resource === Resources.RoleBindings && viewContext.action === ResourceAction.List && <RoleBindingsListView />}
+        {viewContext.resource === Resources.RoleBindings && viewContext.action === ResourceAction.Details && <RoleBindingsDetailsView />}
+
+        {viewContext.resource === Resources.ClusterRoles && viewContext.action === ResourceAction.List && <ClusterRolesListView />}
+        {viewContext.resource === Resources.ClusterRoles && viewContext.action === ResourceAction.Details && <ClusterRolesDetailsView />}
+
+        {viewContext.resource === Resources.ClusterRoleBindings && viewContext.action === ResourceAction.List && <ClusterRoleBindingsListView />}
+        {viewContext.resource === Resources.ClusterRoleBindings && viewContext.action === ResourceAction.Details && <ClusterRoleBindingsDetailsView />}
+
+        {/* Administration */}
+        {viewContext.resource === Resources.PriorityClasses && viewContext.action === ResourceAction.List && <PriorityClassesListView />}
+        {viewContext.resource === Resources.PriorityClasses && viewContext.action === ResourceAction.Details && <PriorityClassesDetailsView />}
+
+        {viewContext.resource === Resources.RuntimeClasses && viewContext.action === ResourceAction.List && <RuntimeClassesListView />}
+        {viewContext.resource === Resources.RuntimeClasses && viewContext.action === ResourceAction.Details && <RuntimeClassesDetailsView />}
+
+        {viewContext.resource === Resources.MutatingWebhookConfigurations && viewContext.action === ResourceAction.List && <MutatingWebhookConfigurationsListView />}
+        {viewContext.resource === Resources.MutatingWebhookConfigurations && viewContext.action === ResourceAction.Details && <MutatingWebhookConfigurationsDetailsView />}
+
+        {viewContext.resource === Resources.ValidatingWebhookConfigurations && viewContext.action === ResourceAction.List && <ValidatingWebhookConfigurationsListView />}
+        {viewContext.resource === Resources.ValidatingWebhookConfigurations && viewContext.action === ResourceAction.Details && <ValidatingWebhookConfigurationsDetailsView />}
+      </div>
+
+      <Drawer title={helpTitle} open={drawerOpen} onClose={() => setDrawerOpen(false)}>{helpContent}</Drawer>
+    </SidebarLayout>
+  )
+};
