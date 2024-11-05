@@ -63,13 +63,13 @@ export const Layout = () => {
                 <SidebarLabel>{Resources.Namespaces}</SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Nodes, action: ResourceAction.List })} current={viewContext.resource === Resources.Nodes} disabled>
-                <SidebarLabel>{Resources.Nodes} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.Nodes} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Nodes, action: ResourceAction.List })} current={viewContext.resource === Resources.Nodes} disabled>
-                <SidebarLabel>{Resources.Events} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.Events} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Nodes, action: ResourceAction.List })} current={viewContext.resource === Resources.Nodes} disabled>
-                <SidebarLabel>{Resources.CustomResourceDefinitions} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.CustomResourceDefinitions} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
             </SidebarSection>
             <SidebarSection>
@@ -84,16 +84,16 @@ export const Layout = () => {
                 <SidebarLabel>{Resources.ReplicaSets}</SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.StatefulSets, action: ResourceAction.List })} current={viewContext.resource === Resources.StatefulSets} disabled>
-                <SidebarLabel>{Resources.StatefulSets} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.StatefulSets} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.DaemonSets, action: ResourceAction.List })} current={viewContext.resource === Resources.DaemonSets} disabled>
-                <SidebarLabel>{Resources.DaemonSets} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.DaemonSets} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Jobs, action: ResourceAction.List })} current={viewContext.resource === Resources.Jobs} disabled>
-                <SidebarLabel>{Resources.Jobs} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.Jobs} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.CronJobs, action: ResourceAction.List })} current={viewContext.resource === Resources.CronJobs} disabled>
-                <SidebarLabel>{Resources.CronJobs} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.CronJobs} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
             </SidebarSection>
 
@@ -103,19 +103,19 @@ export const Layout = () => {
                 <SidebarLabel>{Resources.Services}</SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Ingresses, action: ResourceAction.List })} current={viewContext.resource === Resources.Ingresses} disabled>
-                <SidebarLabel>{Resources.Ingresses} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.Ingresses} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.IngressClasses, action: ResourceAction.List })} current={viewContext.resource === Resources.IngressClasses} disabled>
-                <SidebarLabel>{Resources.IngressClasses} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.IngressClasses} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Endpoints, action: ResourceAction.List })} current={viewContext.resource === Resources.Endpoints} disabled>
-                <SidebarLabel>{Resources.Endpoints} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.Endpoints} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.EndpointSlices, action: ResourceAction.List })} current={viewContext.resource === Resources.EndpointSlices} disabled>
-                <SidebarLabel>{Resources.EndpointSlices} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.EndpointSlices} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.NetworkPolicies, action: ResourceAction.List })} current={viewContext.resource === Resources.NetworkPolicies} disabled>
-                <SidebarLabel>{Resources.NetworkPolicies} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.NetworkPolicies} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
             </SidebarSection>
 
@@ -128,16 +128,16 @@ export const Layout = () => {
                 <SidebarLabel>{Resources.Secrets}</SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.ResourceQuotas, action: ResourceAction.List })} current={viewContext.resource === Resources.ResourceQuotas} disabled>
-                <SidebarLabel>{Resources.ResourceQuotas} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.ResourceQuotas} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.LimitRanges, action: ResourceAction.List })} current={viewContext.resource === Resources.LimitRanges} disabled>
-                <SidebarLabel>{Resources.LimitRanges} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.LimitRanges} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.HorizontalPodAutoscalers, action: ResourceAction.List })} current={viewContext.resource === Resources.HorizontalPodAutoscalers} disabled>
-                <SidebarLabel>{Resources.HorizontalPodAutoscalers} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.HorizontalPodAutoscalers} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.PodDisruptionBudgets, action: ResourceAction.List })} current={viewContext.resource === Resources.PodDisruptionBudgets} disabled>
-                <SidebarLabel>{Resources.PodDisruptionBudgets} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.PodDisruptionBudgets} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
             </SidebarSection>
 
@@ -153,48 +153,48 @@ export const Layout = () => {
                 <SidebarLabel>{Resources.StorageClasses}</SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.VolumeAttachments, action: ResourceAction.List })} current={viewContext.resource === Resources.VolumeAttachments} disabled>
-                <SidebarLabel>{Resources.VolumeAttachments} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.VolumeAttachments} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.CSIDrivers, action: ResourceAction.List })} current={viewContext.resource === Resources.CSIDrivers} disabled>
-                <SidebarLabel>{Resources.CSIDrivers} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.CSIDrivers} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.CSINodes, action: ResourceAction.List })} current={viewContext.resource === Resources.CSINodes} disabled>
-                <SidebarLabel>{Resources.CSINodes} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.CSINodes} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
             </SidebarSection>
 
             <SidebarSection>
               <SidebarHeading>Access Control</SidebarHeading>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.ServiceAccounts, action: ResourceAction.List })} current={viewContext.resource === Resources.ServiceAccounts} disabled>
-                <SidebarLabel>{Resources.ServiceAccounts} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.ServiceAccounts} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Roles, action: ResourceAction.List })} current={viewContext.resource === Resources.Roles} disabled>
-                <SidebarLabel>{Resources.Roles} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.Roles} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.RoleBindings, action: ResourceAction.List })} current={viewContext.resource === Resources.RoleBindings} disabled>
-                <SidebarLabel>{Resources.RoleBindings} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.RoleBindings} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.ClusterRoles, action: ResourceAction.List })} current={viewContext.resource === Resources.ClusterRoles} disabled>
-                <SidebarLabel>{Resources.ClusterRoles} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.ClusterRoles} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.ClusterRoleBindings, action: ResourceAction.List })} current={viewContext.resource === Resources.ClusterRoleBindings} disabled>
-                <SidebarLabel>{Resources.ClusterRoleBindings} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.ClusterRoleBindings} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
             </SidebarSection>
 
             <SidebarSection>
               <SidebarHeading>Administration</SidebarHeading>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.PriorityClasses, action: ResourceAction.List })} current={viewContext.resource === Resources.PriorityClasses} disabled>
-                <SidebarLabel>{Resources.PriorityClasses} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.PriorityClasses} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.RuntimeClasses, action: ResourceAction.List })} current={viewContext.resource === Resources.RuntimeClasses} disabled>
-                <SidebarLabel>{Resources.RuntimeClasses} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.RuntimeClasses} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.MutatingWebhookConfigurations, action: ResourceAction.List })} current={viewContext.resource === Resources.MutatingWebhookConfigurations} disabled>
-                <SidebarLabel>{Resources.MutatingWebhookConfigurations} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.MutatingWebhookConfigurations} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.ValidatingWebhookConfigurations, action: ResourceAction.List })} current={viewContext.resource === Resources.ValidatingWebhookConfigurations} disabled>
-                <SidebarLabel>{Resources.ValidatingWebhookConfigurations} <Badge color='pro' className='ml-2'>Pro</Badge></SidebarLabel>
+                <SidebarLabel>{Resources.ValidatingWebhookConfigurations} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
               </SidebarItem>
             </SidebarSection>
 
