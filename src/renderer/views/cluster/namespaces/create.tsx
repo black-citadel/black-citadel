@@ -13,7 +13,7 @@ import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/for
 import { namespaceTemplate } from '@templates/namespace.yaml';
 import { dump } from 'js-yaml';
 import { HelpButton } from '@components/help-button';
-import helpObjects from '@help/helpObjects';
+import helpObjects from '@help/index';
 
 
 export const NamespacesCreateView = (): JSX.Element => {

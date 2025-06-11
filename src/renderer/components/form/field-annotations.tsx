@@ -4,7 +4,7 @@ import { Input } from "@components/base/input";
 import { Button } from "@components/base/button";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { HelpButton } from '@components/help-button';
-import helpObjects from '@help/helpObjects';
+import helpObjects from '@help/index';
 
 export interface Annotation {
   key: string;

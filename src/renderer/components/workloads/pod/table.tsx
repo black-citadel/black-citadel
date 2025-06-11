@@ -4,6 +4,7 @@ import { StopIcon } from '@heroicons/react/16/solid';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { PodResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
+import { useState } from 'react';
 
 interface Props {
   pods: k8s.V1PodList
@@ -11,6 +12,7 @@ interface Props {
 
 export const PodList = ({ pods }: Props): JSX.Element => {
   const { activeNamespace } = useView();
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
 
   const headers = ['Name', 'Namespace', 'Containers', 'Status', 'Restarts', 'Ports'];
 
@@ -18,7 +20,16 @@ export const PodList = ({ pods }: Props): JSX.Element => {
     ? pods.items
     : pods.items.filter(pod => pod.metadata.namespace === activeNamespace);
 
-  const processedRows = filteredPods.map(pod => ({
+  const sortedPods = [...filteredPods].sort((a, b) => {
+    if (!sortDirection) return 0;
+    const nameA = a.metadata.name.toLowerCase();
+    const nameB = b.metadata.name.toLowerCase();
+    return sortDirection === 'asc'
+      ? nameA.localeCompare(nameB)
+      : nameB.localeCompare(nameA);
+  });
+
+  const processedRows = sortedPods.map(pod => ({
     Name: <PodResourceLink name={pod.metadata.name} namespace={pod.metadata.namespace} />,
     Namespace: <NamespaceResourceLink name={pod.metadata.namespace} />,
     Containers: getContainers(pod),
@@ -28,7 +39,12 @@ export const PodList = ({ pods }: Props): JSX.Element => {
   }));
 
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable
+      headers={headers}
+      rows={processedRows}
+      sortDirection={sortDirection}
+      onSort={setSortDirection}
+    />
   )
 }
 

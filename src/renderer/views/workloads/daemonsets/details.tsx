@@ -3,7 +3,7 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
+import { MetadataDetails } from '@components/metadata';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
@@ -11,17 +11,35 @@ import { DaemonSetBadge } from '@components/workloads/daemonset/badge';
 import { UpdateStrategy } from '@components/workloads/daemonset/update-strategy';
 import { PodTemplate } from '@components/workloads/pod/template';
 import { DaemonSetStatus } from '@components/workloads/daemonset/status';
+import { DaemonSetSpec } from '@components/workloads/daemonset/spec';
+import { PodList } from '@components/workloads/pod/table';
+import { Heading, Subheading } from '@components/base/heading';
 
 export const DaemonSetsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [daemonSet, setDaemonSet] = useState<k8s.V1DaemonSet>();
+  const [pods, setPods] = useState<k8s.V1PodList>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {
     try {
-      const data = await window.electronAPI.readNamespacedDaemonSet(viewContext.name, viewContext.namespace);
-      setDaemonSet(data);
+      const [daemonSetData, podsData] = await Promise.all([
+        window.electronAPI.readNamespacedDaemonSet(viewContext.name, viewContext.namespace),
+        window.electronAPI.listNamespacedPod(viewContext.namespace)
+      ]);
+      setDaemonSet(daemonSetData);
+      
+      // Filter pods by daemonset selector
+      if (daemonSetData.spec.selector?.matchLabels && podsData) {
+        const filteredPods = podsData.items.filter(pod => {
+          return Object.entries(daemonSetData.spec.selector.matchLabels).every(([key, value]) => 
+            pod.metadata?.labels?.[key] === value
+          );
+        });
+        setPods({ items: filteredPods });
+      }
+      
       setError(null);
     } catch (e) {
       console.error("Failed to fetch daemon set:", e);
@@ -43,46 +61,40 @@ export const DaemonSetsDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error}><DaemonSetBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader error={error}>
+        <Heading>
+          <DaemonSetBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
-          <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
-          <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
-        </NavbarSection>
-      </Navbar>
+        <Navbar>
+          <NavbarSection>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
+          </NavbarSection>
+        </Navbar>
+      </DetailsHeader>
+
 
       {activeTab === ResourceTabs.Details && daemonSet && (
-        <div className="grid grid-cols-2 gap-4">
-          <div className='m-2'>
-            <DetailsName name={daemonSet.metadata.name} />
-            <DetailsNamespace name={daemonSet.metadata.namespace} />
-            <DetailsLabels labels={daemonSet.metadata.labels} />
-            <DetailsAnnotations annotations={daemonSet.metadata.annotations} />
-          </div>
+        <div className='m-2'>
+          <MetadataDetails metadata={daemonSet.metadata} />
 
-          <div className='m-2'>
-            <DetailsItem label="Selector">
-              {Object.entries(daemonSet.spec.selector.matchLabels || {}).map(([key, value]) => (
-                <div key={key}>{key}: {value}</div>
-              ))}
-            </DetailsItem>
-            <UpdateStrategy strategy={daemonSet.spec.updateStrategy} />
-            <DetailsItem label="Min Ready Seconds">
-              {daemonSet.spec.minReadySeconds}
-            </DetailsItem>
-            <DetailsItem label="Revision History Limit">
-              {daemonSet.spec.revisionHistoryLimit}
-            </DetailsItem>
-            <PodTemplate template={daemonSet.spec.template} />
-            <DaemonSetStatus status={daemonSet.status} />
-          </div>
+          <DaemonSetSpec spec={daemonSet.spec} />
+
+          <Subheading className='mt-8'>Update Strategy</Subheading>
+          <UpdateStrategy strategy={daemonSet.spec.updateStrategy} />
+
+          <Subheading className='mt-8'>Pod Template</Subheading>
+          <PodTemplate template={daemonSet.spec.template} />
+
+          <Subheading className='mt-8'>Pods</Subheading>
+          {pods && <PodList pods={pods} />}
+
+          <DaemonSetStatus status={daemonSet.status} />
         </div>
       )}
 
-      {activeTab === ResourceTabs.YAML && (
-        <Editor content={yamlContent} />
-      )}
+      {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );
 };

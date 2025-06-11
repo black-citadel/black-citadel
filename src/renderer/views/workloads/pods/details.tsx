@@ -11,12 +11,12 @@ import { PodBadge } from '@components/workloads/pod/badge';
 import { MetadataDetails } from '@components/metadata';
 import { Heading, Subheading } from '@components/base/heading';
 import { Description, Field, Label } from '@components/base/fieldset';
-import { InformationCircleIcon } from '@heroicons/react/24/outline';
 import { HelpButton } from '@components/help-button';
-import helpObjects from '@help/helpObjects';
+import helpObjects from '@help/index';
+import { LogViewer } from '@components/log-viewer';
 
 export const PodsDetailsView = (): JSX.Element => {
-  const { viewContext, setViewContext, drawerOpen, setDrawerOpen } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [pod, setPod] = useState<k8s.V1Pod>();
   const [error, setError] = useState(null);
@@ -59,6 +59,7 @@ export const PodsDetailsView = (): JSX.Element => {
         <Navbar>
           <NavbarSection>
             <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Logs)} current={activeTab == ResourceTabs.Logs}>{ResourceTabs.Logs}</NavbarItem>
             <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
           </NavbarSection>
         </Navbar>
@@ -129,6 +130,16 @@ export const PodsDetailsView = (): JSX.Element => {
         </div>
       )}
 
+
+      {activeTab === ResourceTabs.Logs && pod && (
+        <div className='m-2'>
+          <LogViewer
+            podName={pod.metadata.name}
+            namespace={pod.metadata.namespace}
+            containers={pod.spec.containers.map(c => c.name)}
+          />
+        </div>
+      )}
 
       {activeTab === ResourceTabs.YAML && (
         <Editor content={yamlContent} />

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { NamespaceResourceLink } from "./cluster/namespace/resource-link"
-import helpObjects, { HelpObject } from "@help/helpObjects"
+import helpObjects from "@help/index"
+import { HelpObject } from "@help/types"
 import { HelpButton } from "./help-button"
 
 interface DetailsItemProps {

@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
 import k8s from '@kubernetes/client-node';
-import { Field, Label, Description } from "@components/base/fieldset";
+import { useState, useEffect } from 'react';
+import { Field } from '@components/base/fieldset';
 import { Listbox, ListboxLabel, ListboxOption } from '@components/base/listbox';
 import { NamespaceBadge } from '../cluster/namespace/badge';
 
-interface FieldNamespaceSelectProps {
+interface NamespaceSelectProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export function FieldNamespaceSelect({ value, onChange }: FieldNamespaceSelectProps) {
+export const NamespaceSelect = ({ value, onChange }: NamespaceSelectProps): JSX.Element => {
   const [namespaces, setNamespaces] = useState<k8s.V1NamespaceList>();
 
   const fetchData = async () => {
@@ -28,20 +28,19 @@ export function FieldNamespaceSelect({ value, onChange }: FieldNamespaceSelectPr
   }, []);
 
   return (
-    <Field className="my-8">
-      <Label>Namespace</Label>
-      <Description>
-        Select the namespace.
-      </Description>
-      {namespaces && (
+    <>
+      {namespaces &&
         <Listbox name="namespace" value={value} onChange={onChange}>
+          <ListboxOption value="">
+            <ListboxLabel>Select a namespace</ListboxLabel>
+          </ListboxOption>
           {namespaces.items.map((namespace) => (
             <ListboxOption key={namespace.metadata.name} value={namespace.metadata.name}>
               <ListboxLabel><NamespaceBadge /> {namespace.metadata.name}</ListboxLabel>
             </ListboxOption>
           ))}
         </Listbox>
-      )}
-    </Field>
+      }
+    </>
   );
-}
+};

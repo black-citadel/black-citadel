@@ -11,7 +11,7 @@ import { MetadataDetails } from '@components/metadata';
 import { Heading, Subheading } from '@components/base/heading';
 import { formatStatus } from '@components/cluster/namespace/helpers';
 import { CodePanel } from '@components/code';
-import helpObjects from '@help/helpObjects';
+import helpObjects from '@help/index';
 
 export const NamespacesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()

@@ -91,6 +91,7 @@ export interface ElectronAPI {
   createNamespace: (payload: k8s.V1Namespace) => Promise<{ success: boolean, data?: k8s.V1Namespace, error?: string }>;
   createNamespacedPod: (namespace: string, podSpec: k8s.V1Pod) => Promise<{ success: boolean, data?: k8s.V1Pod, error?: string }>;
   deleteNamespacedPod: (name: string, namespace: string) => Promise<void>;
+  readNamespacedPodLog: (name: string, namespace: string, container?: string, options?: { follow?: boolean, previous?: boolean, sinceSeconds?: number, tailLines?: number, timestamps?: boolean, pretty?: string }) => Promise<{ success: boolean, data?: string, error?: string }>;
   createNamespacedConfigMap: (namespace: string, payload: k8s.V1ConfigMap) => Promise<{ success: boolean, data?: k8s.V1ConfigMap, error?: string }>;
   deleteNamespacedConfigMap: (name: string, namespace: string) => Promise<void>;
 }
@@ -184,6 +185,7 @@ try {
     deleteNamespace: (name: string) => ipcRenderer.invoke('deleteNamespace', name),
     createNamespacedPod: (namespace: string, podSpec: k8s.V1Pod) => ipcRenderer.invoke('createNamespacedPod', namespace, podSpec),
     deleteNamespacedPod: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedPod', name, namespace),
+    readNamespacedPodLog: (name: string, namespace: string, container?: string, options?: { follow?: boolean, previous?: boolean, sinceSeconds?: number, tailLines?: number, timestamps?: boolean, pretty?: string }) => ipcRenderer.invoke('readNamespacedPodLog', name, namespace, container, options),
     createNamespacedConfigMap: (namespace: string, payload: k8s.V1ConfigMap) => ipcRenderer.invoke('createNamespacedConfigMap', namespace, payload),
     deleteNamespacedConfigMap: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedConfigMap', name, namespace),
   } as ElectronAPI);

@@ -83,11 +83,11 @@ export const Layout = () => {
               <SidebarItem onClick={() => setViewContext({ resource: Resources.ReplicaSets, action: ResourceAction.List })} current={viewContext.resource === Resources.ReplicaSets}>
                 <SidebarLabel>{Resources.ReplicaSets}</SidebarLabel>
               </SidebarItem>
-              <SidebarItem onClick={() => setViewContext({ resource: Resources.StatefulSets, action: ResourceAction.List })} current={viewContext.resource === Resources.StatefulSets} disabled>
-                <SidebarLabel>{Resources.StatefulSets} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.StatefulSets, action: ResourceAction.List })} current={viewContext.resource === Resources.StatefulSets}>
+                <SidebarLabel>{Resources.StatefulSets}</SidebarLabel>
               </SidebarItem>
-              <SidebarItem onClick={() => setViewContext({ resource: Resources.DaemonSets, action: ResourceAction.List })} current={viewContext.resource === Resources.DaemonSets} disabled>
-                <SidebarLabel>{Resources.DaemonSets} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.DaemonSets, action: ResourceAction.List })} current={viewContext.resource === Resources.DaemonSets}>
+                <SidebarLabel>{Resources.DaemonSets}</SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Jobs, action: ResourceAction.List })} current={viewContext.resource === Resources.Jobs} disabled>
                 <SidebarLabel>{Resources.Jobs} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>

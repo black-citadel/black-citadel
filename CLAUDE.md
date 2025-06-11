@@ -1,0 +1,108 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+Black Citadel is a cross-platform Kubernetes GUI desktop application built with Electron, React, and TypeScript. It provides a modern interface for managing Kubernetes clusters with full CRUD operations on resources.
+
+## Development Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm start
+
+# Build and package the application
+npm run package
+
+# Create platform-specific distributables
+npm run make
+
+# Run linting
+npm run lint
+```
+
+## Architecture
+
+The application follows Electron's multi-process architecture:
+
+### Main Process (`src/main/index.ts`)
+- Manages application lifecycle and window creation
+- Handles all Kubernetes API interactions via @kubernetes/client-node
+- Exposes operations through IPC handlers (list, read, create, delete, apply)
+
+### Preload Script (`src/preload/index.ts`)
+- Provides secure bridge between main and renderer processes
+- Exposes typed `electronAPI` interface with Kubernetes operations
+- All Kubernetes operations must go through this API
+
+### Renderer Process (`src/renderer/`)
+- React application with TypeScript
+- Uses Redux Toolkit for state management
+- Organized by resource type (workloads, networking, configuration, etc.)
+- Each resource type has:
+  - Components folder with reusable UI components (badge, table, resource-link)
+  - Views folder with list/details/create pages
+  - Consistent pattern: list.tsx, details.tsx, create.tsx (where applicable)
+
+## Key Patterns
+
+### Resource Views
+Each Kubernetes resource follows this structure:
+```
+views/[category]/[resource-type]/
+├── index.ts      # Route configuration
+├── list.tsx      # Table view of resources
+├── details.tsx   # Detailed view with YAML editor
+└── create.tsx    # Creation form (if supported)
+```
+
+### Component Structure
+Resource-specific components:
+```
+components/[category]/[resource-type]/
+├── badge.tsx         # Status/type badges
+├── table.tsx         # List table component
+├── resource-link.tsx # Navigation links
+└── [specific].tsx    # Resource-specific components
+```
+
+### API Communication
+All Kubernetes operations use the typed electronAPI:
+```typescript
+// List resources
+await window.electronAPI.list(resource, namespace?)
+
+// Get specific resource
+await window.electronAPI.read(resource, name, namespace?)
+
+// Create/update resource
+await window.electronAPI.apply(yamlContent)
+
+// Delete resource
+await window.electronAPI.delete(resource, name, namespace?)
+```
+
+### Navigation
+- Uses custom ViewProvider context for routing
+- Main navigation through sidebar with categories
+- Resource links use `viewProvider.navigate()` with standardized paths
+
+## Important Conventions
+
+1. **TypeScript Strict Mode**: All code must be type-safe
+2. **Path Aliases**: Use @components, @views, @utils, etc. instead of relative imports
+3. **Tailwind CSS**: Use utility classes for styling, avoid inline styles
+4. **Component Naming**: Use PascalCase for components, kebab-case for files
+5. **YAML Templates**: Store in `src/renderer/templates/` as TypeScript template strings
+6. **Help Content**: Implement in `src/renderer/help/` following existing pattern
+
+## Testing & Validation
+
+Currently, there are no automated tests. When implementing:
+- Validate YAML before applying to cluster
+- Handle API errors gracefully with user-friendly messages
+- Test multi-context switching thoroughly

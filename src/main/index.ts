@@ -146,6 +146,32 @@ ipcMain.handle('createNamespacedPod', async (event, namespace, podSpec) => {
 });
 ipcMain.handle('deleteNamespacedPod', async (event, name, namespace) => (await k8sCoreV1Api.deleteNamespacedPod(name, namespace)).body);
 
+// Pod logs
+ipcMain.handle('readNamespacedPodLog', async (event, name, namespace, container, options = {}) => {
+  try {
+    const response = await k8sCoreV1Api.readNamespacedPodLog(
+      name,
+      namespace,
+      container,
+      options.follow,
+      undefined, // insecureSkipTLSVerifyBackend
+      undefined, // limitBytes
+      options.pretty,
+      options.previous,
+      options.sinceSeconds,
+      options.tailLines,
+      options.timestamps
+    );
+    return { success: true, data: response.body };
+  } catch (error) {
+    let errorMessage = 'An error occurred while fetching pod logs';
+    if (error.response && error.response.body && error.response.body.message) {
+      errorMessage = error.response.body.message;
+    }
+    return { success: false, error: errorMessage };
+  }
+});
+
 
 // ConfigMaps
 ipcMain.handle('listConfigMapForAllNamespaces', async () => (await k8sCoreV1Api.listConfigMapForAllNamespaces()).body);
