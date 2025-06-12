@@ -18,6 +18,7 @@ import { MetadataDetails } from '@components/metadata';
 import { DeploymentSpec } from '@components/workloads/deployment/spec';
 import { Badge } from '@components/base/badge';
 import { PodList } from '@components/workloads/pod/table';
+import { DeploymentLogViewer } from '@components/deployment-log-viewer';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -68,6 +69,7 @@ export const DeploymentsDetailsView = (): JSX.Element => {
         <Navbar>
           <NavbarSection>
             <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Logs)} current={activeTab == ResourceTabs.Logs}>{ResourceTabs.Logs}</NavbarItem>
             <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
           </NavbarSection>
         </Navbar>
@@ -85,6 +87,15 @@ export const DeploymentsDetailsView = (): JSX.Element => {
           <DeploymentStatus status={deployment.status} />
         </div>
 
+      )}
+
+      {activeTab === ResourceTabs.Logs && deployment && pods && (
+        <div className='m-2'>
+          <DeploymentLogViewer
+            pods={pods.items || []}
+            namespace={deployment.metadata.namespace}
+          />
+        </div>
       )}
 
       {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}

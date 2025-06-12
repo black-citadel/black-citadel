@@ -1,0 +1,346 @@
+import { useEffect, useRef, useState } from 'react';
+import { Button } from '@components/base/button';
+import { Select } from '@components/base/select';
+import k8s = require('@kubernetes/client-node');
+
+interface DeploymentLogViewerProps {
+  pods: k8s.V1Pod[];
+  namespace: string;
+  autoRefresh?: boolean;
+  refreshInterval?: number;
+}
+
+interface LogEntry {
+  timestamp: string;
+  podName: string;
+  containerName: string;
+  message: string;
+}
+
+export const DeploymentLogViewer = ({ 
+  pods, 
+  namespace, 
+  autoRefresh = true,
+  refreshInterval = 2000 
+}: DeploymentLogViewerProps): JSX.Element => {
+  const [combinedLogs, setCombinedLogs] = useState<LogEntry[]>([]);
+  const [selectedPods, setSelectedPods] = useState<string[]>([]);
+  const [isFollowing, setIsFollowing] = useState<boolean>(autoRefresh);
+  const [tailLines, setTailLines] = useState<number>(100);
+  const [error, setError] = useState<string | null>(null);
+  const [showPodNames, setShowPodNames] = useState<boolean>(true);
+  const logContainerRef = useRef<HTMLDivElement>(null);
+  const shouldScrollRef = useRef<boolean>(true);
+
+  // Initialize selected pods
+  useEffect(() => {
+    if (pods.length > 0 && selectedPods.length === 0) {
+      setSelectedPods(pods.map(pod => pod.metadata.name));
+    }
+  }, [pods]);
+
+  const parseLogLine = (line: string, podName: string, containerName: string): LogEntry | null => {
+    // Kubernetes log format with timestamp: "2024-01-01T00:00:00.000000Z message"
+    const timestampMatch = line.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z)\s+(.*)$/);
+    
+    if (timestampMatch) {
+      return {
+        timestamp: timestampMatch[1],
+        podName,
+        containerName,
+        message: timestampMatch[2]
+      };
+    }
+    
+    // If no timestamp, use current time
+    return {
+      timestamp: new Date().toISOString(),
+      podName,
+      containerName,
+      message: line
+    };
+  };
+
+  const fetchLogs = async () => {
+    if (selectedPods.length === 0) {
+      setCombinedLogs([]);
+      return;
+    }
+
+    try {
+      const allLogs: LogEntry[] = [];
+      const errors: string[] = [];
+
+      // Fetch logs from all selected pods and their containers
+      await Promise.all(
+        pods
+          .filter(pod => selectedPods.includes(pod.metadata.name))
+          .map(async (pod) => {
+            const containers = pod.spec.containers || [];
+            
+            await Promise.all(
+              containers.map(async (container) => {
+                try {
+                  const result = await window.electronAPI.readNamespacedPodLog(
+                    pod.metadata.name,
+                    namespace,
+                    container.name,
+                    {
+                      tailLines: tailLines,
+                      timestamps: true
+                    }
+                  );
+
+                  if (result.success && result.data) {
+                    const lines = result.data.split('\n').filter(line => line.trim());
+                    const parsedLogs = lines
+                      .map(line => parseLogLine(line, pod.metadata.name, container.name))
+                      .filter(log => log !== null) as LogEntry[];
+                    
+                    allLogs.push(...parsedLogs);
+                  } else if (result.error) {
+                    errors.push(`${pod.metadata.name}/${container.name}: ${result.error}`);
+                  }
+                } catch (e) {
+                  console.error(`Failed to fetch logs for ${pod.metadata.name}/${container.name}:`, e);
+                  errors.push(`${pod.metadata.name}/${container.name}: Failed to fetch logs`);
+                }
+              })
+            );
+          })
+      );
+
+      // Sort logs by timestamp, then by pod name for consistency
+      allLogs.sort((a, b) => {
+        const dateA = new Date(a.timestamp).getTime();
+        const dateB = new Date(b.timestamp).getTime();
+        
+        // First sort by timestamp
+        if (dateA !== dateB) {
+          return dateA - dateB;
+        }
+        
+        // If timestamps are equal, sort by pod name then container name
+        const podCompare = a.podName.localeCompare(b.podName);
+        if (podCompare !== 0) {
+          return podCompare;
+        }
+        
+        // If pod names are also equal, sort by container name
+        return a.containerName.localeCompare(b.containerName);
+      });
+
+      setCombinedLogs(allLogs);
+      
+      if (errors.length > 0) {
+        setError(errors.join('\n'));
+      } else {
+        setError(null);
+      }
+    } catch (e) {
+      console.error("Failed to fetch logs:", e);
+      setError("Failed to fetch logs");
+    }
+  };
+
+  // Initial fetch and polling
+  useEffect(() => {
+    if (selectedPods.length > 0) {
+      fetchLogs();
+      
+      if (isFollowing) {
+        const intervalId = setInterval(fetchLogs, refreshInterval);
+        return () => clearInterval(intervalId);
+      }
+    }
+  }, [selectedPods, isFollowing, tailLines]);
+
+  // Auto-scroll to bottom when new logs arrive
+  useEffect(() => {
+    if (shouldScrollRef.current && logContainerRef.current) {
+      logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+    }
+  }, [combinedLogs]);
+
+  // Check if user has scrolled up
+  const handleScroll = () => {
+    if (logContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = logContainerRef.current;
+      // If user is near bottom (within 50px), keep auto-scrolling
+      shouldScrollRef.current = scrollHeight - scrollTop - clientHeight < 50;
+    }
+  };
+
+  const handlePodSelectionChange = (podName: string, selected: boolean) => {
+    if (selected) {
+      setSelectedPods([...selectedPods, podName]);
+    } else {
+      setSelectedPods(selectedPods.filter(p => p !== podName));
+    }
+  };
+
+  const handleSelectAll = () => {
+    setSelectedPods(pods.map(pod => pod.metadata.name));
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedPods([]);
+  };
+
+  const handleClearLogs = () => {
+    setCombinedLogs([]);
+  };
+
+  const handleDownloadLogs = () => {
+    const logText = combinedLogs.map(log => {
+      const prefix = showPodNames ? `[${log.podName}/${log.containerName}] ` : '';
+      return `${log.timestamp} ${prefix}${log.message}`;
+    }).join('\n');
+    
+    const blob = new Blob([logText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `deployment-logs-${new Date().getTime()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const formatLogLine = (log: LogEntry): string => {
+    const time = new Date(log.timestamp).toLocaleTimeString();
+    const prefix = showPodNames ? `[${log.podName}/${log.containerName}] ` : '';
+    return `${time} ${prefix}${log.message}`;
+  };
+
+  const getPodColor = (podName: string): string => {
+    // Generate a consistent color for each pod
+    const colors = [
+      '#3B82F6', // blue
+      '#10B981', // green
+      '#F59E0B', // yellow
+      '#EF4444', // red
+      '#8B5CF6', // purple
+      '#EC4899', // pink
+      '#14B8A6', // teal
+      '#F97316', // orange
+    ];
+    
+    const index = pods.findIndex(pod => pod.metadata.name === podName);
+    return colors[index % colors.length];
+  };
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Controls */}
+      <div className="mb-4 p-2 bg-zinc-50 rounded-lg">
+        {/* Pod selection */}
+        <div className="mb-3">
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-sm font-medium text-zinc-700">Select Pods:</label>
+            <div className="flex gap-2">
+              <Button size="sm" onClick={handleSelectAll}>Select All</Button>
+              <Button size="sm" onClick={handleDeselectAll}>Deselect All</Button>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {pods.map(pod => (
+              <label key={pod.metadata.name} className="flex items-center gap-1 px-2 py-1 bg-white rounded border cursor-pointer hover:bg-zinc-50">
+                <input
+                  type="checkbox"
+                  checked={selectedPods.includes(pod.metadata.name)}
+                  onChange={(e) => handlePodSelectionChange(pod.metadata.name, e.target.checked)}
+                  className="rounded"
+                />
+                <span 
+                  className="text-sm"
+                  style={{ color: getPodColor(pod.metadata.name) }}
+                >
+                  {pod.metadata.name}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Other controls */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium text-zinc-700">Lines per pod:</label>
+            <Select
+              value={tailLines.toString()}
+              onChange={(e) => setTailLines(parseInt(e.target.value))}
+            >
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="200">200</option>
+              <option value="500">500</option>
+            </Select>
+          </div>
+
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={showPodNames}
+              onChange={(e) => setShowPodNames(e.target.checked)}
+              className="rounded"
+            />
+            <span className="text-sm font-medium text-zinc-700">Show pod names</span>
+          </label>
+
+          <Button
+            onClick={() => setIsFollowing(!isFollowing)}
+            className={isFollowing ? 'bg-green-600 hover:bg-green-700' : ''}
+          >
+            {isFollowing ? 'Following' : 'Follow'}
+          </Button>
+
+          <Button onClick={fetchLogs}>
+            Refresh
+          </Button>
+
+          <Button onClick={handleClearLogs}>
+            Clear
+          </Button>
+
+          <Button onClick={handleDownloadLogs}>
+            Download
+          </Button>
+        </div>
+      </div>
+
+      {/* Error display */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm whitespace-pre-wrap">
+          {error}
+        </div>
+      )}
+
+      {/* Log display */}
+      <div 
+        ref={logContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-auto bg-black text-green-400 p-4 rounded-lg font-mono text-sm whitespace-pre-wrap"
+        style={{ minHeight: '400px' }}
+      >
+        {combinedLogs.length === 0 ? (
+          <div className="text-zinc-500">
+            {selectedPods.length === 0 ? 'No pods selected' : 'No logs available...'}
+          </div>
+        ) : (
+          combinedLogs.map((log, index) => (
+            <div 
+              key={index}
+              style={{ 
+                color: showPodNames ? getPodColor(log.podName) : undefined 
+              }}
+            >
+              {formatLogLine(log)}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
