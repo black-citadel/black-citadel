@@ -94,6 +94,13 @@ export interface ElectronAPI {
   readNamespacedPodLog: (name: string, namespace: string, container?: string, options?: { follow?: boolean, previous?: boolean, sinceSeconds?: number, tailLines?: number, timestamps?: boolean, pretty?: string }) => Promise<{ success: boolean, data?: string, error?: string }>;
   createNamespacedConfigMap: (namespace: string, payload: k8s.V1ConfigMap) => Promise<{ success: boolean, data?: k8s.V1ConfigMap, error?: string }>;
   deleteNamespacedConfigMap: (name: string, namespace: string) => Promise<void>;
+  // Custom Resource Definitions
+  listCustomResourceDefinition: () => Promise<k8s.V1CustomResourceDefinitionList>;
+  readCustomResourceDefinition: (name: string) => Promise<k8s.V1CustomResourceDefinition>;
+  // Events
+  listEventForAllNamespaces: () => Promise<k8s.CoreV1EventList>;
+  listNamespacedEvent: (namespace: string) => Promise<k8s.CoreV1EventList>;
+  readNamespacedEvent: (name: string, namespace: string) => Promise<k8s.CoreV1Event>;
 }
 
 try {
@@ -188,6 +195,13 @@ try {
     readNamespacedPodLog: (name: string, namespace: string, container?: string, options?: { follow?: boolean, previous?: boolean, sinceSeconds?: number, tailLines?: number, timestamps?: boolean, pretty?: string }) => ipcRenderer.invoke('readNamespacedPodLog', name, namespace, container, options),
     createNamespacedConfigMap: (namespace: string, payload: k8s.V1ConfigMap) => ipcRenderer.invoke('createNamespacedConfigMap', namespace, payload),
     deleteNamespacedConfigMap: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedConfigMap', name, namespace),
+    // Custom Resource Definitions
+    listCustomResourceDefinition: () => ipcRenderer.invoke('listCustomResourceDefinition'),
+    readCustomResourceDefinition: (name: string) => ipcRenderer.invoke('readCustomResourceDefinition', name),
+    // Events
+    listEventForAllNamespaces: () => ipcRenderer.invoke('listEventForAllNamespaces'),
+    listNamespacedEvent: (namespace: string) => ipcRenderer.invoke('listNamespacedEvent', namespace),
+    readNamespacedEvent: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedEvent', name, namespace),
   } as ElectronAPI);
 } catch (error) {
   console.error(error)

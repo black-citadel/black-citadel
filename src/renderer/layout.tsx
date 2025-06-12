@@ -42,6 +42,8 @@ import { ContextDropdown } from '@components/context-dropdown';
 import { Badge } from '@components/base/badge';
 import { Drawer } from '@components/base/drawer';
 import { NodeDetailsView, NodesListView } from '@views/cluster/nodes';
+import { CustomResourceDefinitionsListView, CustomResourceDefinitionsDetailsView } from '@views/cluster/custom-resource-definitions';
+import { EventsListView, EventsDetailsView } from '@views/cluster/events';
 
 export const Layout = () => {
   const { viewContext, setViewContext, drawerOpen, setDrawerOpen, helpTitle, helpContent } = useView()
@@ -65,11 +67,11 @@ export const Layout = () => {
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Nodes, action: ResourceAction.List })} current={viewContext.resource === Resources.Nodes}>
                 <SidebarLabel>{Resources.Nodes}</SidebarLabel>
               </SidebarItem>
-              <SidebarItem onClick={() => setViewContext({ resource: Resources.Events, action: ResourceAction.List })} current={viewContext.resource === Resources.Events} disabled>
-                <SidebarLabel>{Resources.Events} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Events, action: ResourceAction.List })} current={viewContext.resource === Resources.Events}>
+                <SidebarLabel>{Resources.Events}</SidebarLabel>
               </SidebarItem>
-              <SidebarItem onClick={() => setViewContext({ resource: Resources.CustomResourceDefinitions, action: ResourceAction.List })} current={viewContext.resource === Resources.CustomResourceDefinitions} disabled>
-                <SidebarLabel>{Resources.CustomResourceDefinitions} <Badge color='pro' className='ml-2'>Soon</Badge></SidebarLabel>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.CustomResourceDefinitions, action: ResourceAction.List })} current={viewContext.resource === Resources.CustomResourceDefinitions}>
+                <SidebarLabel>{Resources.CustomResourceDefinitions}</SidebarLabel>
               </SidebarItem>
             </SidebarSection>
             <SidebarSection>
@@ -222,6 +224,12 @@ export const Layout = () => {
 
         {viewContext.resource == Resources.Nodes && viewContext.action === ResourceAction.List && <NodesListView />}
         {viewContext.resource == Resources.Nodes && viewContext.action === ResourceAction.Details && <NodeDetailsView />}
+
+        {viewContext.resource === Resources.Events && viewContext.action === ResourceAction.List && <EventsListView />}
+        {viewContext.resource === Resources.Events && viewContext.action === ResourceAction.Details && <EventsDetailsView />}
+
+        {viewContext.resource === Resources.CustomResourceDefinitions && viewContext.action === ResourceAction.List && <CustomResourceDefinitionsListView />}
+        {viewContext.resource === Resources.CustomResourceDefinitions && viewContext.action === ResourceAction.Details && <CustomResourceDefinitionsDetailsView />}
 
         {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.List && <NamespacesListView />}
         {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.Details && <NamespacesDetailsView />}
