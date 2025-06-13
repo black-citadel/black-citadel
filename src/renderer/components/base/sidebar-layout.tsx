@@ -9,7 +9,7 @@ export function SidebarLayout({ sidebar, children }: React.PropsWithChildren<{ s
       </div>
 
       <main className="flex-1 overflow-y-auto pl-80">
-        <div className="min-h-full p-4 bg-white text-neutral-900 dark:bg-[#151517] dark:text-white rounded-md border border-neutral-800">
+        <div className="min-h-full p-4 bg-white text-neutral-900 dark:bg-[#101010] dark:text-white border border-neutral-800">
           <div className="w-full">
             {children}
           </div>
