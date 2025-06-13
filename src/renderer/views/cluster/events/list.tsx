@@ -16,10 +16,14 @@ export const EventsListView = () => {
       
       if (activeNamespace && activeNamespace !== 'all') {
         // Fetch events for specific namespace
+        console.log('Fetching events for namespace:', activeNamespace);
         data = await window.electronAPI.listNamespacedEvent(activeNamespace);
+        console.log('Received events for namespace:', activeNamespace, 'Count:', data.items?.length);
       } else {
         // Fetch events for all namespaces
+        console.log('Fetching events for all namespaces');
         data = await window.electronAPI.listEventForAllNamespaces();
+        console.log('Received all events. Count:', data.items?.length);
       }
       
       setEvents(data);

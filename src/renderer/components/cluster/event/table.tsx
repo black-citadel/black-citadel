@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const EventList = ({ events }: Props): JSX.Element => {
-  const headers = ['Name', 'Namespace', 'Type', 'Reason', 'Object', 'Message', 'Age'];
+  const headers = ['Type', 'Age', 'Object', 'Namespace', 'Event Details'];
 
   const processedRows = events.items
     .sort((a, b) => {
@@ -19,23 +19,40 @@ export const EventList = ({ events }: Props): JSX.Element => {
       return bTime - aTime;
     })
     .map(event => ({
-      Name: <EventResourceLink name={event.metadata?.name} namespace={event.metadata?.namespace} />,
-      Namespace: <NamespaceResourceLink name={event.metadata?.namespace} />,
       Type: (
-        <span className={event.type === 'Warning' ? 'text-red-600' : 'text-green-600'}>
+        <span className={`font-medium ${event.type === 'Warning' ? 'text-red-600' : 'text-green-600'}`}>
           {event.type || 'Unknown'}
         </span>
       ),
-      Reason: event.reason || 'N/A',
-      Object: event.involvedObject ? `${event.involvedObject.kind}/${event.involvedObject.name}` : 'N/A',
-      Message: (
-        <span className='truncate max-w-md' title={event.message}>
-          {event.message || 'No message'}
+      Age: (
+        <span className="text-sm whitespace-nowrap">
+          {event.lastTimestamp ? calculateAge(new Date(event.lastTimestamp)) : 'N/A'}
         </span>
       ),
-      Age: event.lastTimestamp
-        ? calculateAge(new Date(event.lastTimestamp))
-        : 'N/A'
+      Object: (
+        <div className="text-sm">
+          <div className="font-medium">
+            {event.involvedObject ? `${event.involvedObject.kind}/${event.involvedObject.name}` : 'N/A'}
+          </div>
+        </div>
+      ),
+      Namespace: <NamespaceResourceLink name={event.metadata?.namespace} />,
+      'Event Details': (
+        <div className="space-y-1">
+          <div className="flex items-baseline gap-2">
+            <span className="text-sm font-medium text-zinc-400">Reason:</span>
+            <span className="text-sm font-medium">{event.reason || 'N/A'}</span>
+          </div>
+          <div className="text-sm text-zinc-300 break-words">
+            {event.message || 'No message'}
+          </div>
+          {event.count && event.count > 1 && (
+            <div className="text-xs text-zinc-500">
+              Occurred {event.count} times
+            </div>
+          )}
+        </div>
+      )
     }));
 
   return (
