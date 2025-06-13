@@ -13,7 +13,7 @@ import { Heading, Subheading } from '@components/base/heading';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { HelpButton } from '@components/help-button';
 import helpObjects from '@help/index';
-import { LogViewer } from '@components/log-viewer';
+import { WorkloadLogs } from '@components/workload-logs';
 
 export const PodsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -133,10 +133,9 @@ export const PodsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Logs && pod && (
         <div className='m-2'>
-          <LogViewer
-            podName={pod.metadata.name}
+          <WorkloadLogs
+            pods={[pod]}
             namespace={pod.metadata.namespace}
-            containers={pod.spec.containers.map(c => c.name)}
           />
         </div>
       )}

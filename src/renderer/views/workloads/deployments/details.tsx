@@ -18,7 +18,7 @@ import { MetadataDetails } from '@components/metadata';
 import { DeploymentSpec } from '@components/workloads/deployment/spec';
 import { Badge } from '@components/base/badge';
 import { PodList } from '@components/workloads/pod/table';
-import { DeploymentLogViewer } from '@components/deployment-log-viewer';
+import { WorkloadLogs } from '@components/workload-logs';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -91,7 +91,7 @@ export const DeploymentsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Logs && deployment && pods && (
         <div className='m-2'>
-          <DeploymentLogViewer
+          <WorkloadLogs
             pods={pods.items || []}
             namespace={deployment.metadata.namespace}
           />

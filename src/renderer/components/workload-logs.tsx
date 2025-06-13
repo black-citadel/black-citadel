@@ -3,7 +3,7 @@ import { Button } from '@components/base/button';
 import { Select } from '@components/base/select';
 import k8s = require('@kubernetes/client-node');
 
-interface DeploymentLogViewerProps {
+interface WorkloadLogsProps {
   pods: k8s.V1Pod[];
   namespace: string;
   autoRefresh?: boolean;
@@ -17,27 +17,39 @@ interface LogEntry {
   message: string;
 }
 
-export const DeploymentLogViewer = ({ 
+export const WorkloadLogs = ({ 
   pods, 
   namespace, 
   autoRefresh = true,
   refreshInterval = 2000 
-}: DeploymentLogViewerProps): JSX.Element => {
+}: WorkloadLogsProps): JSX.Element => {
   const [combinedLogs, setCombinedLogs] = useState<LogEntry[]>([]);
   const [selectedPods, setSelectedPods] = useState<string[]>([]);
+  const [selectedContainer, setSelectedContainer] = useState<string>('');
   const [isFollowing, setIsFollowing] = useState<boolean>(autoRefresh);
   const [tailLines, setTailLines] = useState<number>(100);
   const [error, setError] = useState<string | null>(null);
   const [showPodNames, setShowPodNames] = useState<boolean>(true);
   const logContainerRef = useRef<HTMLDivElement>(null);
   const shouldScrollRef = useRef<boolean>(true);
+  
+  // Single pod mode when there's only one pod
+  const isSinglePod = pods.length === 1;
+  const allContainers = isSinglePod 
+    ? pods[0].spec.containers.map(c => c.name)
+    : [];
 
-  // Initialize selected pods
+  // Initialize selected pods and container
   useEffect(() => {
     if (pods.length > 0 && selectedPods.length === 0) {
       setSelectedPods(pods.map(pod => pod.metadata.name));
     }
-  }, [pods]);
+    
+    // In single pod mode, initialize selected container
+    if (isSinglePod && allContainers.length > 0 && !selectedContainer) {
+      setSelectedContainer(allContainers[0]);
+    }
+  }, [pods, isSinglePod, allContainers]);
 
   const parseLogLine = (line: string, podName: string, containerName: string): LogEntry | null => {
     // Kubernetes log format with timestamp: "2024-01-01T00:00:00.000000Z message"
@@ -71,44 +83,75 @@ export const DeploymentLogViewer = ({
       const allLogs: LogEntry[] = [];
       const errors: string[] = [];
 
-      // Fetch logs from all selected pods and their containers
-      await Promise.all(
-        pods
-          .filter(pod => selectedPods.includes(pod.metadata.name))
-          .map(async (pod) => {
-            const containers = pod.spec.containers || [];
-            
-            await Promise.all(
-              containers.map(async (container) => {
-                try {
-                  const result = await window.electronAPI.readNamespacedPodLog(
-                    pod.metadata.name,
-                    namespace,
-                    container.name,
-                    {
-                      tailLines: tailLines,
-                      timestamps: true
-                    }
-                  );
+      // Fetch logs based on mode
+      if (isSinglePod && selectedContainer) {
+        // Single pod mode - fetch only selected container
+        const pod = pods[0];
+        try {
+          const result = await window.electronAPI.readNamespacedPodLog(
+            pod.metadata.name,
+            namespace,
+            selectedContainer,
+            {
+              tailLines: tailLines,
+              timestamps: true
+            }
+          );
 
-                  if (result.success && result.data) {
-                    const lines = result.data.split('\n').filter(line => line.trim());
-                    const parsedLogs = lines
-                      .map(line => parseLogLine(line, pod.metadata.name, container.name))
-                      .filter(log => log !== null) as LogEntry[];
-                    
-                    allLogs.push(...parsedLogs);
-                  } else if (result.error) {
-                    errors.push(`${pod.metadata.name}/${container.name}: ${result.error}`);
+          if (result.success && result.data) {
+            const lines = result.data.split('\n').filter(line => line.trim());
+            const parsedLogs = lines
+              .map(line => parseLogLine(line, pod.metadata.name, selectedContainer))
+              .filter(log => log !== null) as LogEntry[];
+            
+            allLogs.push(...parsedLogs);
+          } else if (result.error) {
+            errors.push(`${pod.metadata.name}/${selectedContainer}: ${result.error}`);
+          }
+        } catch (e) {
+          console.error(`Failed to fetch logs for ${pod.metadata.name}/${selectedContainer}:`, e);
+          errors.push(`${pod.metadata.name}/${selectedContainer}: Failed to fetch logs`);
+        }
+      } else {
+        // Multi-pod mode - fetch from all selected pods and their containers
+        await Promise.all(
+          pods
+            .filter(pod => selectedPods.includes(pod.metadata.name))
+            .map(async (pod) => {
+              const containers = pod.spec.containers || [];
+              
+              await Promise.all(
+                containers.map(async (container) => {
+                  try {
+                    const result = await window.electronAPI.readNamespacedPodLog(
+                      pod.metadata.name,
+                      namespace,
+                      container.name,
+                      {
+                        tailLines: tailLines,
+                        timestamps: true
+                      }
+                    );
+
+                    if (result.success && result.data) {
+                      const lines = result.data.split('\n').filter(line => line.trim());
+                      const parsedLogs = lines
+                        .map(line => parseLogLine(line, pod.metadata.name, container.name))
+                        .filter(log => log !== null) as LogEntry[];
+                      
+                      allLogs.push(...parsedLogs);
+                    } else if (result.error) {
+                      errors.push(`${pod.metadata.name}/${container.name}: ${result.error}`);
+                    }
+                  } catch (e) {
+                    console.error(`Failed to fetch logs for ${pod.metadata.name}/${container.name}:`, e);
+                    errors.push(`${pod.metadata.name}/${container.name}: Failed to fetch logs`);
                   }
-                } catch (e) {
-                  console.error(`Failed to fetch logs for ${pod.metadata.name}/${container.name}:`, e);
-                  errors.push(`${pod.metadata.name}/${container.name}: Failed to fetch logs`);
-                }
-              })
-            );
-          })
-      );
+                })
+              );
+            })
+        );
+      }
 
       // Sort logs by timestamp, then by pod name for consistency
       allLogs.sort((a, b) => {
@@ -145,7 +188,7 @@ export const DeploymentLogViewer = ({
 
   // Initial fetch and polling
   useEffect(() => {
-    if (selectedPods.length > 0) {
+    if ((isSinglePod && selectedContainer) || (!isSinglePod && selectedPods.length > 0)) {
       fetchLogs();
       
       if (isFollowing) {
@@ -153,7 +196,7 @@ export const DeploymentLogViewer = ({
         return () => clearInterval(intervalId);
       }
     }
-  }, [selectedPods, isFollowing, tailLines]);
+  }, [selectedPods, selectedContainer, isFollowing, tailLines, isSinglePod]);
 
   // Auto-scroll to bottom when new logs arrive
   useEffect(() => {
@@ -193,7 +236,7 @@ export const DeploymentLogViewer = ({
 
   const handleDownloadLogs = () => {
     const logText = combinedLogs.map(log => {
-      const prefix = showPodNames ? `[${log.podName}/${log.containerName}] ` : '';
+      const prefix = (showPodNames && !isSinglePod) ? `[${log.podName}/${log.containerName}] ` : '';
       return `${log.timestamp} ${prefix}${log.message}`;
     }).join('\n');
     
@@ -201,7 +244,10 @@ export const DeploymentLogViewer = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `deployment-logs-${new Date().getTime()}.txt`;
+    const filename = isSinglePod 
+      ? `${pods[0].metadata.name}-${selectedContainer}-logs-${new Date().getTime()}.txt`
+      : `workload-logs-${new Date().getTime()}.txt`;
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -210,7 +256,7 @@ export const DeploymentLogViewer = ({
 
   const formatLogLine = (log: LogEntry): string => {
     const time = new Date(log.timestamp).toLocaleTimeString();
-    const prefix = showPodNames ? `[${log.podName}/${log.containerName}] ` : '';
+    const prefix = (showPodNames && !isSinglePod) ? `[${log.podName}/${log.containerName}] ` : '';
     return `${time} ${prefix}${log.message}`;
   };
 
@@ -235,34 +281,51 @@ export const DeploymentLogViewer = ({
     <div className="flex flex-col h-full">
       {/* Controls */}
       <div className="mb-4 p-2 bg-zinc-50 rounded-lg">
-        {/* Pod selection */}
-        <div className="mb-3">
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-medium text-zinc-700">Select Pods:</label>
-            <div className="flex gap-2">
-              <Button size="sm" onClick={handleSelectAll}>Select All</Button>
-              <Button size="sm" onClick={handleDeselectAll}>Deselect All</Button>
+        {/* Container selection for single pod mode */}
+        {isSinglePod && allContainers.length > 1 && (
+          <div className="mb-3 flex items-center gap-2">
+            <label className="text-sm font-medium text-zinc-700">Container:</label>
+            <Select
+              value={selectedContainer}
+              onChange={(e) => setSelectedContainer(e.target.value)}
+            >
+              {allContainers.map(container => (
+                <option key={container} value={container}>{container}</option>
+              ))}
+            </Select>
+          </div>
+        )}
+        
+        {/* Pod selection for multi-pod mode */}
+        {!isSinglePod && (
+          <div className="mb-3">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-zinc-700">Select Pods:</label>
+              <div className="flex gap-2">
+                <Button size="sm" onClick={handleSelectAll}>Select All</Button>
+                <Button size="sm" onClick={handleDeselectAll}>Deselect All</Button>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {pods.map(pod => (
+                <label key={pod.metadata.name} className="flex items-center gap-1 px-2 py-1 bg-white rounded border cursor-pointer hover:bg-zinc-50">
+                  <input
+                    type="checkbox"
+                    checked={selectedPods.includes(pod.metadata.name)}
+                    onChange={(e) => handlePodSelectionChange(pod.metadata.name, e.target.checked)}
+                    className="rounded"
+                  />
+                  <span 
+                    className="text-sm"
+                    style={{ color: getPodColor(pod.metadata.name) }}
+                  >
+                    {pod.metadata.name}
+                  </span>
+                </label>
+              ))}
             </div>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {pods.map(pod => (
-              <label key={pod.metadata.name} className="flex items-center gap-1 px-2 py-1 bg-white rounded border cursor-pointer hover:bg-zinc-50">
-                <input
-                  type="checkbox"
-                  checked={selectedPods.includes(pod.metadata.name)}
-                  onChange={(e) => handlePodSelectionChange(pod.metadata.name, e.target.checked)}
-                  className="rounded"
-                />
-                <span 
-                  className="text-sm"
-                  style={{ color: getPodColor(pod.metadata.name) }}
-                >
-                  {pod.metadata.name}
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
+        )}
 
         {/* Other controls */}
         <div className="flex items-center gap-4">
@@ -279,15 +342,17 @@ export const DeploymentLogViewer = ({
             </Select>
           </div>
 
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={showPodNames}
-              onChange={(e) => setShowPodNames(e.target.checked)}
-              className="rounded"
-            />
-            <span className="text-sm font-medium text-zinc-700">Show pod names</span>
-          </label>
+          {!isSinglePod && (
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={showPodNames}
+                onChange={(e) => setShowPodNames(e.target.checked)}
+                className="rounded"
+              />
+              <span className="text-sm font-medium text-zinc-700">Show pod names</span>
+            </label>
+          )}
 
           <Button
             onClick={() => setIsFollowing(!isFollowing)}
@@ -333,7 +398,7 @@ export const DeploymentLogViewer = ({
             <div 
               key={index}
               style={{ 
-                color: showPodNames ? getPodColor(log.podName) : undefined 
+                color: (showPodNames && !isSinglePod) ? getPodColor(log.podName) : undefined 
               }}
             >
               {formatLogLine(log)}
