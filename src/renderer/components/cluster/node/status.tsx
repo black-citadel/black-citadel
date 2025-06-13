@@ -3,6 +3,8 @@ import k8s from '@kubernetes/client-node';
 import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@components/base/description-list';
 import { Badge } from '@components/base/badge';
 import { calculateAge } from '@utils/helpers';
+import { ResourceUsageBar } from '@components/base/resource-usage-bar';
+import { parseCPU, parseBytes, formatCPU, formatBytes } from '@utils/resource-parser';
 
 interface Props {
     node?: k8s.V1Node;
@@ -78,13 +80,13 @@ export const NodeStatus = ({ node, nodeMetrics }: Props): JSX.Element => {
                     <h3 className="text-sm font-medium mb-3">Capacity</h3>
                     <DescriptionList>
                         <DescriptionTerm>CPU</DescriptionTerm>
-                        <DescriptionDetails>{capacity.cpu || 'N/A'}</DescriptionDetails>
+                        <DescriptionDetails>{capacity.cpu ? formatCPU(parseCPU(capacity.cpu)) : 'N/A'}</DescriptionDetails>
                         <DescriptionTerm>Memory</DescriptionTerm>
-                        <DescriptionDetails>{capacity.memory || 'N/A'}</DescriptionDetails>
+                        <DescriptionDetails>{capacity.memory ? formatBytes(parseBytes(capacity.memory)) : 'N/A'}</DescriptionDetails>
                         <DescriptionTerm>Pods</DescriptionTerm>
                         <DescriptionDetails>{capacity.pods || 'N/A'}</DescriptionDetails>
                         <DescriptionTerm>Ephemeral Storage</DescriptionTerm>
-                        <DescriptionDetails>{capacity['ephemeral-storage'] || 'N/A'}</DescriptionDetails>
+                        <DescriptionDetails>{capacity['ephemeral-storage'] ? formatBytes(parseBytes(capacity['ephemeral-storage'])) : 'N/A'}</DescriptionDetails>
                     </DescriptionList>
                 </div>
 
@@ -92,13 +94,13 @@ export const NodeStatus = ({ node, nodeMetrics }: Props): JSX.Element => {
                     <h3 className="text-sm font-medium mb-3">Allocatable</h3>
                     <DescriptionList>
                         <DescriptionTerm>CPU</DescriptionTerm>
-                        <DescriptionDetails>{allocatable.cpu || 'N/A'}</DescriptionDetails>
+                        <DescriptionDetails>{allocatable.cpu ? formatCPU(parseCPU(allocatable.cpu)) : 'N/A'}</DescriptionDetails>
                         <DescriptionTerm>Memory</DescriptionTerm>
-                        <DescriptionDetails>{allocatable.memory || 'N/A'}</DescriptionDetails>
+                        <DescriptionDetails>{allocatable.memory ? formatBytes(parseBytes(allocatable.memory)) : 'N/A'}</DescriptionDetails>
                         <DescriptionTerm>Pods</DescriptionTerm>
                         <DescriptionDetails>{allocatable.pods || 'N/A'}</DescriptionDetails>
                         <DescriptionTerm>Ephemeral Storage</DescriptionTerm>
-                        <DescriptionDetails>{allocatable['ephemeral-storage'] || 'N/A'}</DescriptionDetails>
+                        <DescriptionDetails>{allocatable['ephemeral-storage'] ? formatBytes(parseBytes(allocatable['ephemeral-storage'])) : 'N/A'}</DescriptionDetails>
                     </DescriptionList>
                 </div>
             </div>
@@ -107,30 +109,43 @@ export const NodeStatus = ({ node, nodeMetrics }: Props): JSX.Element => {
             {nodeMetrics && (
                 <div className="border p-4 rounded-md border-neutral-800">
                     <h3 className="text-sm font-medium mb-3">Resource Usage</h3>
-                    <DescriptionList>
-                        <DescriptionTerm>CPU Usage</DescriptionTerm>
-                        <DescriptionDetails>
-                            <div className="space-y-1">
-                                <div className="text-sm">
-                                    Limits: {nodeMetrics.CPU.LimitTotal} / Requests: {nodeMetrics.CPU.RequestTotal} / Capacity: {nodeMetrics.CPU.Capacity}
-                                </div>
-                                <div className="text-sm text-zinc-500">
-                                    {((Number(nodeMetrics.CPU.RequestTotal) / Number(nodeMetrics.CPU.Capacity)) * 100).toFixed(2)}% of capacity requested
-                                </div>
+                    <div className="space-y-4">
+                        {/* CPU Usage */}
+                        <div>
+                            <div className="flex justify-between items-baseline mb-2">
+                                <span className="text-sm font-medium">CPU</span>
+                                <span className="text-xs text-zinc-500">
+                                    Actual: {formatCPU(parseCPU(nodeMetrics.CPU.CurrentUsage || 0))} / 
+                                    Requested: {formatCPU(parseCPU(nodeMetrics.CPU.RequestTotal))} / 
+                                    Capacity: {formatCPU(parseCPU(nodeMetrics.CPU.Capacity))}
+                                </span>
                             </div>
-                        </DescriptionDetails>
-                        <DescriptionTerm>Memory Usage</DescriptionTerm>
-                        <DescriptionDetails>
-                            <div className="space-y-1">
-                                <div className="text-sm">
-                                    Requests: {nodeMetrics.Memory.RequestTotal} / Capacity: {nodeMetrics.Memory.Capacity}
-                                </div>
-                                <div className="text-sm text-zinc-500">
-                                    {((Number(nodeMetrics.Memory.RequestTotal) / Number(nodeMetrics.Memory.Capacity)) * 100).toFixed(2)}% of capacity requested
-                                </div>
+                            <ResourceUsageBar
+                                actual={parseCPU(nodeMetrics.CPU.CurrentUsage || 0)}
+                                requested={parseCPU(nodeMetrics.CPU.RequestTotal)}
+                                capacity={parseCPU(nodeMetrics.CPU.Capacity)}
+                                height={24}
+                            />
+                        </div>
+
+                        {/* Memory Usage */}
+                        <div>
+                            <div className="flex justify-between items-baseline mb-2">
+                                <span className="text-sm font-medium">Memory</span>
+                                <span className="text-xs text-zinc-500">
+                                    Actual: {formatBytes(parseBytes(nodeMetrics.Memory.CurrentUsage || 0))} / 
+                                    Requested: {formatBytes(parseBytes(nodeMetrics.Memory.RequestTotal))} / 
+                                    Capacity: {formatBytes(parseBytes(nodeMetrics.Memory.Capacity))}
+                                </span>
                             </div>
-                        </DescriptionDetails>
-                    </DescriptionList>
+                            <ResourceUsageBar
+                                actual={parseBytes(nodeMetrics.Memory.CurrentUsage || 0)}
+                                requested={parseBytes(nodeMetrics.Memory.RequestTotal)}
+                                capacity={parseBytes(nodeMetrics.Memory.Capacity)}
+                                height={24}
+                            />
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -139,7 +154,7 @@ export const NodeStatus = ({ node, nodeMetrics }: Props): JSX.Element => {
                 <h3 className="text-sm font-medium mb-3">Conditions</h3>
                 <div className="space-y-2">
                     {conditions.map((condition, index) => (
-                        <div key={index} className="flex items-center justify-between py-2 border-b last:border-0">
+                        <div key={index} className="flex items-center justify-between py-2 border-neutral-800 border-b last:border-0">
                             <div className="flex items-center gap-2">
                                 <span className="text-sm font-medium">{condition.type}</span>
                                 <Badge variant={condition.status === 'True' ? 'success' : 'secondary'}>

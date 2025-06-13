@@ -14,6 +14,8 @@ import { Description, Field, Label } from '@components/base/fieldset';
 import { HelpButton } from '@components/help-button';
 import helpObjects from '@help/index';
 import { WorkloadLogs } from '@components/workload-logs';
+import { ContainerResources } from '@components/base/container-resources';
+import { Badge } from '@components/base/badge';
 
 export const PodsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -126,6 +128,110 @@ export const PodsDetailsView = (): JSX.Element => {
             </DetailsItem>
           </div>
 
+          {/* Containers Section */}
+          <Subheading className='mt-8 mb-4'>Containers</Subheading>
+          <div className="space-y-4">
+            {pod.spec.containers.map((container, index) => {
+              const containerStatus = pod.status?.containerStatuses?.find(
+                status => status.name === container.name
+              );
+              
+              return (
+                <div key={index} className="border border-neutral-800 rounded-md p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-sm font-medium">{container.name}</h4>
+                    {containerStatus && (
+                      <Badge variant={containerStatus.ready ? 'success' : 'error'}>
+                        {containerStatus.ready ? 'Ready' : 'Not Ready'}
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2 mb-4">
+                    <DetailsItem label="Image">
+                      <span className="text-sm">{container.image}</span>
+                    </DetailsItem>
+                    
+                    {container.ports && container.ports.length > 0 && (
+                      <DetailsItem label="Ports">
+                        <span className="text-sm">
+                          {container.ports.map(port => `${port.containerPort}/${port.protocol || 'TCP'}`).join(', ')}
+                        </span>
+                      </DetailsItem>
+                    )}
+                    
+                    {containerStatus && (
+                      <>
+                        <DetailsItem label="Container ID">
+                          <span className="text-sm text-zinc-500">{containerStatus.containerID || 'N/A'}</span>
+                        </DetailsItem>
+                        <DetailsItem label="Restart Count">
+                          <span className="text-sm">{containerStatus.restartCount}</span>
+                        </DetailsItem>
+                      </>
+                    )}
+                  </div>
+                  
+                  {/* Resource Usage */}
+                  <div className="mt-4">
+                    <h5 className="text-sm font-medium mb-2">Resources</h5>
+                    <ContainerResources 
+                      container={container}
+                      containerStatus={containerStatus}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Init Containers Section (if any) */}
+          {pod.spec.initContainers && pod.spec.initContainers.length > 0 && (
+            <>
+              <Subheading className='mt-8 mb-4'>Init Containers</Subheading>
+              <div className="space-y-4">
+                {pod.spec.initContainers.map((container, index) => {
+                  const containerStatus = pod.status?.initContainerStatuses?.find(
+                    status => status.name === container.name
+                  );
+                  
+                  return (
+                    <div key={index} className="border border-neutral-800 rounded-md p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-sm font-medium">{container.name}</h4>
+                        {containerStatus && (
+                          <Badge variant={containerStatus.ready ? 'success' : 'secondary'}>
+                            {containerStatus.ready ? 'Complete' : 'Pending'}
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      <div className="space-y-2 mb-4">
+                        <DetailsItem label="Image">
+                          <span className="text-sm">{container.image}</span>
+                        </DetailsItem>
+                        
+                        {containerStatus && (
+                          <DetailsItem label="Restart Count">
+                            <span className="text-sm">{containerStatus.restartCount}</span>
+                          </DetailsItem>
+                        )}
+                      </div>
+                      
+                      {/* Resource Usage */}
+                      <div className="mt-4">
+                        <h5 className="text-sm font-medium mb-2">Resources</h5>
+                        <ContainerResources 
+                          container={container}
+                          containerStatus={containerStatus}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
 
         </div>
       )}
