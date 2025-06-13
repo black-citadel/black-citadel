@@ -7,7 +7,12 @@ import { DetailsItem } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
-import { Subheading } from '@components/base/heading';
+import { Heading, Subheading } from '@components/base/heading';
+import { NodeBadge } from '@components/cluster/node/badge';
+import { MetadataDetails } from '@components/metadata';
+import { EventList } from '@components/cluster/event/table';
+import { NodeSpec } from '@components/cluster/node/spec';
+import { NodeStatus } from '@components/cluster/node/status';
 
 
 export const NodeDetailsView = (): JSX.Element => {
@@ -15,6 +20,7 @@ export const NodeDetailsView = (): JSX.Element => {
     const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
     const [node, setNode] = useState<k8s.V1Node>();
     const [nodeMetrics, setNodeMetrics] = useState<k8s.NodeStatus[]>();
+    const [events, setEvents] = useState<k8s.V1EventList>();
     const [error, setError] = useState<string | null>(null);
   
     const fetchData = async () => {
@@ -25,6 +31,16 @@ export const NodeDetailsView = (): JSX.Element => {
         // Fetch node metrics
         const metrics = await window.electronAPI.topNodes();
         setNodeMetrics(metrics);
+        
+        // Fetch events related to this node
+        const allEvents = await window.electronAPI.listEventForAllNamespaces();
+        const nodeEvents = {
+          items: allEvents.items.filter(event => 
+            event.involvedObject?.kind === 'Node' && 
+            event.involvedObject?.name === viewContext.name
+          )
+        };
+        setEvents(nodeEvents);
         
         setError(null);
       } catch (e) {
@@ -46,53 +62,35 @@ export const NodeDetailsView = (): JSX.Element => {
   
     return (
       <>
-        <DetailsHeader error={error}>{viewContext.name}</DetailsHeader>
-        <Navbar>
-          <NavbarSection>
-            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab === ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
-            <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab === ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
-          </NavbarSection>
-        </Navbar>
+        <DetailsHeader error={error}>
+          <Heading>
+            <NodeBadge />{viewContext.name}
+          </Heading>
+
+          <Navbar>
+            <NavbarSection>
+              <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab === ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+              <NavbarItem onClick={() => setActiveTab(ResourceTabs.Events)} current={activeTab === ResourceTabs.Events}>{ResourceTabs.Events}</NavbarItem>
+              <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab === ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
+            </NavbarSection>
+          </Navbar>
+        </DetailsHeader>
   
         {activeTab === ResourceTabs.Details && node && (
           <div className='m-2'>
-            <Subheading className='mt-8 mb-4'>Node Info</Subheading>
-            <DetailsItem label="Kubernetes Version">
-              {node.status?.nodeInfo?.kubeletVersion || 'Not available'}
-            </DetailsItem>
-            <DetailsItem label="OS">
-              {node.status?.nodeInfo?.osImage || 'Not available'}
-            </DetailsItem>
-            <DetailsItem label="Architecture">
-              {node.status?.nodeInfo?.architecture || 'Not available'}
-            </DetailsItem>
+            <MetadataDetails metadata={node.metadata} />
 
-            <Subheading className='mt-8 mb-4'>Capacity</Subheading>
-            <DetailsItem label="CPU">
-              {node.status?.capacity?.cpu || 'Not available'}
-            </DetailsItem>
-            <DetailsItem label="Memory">
-              {node.status?.capacity?.memory || 'Not available'}
-            </DetailsItem>
+            <Subheading className='mt-8 mb-4'>Spec</Subheading>
+            <NodeSpec node={node} />
 
-            {currentNodeMetrics && (
-              <>
-                <Subheading className='mt-8 mb-4'>Resource Usage</Subheading>
-                <DetailsItem label="CPU Usage">
-                  {`${currentNodeMetrics.CPU.LimitTotal} / ${currentNodeMetrics.CPU.RequestTotal} / ${currentNodeMetrics.CPU.Capacity} (${((Number(currentNodeMetrics.CPU.RequestTotal) / Number(currentNodeMetrics.CPU.Capacity)) * 100).toFixed(2)}%)`}
-                </DetailsItem>
-                <DetailsItem label="Memory Usage">
-                  {`${currentNodeMetrics.Memory.RequestTotal} / ${currentNodeMetrics.Memory.Capacity} (${((Number(currentNodeMetrics.Memory.RequestTotal) / Number(currentNodeMetrics.Memory.Capacity)) * 100).toFixed(2)}%)`}
-                </DetailsItem>
-              </>
-            )}
+            <Subheading className='mt-8 mb-4'>Status</Subheading>
+            <NodeStatus node={node} nodeMetrics={currentNodeMetrics} />
+          </div>
+        )}
 
-            <Subheading className='mt-8 mb-4'>Conditions</Subheading>
-            {node.status?.conditions?.map((condition, index) => (
-              <DetailsItem key={index} label={condition.type || ''}>
-                {condition.status || 'Unknown'}
-              </DetailsItem>
-            ))}
+        {activeTab === ResourceTabs.Events && events && (
+          <div className='m-2'>
+            <EventList events={events} />
           </div>
         )}
   
