@@ -14,6 +14,7 @@ import { DaemonSetStatus } from '@components/workloads/daemonset/status';
 import { DaemonSetSpec } from '@components/workloads/daemonset/spec';
 import { PodList } from '@components/workloads/pod/table';
 import { Heading, Subheading } from '@components/base/heading';
+import { WorkloadLogs } from '@components/workload-logs';
 
 export const DaemonSetsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
@@ -69,6 +70,7 @@ export const DaemonSetsDetailsView = (): JSX.Element => {
         <Navbar>
           <NavbarSection>
             <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Logs)} current={activeTab == ResourceTabs.Logs}>{ResourceTabs.Logs}</NavbarItem>
             <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
           </NavbarSection>
         </Navbar>
@@ -91,6 +93,15 @@ export const DaemonSetsDetailsView = (): JSX.Element => {
           {pods && <PodList pods={pods} />}
 
           <DaemonSetStatus status={daemonSet.status} />
+        </div>
+      )}
+
+      {activeTab === ResourceTabs.Logs && daemonSet && pods && (
+        <div className='m-2'>
+          <WorkloadLogs
+            pods={pods.items || []}
+            namespace={daemonSet.metadata.namespace}
+          />
         </div>
       )}
 
