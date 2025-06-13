@@ -6,10 +6,11 @@ import { Alert, AlertTitle, AlertDescription, AlertActions } from "./base/alert"
 interface Props {
   children: React.ReactNode,
   error: string | null,
-  onDelete?: () => void
+  onDelete?: () => void,
+  actions?: React.ReactNode
 }
 
-export const DetailsHeader = ({ children, error, onDelete }: Props): JSX.Element => {
+export const DetailsHeader = ({ children, error, onDelete, actions }: Props): JSX.Element => {
   let [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -23,6 +24,7 @@ export const DetailsHeader = ({ children, error, onDelete }: Props): JSX.Element
       <div className="flex w-full flex-wrap items-center justify-between gap-4 border-b border-neutral-800 mb-4">
         {children}
         <div className="flex gap-4">
+          {actions}
           {onDelete && <Button onClick={() => setIsOpen(true)} className="uppercase" outline>Delete</Button>}
         </div>
       </div>

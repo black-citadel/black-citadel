@@ -90,6 +90,58 @@ ipcMain.handle('addContext', (event, context) => (kc.addContext(context)));
 ipcMain.handle('listNode', async () => (await k8sCoreV1Api.listNode()).body);
 ipcMain.handle('readNode', async (event, name) => (await k8sCoreV1Api.readNode(name)).body);
 ipcMain.handle('topNodes', async () => (await k8s.topNodes(k8sCoreV1Api)));
+ipcMain.handle('cordonNode', async (event, name) => {
+  try {
+    const patch = {
+      spec: {
+        unschedulable: true
+      }
+    };
+    const response = await k8sCoreV1Api.patchNode(
+      name, 
+      patch, 
+      undefined, 
+      undefined, 
+      undefined, 
+      undefined, 
+      undefined,
+      { headers: { 'Content-Type': k8s.PatchUtils.PATCH_FORMAT_STRATEGIC_MERGE_PATCH } }
+    );
+    return { success: true, data: response.body };
+  } catch (error) {
+    let errorMessage = 'An error occurred while cordoning the node';
+    if (error.response && error.response.body && error.response.body.message) {
+      errorMessage = error.response.body.message;
+    }
+    return { success: false, error: errorMessage };
+  }
+});
+ipcMain.handle('uncordonNode', async (event, name) => {
+  try {
+    const patch = {
+      spec: {
+        unschedulable: false
+      }
+    };
+    const response = await k8sCoreV1Api.patchNode(
+      name, 
+      patch, 
+      undefined, 
+      undefined, 
+      undefined, 
+      undefined, 
+      undefined,
+      { headers: { 'Content-Type': k8s.PatchUtils.PATCH_FORMAT_STRATEGIC_MERGE_PATCH } }
+    );
+    return { success: true, data: response.body };
+  } catch (error) {
+    let errorMessage = 'An error occurred while uncordoning the node';
+    if (error.response && error.response.body && error.response.body.message) {
+      errorMessage = error.response.body.message;
+    }
+    return { success: false, error: errorMessage };
+  }
+});
 
 
 // Namespaces

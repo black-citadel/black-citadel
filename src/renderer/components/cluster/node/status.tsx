@@ -80,7 +80,13 @@ export const NodeStatus = ({ node, nodeMetrics }: Props): JSX.Element => {
                     <h3 className="text-sm font-medium mb-3">Capacity</h3>
                     <DescriptionList>
                         <DescriptionTerm>CPU</DescriptionTerm>
-                        <DescriptionDetails>{capacity.cpu ? formatCPU(parseCPU(capacity.cpu)) : 'N/A'}</DescriptionDetails>
+                        <DescriptionDetails>
+                            {capacity.cpu ? (
+                                <>
+                                    {capacity.cpu} cores ({formatCPU(parseCPU(capacity.cpu))})
+                                </>
+                            ) : 'N/A'}
+                        </DescriptionDetails>
                         <DescriptionTerm>Memory</DescriptionTerm>
                         <DescriptionDetails>{capacity.memory ? formatBytes(parseBytes(capacity.memory)) : 'N/A'}</DescriptionDetails>
                         <DescriptionTerm>Pods</DescriptionTerm>
@@ -94,7 +100,13 @@ export const NodeStatus = ({ node, nodeMetrics }: Props): JSX.Element => {
                     <h3 className="text-sm font-medium mb-3">Allocatable</h3>
                     <DescriptionList>
                         <DescriptionTerm>CPU</DescriptionTerm>
-                        <DescriptionDetails>{allocatable.cpu ? formatCPU(parseCPU(allocatable.cpu)) : 'N/A'}</DescriptionDetails>
+                        <DescriptionDetails>
+                            {allocatable.cpu ? (
+                                <>
+                                    {allocatable.cpu} cores ({formatCPU(parseCPU(allocatable.cpu))})
+                                </>
+                            ) : 'N/A'}
+                        </DescriptionDetails>
                         <DescriptionTerm>Memory</DescriptionTerm>
                         <DescriptionDetails>{allocatable.memory ? formatBytes(parseBytes(allocatable.memory)) : 'N/A'}</DescriptionDetails>
                         <DescriptionTerm>Pods</DescriptionTerm>

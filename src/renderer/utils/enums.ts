@@ -70,5 +70,6 @@ export enum ResourceTabs {
     Logs = 'Logs',
     Events = 'Events',
     YAML = 'YAML',
-    Pods = 'Pods'
+    Pods = 'Pods',
+    Images = 'Images'
 }

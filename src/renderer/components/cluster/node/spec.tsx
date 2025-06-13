@@ -9,7 +9,6 @@ interface Props {
 export const NodeSpec = ({ node }: Props): JSX.Element => {
     if (!node?.spec) return <></>;
 
-    const taints = node.spec.taints || [];
     const unschedulable = node.spec.unschedulable || false;
 
     return (
@@ -18,7 +17,7 @@ export const NodeSpec = ({ node }: Props): JSX.Element => {
                 <DescriptionTerm>Schedulable</DescriptionTerm>
                 <DescriptionDetails>
                     <Badge variant={unschedulable ? 'error' : 'success'}>
-                        {unschedulable ? 'No' : 'Yes'}
+                        {unschedulable ? 'No (Cordoned)' : 'Yes'}
                     </Badge>
                 </DescriptionDetails>
 
@@ -29,32 +28,17 @@ export const NodeSpec = ({ node }: Props): JSX.Element => {
                     </>
                 )}
 
-                {node.spec.providerID && (
+                {node.spec.podCIDRs && node.spec.podCIDRs.length > 0 && (
                     <>
-                        <DescriptionTerm>Provider ID</DescriptionTerm>
-                        <DescriptionDetails>{node.spec.providerID}</DescriptionDetails>
+                        <DescriptionTerm>Pod CIDRs</DescriptionTerm>
+                        <DescriptionDetails>{node.spec.podCIDRs.join(', ')}</DescriptionDetails>
                     </>
                 )}
 
-                {taints.length > 0 && (
+                {node.spec.providerID && (
                     <>
-                        <DescriptionTerm>Taints</DescriptionTerm>
-                        <DescriptionDetails>
-                            <div className="space-y-1">
-                                {taints.map((taint, index) => (
-                                    <div key={index} className="flex items-center gap-2">
-                                        <Badge variant="secondary">
-                                            {taint.key}{taint.value ? `=${taint.value}` : ''}:{taint.effect}
-                                        </Badge>
-                                        {taint.timeAdded && (
-                                            <span className="text-sm text-zinc-500">
-                                                Added: {new Date(taint.timeAdded).toLocaleString()}
-                                            </span>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </DescriptionDetails>
+                        <DescriptionTerm>Provider ID</DescriptionTerm>
+                        <DescriptionDetails className="font-mono text-xs">{node.spec.providerID}</DescriptionDetails>
                     </>
                 )}
             </DescriptionList>

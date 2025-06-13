@@ -12,6 +12,7 @@ interface ListHeaderProps {
 
 const nonNamespacedResources: Resources[] = [
   Resources.Contexts,
+  Resources.Nodes,
   Resources.IngressClasses,
   Resources.PersistentVolumes,
   Resources.VolumeAttachments,
@@ -24,11 +25,21 @@ const nonNamespacedResources: Resources[] = [
   Resources.PriorityClasses,
   Resources.RuntimeClasses,
   Resources.MutatingWebhookConfigurations,
-  Resources.ValidatingWebhookConfigurations
+  Resources.ValidatingWebhookConfigurations,
+  Resources.CustomResourceDefinitions
+];
+
+// Resources that shouldn't have a Create button
+const readOnlyResources: Resources[] = [
+  Resources.Events,
+  Resources.Nodes,
+  Resources.CSINodes,
+  Resources.VolumeAttachments
 ];
 
 export const ListHeader = ({ resource, error }: ListHeaderProps): JSX.Element => {
   const isNamespaced = !nonNamespacedResources.includes(resource);
+  const isReadOnly = readOnlyResources.includes(resource);
   const { setViewContext } = useView();
 
   return (
@@ -42,7 +53,9 @@ export const ListHeader = ({ resource, error }: ListHeaderProps): JSX.Element =>
       <div className="flex w-full flex-wrap items-end justify-between gap-4">
         <Heading>{resource}</Heading>
         <div className="flex gap-4">
-          <Button onClick={() => setViewContext({ resource, action: ResourceAction.Create })} className="uppercase" outline>Create</Button>
+          {!isReadOnly && (
+            <Button onClick={() => setViewContext({ resource, action: ResourceAction.Create })} className="uppercase" outline>Create</Button>
+          )}
           {isNamespaced && <NamespaceDropdown />}
         </div>
       </div>

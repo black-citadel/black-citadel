@@ -14,6 +14,8 @@ export interface ElectronAPI {
   listNode: () => Promise<k8s.V1NodeList>;
   readNode: (name: string) => Promise<k8s.V1Node>;
   topNodes: () => Promise<k8s.NodeStatus[]>;
+  cordonNode: (name: string) => Promise<{ success: boolean, data?: k8s.V1Node, error?: string }>;
+  uncordonNode: (name: string) => Promise<{ success: boolean, data?: k8s.V1Node, error?: string }>;
   // Namespaces
   readNamespace: (name: string) => Promise<k8s.V1Namespace>;
   deleteNamespace: (name: string) => Promise<void>;
@@ -117,6 +119,8 @@ try {
     listNode: () => ipcRenderer.invoke('listNode'),
     readNode: (name: string) => ipcRenderer.invoke('readNode', name),
     topNodes: () => ipcRenderer.invoke('topNodes'),
+    cordonNode: (name: string) => ipcRenderer.invoke('cordonNode', name),
+    uncordonNode: (name: string) => ipcRenderer.invoke('uncordonNode', name),
     listDeploymentForAllNamespaces: () => ipcRenderer.invoke('listDeploymentForAllNamespaces'),
     listReplicaSetForAllNamespaces: () => ipcRenderer.invoke('listReplicaSetForAllNamespaces'),
     listStatefulSetForAllNamespaces: () => ipcRenderer.invoke('listStatefulSetForAllNamespaces'),

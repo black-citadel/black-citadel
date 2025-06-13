@@ -13,6 +13,11 @@ import { MetadataDetails } from '@components/metadata';
 import { EventList } from '@components/cluster/event/table';
 import { NodeSpec } from '@components/cluster/node/spec';
 import { NodeStatus } from '@components/cluster/node/status';
+import { NodeImages } from '@components/cluster/node/images';
+import { Button } from '@components/base/button';
+import { Alert, AlertTitle, AlertDescription, AlertActions } from '@components/base/alert';
+import { NodeLabels } from '@components/cluster/node/labels';
+import { NodeTaints } from '@components/cluster/node/taints';
 
 
 export const NodeDetailsView = (): JSX.Element => {
@@ -22,6 +27,9 @@ export const NodeDetailsView = (): JSX.Element => {
     const [nodeMetrics, setNodeMetrics] = useState<k8s.NodeStatus[]>();
     const [events, setEvents] = useState<k8s.V1EventList>();
     const [error, setError] = useState<string | null>(null);
+    const [cordonAlertOpen, setCordonAlertOpen] = useState(false);
+    const [uncordonAlertOpen, setUncordonAlertOpen] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
   
     const fetchData = async () => {
       try {
@@ -59,10 +67,67 @@ export const NodeDetailsView = (): JSX.Element => {
 
     // Find the metrics for the current node
     const currentNodeMetrics = nodeMetrics?.find(metric => metric.Node.metadata?.name === viewContext.name);
+
+    const handleCordon = async () => {
+      setIsProcessing(true);
+      setCordonAlertOpen(false);
+      
+      const result = await window.electronAPI.cordonNode(viewContext.name);
+      
+      if (result.success) {
+        await fetchData(); // Refresh node data
+      } else {
+        setError(result.error || 'Failed to cordon node');
+      }
+      
+      setIsProcessing(false);
+    };
+
+    const handleUncordon = async () => {
+      setIsProcessing(true);
+      setUncordonAlertOpen(false);
+      
+      const result = await window.electronAPI.uncordonNode(viewContext.name);
+      
+      if (result.success) {
+        await fetchData(); // Refresh node data
+      } else {
+        setError(result.error || 'Failed to uncordon node');
+      }
+      
+      setIsProcessing(false);
+    };
+
+    const isUnschedulable = node?.spec?.unschedulable === true;
   
     return (
       <>
-        <DetailsHeader error={error}>
+        <DetailsHeader 
+          error={error}
+          actions={
+            <>
+              {isUnschedulable ? (
+                <Button 
+                  onClick={() => setUncordonAlertOpen(true)} 
+                  className="uppercase" 
+                  outline
+                  disabled={isProcessing}
+                >
+                  Uncordon
+                </Button>
+              ) : (
+                <Button 
+                  onClick={() => setCordonAlertOpen(true)} 
+                  className="uppercase" 
+                  outline
+                  disabled={isProcessing}
+                >
+                  Cordon
+                </Button>
+              )}
+            </>
+          }
+        >
           <Heading>
             <NodeBadge />{viewContext.name}
           </Heading>
@@ -70,6 +135,7 @@ export const NodeDetailsView = (): JSX.Element => {
           <Navbar>
             <NavbarSection>
               <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab === ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+              <NavbarItem onClick={() => setActiveTab(ResourceTabs.Images)} current={activeTab === ResourceTabs.Images}>{ResourceTabs.Images}</NavbarItem>
               <NavbarItem onClick={() => setActiveTab(ResourceTabs.Events)} current={activeTab === ResourceTabs.Events}>{ResourceTabs.Events}</NavbarItem>
               <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab === ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
             </NavbarSection>
@@ -78,6 +144,16 @@ export const NodeDetailsView = (): JSX.Element => {
   
         {activeTab === ResourceTabs.Details && node && (
           <div className='m-2'>
+            <Subheading className='mb-4'>Labels</Subheading>
+            <div className="border p-4 rounded-md border-neutral-800 mb-8">
+              <NodeLabels labels={node.metadata?.labels} />
+            </div>
+
+            <Subheading className='mb-4'>Taints</Subheading>
+            <div className="mb-8">
+              <NodeTaints taints={node.spec?.taints} />
+            </div>
+
             <MetadataDetails metadata={node.metadata} />
 
             <Subheading className='mt-8 mb-4'>Spec</Subheading>
@@ -88,6 +164,12 @@ export const NodeDetailsView = (): JSX.Element => {
           </div>
         )}
 
+        {activeTab === ResourceTabs.Images && node && (
+          <div className='m-2'>
+            <NodeImages node={node} />
+          </div>
+        )}
+
         {activeTab === ResourceTabs.Events && events && (
           <div className='m-2'>
             <EventList events={events} />
@@ -95,6 +177,32 @@ export const NodeDetailsView = (): JSX.Element => {
         )}
   
         {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
+
+        <Alert open={cordonAlertOpen} onClose={setCordonAlertOpen}>
+          <AlertTitle>Cordon Node</AlertTitle>
+          <AlertDescription>
+            Are you sure you want to cordon this node? This will prevent new pods from being scheduled on this node.
+          </AlertDescription>
+          <AlertActions>
+            <Button plain onClick={() => setCordonAlertOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCordon}>Cordon</Button>
+          </AlertActions>
+        </Alert>
+
+        <Alert open={uncordonAlertOpen} onClose={setUncordonAlertOpen}>
+          <AlertTitle>Uncordon Node</AlertTitle>
+          <AlertDescription>
+            Are you sure you want to uncordon this node? This will allow new pods to be scheduled on this node again.
+          </AlertDescription>
+          <AlertActions>
+            <Button plain onClick={() => setUncordonAlertOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUncordon}>Uncordon</Button>
+          </AlertActions>
+        </Alert>
       </>
     );
 }
