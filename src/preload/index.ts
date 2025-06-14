@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 import k8s = require('@kubernetes/client-node');
+import { PortForwardInfo, PortForwardRequest } from '../renderer/utils/types';
 
 export interface ElectronAPI {
   // External links
@@ -106,6 +107,10 @@ export interface ElectronAPI {
   listEventForAllNamespaces: () => Promise<k8s.CoreV1EventList>;
   listNamespacedEvent: (namespace: string) => Promise<k8s.CoreV1EventList>;
   readNamespacedEvent: (name: string, namespace: string) => Promise<k8s.CoreV1Event>;
+  // Port Forwarding
+  createPortForward: (request: PortForwardRequest) => Promise<{ success: boolean, forwardId?: string, localPort?: number, error?: string }>;
+  stopPortForward: (forwardId: string) => Promise<{ success: boolean, error?: string }>;
+  listPortForwards: () => Promise<PortForwardInfo[]>;
 }
 
 try {
@@ -212,6 +217,10 @@ try {
     listEventForAllNamespaces: () => ipcRenderer.invoke('listEventForAllNamespaces'),
     listNamespacedEvent: (namespace: string) => ipcRenderer.invoke('listNamespacedEvent', namespace),
     readNamespacedEvent: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedEvent', name, namespace),
+    // Port Forwarding
+    createPortForward: (request: PortForwardRequest) => ipcRenderer.invoke('createPortForward', request),
+    stopPortForward: (forwardId: string) => ipcRenderer.invoke('stopPortForward', forwardId),
+    listPortForwards: () => ipcRenderer.invoke('listPortForwards'),
   } as ElectronAPI);
 } catch (error) {
   console.error(error)
