@@ -99,6 +99,9 @@ export interface ElectronAPI {
   // Custom Resource Definitions
   listCustomResourceDefinition: () => Promise<k8s.V1CustomResourceDefinitionList>;
   readCustomResourceDefinition: (name: string) => Promise<k8s.V1CustomResourceDefinition>;
+  // Custom Resources
+  listCustomResources: (group: string, version: string, plural: string, namespace?: string) => Promise<any>;
+  readCustomResource: (group: string, version: string, plural: string, name: string, namespace?: string) => Promise<any>;
   // Events
   listEventForAllNamespaces: () => Promise<k8s.CoreV1EventList>;
   listNamespacedEvent: (namespace: string) => Promise<k8s.CoreV1EventList>;
@@ -202,6 +205,9 @@ try {
     // Custom Resource Definitions
     listCustomResourceDefinition: () => ipcRenderer.invoke('listCustomResourceDefinition'),
     readCustomResourceDefinition: (name: string) => ipcRenderer.invoke('readCustomResourceDefinition', name),
+    // Custom Resources
+    listCustomResources: (group: string, version: string, plural: string, namespace?: string) => ipcRenderer.invoke('listCustomResources', group, version, plural, namespace),
+    readCustomResource: (group: string, version: string, plural: string, name: string, namespace?: string) => ipcRenderer.invoke('readCustomResource', group, version, plural, name, namespace),
     // Events
     listEventForAllNamespaces: () => ipcRenderer.invoke('listEventForAllNamespaces'),
     listNamespacedEvent: (namespace: string) => ipcRenderer.invoke('listNamespacedEvent', namespace),

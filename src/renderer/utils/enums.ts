@@ -9,6 +9,7 @@ export enum Resources {
     Namespaces = 'Namespaces',
     Events = 'Events',
     CustomResourceDefinitions = 'Custom Resource Definitions',
+    CustomResources = 'Custom Resources',
     Lease = 'Lease',
 
     // Workloads

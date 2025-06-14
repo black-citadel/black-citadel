@@ -2,11 +2,14 @@ import React from "react";
 import k8s = require('@kubernetes/client-node');
 
 
-export function calculateAge(timestamp: Date): string {
-  if (!timestamp) return null;
+export function calculateAge(timestamp: Date | string): string {
+  if (!timestamp) return 'N/A';
+
+  const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
+  if (isNaN(date.getTime())) return 'N/A';
 
   const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - timestamp.getTime()) / 1000);
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
   if (diffInSeconds < 60) return `${diffInSeconds}s`;
   if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m`;

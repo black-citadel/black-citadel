@@ -43,6 +43,7 @@ import { Badge } from '@components/base/badge';
 import { Drawer } from '@components/base/drawer';
 import { NodeDetailsView, NodesListView } from '@views/cluster/nodes';
 import { CustomResourceDefinitionsListView, CustomResourceDefinitionsDetailsView } from '@views/cluster/custom-resource-definitions';
+import { CustomResourceDetailsView } from '@views/cluster/custom-resources';
 import { EventsListView, EventsDetailsView } from '@views/cluster/events';
 
 export const Layout = () => {
@@ -230,6 +231,8 @@ export const Layout = () => {
 
         {viewContext.resource === Resources.CustomResourceDefinitions && viewContext.action === ResourceAction.List && <CustomResourceDefinitionsListView />}
         {viewContext.resource === Resources.CustomResourceDefinitions && viewContext.action === ResourceAction.Details && <CustomResourceDefinitionsDetailsView />}
+
+        {viewContext.resource === Resources.CustomResources && viewContext.action === ResourceAction.Details && <CustomResourceDetailsView />}
 
         {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.List && <NamespacesListView />}
         {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.Details && <NamespacesDetailsView />}
