@@ -1,5 +1,8 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import k8s = require('@kubernetes/client-node');
+import * as net from 'net';
+import { v4 as uuidv4 } from 'uuid';
+import { PortForwardInfo, PortForwardRequest, PortForwardStatus } from '../renderer/utils/types';
 
 const kc = new k8s.KubeConfig();
 kc.loadFromDefault();
@@ -365,4 +368,129 @@ ipcMain.handle('readCustomResource', async (event, group, version, plural, name,
 // Events
 ipcMain.handle('listEventForAllNamespaces', async () => (await k8sCoreV1Api.listEventForAllNamespaces()).body);
 ipcMain.handle('listNamespacedEvent', async (event, namespace) => (await k8sCoreV1Api.listNamespacedEvent(namespace)).body);
+
+// Port Forwarding
+const activePortForwards = new Map<string, PortForwardInfo & { server?: net.Server; forwarder?: k8s.PortForward }>();
+
+// Helper function to find an available port
+async function findAvailablePort(startPort: number = 8080): Promise<number> {
+  return new Promise((resolve) => {
+    const server = net.createServer();
+    server.listen(startPort, '127.0.0.1', () => {
+      const port = (server.address() as net.AddressInfo).port;
+      server.close(() => resolve(port));
+    });
+    server.on('error', () => {
+      resolve(findAvailablePort(startPort + 1));
+    });
+  });
+}
+
+ipcMain.handle('createPortForward', async (event, request: PortForwardRequest) => {
+  try {
+    const id = uuidv4();
+    const localPort = request.localPort || await findAvailablePort();
+    const localAddress = request.localAddress || '127.0.0.1';
+
+    // Create port forward info
+    const portForwardInfo: PortForwardInfo = {
+      id,
+      resourceType: request.resourceType,
+      resourceName: request.resourceName,
+      namespace: request.namespace,
+      localPort,
+      remotePort: request.remotePort,
+      localAddress,
+      status: PortForwardStatus.Connecting,
+      startTime: new Date(),
+      bytesTransferred: { sent: 0, received: 0 }
+    };
+
+    // Store in map
+    activePortForwards.set(id, portForwardInfo);
+
+    // Create the port forwarder
+    const forwarder = new k8s.PortForward(kc, true); // true for WebSocket
+
+    // Create local server
+    const server = net.createServer((socket) => {
+      forwarder.portForward(
+        request.namespace,
+        request.resourceName,
+        [request.remotePort],
+        socket,
+        null,
+        socket,
+        3
+      ).catch((err) => {
+        console.error('Port forward error:', err);
+        socket.destroy();
+      });
+    });
+
+    server.listen(localPort, localAddress, () => {
+      console.log(`Port forward established: ${localAddress}:${localPort} -> ${request.resourceName}:${request.remotePort}`);
+      const forwardInfo = activePortForwards.get(id);
+      if (forwardInfo) {
+        forwardInfo.status = PortForwardStatus.Active;
+        activePortForwards.set(id, { ...forwardInfo, server, forwarder });
+      }
+    });
+
+    server.on('error', (err) => {
+      console.error('Server error:', err);
+      const forwardInfo = activePortForwards.get(id);
+      if (forwardInfo) {
+        forwardInfo.status = PortForwardStatus.Failed;
+        forwardInfo.error = err.message;
+        activePortForwards.set(id, forwardInfo);
+      }
+    });
+
+    return { success: true, forwardId: id, localPort };
+  } catch (error) {
+    console.error('Failed to create port forward:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('stopPortForward', async (event, forwardId: string) => {
+  try {
+    const portForward = activePortForwards.get(forwardId);
+    if (!portForward) {
+      return { success: false, error: 'Port forward not found' };
+    }
+
+    // Update status
+    portForward.status = PortForwardStatus.Stopping;
+    activePortForwards.set(forwardId, portForward);
+
+    // Close server
+    if (portForward.server) {
+      portForward.server.close();
+    }
+
+    // Remove from active forwards
+    activePortForwards.delete(forwardId);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to stop port forward:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('listPortForwards', async () => {
+  return Array.from(activePortForwards.values()).map(({ server, forwarder, ...info }) => info);
+});
+
+// Clean up port forwards on app quit
+app.on('before-quit', () => {
+  activePortForwards.forEach((portForward, id) => {
+    if (portForward.server) {
+      portForward.server.close();
+    }
+  });
+});
+
 ipcMain.handle('readNamespacedEvent', async (event, name, namespace) => (await k8sCoreV1Api.readNamespacedEvent(name, namespace)).body);
