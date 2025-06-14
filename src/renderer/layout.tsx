@@ -45,6 +45,7 @@ import { NodeDetailsView, NodesListView } from '@views/cluster/nodes';
 import { CustomResourceDefinitionsListView, CustomResourceDefinitionsDetailsView } from '@views/cluster/custom-resource-definitions';
 import { CustomResourceDetailsView } from '@views/cluster/custom-resources';
 import { EventsListView, EventsDetailsView } from '@views/cluster/events';
+import { PortForwardsListView } from '@views/tools/port-forwards';
 
 export const Layout = () => {
   const { viewContext, setViewContext, drawerOpen, setDrawerOpen, helpTitle, helpContent } = useView()
@@ -348,6 +349,9 @@ export const Layout = () => {
 
         {viewContext.resource === Resources.ValidatingWebhookConfigurations && viewContext.action === ResourceAction.List && <ValidatingWebhookConfigurationsListView />}
         {viewContext.resource === Resources.ValidatingWebhookConfigurations && viewContext.action === ResourceAction.Details && <ValidatingWebhookConfigurationsDetailsView />}
+
+        {/* Operations */}
+        {viewContext.resource === Resources.PortForwards && viewContext.action === ResourceAction.List && <PortForwardsListView />}
       </div>
 
       <Drawer title={helpTitle} open={drawerOpen} onClose={() => setDrawerOpen(false)}>{helpContent}</Drawer>
