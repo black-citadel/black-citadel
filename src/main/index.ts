@@ -391,6 +391,7 @@ async function findAvailablePort(startPort: number = 8080): Promise<number> {
 ipcMain.handle('createPortForward', async (event, request: PortForwardRequest) => {
   try {
     const id = uuidv4();
+    // Use provided port or find an available one
     const localPort = request.localPort || await findAvailablePort();
     const localAddress = request.localAddress || '127.0.0.1';
 

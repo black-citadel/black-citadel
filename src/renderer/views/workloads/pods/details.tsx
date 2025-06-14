@@ -73,11 +73,18 @@ export const PodsDetailsView = (): JSX.Element => {
     return ports;
   };
 
-  const handlePortForward = async (request: PortForwardRequest) => {
+  const handlePortForward = async (request: PortForwardRequest, openInBrowser: boolean) => {
     const result = await window.electronAPI.createPortForward(request);
     if (result.success) {
       setPortForwardSuccess(`Port forward established on localhost:${result.localPort}`);
       setTimeout(() => setPortForwardSuccess(null), 5000);
+      
+      // Open in browser if requested
+      if (openInBrowser && result.localPort) {
+        const isHttps = request.remotePort === 443 || request.remotePort === 8443;
+        const url = `${isHttps ? 'https' : 'http'}://localhost:${result.localPort}`;
+        await window.electronAPI.openExternalLink(url);
+      }
     } else {
       throw new Error(result.error || 'Failed to create port forward');
     }

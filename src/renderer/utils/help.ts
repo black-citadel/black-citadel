@@ -55,5 +55,11 @@ export const ResourceHelp: { [key in Resources]: string } = {
     "Priority Classes": "Defines the relative importance of Pods to influence scheduling and eviction decisions.",
     "Runtime Classes": "Selects the container runtime configuration to use for Pods.",
     "Mutating Webhook Configurations": "Defines webhooks that can modify objects sent to the API server.",
-    "Validating Webhook Configurations": "Defines webhooks that can validate objects sent to the API server."
+    "Validating Webhook Configurations": "Defines webhooks that can validate objects sent to the API server.",
+    
+    // Operations
+    "Port Forwards": "Active port forwarding connections from local ports to Pods or Services in the cluster.",
+    
+    // Custom Resources
+    "Custom Resources": "Instances of custom resource definitions that extend the Kubernetes API."
   };

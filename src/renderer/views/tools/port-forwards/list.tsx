@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ListHeader } from '@components/list-header';
-import { Heading } from '@components/base/heading';
-import { PortForwardBadge } from '@components/tools/port-forward/badge';
 import { PortForwardTable } from '@components/tools/port-forward/table';
 import { PortForwardInfo } from '@utils/types';
+import { Resources } from '@utils/enums';
 
 export const PortForwardsListView = (): JSX.Element => {
   const [portForwards, setPortForwards] = useState<PortForwardInfo[]>([]);
@@ -58,11 +57,7 @@ export const PortForwardsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader error={error}>
-        <Heading>
-          <PortForwardBadge />Port Forwards
-        </Heading>
-      </ListHeader>
+      <ListHeader resource={Resources.PortForwards} error={error} />
 
       <div className='m-2'>
         {portForwards.length === 0 ? (

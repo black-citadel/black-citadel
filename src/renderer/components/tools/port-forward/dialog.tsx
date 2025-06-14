@@ -3,6 +3,7 @@ import { Dialog } from '@components/base/dialog';
 import { Button } from '@components/base/button';
 import { Input } from '@components/base/input';
 import { Select } from '@components/base/select';
+import { Checkbox } from '@components/base/checkbox';
 // Removed Alert import - using inline error display instead
 import { Text } from '@components/base/text';
 import { PortOption, PortForwardRequest } from '@utils/types';
@@ -15,7 +16,7 @@ interface PortForwardDialogProps {
   resourceName: string;
   namespace: string;
   availablePorts: PortOption[];
-  onSubmit: (request: PortForwardRequest) => Promise<void>;
+  onSubmit: (request: PortForwardRequest, openInBrowser: boolean) => Promise<void>;
 }
 
 export const PortForwardDialog = ({
@@ -33,14 +34,15 @@ export const PortForwardDialog = ({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openInBrowser, setOpenInBrowser] = useState(true);
 
   // Set default values when dialog opens
   useEffect(() => {
     if (isOpen && availablePorts.length > 0) {
       setSelectedPort(availablePorts[0].port);
-      // Suggest local port based on remote port
-      const suggestedPort = availablePorts[0].port >= 1024 ? availablePorts[0].port : 8080;
-      setLocalPort(suggestedPort.toString());
+      // Generate random port between 10000-65535
+      const randomPort = Math.floor(Math.random() * (65535 - 10000 + 1)) + 10000;
+      setLocalPort(randomPort.toString());
     }
   }, [isOpen, availablePorts]);
 
@@ -69,7 +71,7 @@ export const PortForwardDialog = ({
         localAddress: showAdvanced ? localAddress : undefined
       };
 
-      await onSubmit(request);
+      await onSubmit(request, openInBrowser);
       onClose();
     } catch (err: any) {
       setError(err.message || 'Failed to create port forward');
@@ -123,7 +125,7 @@ export const PortForwardDialog = ({
               type="number"
               value={localPort}
               onChange={(e) => setLocalPort(e.target.value)}
-              placeholder="8080"
+              placeholder="10000-65535"
               min="1"
               max="65535"
             />
@@ -131,6 +133,18 @@ export const PortForwardDialog = ({
               The port on your local machine to forward to
             </Text>
           </div>
+
+          {selectedPort && (80 === selectedPort || 443 === selectedPort || 8080 === selectedPort || 8443 === selectedPort || 3000 === selectedPort || 5000 === selectedPort || 8000 === selectedPort) && (
+            <div>
+              <label className="flex items-center space-x-2">
+                <Checkbox
+                  checked={openInBrowser}
+                  onChange={(checked) => setOpenInBrowser(checked)}
+                />
+                <Text size="sm">Open in browser after port forward</Text>
+              </label>
+            </div>
+          )}
 
           <div>
             <button

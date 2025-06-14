@@ -26,7 +26,8 @@ const nonNamespacedResources: Resources[] = [
   Resources.RuntimeClasses,
   Resources.MutatingWebhookConfigurations,
   Resources.ValidatingWebhookConfigurations,
-  Resources.CustomResourceDefinitions
+  Resources.CustomResourceDefinitions,
+  Resources.PortForwards
 ];
 
 // Resources that shouldn't have a Create button
@@ -34,7 +35,8 @@ const readOnlyResources: Resources[] = [
   Resources.Events,
   Resources.Nodes,
   Resources.CSINodes,
-  Resources.VolumeAttachments
+  Resources.VolumeAttachments,
+  Resources.PortForwards
 ];
 
 export const ListHeader = ({ resource, error }: ListHeaderProps): JSX.Element => {
