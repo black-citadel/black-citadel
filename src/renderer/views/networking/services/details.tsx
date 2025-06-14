@@ -12,6 +12,9 @@ import { dump } from 'js-yaml';
 import { PodList } from '@components/workloads/pod/table';
 import { DetailsHeader } from '@components/details-header';
 import { MetadataDetails } from '@components/metadata';
+import { Button } from '@components/base/button';
+import { PortForwardDialog } from '@components/tools/port-forward/dialog';
+import { PortOption, PortForwardRequest } from '@utils/types';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -25,6 +28,8 @@ export const ServicesDetailsView = (): JSX.Element => {
   const [service, setService] = useState<k8s.V1Service>();
   const [pods, setPods] = useState<k8s.V1PodList>();
   const [error, setError] = useState(null);
+  const [showPortForwardDialog, setShowPortForwardDialog] = useState(false);
+  const [portForwardSuccess, setPortForwardSuccess] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -53,9 +58,43 @@ export const ServicesDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(service);
 
+  const getAvailablePorts = (): PortOption[] => {
+    if (!service?.spec?.ports) return [];
+    
+    return service.spec.ports.map(port => ({
+      name: port.name,
+      port: port.port,
+      protocol: port.protocol || 'TCP',
+      targetPort: port.targetPort
+    }));
+  };
+
+  const handlePortForward = async (request: PortForwardRequest) => {
+    const result = await window.electronAPI.createPortForward(request);
+    if (result.success) {
+      setPortForwardSuccess(`Port forward established on localhost:${result.localPort}`);
+      setTimeout(() => setPortForwardSuccess(null), 5000);
+    } else {
+      throw new Error(result.error || 'Failed to create port forward');
+    }
+  };
+
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          service && getAvailablePorts().length > 0 && (
+            <Button 
+              onClick={() => setShowPortForwardDialog(true)}
+              className="uppercase"
+              outline
+            >
+              Port Forward
+            </Button>
+          )
+        }
+      >
         <Heading>
           <ServiceBadge />{viewContext.name}
         </Heading>
@@ -94,6 +133,24 @@ export const ServicesDetailsView = (): JSX.Element => {
       }
 
       {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
+
+      {portForwardSuccess && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <div className="border border-green-700 bg-green-50 text-green-700 px-4 py-3 rounded-lg shadow-lg" role="alert">
+            <span className="block sm:inline">{portForwardSuccess}</span>
+          </div>
+        </div>
+      )}
+
+      <PortForwardDialog
+        isOpen={showPortForwardDialog}
+        onClose={() => setShowPortForwardDialog(false)}
+        resourceType="service"
+        resourceName={viewContext.name}
+        namespace={viewContext.namespace}
+        availablePorts={getAvailablePorts()}
+        onSubmit={handlePortForward}
+      />
     </>
   );
 };
