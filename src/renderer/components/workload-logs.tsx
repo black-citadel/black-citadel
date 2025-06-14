@@ -222,14 +222,6 @@ export const WorkloadLogs = ({
     }
   };
 
-  const handleSelectAll = () => {
-    setSelectedPods(pods.map(pod => pod.metadata.name));
-  };
-
-  const handleDeselectAll = () => {
-    setSelectedPods([]);
-  };
-
   const handleClearLogs = () => {
     setCombinedLogs([]);
   };
@@ -280,11 +272,11 @@ export const WorkloadLogs = ({
   return (
     <div className="flex flex-col h-full">
       {/* Controls */}
-      <div className="mb-4 p-2 bg-zinc-50 rounded-lg">
+      <div className="mb-4 p-2">
         {/* Container selection for single pod mode */}
         {isSinglePod && allContainers.length > 1 && (
           <div className="mb-3 flex items-center gap-2">
-            <label className="text-sm font-medium text-zinc-700">Container:</label>
+            <label className="text-sm font-medium text-white">Container:</label>
             <Select
               value={selectedContainer}
               onChange={(e) => setSelectedContainer(e.target.value)}
@@ -300,15 +292,11 @@ export const WorkloadLogs = ({
         {!isSinglePod && (
           <div className="mb-3">
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-zinc-700">Select Pods:</label>
-              <div className="flex gap-2">
-                <Button size="sm" onClick={handleSelectAll}>Select All</Button>
-                <Button size="sm" onClick={handleDeselectAll}>Deselect All</Button>
-              </div>
+              <label className="text-sm font-medium text-white">Select Pods:</label>
             </div>
             <div className="flex flex-wrap gap-2">
               {pods.map(pod => (
-                <label key={pod.metadata.name} className="flex items-center gap-1 px-2 py-1 bg-white rounded border cursor-pointer hover:bg-zinc-50">
+                <label key={pod.metadata.name} className="flex items-center gap-1 px-2 py-1 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={selectedPods.includes(pod.metadata.name)}
@@ -330,7 +318,7 @@ export const WorkloadLogs = ({
         {/* Other controls */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-zinc-700">Lines per pod:</label>
+            <label className="text-sm font-medium text-white">Lines per pod:</label>
             <Select
               value={tailLines.toString()}
               onChange={(e) => setTailLines(parseInt(e.target.value))}
@@ -350,7 +338,7 @@ export const WorkloadLogs = ({
                 onChange={(e) => setShowPodNames(e.target.checked)}
                 className="rounded"
               />
-              <span className="text-sm font-medium text-zinc-700">Show pod names</span>
+              <span className="text-sm font-medium text-white">Show pod names</span>
             </label>
           )}
 

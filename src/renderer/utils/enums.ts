@@ -56,7 +56,10 @@ export enum Resources {
     PriorityClasses = 'Priority Classes',
     RuntimeClasses = 'Runtime Classes',
     MutatingWebhookConfigurations = 'Mutating Webhook Configurations',
-    ValidatingWebhookConfigurations = 'Validating Webhook Configurations'
+    ValidatingWebhookConfigurations = 'Validating Webhook Configurations',
+    
+    // Operations
+    PortForwards = 'Port Forwards'
 }
 
 export enum ResourceAction {
@@ -73,4 +76,11 @@ export enum ResourceTabs {
     YAML = 'YAML',
     Pods = 'Pods',
     Images = 'Images'
+}
+
+export enum PortForwardStatus {
+    Connecting = 'Connecting',
+    Active = 'Active',
+    Failed = 'Failed',
+    Stopping = 'Stopping'
 }
