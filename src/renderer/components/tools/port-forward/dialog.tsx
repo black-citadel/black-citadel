@@ -3,7 +3,7 @@ import { Dialog } from '@components/base/dialog';
 import { Button } from '@components/base/button';
 import { Input } from '@components/base/input';
 import { Select } from '@components/base/select';
-import { Alert } from '@components/base/alert';
+// Removed Alert import - using inline error display instead
 import { Text } from '@components/base/text';
 import { PortOption, PortForwardRequest } from '@utils/types';
 import { Heading } from '@components/base/heading';
@@ -81,7 +81,7 @@ export const PortForwardDialog = ({
   const selectedPortInfo = availablePorts.find(p => p.port === selectedPort);
 
   return (
-    <Dialog open={isOpen} onClose={onClose}>
+    <Dialog open={isOpen} onClose={() => onClose()}>
       <div className="p-6 space-y-4">
         <Heading>Port Forward</Heading>
         
@@ -92,7 +92,9 @@ export const PortForwardDialog = ({
         </div>
 
         {error && (
-          <Alert color="error">{error}</Alert>
+          <div className="border border-red-700 text-red-700 px-2 py-1.5 rounded" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>
         )}
 
         <div className="space-y-4">

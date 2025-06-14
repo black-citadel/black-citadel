@@ -16,12 +16,17 @@ import helpObjects from '@help/index';
 import { WorkloadLogs } from '@components/workload-logs';
 import { ContainerResources } from '@components/base/container-resources';
 import { Badge } from '@components/base/badge';
+import { Button } from '@components/base/button';
+import { PortForwardDialog } from '@components/tools/port-forward/dialog';
+import { PortOption, PortForwardRequest } from '@utils/types';
 
 export const PodsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [pod, setPod] = useState<k8s.V1Pod>();
   const [error, setError] = useState(null);
+  const [showPortForwardDialog, setShowPortForwardDialog] = useState(false);
+  const [portForwardSuccess, setPortForwardSuccess] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
@@ -51,9 +56,50 @@ export const PodsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.Pods, action: ResourceAction.List });
   };
 
+  const getAvailablePorts = (): PortOption[] => {
+    if (!pod?.spec?.containers) return [];
+    
+    const ports: PortOption[] = [];
+    pod.spec.containers.forEach(container => {
+      container.ports?.forEach(port => {
+        ports.push({
+          name: port.name,
+          port: port.containerPort,
+          protocol: port.protocol || 'TCP'
+        });
+      });
+    });
+    
+    return ports;
+  };
+
+  const handlePortForward = async (request: PortForwardRequest) => {
+    const result = await window.electronAPI.createPortForward(request);
+    if (result.success) {
+      setPortForwardSuccess(`Port forward established on localhost:${result.localPort}`);
+      setTimeout(() => setPortForwardSuccess(null), 5000);
+    } else {
+      throw new Error(result.error || 'Failed to create port forward');
+    }
+  };
+
   return (
     <>
-      <DetailsHeader error={error} onDelete={handleDelete}>
+      <DetailsHeader 
+        error={error} 
+        onDelete={handleDelete}
+        actions={
+          pod?.status?.phase === 'Running' && getAvailablePorts().length > 0 && (
+            <Button 
+              onClick={() => setShowPortForwardDialog(true)}
+              className="uppercase"
+              outline
+            >
+              Port Forward
+            </Button>
+          )
+        }
+      >
         <Heading>
           <PodBadge />{viewContext.name}
         </Heading>
@@ -249,6 +295,24 @@ export const PodsDetailsView = (): JSX.Element => {
       {activeTab === ResourceTabs.YAML && (
         <Editor content={yamlContent} />
       )}
+
+      {portForwardSuccess && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <div className="border border-green-700 bg-green-50 text-green-700 px-4 py-3 rounded-lg shadow-lg" role="alert">
+            <span className="block sm:inline">{portForwardSuccess}</span>
+          </div>
+        </div>
+      )}
+
+      <PortForwardDialog
+        isOpen={showPortForwardDialog}
+        onClose={() => setShowPortForwardDialog(false)}
+        resourceType="pod"
+        resourceName={viewContext.name}
+        namespace={viewContext.namespace}
+        availablePorts={getAvailablePorts()}
+        onSubmit={handlePortForward}
+      />
     </>
   );
 };

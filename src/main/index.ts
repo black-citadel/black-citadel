@@ -2,7 +2,9 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import k8s = require('@kubernetes/client-node');
 import * as net from 'net';
 import { v4 as uuidv4 } from 'uuid';
-import { PortForwardInfo, PortForwardRequest, PortForwardStatus } from '../renderer/utils/types';
+import { spawn, ChildProcess } from 'child_process';
+import { PortForwardInfo, PortForwardRequest } from '../renderer/utils/types';
+import { PortForwardStatus } from '../renderer/utils/enums';
 
 const kc = new k8s.KubeConfig();
 kc.loadFromDefault();
@@ -370,7 +372,7 @@ ipcMain.handle('listEventForAllNamespaces', async () => (await k8sCoreV1Api.list
 ipcMain.handle('listNamespacedEvent', async (event, namespace) => (await k8sCoreV1Api.listNamespacedEvent(namespace)).body);
 
 // Port Forwarding
-const activePortForwards = new Map<string, PortForwardInfo & { server?: net.Server; forwarder?: k8s.PortForward }>();
+const activePortForwards = new Map<string, PortForwardInfo & { process?: ChildProcess }>();
 
 // Helper function to find an available port
 async function findAvailablePort(startPort: number = 8080): Promise<number> {
@@ -409,36 +411,60 @@ ipcMain.handle('createPortForward', async (event, request: PortForwardRequest) =
     // Store in map
     activePortForwards.set(id, portForwardInfo);
 
-    // Create the port forwarder
-    const forwarder = new k8s.PortForward(kc, true); // true for WebSocket
+    // Get current context for kubectl
+    const currentContext = kc.getCurrentContext();
+    
+    // Build kubectl command
+    const args = [
+      '--context', currentContext,
+      '-n', request.namespace,
+      'port-forward',
+      `${request.resourceType}/${request.resourceName}`,
+      `${localPort}:${request.remotePort}`
+    ];
 
-    // Create local server
-    const server = net.createServer((socket) => {
-      forwarder.portForward(
-        request.namespace,
-        request.resourceName,
-        [request.remotePort],
-        socket,
-        null,
-        socket,
-        3
-      ).catch((err) => {
-        console.error('Port forward error:', err);
-        socket.destroy();
-      });
-    });
+    if (localAddress !== '127.0.0.1') {
+      args.push('--address', localAddress);
+    }
 
-    server.listen(localPort, localAddress, () => {
-      console.log(`Port forward established: ${localAddress}:${localPort} -> ${request.resourceName}:${request.remotePort}`);
-      const forwardInfo = activePortForwards.get(id);
-      if (forwardInfo) {
-        forwardInfo.status = PortForwardStatus.Active;
-        activePortForwards.set(id, { ...forwardInfo, server, forwarder });
+    // Spawn kubectl port-forward process
+    const kubectlProcess = spawn('kubectl', args);
+
+    // Handle stdout
+    kubectlProcess.stdout.on('data', (data) => {
+      const output = data.toString();
+      console.log('Port forward output:', output);
+      
+      // Check if forwarding is ready
+      if (output.includes('Forwarding from')) {
+        const forwardInfo = activePortForwards.get(id);
+        if (forwardInfo) {
+          forwardInfo.status = PortForwardStatus.Active;
+          activePortForwards.set(id, { ...forwardInfo, process: kubectlProcess });
+        }
       }
     });
 
-    server.on('error', (err) => {
-      console.error('Server error:', err);
+    // Handle stderr
+    kubectlProcess.stderr.on('data', (data) => {
+      console.error('Port forward error:', data.toString());
+    });
+
+    // Handle process exit
+    kubectlProcess.on('exit', (code, signal) => {
+      console.log(`Port forward process exited with code ${code} and signal ${signal}`);
+      const forwardInfo = activePortForwards.get(id);
+      if (forwardInfo && forwardInfo.status !== PortForwardStatus.Stopping) {
+        forwardInfo.status = PortForwardStatus.Failed;
+        forwardInfo.error = `Process exited with code ${code}`;
+        activePortForwards.set(id, forwardInfo);
+      }
+      activePortForwards.delete(id);
+    });
+
+    // Handle process error
+    kubectlProcess.on('error', (err) => {
+      console.error('Failed to start port forward:', err);
       const forwardInfo = activePortForwards.get(id);
       if (forwardInfo) {
         forwardInfo.status = PortForwardStatus.Failed;
@@ -447,8 +473,16 @@ ipcMain.handle('createPortForward', async (event, request: PortForwardRequest) =
       }
     });
 
+    // Wait a bit to see if the process starts successfully
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Check if process is still running
+    if (kubectlProcess.exitCode !== null) {
+      throw new Error('Port forward process failed to start');
+    }
+
     return { success: true, forwardId: id, localPort };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to create port forward:', error);
     return { success: false, error: error.message };
   }
@@ -465,30 +499,37 @@ ipcMain.handle('stopPortForward', async (event, forwardId: string) => {
     portForward.status = PortForwardStatus.Stopping;
     activePortForwards.set(forwardId, portForward);
 
-    // Close server
-    if (portForward.server) {
-      portForward.server.close();
+    // Kill the kubectl process
+    if (portForward.process && !portForward.process.killed) {
+      portForward.process.kill('SIGTERM');
+      
+      // Force kill after 2 seconds if still running
+      setTimeout(() => {
+        if (portForward.process && !portForward.process.killed) {
+          portForward.process.kill('SIGKILL');
+        }
+      }, 2000);
     }
 
     // Remove from active forwards
     activePortForwards.delete(forwardId);
 
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     console.error('Failed to stop port forward:', error);
     return { success: false, error: error.message };
   }
 });
 
 ipcMain.handle('listPortForwards', async () => {
-  return Array.from(activePortForwards.values()).map(({ server, forwarder, ...info }) => info);
+  return Array.from(activePortForwards.values()).map(({ process, ...info }) => info);
 });
 
 // Clean up port forwards on app quit
 app.on('before-quit', () => {
   activePortForwards.forEach((portForward, id) => {
-    if (portForward.server) {
-      portForward.server.close();
+    if (portForward.process && !portForward.process.killed) {
+      portForward.process.kill('SIGTERM');
     }
   });
 });
