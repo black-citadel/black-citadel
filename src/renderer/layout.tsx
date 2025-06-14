@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { SidebarLayout } from '@components/base/sidebar-layout'
 import { DeploymentsListView, DeploymentsDetailsView } from '@views/workloads/deployments'
 import { PodsListView, PodsDetailsView, PodsCreateView } from '@views/workloads/pods'
@@ -49,6 +50,23 @@ import { PortForwardsListView } from '@views/tools/port-forwards';
 
 export const Layout = () => {
   const { viewContext, setViewContext, drawerOpen, setDrawerOpen, helpTitle, helpContent } = useView()
+  const [activePortForwards, setActivePortForwards] = useState(0);
+
+  // Fetch active port forward count
+  useEffect(() => {
+    const fetchPortForwardCount = async () => {
+      try {
+        const portForwards = await window.electronAPI.listPortForwards();
+        setActivePortForwards(portForwards.filter(pf => pf.status === 'Active').length);
+      } catch (e) {
+        console.error('Failed to fetch port forward count:', e);
+      }
+    };
+
+    fetchPortForwardCount();
+    const intervalId = setInterval(fetchPortForwardCount, 2000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <SidebarLayout
@@ -199,6 +217,18 @@ export const Layout = () => {
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.ValidatingWebhookConfigurations, action: ResourceAction.List })} current={viewContext.resource === Resources.ValidatingWebhookConfigurations}>
                 <SidebarLabel>{Resources.ValidatingWebhookConfigurations}</SidebarLabel>
+              </SidebarItem>
+            </SidebarSection>
+
+            <SidebarSection>
+              <SidebarHeading>Operations</SidebarHeading>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.PortForwards, action: ResourceAction.List })} current={viewContext.resource === Resources.PortForwards}>
+                <SidebarLabel>
+                  {Resources.PortForwards}
+                  {activePortForwards > 0 && (
+                    <Badge color="green" className="ml-auto">{activePortForwards}</Badge>
+                  )}
+                </SidebarLabel>
               </SidebarItem>
             </SidebarSection>
 
