@@ -59,6 +59,7 @@ export const ResourceHelp: { [key in Resources]: string } = {
     
     // Operations
     "Port Forwards": "Active port forwarding connections from local ports to Pods or Services in the cluster.",
+    "MCP Server": "Model Context Protocol server that exposes Kubernetes operations as tools for AI agents.",
     
     // Custom Resources
     "Custom Resources": "Instances of custom resource definitions that extend the Kubernetes API."

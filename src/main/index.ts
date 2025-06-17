@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { spawn, ChildProcess } from 'child_process';
 import { PortForwardInfo, PortForwardRequest } from '../renderer/utils/types';
 import { PortForwardStatus } from '../renderer/utils/enums';
+import { startMCPServer, stopMCPServer, getToolCallHistory, getActiveConnections, clearToolCallHistory } from './mcp-server';
 
 const kc = new k8s.KubeConfig();
 kc.loadFromDefault();
@@ -58,7 +59,16 @@ const createWindow = (): void => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', async () => {
+  createWindow();
+  
+  // Start MCP server
+  try {
+    await startMCPServer();
+  } catch (error) {
+    console.error('Failed to start MCP server:', error);
+  }
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
@@ -526,13 +536,22 @@ ipcMain.handle('listPortForwards', async () => {
   return Array.from(activePortForwards.values()).map(({ process, ...info }) => info);
 });
 
-// Clean up port forwards on app quit
-app.on('before-quit', () => {
+// Clean up on app quit
+app.on('before-quit', async () => {
+  // Clean up port forwards
   activePortForwards.forEach((portForward, id) => {
     if (portForward.process && !portForward.process.killed) {
       portForward.process.kill('SIGTERM');
     }
   });
+  
+  // Stop MCP server
+  await stopMCPServer();
 });
 
 ipcMain.handle('readNamespacedEvent', async (event, name, namespace) => (await k8sCoreV1Api.readNamespacedEvent(name, namespace)).body);
+
+// MCP Server handlers
+ipcMain.handle('getMCPConnections', async () => getActiveConnections());
+ipcMain.handle('getMCPToolCallHistory', async (event, limit?: number) => getToolCallHistory(limit));
+ipcMain.handle('clearMCPToolCallHistory', async () => clearToolCallHistory());

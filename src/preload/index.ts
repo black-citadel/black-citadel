@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 import k8s = require('@kubernetes/client-node');
-import { PortForwardInfo, PortForwardRequest } from '../renderer/utils/types';
+import { PortForwardInfo, PortForwardRequest, MCPConnection, MCPToolCallHistory } from '../renderer/utils/types';
 
 export interface ElectronAPI {
   // External links
@@ -111,6 +111,10 @@ export interface ElectronAPI {
   createPortForward: (request: PortForwardRequest) => Promise<{ success: boolean, forwardId?: string, localPort?: number, error?: string }>;
   stopPortForward: (forwardId: string) => Promise<{ success: boolean, error?: string }>;
   listPortForwards: () => Promise<PortForwardInfo[]>;
+  // MCP Server
+  getMCPConnections: () => Promise<MCPConnection[]>;
+  getMCPToolCallHistory: (limit?: number) => Promise<MCPToolCallHistory[]>;
+  clearMCPToolCallHistory: () => Promise<void>;
 }
 
 try {
@@ -221,6 +225,10 @@ try {
     createPortForward: (request: PortForwardRequest) => ipcRenderer.invoke('createPortForward', request),
     stopPortForward: (forwardId: string) => ipcRenderer.invoke('stopPortForward', forwardId),
     listPortForwards: () => ipcRenderer.invoke('listPortForwards'),
+    // MCP Server
+    getMCPConnections: () => ipcRenderer.invoke('getMCPConnections'),
+    getMCPToolCallHistory: (limit?: number) => ipcRenderer.invoke('getMCPToolCallHistory', limit),
+    clearMCPToolCallHistory: () => ipcRenderer.invoke('clearMCPToolCallHistory'),
   } as ElectronAPI);
 } catch (error) {
   console.error(error)

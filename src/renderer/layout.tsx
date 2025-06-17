@@ -47,6 +47,7 @@ import { CustomResourceDefinitionsListView, CustomResourceDefinitionsDetailsView
 import { CustomResourceDetailsView } from '@views/cluster/custom-resources';
 import { EventsListView, EventsDetailsView } from '@views/cluster/events';
 import { PortForwardsListView } from '@views/tools/port-forwards';
+import { MCPServerListView, MCPServerDetailsView } from '@views/operations/mcp-server';
 
 export const Layout = () => {
   const { viewContext, setViewContext, drawerOpen, setDrawerOpen, helpTitle, helpContent } = useView()
@@ -230,6 +231,9 @@ export const Layout = () => {
                   )}
                 </SidebarLabel>
               </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.MCPServer, action: ResourceAction.List })} current={viewContext.resource === Resources.MCPServer}>
+                <SidebarLabel>{Resources.MCPServer}</SidebarLabel>
+              </SidebarItem>
             </SidebarSection>
 
             <SidebarSection>
@@ -382,6 +386,8 @@ export const Layout = () => {
 
         {/* Operations */}
         {viewContext.resource === Resources.PortForwards && viewContext.action === ResourceAction.List && <PortForwardsListView />}
+        {viewContext.resource === Resources.MCPServer && viewContext.action === ResourceAction.List && <MCPServerListView />}
+        {viewContext.resource === Resources.MCPServer && viewContext.action === ResourceAction.Details && <MCPServerDetailsView />}
       </div>
 
       <Drawer title={helpTitle} open={drawerOpen} onClose={() => setDrawerOpen(false)}>{helpContent}</Drawer>

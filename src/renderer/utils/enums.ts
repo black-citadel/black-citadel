@@ -59,7 +59,8 @@ export enum Resources {
     ValidatingWebhookConfigurations = 'Validating Webhook Configurations',
     
     // Operations
-    PortForwards = 'Port Forwards'
+    PortForwards = 'Port Forwards',
+    MCPServer = 'MCP Server'
 }
 
 export enum ResourceAction {

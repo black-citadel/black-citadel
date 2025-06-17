@@ -32,3 +32,24 @@ export interface PortOption {
   protocol: string;
   targetPort?: number | string;
 }
+
+// MCP Types
+export interface MCPToolCallHistory {
+  id: string;
+  timestamp: Date;
+  connectionId: string;
+  toolName: string;
+  input: any;
+  output: any;
+  duration: number;
+  status: 'success' | 'error';
+  error?: string;
+}
+
+export interface MCPConnection {
+  id: string;
+  connectedAt: Date;
+  lastActivity: Date;
+  toolsUsed: number;
+  agentName?: string;
+}
