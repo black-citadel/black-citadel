@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { LimitRangeList } from '@components/configuration/limit-range/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const LimitRangesListView = (): JSX.Element => {
   const [limitRanges, setLimitRanges] = useState<k8s.V1LimitRangeList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -29,7 +32,19 @@ export const LimitRangesListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.LimitRanges} error={error} />
+      <ListHeader 
+        resource={Resources.LimitRanges} 
+        error={error}
+        showNamespaceDropdown={true}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.LimitRanges, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Limit Range
+          </Button>
+        }
+      />
       {limitRanges && <LimitRangeList limitRanges={limitRanges} />}
     </>
   );

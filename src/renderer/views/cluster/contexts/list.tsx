@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
-import { Resources } from '@utils/enums';
+import { Resources, ResourceAction } from '@utils/enums';
 import { ContextList } from '@components/cluster/context/table';
+import { Button } from '@components/base/button';
+import { useView } from '@context/viewProvider';
 
 export const ContextsListView = (): JSX.Element => {
   const [contexts, setContexts] = useState<k8s.Context[]>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -31,7 +34,18 @@ export const ContextsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.Contexts} error={error}  />
+      <ListHeader 
+        resource={Resources.Contexts} 
+        error={error}
+        actions={
+          <Button 
+            onClick={() => setViewContext({ resource: Resources.Contexts, action: ResourceAction.Create })} 
+            outline
+          >
+            Add new Context
+          </Button>
+        }
+      />
 
       {contexts && <ContextList contexts={contexts} />}
     </>

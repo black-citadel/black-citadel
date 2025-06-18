@@ -21,7 +21,7 @@ export const ContextList = ({ contexts }: Props): JSX.Element => {
     Namespace: ctx.namespace,
     Current: (
       ctx.name === activeContext ? (
-        <CheckIcon className="text-green-600 w-6 h-6" />
+        <CheckIcon className="text-green-500 w-6 h-6" />
       ) : (
         <Button className='font-xs'
           onClick={() => handleContextChange(ctx.name)}

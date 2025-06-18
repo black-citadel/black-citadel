@@ -27,7 +27,11 @@ export const VolumeAttachmentsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.VolumeAttachments} error={error} />
+      <ListHeader 
+        resource={Resources.VolumeAttachments} 
+        error={error}
+        showNamespaceDropdown={false}
+      />
       {volumeAttachments && <VolumeAttachmentList volumeAttachments={volumeAttachments} />}
     </>
   );

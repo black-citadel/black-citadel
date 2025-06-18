@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { HorizontalPodAutoscalerList } from '@components/configuration/horizontal-pod-autoscaler/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const HorizontalPodAutoscalersListView = (): JSX.Element => {
   const [hpas, setHPAs] = useState<k8s.V2HorizontalPodAutoscalerList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,19 @@ export const HorizontalPodAutoscalersListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.HorizontalPodAutoscalers} error={error} />
+      <ListHeader 
+        resource={Resources.HorizontalPodAutoscalers} 
+        error={error}
+        showNamespaceDropdown={true}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.HorizontalPodAutoscalers, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Horizontal Pod Autoscaler
+          </Button>
+        }
+      />
       {hpas && <HorizontalPodAutoscalerList hpas={hpas} />}
     </>
   );

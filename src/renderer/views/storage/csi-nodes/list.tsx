@@ -27,7 +27,11 @@ export const CSINodesListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.CSINodes} error={error} />
+      <ListHeader 
+        resource={Resources.CSINodes} 
+        error={error}
+        showNamespaceDropdown={false}
+      />
       {csiNodes && <CSINodeList csiNodes={csiNodes} />}
     </>
   );

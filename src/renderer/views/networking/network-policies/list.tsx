@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { NetworkPolicyList } from '@components/networking/network-policy/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const NetworkPoliciesListView = (): JSX.Element => {
   const [networkPolicies, setNetworkPolicies] = useState<k8s.V1NetworkPolicyList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,19 @@ export const NetworkPoliciesListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.NetworkPolicies} error={error} />
+      <ListHeader 
+        resource={Resources.NetworkPolicies} 
+        error={error}
+        showNamespaceDropdown={true}
+        actions={
+          <Button 
+            onClick={() => setViewContext({ resource: Resources.NetworkPolicies, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Network Policy
+          </Button>
+        }
+      />
       {networkPolicies && <NetworkPolicyList networkPolicies={networkPolicies} />}
     </>
   );

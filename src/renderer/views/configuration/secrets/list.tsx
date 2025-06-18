@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { SecretList } from '@components/configuration/secret/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const SecretsListView = (): JSX.Element => {
   const [secrets, setSecrets] = useState<k8s.V1SecretList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,19 @@ export const SecretsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.Secrets} error={error} />
+      <ListHeader 
+        resource={Resources.Secrets} 
+        error={error}
+        showNamespaceDropdown={true}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.Secrets, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Secret
+          </Button>
+        }
+      />
       {secrets && <SecretList secrets={secrets} />}
     </>
   );

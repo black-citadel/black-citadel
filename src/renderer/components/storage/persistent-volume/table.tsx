@@ -52,7 +52,7 @@ const formatStatus = (phase: string | undefined): JSX.Element => {
   let color;
   switch (phase.toLowerCase()) {
     case 'available':
-      color = 'text-green-600';
+      color = 'text-green-500';
       break;
     case 'bound':
       color = 'text-blue-600';

@@ -11,6 +11,7 @@ export interface ElectronAPI {
   setCurrentContext: (name: string) => Promise<void>;
   getContextObject: (name: string) => Promise<k8s.Context>;
   addContext: (context: k8s.Context) => Promise<void>;
+  mergeKubeconfig: (kubeconfigYaml: string) => Promise<{ success: boolean, error?: string }>;
   // Nodes
   listNode: () => Promise<k8s.V1NodeList>;
   readNode: (name: string) => Promise<k8s.V1Node>;
@@ -127,6 +128,7 @@ try {
     setCurrentContext: (name: string) => ipcRenderer.invoke('setCurrentContext', name),
     getContextObject: (name: string) => ipcRenderer.invoke('getContextObject', name),
     addContext: (context: k8s.Context) => ipcRenderer.invoke('addContext', context),
+    mergeKubeconfig: (kubeconfigYaml: string) => ipcRenderer.invoke('mergeKubeconfig', kubeconfigYaml),
     // Nodes
     listNode: () => ipcRenderer.invoke('listNode'),
     readNode: (name: string) => ipcRenderer.invoke('readNode', name),

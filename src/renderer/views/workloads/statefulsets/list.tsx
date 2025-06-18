@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { StatefulSetList } from '@components/workloads/statefulset/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const StatefulSetsListView = (): JSX.Element => {
   const [statefulSets, setStatefulSets] = useState<k8s.V1StatefulSetList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -31,7 +34,19 @@ export const StatefulSetsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.StatefulSets} error={error} />
+      <ListHeader 
+        resource={Resources.StatefulSets} 
+        error={error}
+        showNamespaceDropdown={true}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.StatefulSets, action: ResourceAction.Create})} 
+            outline
+          >
+            Create StatefulSet
+          </Button>
+        }
+      />
 
       {statefulSets && <StatefulSetList statefulSets={statefulSets} />}
     </>

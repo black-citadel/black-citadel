@@ -57,7 +57,11 @@ export const PortForwardsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.PortForwards} error={error} />
+      <ListHeader 
+        resource={Resources.PortForwards} 
+        error={error}
+        showNamespaceDropdown={false}
+      />
 
       <div className='m-2'>
         {portForwards.length === 0 ? (

@@ -14,7 +14,7 @@ import { DaemonSetStatus } from '@components/workloads/daemonset/status';
 import { DaemonSetSpec } from '@components/workloads/daemonset/spec';
 import { PodList } from '@components/workloads/pod/table';
 import { Heading, Subheading } from '@components/base/heading';
-import { WorkloadLogs } from '@components/workload-logs';
+import { WorkloadLogs } from '@components/workloads/workload-logs';
 
 export const DaemonSetsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()

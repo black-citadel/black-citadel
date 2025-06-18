@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { MutatingWebhookConfigurationList } from '@components/administration/mutating-webhook-configuration/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 
 export const MutatingWebhookConfigurationsListView = (): JSX.Element => {
   const [mutatingWebhookConfigs, setMutatingWebhookConfigs] = useState<k8s.V1MutatingWebhookConfigurationList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -28,7 +31,19 @@ export const MutatingWebhookConfigurationsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.MutatingWebhookConfigurations} error={error} />
+      <ListHeader 
+        resource={Resources.MutatingWebhookConfigurations} 
+        error={error}
+        showNamespaceDropdown={false}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.MutatingWebhookConfigurations, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Mutating Webhook Configuration
+          </Button>
+        }
+      />
       {mutatingWebhookConfigs && <MutatingWebhookConfigurationList mutatingWebhookConfigurations={mutatingWebhookConfigs} />}
     </>
   );

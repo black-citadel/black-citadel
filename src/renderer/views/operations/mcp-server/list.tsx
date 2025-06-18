@@ -7,6 +7,7 @@ import { ListHeader } from '@components/list-header';
 import { MCPConnection, MCPToolCallHistory } from '@utils/types';
 import { formatDistanceToNow } from 'date-fns';
 import { MCPConnectionList } from '@components/operations/mcp-server/table';
+import { Resources } from '@utils/enums';
 
 export const MCPServerListView = (): JSX.Element => {
   const [connections, setConnections] = useState<MCPConnection[]>([]);
@@ -153,29 +154,26 @@ export const MCPServerListView = (): JSX.Element => {
   return (
     <>
       <ListHeader 
+        resource={Resources.MCPServer}
         error={error}
-        title="MCP Server"
-        description="Model Context Protocol server for AI agent interactions"
-        showCreate={false}
-        showNamespaceSelector={false}
-      >
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setActiveTab('overview')}
-            variant={activeTab === 'overview' ? 'primary' : 'secondary'}
-            size="sm"
-          >
-            Overview
-          </Button>
-          <Button
-            onClick={() => setActiveTab('history')}
-            variant={activeTab === 'history' ? 'primary' : 'secondary'}
-            size="sm"
-          >
-            History
-          </Button>
-        </div>
-      </ListHeader>
+        showNamespaceDropdown={false}
+        actions={
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setActiveTab('overview')}
+              outline
+            >
+              Overview
+            </Button>
+            <Button
+              onClick={() => setActiveTab('history')}
+              outline
+            >
+              History
+            </Button>
+          </div>
+        }
+      />
 
       <div className="m-2">
         {activeTab === 'overview' ? renderOverview() : renderHistory()}

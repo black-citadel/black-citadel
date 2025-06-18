@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { EndpointsList } from '@components/networking/endpoint/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const EndpointsListView = (): JSX.Element => {
   const [endpoints, setEndpoints] = useState<k8s.V1EndpointsList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,19 @@ export const EndpointsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.Endpoints} error={error} />
+      <ListHeader 
+        resource={Resources.Endpoints} 
+        error={error}
+        showNamespaceDropdown={true}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.Endpoints, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Endpoint
+          </Button>
+        }
+      />
       {endpoints && <EndpointsList endpoints={endpoints} />}
     </>
   );

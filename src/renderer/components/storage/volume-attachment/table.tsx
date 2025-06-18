@@ -30,7 +30,7 @@ export const VolumeAttachmentList = ({ volumeAttachments }: VolumeAttachmentList
 const formatAttachmentStatus = (attached: boolean | undefined): JSX.Element => {
   if (attached === undefined) return <span className="text-gray-600">Unknown</span>;
   return attached ? 
-    <span className="text-green-600">Yes</span> : 
+    <span className="text-green-500">Yes</span> : 
     <span className="text-red-600">No</span>;
 };
 

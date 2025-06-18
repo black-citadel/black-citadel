@@ -60,6 +60,6 @@ const formatImagePullSecrets = (imagePullSecrets: k8s.V1LocalObjectReference[] |
 const formatAutomountToken = (automount: boolean | undefined): JSX.Element => {
   if (automount === undefined) return <span className="text-gray-600">Default</span>;
   return automount ? 
-    <span className="text-green-600">Yes</span> : 
+    <span className="text-green-500">Yes</span> : 
     <span className="text-red-600">No</span>;
 };

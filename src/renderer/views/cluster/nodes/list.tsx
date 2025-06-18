@@ -26,7 +26,11 @@ export const NodesListView = () => {
 
   return (
     <>
-      <ListHeader resource={Resources.Nodes} error={error} />
+      <ListHeader 
+        resource={Resources.Nodes} 
+        error={error}
+        showNamespaceDropdown={false}
+      />
       {nodes && <NodeList nodes={nodes} />}
     </>
   );

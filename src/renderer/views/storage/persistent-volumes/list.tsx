@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { PersistentVolumeList } from '@components/storage/persistent-volume/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const PersistentVolumesListView = (): JSX.Element => {
   const [pvs, setPVs] = useState<k8s.V1PersistentVolumeList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,19 @@ export const PersistentVolumesListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.PersistentVolumes} error={error} />
+      <ListHeader 
+        resource={Resources.PersistentVolumes} 
+        error={error}
+        showNamespaceDropdown={false}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.PersistentVolumes, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Persistent Volume
+          </Button>
+        }
+      />
       {pvs && <PersistentVolumeList pvs={pvs} />}
     </>
   );

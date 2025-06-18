@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { PodList } from '@components/workloads/pod/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const PodsListView = (): JSX.Element => {
   const [pods, setPods] = useState<k8s.V1PodList>();
   const [error, setError] = useState(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -32,7 +35,19 @@ export const PodsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.Pods} error={error} />
+      <ListHeader 
+        resource={Resources.Pods} 
+        error={error}
+        showNamespaceDropdown={true}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.Pods, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Pod
+          </Button>
+        }
+      />
 
       {pods && <PodList pods={pods} />}
     </>

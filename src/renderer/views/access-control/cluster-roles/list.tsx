@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { ClusterRoleList } from '@components/access-control/cluster-role/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const ClusterRolesListView = (): JSX.Element => {
   const [clusterRoles, setClusterRoles] = useState<k8s.V1ClusterRoleList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -28,7 +31,19 @@ export const ClusterRolesListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.ClusterRoles} error={error} />
+      <ListHeader 
+        resource={Resources.ClusterRoles} 
+        error={error}
+        showNamespaceDropdown={false}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.ClusterRoles, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Cluster Role
+          </Button>
+        }
+      />
       {clusterRoles && <ClusterRoleList clusterRoles={clusterRoles} />}
     </>
   );

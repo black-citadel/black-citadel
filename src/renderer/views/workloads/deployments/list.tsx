@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { DeploymentList } from '@components/workloads/deployment/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const DeploymentsListView = (): JSX.Element => {
   const [deployments, setDeployments] = useState<k8s.V1DeploymentList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -31,7 +34,19 @@ export const DeploymentsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.Deployments} error={error}  />
+      <ListHeader 
+        resource={Resources.Deployments} 
+        error={error}
+        showNamespaceDropdown={true}
+        actions={
+          <Button 
+            onClick={() => setViewContext({ resource: Resources.Deployments, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Deployment
+          </Button>
+        }
+      />
 
       {deployments && <DeploymentList deployments={deployments} />}
     </>

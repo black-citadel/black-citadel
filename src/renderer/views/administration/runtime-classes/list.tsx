@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { RuntimeClassList } from '@components/administration/runtime-class/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const RuntimeClassesListView = (): JSX.Element => {
   const [runtimeClasses, setRuntimeClasses] = useState<k8s.V1RuntimeClassList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,19 @@ export const RuntimeClassesListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.RuntimeClasses} error={error} />
+      <ListHeader 
+        resource={Resources.RuntimeClasses} 
+        error={error}
+        showNamespaceDropdown={false}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.RuntimeClasses, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Runtime Class
+          </Button>
+        }
+      />
       {runtimeClasses && <RuntimeClassList runtimeClasses={runtimeClasses} />}
     </>
   );

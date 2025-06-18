@@ -15,7 +15,7 @@ import { StatefulSetStatus } from '@components/workloads/statefulset/status';
 import { StatefulSetSpec } from '@components/workloads/statefulset/spec';
 import { PodList } from '@components/workloads/pod/table';
 import { Heading, Subheading } from '@components/base/heading';
-import { WorkloadLogs } from '@components/workload-logs';
+import { WorkloadLogs } from '@components/workloads/workload-logs';
 
 export const StatefulSetsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()

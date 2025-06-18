@@ -13,7 +13,7 @@ import { CronJobStatus } from '@components/workloads/cronjob/status';
 import { MetadataDetails } from '@components/metadata';
 import { Heading, Subheading } from '@components/base/heading';
 import { JobList } from '@components/workloads/job/table';
-import { WorkloadLogs } from '@components/workload-logs';
+import { WorkloadLogs } from '@components/workloads/workload-logs';
 
 export const CronJobsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()

@@ -13,7 +13,7 @@ import { Heading, Subheading } from '@components/base/heading';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { HelpButton } from '@components/help-button';
 import helpObjects from '@help/index';
-import { WorkloadLogs } from '@components/workload-logs';
+import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ContainerResources } from '@components/base/container-resources';
 import { Badge } from '@components/base/badge';
 import { Button } from '@components/base/button';

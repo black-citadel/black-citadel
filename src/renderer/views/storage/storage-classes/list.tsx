@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { StorageClassList } from '@components/storage/storage-class/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const StorageClassesListView = (): JSX.Element => {
   const [storageClasses, setStorageClasses] = useState<k8s.V1StorageClassList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,19 @@ export const StorageClassesListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.StorageClasses} error={error} />
+      <ListHeader 
+        resource={Resources.StorageClasses} 
+        error={error}
+        showNamespaceDropdown={false}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.StorageClasses, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Storage Class
+          </Button>
+        }
+      />
       {storageClasses && <StorageClassList storageClasses={storageClasses} />}
     </>
   );

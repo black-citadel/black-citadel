@@ -14,7 +14,7 @@ import { ReplicaSetSpec } from '@components/workloads/replicaset/spec';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { PodList } from '@components/workloads/pod/table';
-import { WorkloadLogs } from '@components/workload-logs';
+import { WorkloadLogs } from '@components/workloads/workload-logs';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)

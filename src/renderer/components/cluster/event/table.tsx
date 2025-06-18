@@ -20,7 +20,7 @@ export const EventList = ({ events }: Props): JSX.Element => {
     })
     .map(event => ({
       Type: (
-        <span className={`font-medium ${event.type === 'Warning' ? 'text-red-600' : 'text-green-600'}`}>
+        <span className={`font-medium ${event.type === 'Warning' ? 'text-red-600' : 'text-green-500'}`}>
           {event.type || 'Unknown'}
         </span>
       ),

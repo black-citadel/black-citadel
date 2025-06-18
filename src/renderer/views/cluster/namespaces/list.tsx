@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s from '@kubernetes/client-node';
 import { ListHeader } from '@components/list-header';
 import { NamespaceList } from '@components/cluster/namespace/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const NamespacesListView = () => {
   const [namespaces, setNamespaces] = useState<k8s.V1NamespaceList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,19 @@ export const NamespacesListView = () => {
 
   return (
     <>
-      <ListHeader resource={Resources.Namespaces} error={error} />
+      <ListHeader 
+        resource={Resources.Namespaces} 
+        error={error}
+        showNamespaceDropdown={false}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.Namespaces, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Namespace
+          </Button>
+        }
+      />
       {namespaces && <NamespaceList namespaces={namespaces} />}
     </>
   );

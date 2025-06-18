@@ -9,8 +9,8 @@ interface Props {
 export const NodeTaints = ({ taints }: Props): JSX.Element => {
     if (!taints || taints.length === 0) {
         return (
-            <div className="p-4 bg-green-900/20 border border-green-700 rounded-md">
-                <p className="text-sm text-green-400">No taints - All pods can be scheduled on this node</p>
+            <div className="p-4 bg-green-800/20 border border-green-500 rounded-md">
+                <p className="text-sm text-green-500">No taints - All pods can be scheduled on this node</p>
             </div>
         );
     }

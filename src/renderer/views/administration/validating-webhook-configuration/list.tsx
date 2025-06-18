@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { ValidatingWebhookConfigurationList } from '@components/administration/validating-webhook-configuration/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 
 export const ValidatingWebhookConfigurationsListView = (): JSX.Element => {
   const [validatingWebhookConfigs, setValidatingWebhookConfigs] = useState<k8s.V1ValidatingWebhookConfigurationList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -28,7 +31,19 @@ export const ValidatingWebhookConfigurationsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.ValidatingWebhookConfigurations} error={error} />
+      <ListHeader 
+        resource={Resources.ValidatingWebhookConfigurations} 
+        error={error}
+        showNamespaceDropdown={false}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.ValidatingWebhookConfigurations, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Validating Webhook Configuration
+          </Button>
+        }
+      />
       {validatingWebhookConfigs && <ValidatingWebhookConfigurationList validatingWebhookConfigurations={validatingWebhookConfigs} />}
     </>
   );

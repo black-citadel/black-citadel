@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { ServiceAccountList } from '@components/access-control/service-account/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const ServiceAccountsListView = (): JSX.Element => {
   const [serviceAccounts, setServiceAccounts] = useState<k8s.V1ServiceAccountList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,19 @@ export const ServiceAccountsListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.ServiceAccounts} error={error} />
+      <ListHeader 
+        resource={Resources.ServiceAccounts} 
+        error={error}
+        showNamespaceDropdown={true}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.ServiceAccounts, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Service Account
+          </Button>
+        }
+      />
       {serviceAccounts && <ServiceAccountList serviceAccounts={serviceAccounts} />}
     </>
   );

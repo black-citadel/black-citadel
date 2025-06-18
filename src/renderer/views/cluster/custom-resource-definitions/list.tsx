@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import k8s from '@kubernetes/client-node';
 import { ListHeader } from '@components/list-header';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
 import { CustomResourceDefinitionList } from '@components/cluster/custom-resource-definition/table';
+import { useView } from '@context/viewProvider';
 
 export const CustomResourceDefinitionsListView = () => {
   const [crds, setCrds] = useState<k8s.V1CustomResourceDefinitionList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,12 @@ export const CustomResourceDefinitionsListView = () => {
 
   return (
     <>
-      <ListHeader resource={Resources.CustomResourceDefinitions} error={error} />
+      <ListHeader 
+        resource={Resources.CustomResourceDefinitions} 
+        error={error}
+        showNamespaceDropdown={false}
+        actions={}
+      />
       {crds && <CustomResourceDefinitionList customResourceDefinitions={crds} />}
     </>
   );

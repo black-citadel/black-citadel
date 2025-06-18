@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListHeader } from '@components/list-header';
 import { ResourceQuotaList } from '@components/configuration/resource-quota/table';
-import { Resources } from '@utils/enums';
+import { Button } from '@components/base/button';
+import { Resources, ResourceAction } from '@utils/enums';
+import { useView } from '@context/viewProvider';
 
 export const ResourceQuotasListView = (): JSX.Element => {
   const [resourceQuotas, setResourceQuotas] = useState<k8s.V1ResourceQuotaList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -27,7 +30,19 @@ export const ResourceQuotasListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader resource={Resources.ResourceQuotas} error={error} />
+      <ListHeader 
+        resource={Resources.ResourceQuotas} 
+        error={error}
+        showNamespaceDropdown={true}
+        actions={
+          <Button 
+            onClick={() => setViewContext({resource: Resources.ResourceQuotas, action: ResourceAction.Create})} 
+            outline
+          >
+            Create Resource Quota
+          </Button>
+        }
+      />
       {resourceQuotas && <ResourceQuotaList resourceQuotas={resourceQuotas} />}
     </>
   );

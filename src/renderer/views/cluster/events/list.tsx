@@ -42,7 +42,11 @@ export const EventsListView = () => {
 
   return (
     <>
-      <ListHeader resource={Resources.Events} error={error} />
+      <ListHeader 
+        resource={Resources.Events} 
+        error={error}
+        showNamespaceDropdown={true}
+      />
       {events && <EventList events={events} />}
     </>
   );

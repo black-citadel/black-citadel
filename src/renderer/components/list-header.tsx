@@ -1,49 +1,22 @@
 import { Heading } from "./base/heading"
-import { ResourceAction, Resources } from "@utils/enums";
+import { Resources } from "@utils/enums";
 import { ResourceHelp } from "@utils/help";
 import { NamespaceDropdown } from "./namespace-dropdown";
-import { Button } from "./base/button";
-import { useView } from '@context/viewProvider';
+import { ReactNode } from "react";
 
 interface ListHeaderProps {
   resource: Resources
-  error: string | null
+  error?: string | null
+  actions?: ReactNode
+  showNamespaceDropdown?: boolean
 }
 
-const nonNamespacedResources: Resources[] = [
-  Resources.Contexts,
-  Resources.Nodes,
-  Resources.IngressClasses,
-  Resources.PersistentVolumes,
-  Resources.VolumeAttachments,
-  Resources.StorageClasses,
-  Resources.CSIDrivers,
-  Resources.CSINodes,
-  Resources.ClusterRoles,
-  Resources.ClusterRoleBindings,
-  Resources.Namespaces,
-  Resources.PriorityClasses,
-  Resources.RuntimeClasses,
-  Resources.MutatingWebhookConfigurations,
-  Resources.ValidatingWebhookConfigurations,
-  Resources.CustomResourceDefinitions,
-  Resources.PortForwards
-];
-
-// Resources that shouldn't have a Create button
-const readOnlyResources: Resources[] = [
-  Resources.Events,
-  Resources.Nodes,
-  Resources.CSINodes,
-  Resources.VolumeAttachments,
-  Resources.PortForwards
-];
-
-export const ListHeader = ({ resource, error }: ListHeaderProps): JSX.Element => {
-  const isNamespaced = !nonNamespacedResources.includes(resource);
-  const isReadOnly = readOnlyResources.includes(resource);
-  const { setViewContext } = useView();
-
+export const ListHeader = ({ 
+  resource, 
+  error, 
+  actions,
+  showNamespaceDropdown = false 
+}: ListHeaderProps): JSX.Element => {
   return (
     <div className="border-b border-zinc-950/10 pb-3 dark:border-white/10">
       {error && (
@@ -54,16 +27,18 @@ export const ListHeader = ({ resource, error }: ListHeaderProps): JSX.Element =>
 
       <div className="flex w-full flex-wrap items-end justify-between gap-4">
         <Heading>{resource}</Heading>
-        <div className="flex gap-4">
-          {!isReadOnly && (
-            <Button onClick={() => setViewContext({ resource, action: ResourceAction.Create })} className="uppercase" outline>Create</Button>
-          )}
-          {isNamespaced && <NamespaceDropdown />}
-        </div>
+        {showNamespaceDropdown && <NamespaceDropdown />}
       </div>
 
-      <div className="text-zinc-500 py-3 text-sm max-w-4xl">
-        <span className="block sm:inline">{ResourceHelp[resource]}</span>
+      <div className="flex items-start justify-between gap-4 py-3">
+        <div className="text-zinc-500 text-sm flex-shrink min-w-0">
+          <span className="block sm:inline">{ResourceHelp[resource]}</span>
+        </div>
+        {actions && (
+          <div className="flex gap-2 flex-shrink-0">
+            {actions}
+          </div>
+        )}
       </div>
     </div>
   )

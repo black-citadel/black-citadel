@@ -13,7 +13,7 @@ import { JobStatus } from '@components/workloads/job/status';
 import { MetadataDetails } from '@components/metadata';
 import { Heading, Subheading } from '@components/base/heading';
 import { PodList } from '@components/workloads/pod/table';
-import { WorkloadLogs } from '@components/workload-logs';
+import { WorkloadLogs } from '@components/workloads/workload-logs';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
