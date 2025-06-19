@@ -1,5 +1,5 @@
 import { Badge } from "@components/base/badge";
 
-export const MCPServerBadge = () => {
-  return <Badge color="purple">MCP</Badge>;
+export const MCPBadge = () => {
+  return <Badge color="purple">MCP Client</Badge>;
 };

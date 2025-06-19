@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Heading, Subheading } from '@components/base/heading';
 import { DetailsHeader } from '@components/details-header';
 import { DetailsItem, DetailsName } from '@components/details-item';
-import { MCPServerBadge } from '@components/operations/mcp-server/badge';
+import { MCPBadge } from '@components/operations/mcp-server/badge';
 import { Badge } from '@components/base/badge';
 import { Text } from '@components/base/text';
 import { MCPConnection, MCPToolCallHistory } from '@utils/types';
@@ -195,8 +195,8 @@ export const MCPServerDetailsView = (): JSX.Element => {
     <>
       <DetailsHeader error={error}>
         <Heading>
-          <MCPServerBadge />
-          <span className="ml-2">{connection?.agentName || `Connection ${viewContext.name?.substring(0, 8)}`}</span>
+          <MCPBadge />
+          <span>{connection?.agentName || `Connection ${viewContext.name?.substring(0, 8)}`}</span>
         </Heading>
 
         <Navbar>

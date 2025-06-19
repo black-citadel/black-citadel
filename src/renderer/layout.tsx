@@ -52,6 +52,7 @@ import { MCPServerListView, MCPServerDetailsView } from '@views/operations/mcp-s
 export const Layout = () => {
   const { viewContext, setViewContext, drawerOpen, setDrawerOpen, helpTitle, helpContent } = useView()
   const [activePortForwards, setActivePortForwards] = useState(0);
+  const [activeMCPConnections, setActiveMCPConnections] = useState(0);
 
   // Fetch active port forward count
   useEffect(() => {
@@ -66,6 +67,22 @@ export const Layout = () => {
 
     fetchPortForwardCount();
     const intervalId = setInterval(fetchPortForwardCount, 2000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Fetch active MCP connection count
+  useEffect(() => {
+    const fetchMCPConnectionCount = async () => {
+      try {
+        const connections = await window.electronAPI.getMCPConnections();
+        setActiveMCPConnections(connections.length);
+      } catch (e) {
+        console.error('Failed to fetch MCP connection count:', e);
+      }
+    };
+
+    fetchMCPConnectionCount();
+    const intervalId = setInterval(fetchMCPConnectionCount, 2000);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -227,12 +244,17 @@ export const Layout = () => {
                 <SidebarLabel>
                   {Resources.PortForwards}
                   {activePortForwards > 0 && (
-                    <Badge color="green" className="ml-auto">{activePortForwards}</Badge>
+                    <Badge color="green" className="ml-2">{activePortForwards}</Badge>
                   )}
                 </SidebarLabel>
               </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.MCPServer, action: ResourceAction.List })} current={viewContext.resource === Resources.MCPServer}>
-                <SidebarLabel>{Resources.MCPServer}</SidebarLabel>
+                <SidebarLabel>
+                  {Resources.MCPServer}
+                  {activeMCPConnections > 0 && (
+                    <Badge color="green" className="ml-2">{activeMCPConnections}</Badge>
+                  )}
+                </SidebarLabel>
               </SidebarItem>
             </SidebarSection>
 

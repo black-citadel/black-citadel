@@ -3,6 +3,8 @@ import { ListHeader } from '@components/list-header';
 import { PortForwardTable } from '@components/tools/port-forward/table';
 import { PortForwardInfo } from '@utils/types';
 import { Resources } from '@utils/enums';
+import { Heading, Subheading } from '@components/base/heading';
+import { EmptyState } from '@components/base/empty-state';
 
 export const PortForwardsListView = (): JSX.Element => {
   const [portForwards, setPortForwards] = useState<PortForwardInfo[]>([]);
@@ -63,20 +65,19 @@ export const PortForwardsListView = (): JSX.Element => {
         showNamespaceDropdown={false}
       />
 
-      <div className='m-2'>
-        {portForwards.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            No active port forwards. Start a port forward from a Pod or Service details view.
-          </div>
-        ) : (
-          <PortForwardTable
-            portForwards={portForwards}
-            onStop={handleStop}
-            onCopyUrl={handleCopyUrl}
-            onOpen={handleOpen}
-          />
-        )}
-      </div>
+      {portForwards.length === 0 ? (
+        <EmptyState 
+          title="No active port forwards"
+          description="Start a port forward from a Pod or Service details view."
+        />
+      ) : (
+        <PortForwardTable
+        portForwards={portForwards}
+        onStop={handleStop}
+        onCopyUrl={handleCopyUrl}
+        onOpen={handleOpen}
+      />
+      )}
     </>
   );
 };

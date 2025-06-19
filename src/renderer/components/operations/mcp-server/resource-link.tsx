@@ -1,6 +1,6 @@
 import { ResourceAction, Resources } from "@utils/enums";
 import { useView } from "@context/viewProvider";
-import { MCPServerBadge } from "./badge";
+import { MCPBadge } from "./badge";
 
 interface Props {
   connectionId: string;
@@ -12,7 +12,7 @@ export const MCPConnectionResourceLink = ({ connectionId, agentName }: Props): J
 
   return (
     <>
-      <MCPServerBadge />
+      <MCPBadge />
       <button
         className="text-blue-500 ml-2"
         onClick={() => setViewContext({

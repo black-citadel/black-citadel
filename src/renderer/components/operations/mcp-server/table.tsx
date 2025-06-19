@@ -25,7 +25,7 @@ export const MCPConnectionList = ({ connections }: Props): JSX.Element => {
 
   const processedRows = sortedConnections.map(connection => ({
     'Name': <MCPConnectionResourceLink connectionId={connection.id} agentName={connection.agentName} />,
-    'Session ID': <code className="text-xs">{connection.id.substring(0, 8)}...</code>,
+    'Session ID': <>{connection.id}</>,
     'Status': <Badge color="green">Active</Badge>,
     'Connected': formatDistanceToNow(new Date(connection.connectedAt), { addSuffix: true }),
     'Last Activity': formatDistanceToNow(new Date(connection.lastActivity), { addSuffix: true }),
