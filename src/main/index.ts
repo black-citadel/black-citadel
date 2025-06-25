@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, shell, globalShortcut } from 'electron';
 import k8s = require('@kubernetes/client-node');
 import { dumpYaml } from '@kubernetes/client-node/dist/yaml';
 import * as net from 'net';
@@ -71,7 +71,7 @@ if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
   app.commandLine.appendSwitch('v', '1');
 }
 
-const createWindow = (): void => {
+const createWindow = (): BrowserWindow => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
@@ -88,6 +88,49 @@ const createWindow = (): void => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  // Handle mouse navigation buttons
+  mainWindow.webContents.on('before-input-event', (event, input) => {
+    // Log all mouse events for debugging
+    if (input.type === 'mouseDown' || input.type === 'mouseUp') {
+      console.log('Mouse event:', input.type, 'button:', input.button, 'typeof:', typeof input.button);
+    }
+    
+    if (input.type === 'mouseDown') {
+      // Check for string-based button names
+      if (input.button === 'back') {
+        console.log('Back button pressed (string)');
+        event.preventDefault();
+        mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'back' });
+      } else if (input.button === 'forward') {
+        console.log('Forward button pressed (string)');
+        event.preventDefault();
+        mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'forward' });
+      }
+      // Check for numeric button codes (3 = back, 4 = forward on many mice)
+      else if (input.button === 3) {
+        console.log('Back button pressed (button 3)');
+        event.preventDefault();
+        mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'back' });
+      } else if (input.button === 4) {
+        console.log('Forward button pressed (button 4)');
+        event.preventDefault();
+        mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'forward' });
+      }
+    }
+  });
+
+  // Alternative method using app-command event
+  mainWindow.on('app-command', (event, cmd) => {
+    console.log('App command:', cmd);
+    if (cmd === 'browser-backward') {
+      event.preventDefault();
+      mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'back' });
+    } else if (cmd === 'browser-forward') {
+      event.preventDefault();
+      mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'forward' });
+    }
+  });
   
   // Development-only CDP features
   if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
@@ -108,13 +151,28 @@ const createWindow = (): void => {
       callback(true);
     });
   }
+  
+  return mainWindow;
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  createWindow();
+  const mainWindow = createWindow();
+  
+  // Register keyboard shortcuts for navigation
+  globalShortcut.register('Alt+Left', () => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'back' });
+    }
+  });
+  
+  globalShortcut.register('Alt+Right', () => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'forward' });
+    }
+  });
   
   // Start MCP server
   try {
@@ -131,6 +189,11 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+app.on('will-quit', () => {
+  // Unregister all shortcuts
+  globalShortcut.unregisterAll();
 });
 
 app.on('activate', () => {

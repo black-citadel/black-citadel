@@ -235,3 +235,8 @@ try {
 } catch (error) {
   console.error(error)
 }
+
+// Forward navigation events from main process to renderer
+ipcRenderer.on('navigation', (_, data) => {
+  window.postMessage(data, '*');
+});
