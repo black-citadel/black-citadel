@@ -34,14 +34,6 @@ export const EndpointsListView = (): JSX.Element => {
         resource={Resources.Endpoints} 
         error={error}
         showNamespaceDropdown={true}
-        actions={
-          <Button 
-            onClick={() => setViewContext({resource: Resources.Endpoints, action: ResourceAction.Create})} 
-            outline
-          >
-            Create Endpoint
-          </Button>
-        }
       />
       {endpoints && <EndpointsList endpoints={endpoints} />}
     </>

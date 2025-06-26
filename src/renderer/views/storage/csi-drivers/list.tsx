@@ -34,14 +34,6 @@ export const CSIDriversListView = (): JSX.Element => {
         resource={Resources.CSIDrivers} 
         error={error}
         showNamespaceDropdown={false}
-        actions={
-          <Button 
-            onClick={() => setViewContext({resource: Resources.CSIDrivers, action: ResourceAction.Create})} 
-            outline
-          >
-            Create CSI Driver
-          </Button>
-        }
       />
       {csiDrivers && <CSIDriverList csiDrivers={csiDrivers} />}
     </>

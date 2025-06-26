@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell, globalShortcut } from 'electron';
 import k8s = require('@kubernetes/client-node');
-import { dumpYaml } from '@kubernetes/client-node/dist/yaml';
+import { dumpYaml, loadYaml } from '@kubernetes/client-node/dist/yaml';
 import * as net from 'net';
 import * as path from 'path';
 import * as os from 'os';
@@ -758,3 +758,157 @@ ipcMain.handle('readNamespacedEvent', async (event, name, namespace) => (await k
 ipcMain.handle('getMCPConnections', async () => getActiveConnections());
 ipcMain.handle('getMCPToolCallHistory', async (event, limit?: number) => getToolCallHistory(limit));
 ipcMain.handle('clearMCPToolCallHistory', async () => clearToolCallHistory());
+
+// Generic Apply handler
+ipcMain.handle('apply', async (event, yamlContent: string) => {
+  try {
+    const resources = loadYaml(yamlContent);
+    const resourceArray = Array.isArray(resources) ? resources : [resources];
+    
+    const results = [];
+    for (const resource of resourceArray) {
+      if (!resource || !resource.kind) {
+        throw new Error('Invalid resource: missing kind');
+      }
+
+      const namespace = resource.metadata?.namespace || 'default';
+      const name = resource.metadata?.name;
+
+      try {
+        let result;
+        switch (resource.kind) {
+          case 'Namespace':
+            result = await k8sCoreV1Api.createNamespace(resource);
+            break;
+          case 'Deployment':
+            result = await k8sAppsV1Api.createNamespacedDeployment(namespace, resource);
+            break;
+          case 'Service':
+            result = await k8sCoreV1Api.createNamespacedService(namespace, resource);
+            break;
+          case 'ConfigMap':
+            result = await k8sCoreV1Api.createNamespacedConfigMap(namespace, resource);
+            break;
+          case 'Secret':
+            result = await k8sCoreV1Api.createNamespacedSecret(namespace, resource);
+            break;
+          case 'Pod':
+            result = await k8sCoreV1Api.createNamespacedPod(namespace, resource);
+            break;
+          case 'StatefulSet':
+            result = await k8sAppsV1Api.createNamespacedStatefulSet(namespace, resource);
+            break;
+          case 'DaemonSet':
+            result = await k8sAppsV1Api.createNamespacedDaemonSet(namespace, resource);
+            break;
+          case 'Job':
+            result = await k8sBatchV1Api.createNamespacedJob(namespace, resource);
+            break;
+          case 'CronJob':
+            result = await k8sBatchV1Api.createNamespacedCronJob(namespace, resource);
+            break;
+          case 'Ingress':
+            result = await k8sNetworkingV1Api.createNamespacedIngress(namespace, resource);
+            break;
+          case 'PersistentVolumeClaim':
+            result = await k8sCoreV1Api.createNamespacedPersistentVolumeClaim(namespace, resource);
+            break;
+          case 'ServiceAccount':
+            result = await k8sCoreV1Api.createNamespacedServiceAccount(namespace, resource);
+            break;
+          case 'Role':
+            result = await k8sRbacAuthorizationV1Api.createNamespacedRole(namespace, resource);
+            break;
+          case 'RoleBinding':
+            result = await k8sRbacAuthorizationV1Api.createNamespacedRoleBinding(namespace, resource);
+            break;
+          case 'ClusterRole':
+            result = await k8sRbacAuthorizationV1Api.createClusterRole(resource);
+            break;
+          case 'ClusterRoleBinding':
+            result = await k8sRbacAuthorizationV1Api.createClusterRoleBinding(resource);
+            break;
+          case 'NetworkPolicy':
+            result = await k8sNetworkingV1Api.createNamespacedNetworkPolicy(namespace, resource);
+            break;
+          case 'HorizontalPodAutoscaler':
+            result = await k8sAutoscalingV2Api.createNamespacedHorizontalPodAutoscaler(namespace, resource);
+            break;
+          case 'PodDisruptionBudget':
+            result = await k8sPolicyV1Api.createNamespacedPodDisruptionBudget(namespace, resource);
+            break;
+          case 'LimitRange':
+            result = await k8sCoreV1Api.createNamespacedLimitRange(namespace, resource);
+            break;
+          case 'ResourceQuota':
+            result = await k8sCoreV1Api.createNamespacedResourceQuota(namespace, resource);
+            break;
+          case 'PersistentVolume':
+            result = await k8sCoreV1Api.createPersistentVolume(resource);
+            break;
+          case 'StorageClass':
+            result = await k8sStorageV1Api.createStorageClass(resource);
+            break;
+          default:
+            // Try to handle as a custom resource
+            if (resource.apiVersion && resource.apiVersion.includes('/')) {
+              const [group, version] = resource.apiVersion.split('/');
+              const plural = resource.kind.toLowerCase() + 's'; // Simple pluralization
+              if (namespace && namespace !== 'default') {
+                result = await k8sCustomObjectsApi.createNamespacedCustomObject(
+                  group, version, namespace, plural, resource
+                );
+              } else {
+                result = await k8sCustomObjectsApi.createClusterCustomObject(
+                  group, version, plural, resource
+                );
+              }
+            } else {
+              throw new Error(`Unsupported resource kind: ${resource.kind}`);
+            }
+        }
+        results.push(result.body);
+      } catch (error) {
+        // If create fails, try to update instead
+        if (error.response?.statusCode === 409 && name) {
+          try {
+            let result;
+            switch (resource.kind) {
+              case 'Namespace':
+                result = await k8sCoreV1Api.patchNamespace(name, resource, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+                break;
+              case 'Deployment':
+                result = await k8sAppsV1Api.patchNamespacedDeployment(name, namespace, resource, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+                break;
+              case 'Service':
+                result = await k8sCoreV1Api.patchNamespacedService(name, namespace, resource, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+                break;
+              case 'ConfigMap':
+                result = await k8sCoreV1Api.patchNamespacedConfigMap(name, namespace, resource, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+                break;
+              case 'Secret':
+                result = await k8sCoreV1Api.patchNamespacedSecret(name, namespace, resource, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+                break;
+              // Add more patch cases as needed
+              default:
+                throw error;
+            }
+            results.push(result.body);
+          } catch (patchError) {
+            throw patchError;
+          }
+        } else {
+          throw error;
+        }
+      }
+    }
+
+    return { success: true, data: results.length === 1 ? results[0] : results };
+  } catch (error) {
+    console.error('Apply error:', error);
+    return { 
+      success: false, 
+      error: error.response?.body?.message || error.message || 'Failed to apply resource' 
+    };
+  }
+});

@@ -116,6 +116,8 @@ export interface ElectronAPI {
   getMCPConnections: () => Promise<MCPConnection[]>;
   getMCPToolCallHistory: (limit?: number) => Promise<MCPToolCallHistory[]>;
   clearMCPToolCallHistory: () => Promise<void>;
+  // Generic Apply
+  apply: (yamlContent: string) => Promise<{ success: boolean; data?: any; error?: string }>;
 }
 
 try {
@@ -231,6 +233,8 @@ try {
     getMCPConnections: () => ipcRenderer.invoke('getMCPConnections'),
     getMCPToolCallHistory: (limit?: number) => ipcRenderer.invoke('getMCPToolCallHistory', limit),
     clearMCPToolCallHistory: () => ipcRenderer.invoke('clearMCPToolCallHistory'),
+    // Generic Apply
+    apply: (yamlContent: string) => ipcRenderer.invoke('apply', yamlContent),
   } as ElectronAPI);
 } catch (error) {
   console.error(error)

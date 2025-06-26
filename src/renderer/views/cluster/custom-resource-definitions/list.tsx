@@ -34,7 +34,6 @@ export const CustomResourceDefinitionsListView = () => {
         resource={Resources.CustomResourceDefinitions} 
         error={error}
         showNamespaceDropdown={false}
-        actions={}
       />
       {crds && <CustomResourceDefinitionList customResourceDefinitions={crds} />}
     </>

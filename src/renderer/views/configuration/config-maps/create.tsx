@@ -13,13 +13,15 @@ import { dump } from 'js-yaml';
 import { ConfigMapBadge } from '@components/configuration/config-map/badge';
 import { configMapTemplate } from '@templates/config-map.yaml';
 import { FieldData } from '@components/form/field-data';
-import { FieldNamespaceSelect } from '@components/form/field-namespace-select';
+import { NamespaceDropdown } from '@components/namespace-dropdown';
+import { HelpButton } from '@components/help-button';
+import helpObjects from '@help/index';
 
 export const ConfigMapsCreateView = (): JSX.Element => {
-  const { setViewContext } = useView();
+  const { setViewContext, activeNamespace } = useView();
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
-  const [namespace, setNamespace] = useState<string>('default');
+  const [namespace, setNamespace] = useState<string>(activeNamespace === 'all' ? 'default' : activeNamespace);
   const [labels, setLabels] = useState<FieldLabel[]>([{ key: '', value: '' }]);
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
   const [data, setData] = useState<FieldLabel[]>([{ key: '', value: '' }]);
@@ -28,15 +30,16 @@ export const ConfigMapsCreateView = (): JSX.Element => {
 
   const handleCreate = async () => {
     try {
-      const result = await window.electronAPI.createNamespacedConfigMap(namespace, payload);
+      const yamlString = dump(payload);
+      const result = await window.electronAPI.apply(yamlString);
 
       if (result.success) {
         setViewContext({
           resource: Resources.ConfigMaps,
           action: ResourceAction.Details,
-          name: result.data.metadata.name,
-          namespace: result.data.metadata.namespace
-        })
+          name: name,
+          namespace: namespace
+        });
       } else {
         setError(result.error);
       }
@@ -54,7 +57,7 @@ export const ConfigMapsCreateView = (): JSX.Element => {
         <div className='px-4'>
           <Subheading>Metadata</Subheading>
           <Field className="my-8">
-            <Label>Name</Label>
+            <Label>Name <HelpButton title="Name" content={helpObjects.metadata.name.help} /></Label>
             <Description>
               Enter a unique name for your ConfigMap.
             </Description>
@@ -66,7 +69,16 @@ export const ConfigMapsCreateView = (): JSX.Element => {
             />
           </Field>
 
-          <FieldNamespaceSelect value={namespace} onChange={setNamespace} />
+          <Field>
+            <Label>Namespace</Label>
+            <Description>
+              Select the namespace for this ConfigMap.
+            </Description>
+            <NamespaceDropdown 
+              value={namespace} 
+              onChange={setNamespace}
+            />
+          </Field>
 
           <FieldLabels labels={labels} setLabels={setLabels} />
 

@@ -35,14 +35,6 @@ export const MutatingWebhookConfigurationsListView = (): JSX.Element => {
         resource={Resources.MutatingWebhookConfigurations} 
         error={error}
         showNamespaceDropdown={false}
-        actions={
-          <Button 
-            onClick={() => setViewContext({resource: Resources.MutatingWebhookConfigurations, action: ResourceAction.Create})} 
-            outline
-          >
-            Create Mutating Webhook Configuration
-          </Button>
-        }
       />
       {mutatingWebhookConfigs && <MutatingWebhookConfigurationList mutatingWebhookConfigurations={mutatingWebhookConfigs} />}
     </>

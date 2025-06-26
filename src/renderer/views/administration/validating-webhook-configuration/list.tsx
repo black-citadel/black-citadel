@@ -35,14 +35,6 @@ export const ValidatingWebhookConfigurationsListView = (): JSX.Element => {
         resource={Resources.ValidatingWebhookConfigurations} 
         error={error}
         showNamespaceDropdown={false}
-        actions={
-          <Button 
-            onClick={() => setViewContext({resource: Resources.ValidatingWebhookConfigurations, action: ResourceAction.Create})} 
-            outline
-          >
-            Create Validating Webhook Configuration
-          </Button>
-        }
       />
       {validatingWebhookConfigs && <ValidatingWebhookConfigurationList validatingWebhookConfigurations={validatingWebhookConfigs} />}
     </>
