@@ -36,4 +36,8 @@ export const rules: Required<ModuleOptions>['rules'] = [
       { loader: "postcss-loader" }
     ],
   },
+  {
+    test: /\.(svg|png|jpg|jpeg|gif)$/,
+    type: 'asset/resource',
+  },
 ];

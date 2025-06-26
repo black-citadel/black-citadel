@@ -18,7 +18,8 @@ export const rendererConfig: Configuration = {
       '@utils': path.resolve(__dirname, 'src/renderer/utils'),
       '@views': path.resolve(__dirname, 'src/renderer/views'),
       '@templates': path.resolve(__dirname, 'src/renderer/templates'),
-      '@help': path.resolve(__dirname, 'src/renderer/help')
+      '@help': path.resolve(__dirname, 'src/renderer/help'),
+      '@assets': path.resolve(__dirname, 'src/renderer/assets')
     }
   },
 };

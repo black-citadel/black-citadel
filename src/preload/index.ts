@@ -5,6 +5,8 @@ import { PortForwardInfo, PortForwardRequest, MCPConnection, MCPToolCallHistory 
 export interface ElectronAPI {
   // External links
   openExternalLink: (url: string) => Promise<void>;
+  // Kubernetes status
+  getK8sStatus: () => Promise<{ initialized: boolean; error: string | null }>;
   // Contexts
   getContexts: () => Promise<k8s.Context[]>;
   getCurrentContext: () => Promise<string>;
@@ -124,6 +126,8 @@ try {
   contextBridge.exposeInMainWorld('electronAPI', {
     // External links
     openExternalLink: (url: string) => ipcRenderer.invoke('openExternalLink', url),
+    // Kubernetes status
+    getK8sStatus: () => ipcRenderer.invoke('getK8sStatus'),
     // Contexts
     getContexts: () => ipcRenderer.invoke('getContexts'),
     getCurrentContext: () => ipcRenderer.invoke('getCurrentContext'),

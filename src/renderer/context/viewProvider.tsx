@@ -32,7 +32,7 @@ const ViewContext = createContext<ViewContextType | undefined>(undefined);
 const MAX_HISTORY_SIZE = 50;
 
 export const ViewProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const initialView = {resource: Resources.Contexts, action: ResourceAction.List};
+  const initialView = {resource: Resources.Welcome, action: ResourceAction.List};
   const [viewContext, setViewContextState] = useState<ViewContext>(initialView);
   const [activeNamespace, setActiveNamespace] = useState("all");
   const [activeContext, setActiveContext] = useState("");

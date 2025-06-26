@@ -20,7 +20,8 @@
       "@utils/*": ["src/renderer/utils/*"],
       "@views/*": ["src/renderer/views/*"],
       "@templates/*": ["src/renderer/templates/*"],
-      "@help/*": ["src/renderer/help/*"]
+      "@help/*": ["src/renderer/help/*"],
+      "@assets/*": ["src/renderer/assets/*"]
     }
   },
   "include": ["src/**/*"]

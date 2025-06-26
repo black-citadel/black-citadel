@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { SidebarLayout } from '@components/base/sidebar-layout'
+import { WelcomeView } from '@views/welcome/welcome';
 import { DeploymentsListView, DeploymentsDetailsView, DeploymentsCreateView } from '@views/workloads/deployments'
 import { PodsListView, PodsDetailsView, PodsCreateView } from '@views/workloads/pods'
 import { ReplicaSetsListView, ReplicaSetsDetailsView, ReplicaSetsCreateView } from '@views/workloads/replicasets';
@@ -85,6 +86,18 @@ export const Layout = () => {
     const intervalId = setInterval(fetchMCPConnectionCount, 2000);
     return () => clearInterval(intervalId);
   }, []);
+
+  // Check if we should show the sidebar
+  const showSidebar = viewContext.resource !== Resources.Welcome;
+
+  // If on welcome page, render without sidebar
+  if (!showSidebar) {
+    return (
+      <div className="w-full h-screen">
+        <WelcomeView />
+      </div>
+    );
+  }
 
   return (
     <SidebarLayout
@@ -284,6 +297,9 @@ export const Layout = () => {
 
             <SidebarSection>
               <SidebarHeading>Settings</SidebarHeading>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Welcome, action: ResourceAction.List })} current={viewContext.resource === Resources.Welcome}>
+                <SidebarLabel>Welcome</SidebarLabel>
+              </SidebarItem>
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Contexts, action: ResourceAction.List })} current={viewContext.resource === Resources.Contexts}>
                 <SidebarLabel>{Resources.Contexts}</SidebarLabel>
               </SidebarItem>
@@ -299,6 +315,9 @@ export const Layout = () => {
       }
     >
       <div className="w-full mx-auto">
+        {/* Welcome */}
+        {viewContext.resource === Resources.Welcome && <WelcomeView />}
+        
         {/* Cluster */}
         {viewContext.resource == Resources.Contexts && viewContext.action === ResourceAction.List && <ContextsListView />}
         {viewContext.resource == Resources.Contexts && viewContext.action === ResourceAction.Details && <ContextsDetailsView />}

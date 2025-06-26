@@ -14,56 +14,56 @@ This document tracks the implementation status of all Kubernetes resources and t
 | Resource | Category | List View | Details View | YAML View | Create | Delete | Edit/Apply | Logs | Port Forward | Exec/Shell | Notes |
 |----------|----------|-----------|--------------|-----------|---------|---------|------------|------|--------------|------------|-------|
 | **Cluster Resources** |
-| Namespaces | Cluster | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A | N/A | N/A | |
-| Nodes | Cluster | ✅ | ✅ | ✅ | N/A | ❌ | ❌ | N/A | N/A | N/A | Cannot create/delete nodes |
-| Events | Cluster | ✅ | ✅ | ✅ | N/A | ✅ | ❌ | N/A | N/A | N/A | System-generated |
-| CustomResourceDefinitions | Cluster | ✅ | ✅ | ✅ | ❌ | ✅ | ✅ | N/A | N/A | N/A | |
-| CustomResources | Cluster | ❌ | ✅ | ✅ | ❌ | ✅ | ✅ | N/A | N/A | N/A | Dynamic based on CRDs |
+| Namespaces | Cluster | ✅ | ✅ | v | ✅ | ✅ | ✅ | N/A | N/A | N/A | |
+| Nodes | Cluster | ✅ | ✅ | v | N/A | ❌ | ❌ | N/A | N/A | N/A | Cannot create/delete nodes |
+| Events | Cluster | ✅ | ✅ | v | N/A | ✅ | ❌ | N/A | N/A | N/A | System-generated |
+| CustomResourceDefinitions | Cluster | ✅ | ✅ | v | ❌ | ✅ | ✅ | N/A | N/A | N/A | |
+| CustomResources | Cluster | ❌ | ✅ | v | ❌ | ✅ | ✅ | N/A | N/A | N/A | Dynamic based on CRDs |
 | **Workloads** |
-| Deployments | Workloads | ✅ | ✅ | ✅ | v | ✅ | ✅ | v | N/A | ❌ | Logs from managed pods |
-| Pods | Workloads | ✅ | ✅ | ✅ | v | ✅ | ✅ | v | N/A | ❌ | Direct container logs |
-| ReplicaSets | Workloads | ✅ | ✅ | ✅ | v | ✅ | ✅ | v | N/A | N/A | Logs from managed pods |
-| StatefulSets | Workloads | ✅ | ✅ | ✅ | v | ✅ | ✅ | v | N/A | ❌ | Logs from managed pods |
-| DaemonSets | Workloads | ✅ | ✅ | ✅ | v | ✅ | ✅ | v | N/A | ❌ | Logs from managed pods |
-| Jobs | Workloads | ✅ | ✅ | ✅ | v | ✅ | ✅ | v | N/A | ❌ | Logs from job pods |
-| CronJobs | Workloads | ✅ | ✅ | ✅ | v | ✅ | ✅ | v | N/A | N/A | Logs from job pods |
+| Deployments | Workloads | ✅ | ✅ | v | v | ✅ | ✅ | v | N/A | ❌ | Logs from managed pods |
+| Pods | Workloads | ✅ | ✅ | v | v | ✅ | ✅ | v | N/A | ❌ | Direct container logs |
+| ReplicaSets | Workloads | ✅ | ✅ | v | v | ✅ | ✅ | v | N/A | N/A | Logs from managed pods |
+| StatefulSets | Workloads | ✅ | ✅ | v | v | ✅ | ✅ | v | N/A | ❌ | Logs from managed pods |
+| DaemonSets | Workloads | ✅ | ✅ | v | v | ✅ | ✅ | v | N/A | ❌ | Logs from managed pods |
+| Jobs | Workloads | ✅ | ✅ | v | v | ✅ | ✅ | v | N/A | ❌ | Logs from job pods |
+| CronJobs | Workloads | ✅ | ✅ | v | v | ✅ | ✅ | v | N/A | N/A | Logs from job pods |
 | **Networking** |
-| Services | Networking | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | ✅ | N/A | Port forward implemented |
-| Ingresses | Networking | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| IngressClasses | Networking | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| Endpoints | Networking | ✅ | ✅ | ✅ | N/A | ✅ | ✅ | N/A | N/A | N/A | Auto-managed by Services |
-| EndpointSlices | Networking | ✅ | ✅ | ✅ | N/A | ✅ | ✅ | N/A | N/A | N/A | Auto-managed by Services |
-| NetworkPolicies | Networking | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
+| Services | Networking | ✅ | ✅ | v | v | ✅ | ✅ | N/A | ✅ | N/A | Port forward implemented |
+| Ingresses | Networking | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| IngressClasses | Networking | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| Endpoints | Networking | ✅ | ✅ | v | N/A | ✅ | ✅ | N/A | N/A | N/A | Auto-managed by Services |
+| EndpointSlices | Networking | ✅ | ✅ | v | N/A | ✅ | ✅ | N/A | N/A | N/A | Auto-managed by Services |
+| NetworkPolicies | Networking | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
 | **Configuration** |
-| ConfigMaps | Configuration | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| Secrets | Configuration | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| ResourceQuotas | Configuration | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| LimitRanges | Configuration | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| HorizontalPodAutoscalers | Configuration | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| PodDisruptionBudgets | Configuration | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
+| ConfigMaps | Configuration | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| Secrets | Configuration | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| ResourceQuotas | Configuration | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| LimitRanges | Configuration | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| HorizontalPodAutoscalers | Configuration | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| PodDisruptionBudgets | Configuration | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
 | **Storage** |
-| PersistentVolumeClaims | Storage | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| PersistentVolumes | Storage | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| StorageClasses | Storage | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| VolumeAttachments | Storage | ✅ | ✅ | ✅ | N/A | ✅ | ✅ | N/A | N/A | N/A | Managed by kubelet |
-| CSIDrivers | Storage | ✅ | ✅ | ✅ | N/A | ✅ | ✅ | N/A | N/A | N/A | Installed by storage providers |
-| CSINodes | Storage | ✅ | ✅ | ✅ | N/A | ❌ | ❌ | N/A | N/A | N/A | Read-only, managed by CSI drivers |
+| PersistentVolumeClaims | Storage | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| PersistentVolumes | Storage | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| StorageClasses | Storage | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| VolumeAttachments | Storage | ✅ | ✅ | v | N/A | ✅ | ✅ | N/A | N/A | N/A | Managed by kubelet |
+| CSIDrivers | Storage | ✅ | ✅ | v | N/A | ✅ | ✅ | N/A | N/A | N/A | Installed by storage providers |
+| CSINodes | Storage | ✅ | ✅ | v | N/A | ❌ | ❌ | N/A | N/A | N/A | Read-only, managed by CSI drivers |
 | **Access Control** |
-| ServiceAccounts | Access Control | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| Roles | Access Control | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| RoleBindings | Access Control | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| ClusterRoles | Access Control | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| ClusterRoleBindings | Access Control | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
+| ServiceAccounts | Access Control | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| Roles | Access Control | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| RoleBindings | Access Control | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| ClusterRoles | Access Control | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| ClusterRoleBindings | Access Control | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
 | **Administration** |
-| PriorityClasses | Administration | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| RuntimeClasses | Administration | ✅ | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | |
-| MutatingWebhookConfigurations | Administration | ✅ | ✅ | ✅ | N/A | ✅ | ✅ | N/A | N/A | N/A | Advanced admission controller config |
-| ValidatingWebhookConfigurations | Administration | ✅ | ✅ | ✅ | N/A | ✅ | ✅ | N/A | N/A | N/A | Advanced admission controller config |
+| PriorityClasses | Administration | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| RuntimeClasses | Administration | ✅ | ✅ | v | v | ✅ | ✅ | N/A | N/A | N/A | |
+| MutatingWebhookConfigurations | Administration | ✅ | ✅ | v | N/A | ✅ | ✅ | N/A | N/A | N/A | Advanced admission controller config |
+| ValidatingWebhookConfigurations | Administration | ✅ | ✅ | v | N/A | ✅ | ✅ | N/A | N/A | N/A | Advanced admission controller config |
 | **Operations** |
 | Port Forwards | Operations | ✅ | N/A | N/A | ✅ | ✅ | N/A | N/A | N/A | N/A | Special tool |
 | MCP Server | Operations | ✅ | ✅ | N/A | N/A | N/A | N/A | N/A | N/A | N/A | AI integration |
 | **Settings** |
-| Contexts | Settings | ✅ | ✅ | N/A | ✅ | ✅ | N/A | N/A | N/A | N/A | Kubeconfig management |
+| Contexts | Settings | ✅ | ✅ | v | ✅ | ✅ | N/A | N/A | N/A | N/A | Kubeconfig management |
 | Preferences | Settings | ❌ | ❌ | N/A | N/A | N/A | N/A | N/A | N/A | N/A | Not implemented |
 | License | Settings | ❌ | ❌ | N/A | N/A | N/A | N/A | N/A | N/A | N/A | Not implemented |
 
@@ -79,7 +79,7 @@ This document tracks the implementation status of all Kubernetes resources and t
 ### Core CRUD Operations
 - **List Views**: ✅ All resources (except CustomResources list)
 - **Details Views**: ✅ All resources
-- **YAML Views**: ✅ All resources (where applicable)
+- **YAML Views**: v All Kubernetes resources with details views (40 resources), N/A for non-Kubernetes resources (Port Forwards, MCP Server, Preferences, License)
 - **Create**: v Implemented for 27 resources, N/A for 8 system-managed resources
 - **Delete**: ✅ All resources (except read-only ones like Nodes, CSINodes)
 - **Edit/Apply**: ✅ All resources (except read-only ones)

@@ -1,4 +1,7 @@
 export enum Resources {
+    // General
+    Welcome = 'Welcome',
+    
     // Settings
     Contexts = "Contexts",
     Preferences = 'Preferences',

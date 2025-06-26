@@ -71,19 +71,30 @@ components/[category]/[resource-type]/
 ```
 
 ### API Communication
-All Kubernetes operations use the typed electronAPI:
+All Kubernetes operations use the typed electronAPI with resource-specific methods:
 ```typescript
-// List resources
-await window.electronAPI.list(resource, namespace?)
+// List resources (examples)
+await window.electronAPI.listPodForAllNamespaces()
+await window.electronAPI.listNamespacedPod(namespace)
+await window.electronAPI.listDeploymentForAllNamespaces()
+await window.electronAPI.listNamespace()
 
-// Get specific resource
-await window.electronAPI.read(resource, name, namespace?)
+// Get specific resource (examples)
+await window.electronAPI.readNamespacedPod(name, namespace)
+await window.electronAPI.readNamespacedDeployment(name, namespace)
+await window.electronAPI.readNamespace(name)
 
-// Create/update resource
+// Create resources (examples)
+await window.electronAPI.createNamespace(payload)
+await window.electronAPI.createNamespacedPod(namespace, podSpec)
+await window.electronAPI.createNamespacedConfigMap(namespace, payload)
+
+// Delete resources (examples)
+await window.electronAPI.deleteNamespacedPod(name, namespace)
+await window.electronAPI.deleteNamespace(name)
+
+// Apply YAML (generic for all resources)
 await window.electronAPI.apply(yamlContent)
-
-// Delete resource
-await window.electronAPI.delete(resource, name, namespace?)
 ```
 
 ### Navigation
