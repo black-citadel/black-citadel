@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -19,6 +19,7 @@ import { DeploymentSpec } from '@components/workloads/deployment/spec';
 import { Badge } from '@components/base/badge';
 import { PodList } from '@components/workloads/pod/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -27,7 +28,7 @@ function getLabelSelectorString(selector: { [key: string]: string }): string {
 }
 
 export const DeploymentsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [deployment, setDeployment] = useState<k8s.V1Deployment>();
   const [pods, setPods] = useState<k8s.V1PodList>();
@@ -59,9 +60,25 @@ export const DeploymentsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(deployment);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedDeployment(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.Deployments, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.Deployments}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={deployment}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <DeploymentBadge />{viewContext.name}
         </Heading>

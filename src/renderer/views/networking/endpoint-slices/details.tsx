@@ -9,6 +9,7 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { EndpointSliceBadge } from '@components/networking/endpoint-slice/badge';
 import { EndpointSliceEndpoints } from '@components/networking/endpoint-slice/endpoint-slice-endpoints';
+import { Heading } from '@components/base/heading';
 
 export const EndpointSlicesDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
@@ -41,14 +42,18 @@ export const EndpointSlicesDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error}><EndpointSliceBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader error={error}>
+        <Heading>
+          <EndpointSliceBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && endpointSlice && (
         <div className="grid grid-cols-2 gap-4">

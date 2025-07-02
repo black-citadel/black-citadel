@@ -2,7 +2,7 @@ import k8s = require('@kubernetes/client-node');
 import { Heading, Subheading } from "@components/base/heading";
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -10,6 +10,7 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { MetadataDetails } from '@components/metadata';
 import { HorizontalPodAutoscalerBadge } from '@components/configuration/horizontal-pod-autoscaler/badge';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const HorizontalPodAutoscalersDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -40,16 +41,36 @@ export const HorizontalPodAutoscalersDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(hpa);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedHorizontalPodAutoscaler(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.HorizontalPodAutoscalers, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}><HorizontalPodAutoscalerBadge /> {viewContext.name}</DetailsHeader>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.HorizontalPodAutoscalers}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={hpa}
+            onDelete={handleDelete}
+          />
+        }
+      >
+        <Heading>
+          <HorizontalPodAutoscalerBadge /> {viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && hpa && (
         <div className='m-2'>

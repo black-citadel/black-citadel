@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -11,9 +11,10 @@ import { ConfigMapBadge } from '@components/configuration/config-map/badge';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { DescriptionDetails, DescriptionList, DescriptionTerm } from '@components/base/description-list';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const ConfigMapsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [configMap, setConfigMap] = useState<k8s.V1ConfigMap>();
   const [error, setError] = useState(null);
@@ -43,6 +44,11 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(configMap);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedConfigMap(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.ConfigMaps, action: ResourceAction.List });
+  };
+
   const renderConfigMapData = () => {
     if (!configMap || !configMap.data) return "No data";
     return Object.entries(configMap.data).map(([key, value]) => (
@@ -55,7 +61,18 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.ConfigMaps}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={configMap}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <ConfigMapBadge />{viewContext.name}
         </Heading>

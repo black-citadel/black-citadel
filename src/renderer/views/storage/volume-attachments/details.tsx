@@ -12,7 +12,7 @@ import { AttacherDetails } from '@components/storage/volume-attachment/attacher-
 import { NodeDetails } from '@components/storage/volume-attachment/node-details';
 import { SourceDetails } from '@components/storage/volume-attachment/source-details';
 import { AttachmentStatus } from '@components/storage/volume-attachment/attachment-status';
-import { Subheading } from '@components/base/heading';
+import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 
 
@@ -47,14 +47,18 @@ export const VolumeAttachmentsDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error}><VolumeAttachmentBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader error={error}>
+        <Heading>
+          <VolumeAttachmentBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && volumeAttachment && (
         <div className='m-2'>

@@ -10,7 +10,7 @@ import { DetailsHeader } from '@components/details-header';
 import { CSIDriverBadge } from '@components/storage/csi-driver/badge';
 import { VolumeLifecycleModes } from '@components/storage/csi-driver/volume-lifecycle-modes';
 import { TokenRequests } from '@components/storage/csi-driver/token-requests';
-import { Subheading } from '@components/base/heading';
+import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 
 export const CSIDriversDetailsView = (): JSX.Element => {
@@ -44,14 +44,18 @@ export const CSIDriversDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error}><CSIDriverBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader error={error}>
+        <Heading>
+          <CSIDriverBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && csiDriver && (
         <div className='m-2'>

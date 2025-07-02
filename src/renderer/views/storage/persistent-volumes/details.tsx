@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -16,9 +16,10 @@ import { AccessModes } from '@components/storage/persistent-volume/access-modes'
 import { StorageDetails } from '@components/storage/persistent-volume/storage-details';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const PersistentVolumesDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [pv, setPV] = useState<k8s.V1PersistentVolume>();
   const [error, setError] = useState(null);
@@ -46,9 +47,24 @@ export const PersistentVolumesDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(pv);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deletePersistentVolume(viewContext.name);
+    setViewContext({ resource: Resources.PersistentVolumes, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.PersistentVolumes}
+            resourceName={viewContext.name}
+            resource={persistentVolume}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <PersistentVolumeBadge />{viewContext.name}
         </Heading>

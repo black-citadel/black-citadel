@@ -100,6 +100,32 @@ export interface ElectronAPI {
   readNamespacedPodLog: (name: string, namespace: string, container?: string, options?: { follow?: boolean, previous?: boolean, sinceSeconds?: number, tailLines?: number, timestamps?: boolean, pretty?: string }) => Promise<{ success: boolean, data?: string, error?: string }>;
   createNamespacedConfigMap: (namespace: string, payload: k8s.V1ConfigMap) => Promise<{ success: boolean, data?: k8s.V1ConfigMap, error?: string }>;
   deleteNamespacedConfigMap: (name: string, namespace: string) => Promise<void>;
+  // Additional delete methods
+  deleteNamespacedDeployment: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedReplicaSet: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedStatefulSet: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedDaemonSet: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedJob: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedCronJob: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedService: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedSecret: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedIngress: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedNetworkPolicy: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedEndpoints: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedHorizontalPodAutoscaler: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedPodDisruptionBudget: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedResourceQuota: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedLimitRange: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedServiceAccount: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedPersistentVolumeClaim: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedRole: (name: string, namespace: string) => Promise<void>;
+  deleteNamespacedRoleBinding: (name: string, namespace: string) => Promise<void>;
+  deleteClusterRole: (name: string) => Promise<void>;
+  deleteClusterRoleBinding: (name: string) => Promise<void>;
+  deletePersistentVolume: (name: string) => Promise<void>;
+  deleteStorageClass: (name: string) => Promise<void>;
+  deletePriorityClass: (name: string) => Promise<void>;
+  deleteRuntimeClass: (name: string) => Promise<void>;
   // Custom Resource Definitions
   listCustomResourceDefinition: () => Promise<k8s.V1CustomResourceDefinitionList>;
   readCustomResourceDefinition: (name: string) => Promise<k8s.V1CustomResourceDefinition>;
@@ -219,6 +245,32 @@ try {
     readNamespacedPodLog: (name: string, namespace: string, container?: string, options?: { follow?: boolean, previous?: boolean, sinceSeconds?: number, tailLines?: number, timestamps?: boolean, pretty?: string }) => ipcRenderer.invoke('readNamespacedPodLog', name, namespace, container, options),
     createNamespacedConfigMap: (namespace: string, payload: k8s.V1ConfigMap) => ipcRenderer.invoke('createNamespacedConfigMap', namespace, payload),
     deleteNamespacedConfigMap: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedConfigMap', name, namespace),
+    // Additional delete methods
+    deleteNamespacedDeployment: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedDeployment', name, namespace),
+    deleteNamespacedReplicaSet: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedReplicaSet', name, namespace),
+    deleteNamespacedStatefulSet: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedStatefulSet', name, namespace),
+    deleteNamespacedDaemonSet: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedDaemonSet', name, namespace),
+    deleteNamespacedJob: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedJob', name, namespace),
+    deleteNamespacedCronJob: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedCronJob', name, namespace),
+    deleteNamespacedService: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedService', name, namespace),
+    deleteNamespacedSecret: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedSecret', name, namespace),
+    deleteNamespacedIngress: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedIngress', name, namespace),
+    deleteNamespacedNetworkPolicy: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedNetworkPolicy', name, namespace),
+    deleteNamespacedEndpoints: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedEndpoints', name, namespace),
+    deleteNamespacedHorizontalPodAutoscaler: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedHorizontalPodAutoscaler', name, namespace),
+    deleteNamespacedPodDisruptionBudget: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedPodDisruptionBudget', name, namespace),
+    deleteNamespacedResourceQuota: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedResourceQuota', name, namespace),
+    deleteNamespacedLimitRange: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedLimitRange', name, namespace),
+    deleteNamespacedServiceAccount: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedServiceAccount', name, namespace),
+    deleteNamespacedPersistentVolumeClaim: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedPersistentVolumeClaim', name, namespace),
+    deleteNamespacedRole: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedRole', name, namespace),
+    deleteNamespacedRoleBinding: (name: string, namespace: string) => ipcRenderer.invoke('deleteNamespacedRoleBinding', name, namespace),
+    deleteClusterRole: (name: string) => ipcRenderer.invoke('deleteClusterRole', name),
+    deleteClusterRoleBinding: (name: string) => ipcRenderer.invoke('deleteClusterRoleBinding', name),
+    deletePersistentVolume: (name: string) => ipcRenderer.invoke('deletePersistentVolume', name),
+    deleteStorageClass: (name: string) => ipcRenderer.invoke('deleteStorageClass', name),
+    deletePriorityClass: (name: string) => ipcRenderer.invoke('deletePriorityClass', name),
+    deleteRuntimeClass: (name: string) => ipcRenderer.invoke('deleteRuntimeClass', name),
     // Custom Resource Definitions
     listCustomResourceDefinition: () => ipcRenderer.invoke('listCustomResourceDefinition'),
     readCustomResourceDefinition: (name: string) => ipcRenderer.invoke('readCustomResourceDefinition', name),

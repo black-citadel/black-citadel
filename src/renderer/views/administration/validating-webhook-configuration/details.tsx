@@ -9,7 +9,7 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { ValidatingWebhookConfigurationBadge } from '@components/administration/validating-webhook-configuration/badge';
 import { WebhookList } from '@components/administration/mutating-webhook-configuration/webhook-list';
-import { Subheading } from '@components/base/heading';
+import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 
 export const ValidatingWebhookConfigurationsDetailsView = (): JSX.Element => {
@@ -43,14 +43,18 @@ export const ValidatingWebhookConfigurationsDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error}><ValidatingWebhookConfigurationBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader error={error}>
+        <Heading>
+          <ValidatingWebhookConfigurationBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && validatingWebhookConfiguration && (
         <div className='m-2'>

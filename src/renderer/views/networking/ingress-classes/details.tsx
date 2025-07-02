@@ -8,6 +8,7 @@ import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { IngressClassBadge } from '@components/networking/ingress-class/badge';
+import { Heading } from '@components/base/heading';
 
 export const IngressClassesDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
@@ -40,14 +41,18 @@ export const IngressClassesDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error}><IngressClassBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader error={error}>
+        <Heading>
+          <IngressClassBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && ingressClass && (
         <div className="grid grid-cols-2 gap-4">

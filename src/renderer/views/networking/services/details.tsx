@@ -15,6 +15,7 @@ import { MetadataDetails } from '@components/metadata';
 import { Button } from '@components/base/button';
 import { PortForwardDialog } from '@components/tools/port-forward/dialog';
 import { PortOption, PortForwardRequest } from '@utils/types';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -58,6 +59,11 @@ export const ServicesDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(service);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedService(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.Services, action: ResourceAction.List });
+  };
+
   const getAvailablePorts = (): PortOption[] => {
     if (!service?.spec?.ports) return [];
     
@@ -91,15 +97,21 @@ export const ServicesDetailsView = (): JSX.Element => {
       <DetailsHeader 
         error={error}
         actions={
-          service && getAvailablePorts().length > 0 && (
-            <Button 
-              onClick={() => setShowPortForwardDialog(true)}
-              className="uppercase"
-              outline
-            >
-              Port Forward
-            </Button>
-          )
+          <ResourceActions
+            resourceType={Resources.Services}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={service}
+            onDelete={handleDelete}
+            customActions={
+              service && getAvailablePorts().length > 0 ? [{
+                id: 'port-forward',
+                label: 'Port Forward',
+                onClick: () => setShowPortForwardDialog(true),
+                variant: 'secondary' as const,
+              }] : []
+            }
+          />
         }
       >
         <Heading>

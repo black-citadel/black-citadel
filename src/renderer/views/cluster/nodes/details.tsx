@@ -18,6 +18,8 @@ import { Button } from '@components/base/button';
 import { Alert, AlertTitle, AlertDescription, AlertActions } from '@components/base/alert';
 import { NodeLabels } from '@components/cluster/node/labels';
 import { NodeTaints } from '@components/cluster/node/taints';
+import { ResourceActions } from '@components/resources/ResourceActions';
+import { Resources } from '@utils/enums';
 
 
 export const NodeDetailsView = (): JSX.Element => {
@@ -105,27 +107,21 @@ export const NodeDetailsView = (): JSX.Element => {
         <DetailsHeader 
           error={error}
           actions={
-            <>
-              {isUnschedulable ? (
-                <Button 
-                  onClick={() => setUncordonAlertOpen(true)} 
-                  className="uppercase" 
-                  outline
-                  disabled={isProcessing}
-                >
-                  Uncordon
-                </Button>
-              ) : (
-                <Button 
-                  onClick={() => setCordonAlertOpen(true)} 
-                  className="uppercase" 
-                  outline
-                  disabled={isProcessing}
-                >
-                  Cordon
-                </Button>
-              )}
-            </>
+            <ResourceActions
+              resourceType={Resources.Nodes}
+              resourceName={viewContext.name}
+              resource={node}
+              isLoading={isProcessing}
+              customActions={[
+                {
+                  id: 'cordon',
+                  label: isUnschedulable ? 'Uncordon' : 'Cordon',
+                  onClick: () => isUnschedulable ? setUncordonAlertOpen(true) : setCordonAlertOpen(true),
+                  variant: 'secondary' as const,
+                  disabled: isProcessing,
+                },
+              ]}
+            />
           }
         >
           <Heading>

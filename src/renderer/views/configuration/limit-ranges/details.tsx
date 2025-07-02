@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar';
 import { useView } from '@context/viewProvider';
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { LimitRangeBadge } from '@components/configuration/limit-range/badge';
-import { Subheading } from '@components/base/heading';
+import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const LimitRangesDetailsView = (): JSX.Element => {
-  const { viewContext } = useView();
+  const { viewContext, setViewContext } = useView();
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details);
   const [limitRange, setLimitRange] = useState<k8s.V1LimitRange>();
   const [error, setError] = useState(null);
@@ -38,15 +39,36 @@ export const LimitRangesDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(limitRange);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedLimitRange(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.LimitRanges, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}><LimitRangeBadge />{viewContext.name}</DetailsHeader>
-      <Navbar>
-        <NavbarSection>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.LimitRanges}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={limitRange}
+            onDelete={handleDelete}
+          />
+        }
+      >
+        <Heading>
+          <LimitRangeBadge />{viewContext.name}
+        </Heading>
+
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
       {activeTab === ResourceTabs.Details && limitRange && (
         <div className='m-2'>
         <MetadataDetails metadata={limitRange.metadata} />

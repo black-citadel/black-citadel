@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar';
 import { useView } from '@context/viewProvider';
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
@@ -10,9 +10,10 @@ import { DetailsHeader } from '@components/details-header';
 import { SecretBadge } from '@components/configuration/secret/badge';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const SecretsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView();
+  const { viewContext, setViewContext } = useView();
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details);
   const [secret, setSecret] = useState<k8s.V1Secret>();
   const [revealedSecrets, setRevealedSecrets] = useState<Record<string, boolean>>({});
@@ -38,6 +39,11 @@ export const SecretsDetailsView = (): JSX.Element => {
   }, []);
 
   const yamlContent = dump(secret);
+
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedSecret(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.Secrets, action: ResourceAction.List });
+  };
 
   const toggleRevealSecret = (key: string) => {
     setRevealedSecrets(prev => ({
@@ -69,7 +75,18 @@ export const SecretsDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.Secrets}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={secret}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <SecretBadge />{viewContext.name}
         </Heading>

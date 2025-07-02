@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -15,6 +15,7 @@ import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { PodList } from '@components/workloads/pod/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -23,7 +24,7 @@ function getLabelSelectorString(selector: { [key: string]: string }): string {
 }
 
 export const ReplicaSetsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [replicaSet, setReplicaSet] = useState<k8s.V1ReplicaSet>();
   const [pods, setPods] = useState<k8s.V1PodList>();
@@ -55,9 +56,25 @@ export const ReplicaSetsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(replicaSet);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedReplicaSet(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.ReplicaSets, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.ReplicaSets}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={replicaSet}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <ReplicaSetBadge />{viewContext.name}
         </Heading>

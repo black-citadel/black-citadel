@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -12,9 +12,10 @@ import { Parameters } from '@components/storage/storage-class/parameters';
 import { AllowedTopologies } from '@components/storage/storage-class/allowed-topologies';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const StorageClassesDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [storageClass, setStorageClass] = useState<k8s.V1StorageClass>();
   const [error, setError] = useState(null);
@@ -42,9 +43,24 @@ export const StorageClassesDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(storageClass);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteStorageClass(viewContext.name);
+    setViewContext({ resource: Resources.StorageClasses, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.StorageClasses}
+            resourceName={viewContext.name}
+            resource={storageClass}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <StorageClassBadge />{viewContext.name}
         </Heading>

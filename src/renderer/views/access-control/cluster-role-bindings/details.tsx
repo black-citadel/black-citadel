@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -11,10 +11,11 @@ import { ClusterRoleBindingBadge } from '@components/access-control/cluster-role
 import { SubjectList } from '@components/access-control/subject-list';
 import { ClusterRoleResourceLink } from '@components/access-control/cluster-role/resource-link';
 import { MetadataDetails } from '@components/metadata';
-import { Subheading } from '@components/base/heading';
+import { Heading, Subheading } from '@components/base/heading';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const ClusterRoleBindingsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [clusterRoleBinding, setClusterRoleBinding] = useState<k8s.V1ClusterRoleBinding>();
   const [error, setError] = useState(null);
@@ -42,16 +43,35 @@ export const ClusterRoleBindingsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(clusterRoleBinding);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteClusterRoleBinding(viewContext.name);
+    setViewContext({ resource: Resources.ClusterRoleBindings, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}><ClusterRoleBindingBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.ClusterRoleBindings}
+            resourceName={viewContext.name}
+            resource={clusterRoleBinding}
+            onDelete={handleDelete}
+          />
+        }
+      >
+        <Heading>
+          <ClusterRoleBindingBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && clusterRoleBinding && (
         <div className='m-2'>

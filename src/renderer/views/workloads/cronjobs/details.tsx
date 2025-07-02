@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -14,9 +14,10 @@ import { MetadataDetails } from '@components/metadata';
 import { Heading, Subheading } from '@components/base/heading';
 import { JobList } from '@components/workloads/job/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const CronJobsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [cronJob, setCronJob] = useState<k8s.V1CronJob>();
   const [jobs, setJobs] = useState<k8s.V1JobList>();
@@ -68,9 +69,25 @@ export const CronJobsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(cronJob);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedCronJob(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.CronJobs, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.CronJobs}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={cronJob}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <CronJobBadge />{viewContext.name}
         </Heading>

@@ -13,6 +13,7 @@ import { formatStatus } from '@components/cluster/namespace/helpers';
 import { Editor } from '@components/editor';
 import helpObjects from '@help/index';
 import { NamespaceResourcesTable } from '@components/cluster/namespace/resources-table';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const NamespacesDetailsView = (): JSX.Element => {
   // Debug imports
@@ -185,7 +186,17 @@ export const NamespacesDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error} onDelete={handleDelete}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.Namespaces}
+            resourceName={viewContext.name}
+            resource={namespace}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <NamespaceBadge />{viewContext.name}
         </Heading>

@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -10,11 +10,12 @@ import { DetailsHeader } from '@components/details-header';
 import { RoleBadge } from '@components/access-control/role/badge';
 import { RuleList } from '@components/access-control/cluster-role/rule-list';
 import { MetadataDetails } from '@components/metadata';
-import { Subheading } from '@components/base/heading';
+import { Heading, Subheading } from '@components/base/heading';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 
 export const RolesDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [role, setRole] = useState<k8s.V1Role>();
   const [error, setError] = useState(null);
@@ -42,16 +43,36 @@ export const RolesDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(role);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedRole(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.Roles, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}><RoleBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.Roles}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={role}
+            onDelete={handleDelete}
+          />
+        }
+      >
+        <Heading>
+          <RoleBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && role && (
         <div className='m-2'>

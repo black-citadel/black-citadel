@@ -19,6 +19,7 @@ import { Badge } from '@components/base/badge';
 import { Button } from '@components/base/button';
 import { PortForwardDialog } from '@components/tools/port-forward/dialog';
 import { PortOption, PortForwardRequest } from '@utils/types';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const PodsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -93,18 +94,24 @@ export const PodsDetailsView = (): JSX.Element => {
   return (
     <>
       <DetailsHeader 
-        error={error} 
-        onDelete={handleDelete}
+        error={error}
         actions={
-          pod?.status?.phase === 'Running' && getAvailablePorts().length > 0 && (
-            <Button 
-              onClick={() => setShowPortForwardDialog(true)}
-              className="uppercase"
-              outline
-            >
-              Port Forward
-            </Button>
-          )
+          <ResourceActions
+            resourceType={Resources.Pods}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={pod}
+            onDelete={handleDelete}
+            onNavigate={(path) => console.log('Navigate to:', path)}
+            customActions={
+              pod?.status?.phase === 'Running' && getAvailablePorts().length > 0 ? [{
+                id: 'port-forward',
+                label: 'Port Forward',
+                onClick: () => setShowPortForwardDialog(true),
+                variant: 'secondary' as const,
+              }] : []
+            }
+          />
         }
       >
         <Heading>

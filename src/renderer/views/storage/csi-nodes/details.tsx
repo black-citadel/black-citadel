@@ -9,7 +9,7 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { CSINodeBadge } from '@components/storage/csi-node/badge';
 import { CSIDriversList } from '@components/storage/csi-node/csi-drivers-list';
-import { Subheading } from '@components/base/heading';
+import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 
 export const CSINodesDetailsView = (): JSX.Element => {
@@ -43,14 +43,18 @@ export const CSINodesDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error}><CSINodeBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader error={error}>
+        <Heading>
+          <CSINodeBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && csiNode && (
         <div className='m-2'>

@@ -1,18 +1,19 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsItem } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { PriorityClassBadge } from '@components/administration/priority-class/badge';
-import { Subheading } from '@components/base/heading';
+import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const PriorityClassesDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [priorityClass, setPriorityClass] = useState<k8s.V1PriorityClass>();
   const [error, setError] = useState(null);
@@ -40,16 +41,35 @@ export const PriorityClassesDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(priorityClass);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deletePriorityClass(viewContext.name);
+    setViewContext({ resource: Resources.PriorityClasses, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}><PriorityClassBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.PriorityClasses}
+            resourceName={viewContext.name}
+            resource={priorityClass}
+            onDelete={handleDelete}
+          />
+        }
+      >
+        <Heading>
+          <PriorityClassBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && priorityClass && (
         <div className='m-2'>

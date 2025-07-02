@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
@@ -10,12 +10,13 @@ import { ServiceAccountBadge } from '@components/access-control/service-account/
 import { ImagePullSecretList } from '@components/access-control/service-account/image-pull-secret-list';
 import { SecretList } from '@components/access-control/service-account/secret-list';
 import { MetadataDetails } from '@components/metadata';
-import { Subheading } from '@components/base/heading';
+import { Heading, Subheading } from '@components/base/heading';
 import { DetailsItem } from '@components/details-item';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 
 export const ServiceAccountsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [serviceAccount, setServiceAccount] = useState<k8s.V1ServiceAccount>();
   const [error, setError] = useState(null);
@@ -43,16 +44,36 @@ export const ServiceAccountsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(serviceAccount);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedServiceAccount(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.ServiceAccounts, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}><ServiceAccountBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.ServiceAccounts}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={serviceAccount}
+            onDelete={handleDelete}
+          />
+        }
+      >
+        <Heading>
+          <ServiceAccountBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && serviceAccount && (
         <div className='m-2'>

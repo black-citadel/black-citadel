@@ -132,7 +132,7 @@ const createWindow = (): BrowserWindow => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Handle mouse navigation buttons
   mainWindow.webContents.on('before-input-event', (event, input) => {
@@ -485,6 +485,7 @@ ipcMain.handle('listDeploymentForAllNamespaces', async () => {
   return (await k8sAppsV1Api.listDeploymentForAllNamespaces()).body;
 });
 ipcMain.handle('readNamespacedDeployment', async (event, name, namespace) => (await k8sAppsV1Api.readNamespacedDeployment(name, namespace)).body);
+ipcMain.handle('deleteNamespacedDeployment', async (event, name, namespace) => (await k8sAppsV1Api.deleteNamespacedDeployment(name, namespace)).body);
 
 
 // ReplicaSets
@@ -492,6 +493,7 @@ ipcMain.handle('listReplicaSetForAllNamespaces', async () => {
   return handleK8sListRequest(async () => (await k8sAppsV1Api.listReplicaSetForAllNamespaces()).body);
 });
 ipcMain.handle('readNamespacedReplicaSet', async (event, name, namespace) => (await k8sAppsV1Api.readNamespacedReplicaSet(name, namespace)).body);
+ipcMain.handle('deleteNamespacedReplicaSet', async (event, name, namespace) => (await k8sAppsV1Api.deleteNamespacedReplicaSet(name, namespace)).body);
 
 
 // StatefulSets
@@ -499,6 +501,7 @@ ipcMain.handle('listStatefulSetForAllNamespaces', async () => {
   return handleK8sListRequest(async () => (await k8sAppsV1Api.listStatefulSetForAllNamespaces()).body);
 });
 ipcMain.handle('readNamespacedStatefulSet', async (event, name, namespace) => (await k8sAppsV1Api.readNamespacedStatefulSet(name, namespace)).body);
+ipcMain.handle('deleteNamespacedStatefulSet', async (event, name, namespace) => (await k8sAppsV1Api.deleteNamespacedStatefulSet(name, namespace)).body);
 
 
 // DaemonSets
@@ -506,6 +509,7 @@ ipcMain.handle('listDaemonSetForAllNamespaces', async () => {
   return handleK8sListRequest(async () => (await k8sAppsV1Api.listDaemonSetForAllNamespaces()).body);
 });
 ipcMain.handle('readNamespacedDaemonSet', async (event, name, namespace) => (await k8sAppsV1Api.readNamespacedDaemonSet(name, namespace)).body);
+ipcMain.handle('deleteNamespacedDaemonSet', async (event, name, namespace) => (await k8sAppsV1Api.deleteNamespacedDaemonSet(name, namespace)).body);
 
 
 // Pods
@@ -587,6 +591,8 @@ ipcMain.handle('listCronJobForAllNamespaces', async () => {
 });
 ipcMain.handle('readNamespacedCronJob', async (event, name, namespace) => (await k8sBatchV1Api.readNamespacedCronJob(name, namespace)).body);
 ipcMain.handle('readNamespacedJob', async (event, name, namespace) => (await k8sBatchV1Api.readNamespacedJob(name, namespace)).body);
+ipcMain.handle('deleteNamespacedJob', async (event, name, namespace) => (await k8sBatchV1Api.deleteNamespacedJob(name, namespace)).body);
+ipcMain.handle('deleteNamespacedCronJob', async (event, name, namespace) => (await k8sBatchV1Api.deleteNamespacedCronJob(name, namespace)).body);
 
 
 ipcMain.handle('listServiceForAllNamespaces', async () => {
@@ -619,15 +625,23 @@ ipcMain.handle('listNamespacedPod', async (event, namespace, ...args) => {
 });
 
 ipcMain.handle('readNamespacedService', async (event, name, namespace) => (await k8sCoreV1Api.readNamespacedService(name, namespace)).body);
+ipcMain.handle('deleteNamespacedService', async (event, name, namespace) => (await k8sCoreV1Api.deleteNamespacedService(name, namespace)).body);
 
 ipcMain.handle('readNamespacedSecret', async (event, name, namespace) => (await k8sCoreV1Api.readNamespacedSecret(name, namespace)).body);
+ipcMain.handle('deleteNamespacedSecret', async (event, name, namespace) => (await k8sCoreV1Api.deleteNamespacedSecret(name, namespace)).body);
 ipcMain.handle('readNamespacedResourceQuota', async (event, name, namespace) => (await k8sCoreV1Api.readNamespacedResourceQuota(name, namespace)).body);
+ipcMain.handle('deleteNamespacedResourceQuota', async (event, name, namespace) => (await k8sCoreV1Api.deleteNamespacedResourceQuota(name, namespace)).body);
 ipcMain.handle('readNamespacedLimitRange', async (event, name, namespace) => (await k8sCoreV1Api.readNamespacedLimitRange(name, namespace)).body);
+ipcMain.handle('deleteNamespacedLimitRange', async (event, name, namespace) => (await k8sCoreV1Api.deleteNamespacedLimitRange(name, namespace)).body);
 ipcMain.handle('readNamespacedEndpoints', async (event, name, namespace) => (await k8sCoreV1Api.readNamespacedEndpoints(name, namespace)).body);
+ipcMain.handle('deleteNamespacedEndpoints', async (event, name, namespace) => (await k8sCoreV1Api.deleteNamespacedEndpoints(name, namespace)).body);
 
 ipcMain.handle('readNamespacedServiceAccount', async (event, name, namespace) => (await k8sCoreV1Api.readNamespacedServiceAccount(name, namespace)).body);
+ipcMain.handle('deleteNamespacedServiceAccount', async (event, name, namespace) => (await k8sCoreV1Api.deleteNamespacedServiceAccount(name, namespace)).body);
 ipcMain.handle('readNamespacedPersistentVolumeClaim', async (event, name, namespace) => (await k8sCoreV1Api.readNamespacedPersistentVolumeClaim(name, namespace)).body);
+ipcMain.handle('deleteNamespacedPersistentVolumeClaim', async (event, name, namespace) => (await k8sCoreV1Api.deleteNamespacedPersistentVolumeClaim(name, namespace)).body);
 ipcMain.handle('readPersistentVolume', async (event, name) => (await k8sCoreV1Api.readPersistentVolume(name)).body);
+ipcMain.handle('deletePersistentVolume', async (event, name) => (await k8sCoreV1Api.deletePersistentVolume(name)).body);
 
 
 
@@ -641,8 +655,10 @@ ipcMain.handle('listNetworkPolicyForAllNamespaces', async () => {
   return handleK8sListRequest(async () => (await k8sNetworkingV1Api.listNetworkPolicyForAllNamespaces()).body);
 });
 ipcMain.handle('readNamespacedIngress', async (event, name, namespace) => (await k8sNetworkingV1Api.readNamespacedIngress(name, namespace)).body);
+ipcMain.handle('deleteNamespacedIngress', async (event, name, namespace) => (await k8sNetworkingV1Api.deleteNamespacedIngress(name, namespace)).body);
 ipcMain.handle('readIngressClass', async (event, name) => (await k8sNetworkingV1Api.readIngressClass(name)).body);
 ipcMain.handle('readNamespacedNetworkPolicy', async (event, name, namespace) => (await k8sNetworkingV1Api.readNamespacedNetworkPolicy(name, namespace)).body);
+ipcMain.handle('deleteNamespacedNetworkPolicy', async (event, name, namespace) => (await k8sNetworkingV1Api.deleteNamespacedNetworkPolicy(name, namespace)).body);
 
 
 ipcMain.handle('listEndpointSliceForAllNamespaces', async () => {
@@ -666,6 +682,7 @@ ipcMain.handle('listCSIDriver', async () => {
 ipcMain.handle('readCSIDriver', async (event, name) => (await k8sStorageV1Api.readCSIDriver(name)).body);
 ipcMain.handle('readCSINode', async (event, name) => (await k8sStorageV1Api.readCSINode(name)).body);
 ipcMain.handle('readStorageClass', async (event, name) => (await k8sStorageV1Api.readStorageClass(name)).body);
+ipcMain.handle('deleteStorageClass', async (event, name) => (await k8sStorageV1Api.deleteStorageClass(name)).body);
 ipcMain.handle('readVolumeAttachment', async (event, name) => (await k8sStorageV1Api.readVolumeAttachment(name)).body);
 
 
@@ -673,24 +690,28 @@ ipcMain.handle('listHorizontalPodAutoscalerForAllNamespaces', async () => {
   return handleK8sListRequest(async () => (await k8sAutoscalingV2Api.listHorizontalPodAutoscalerForAllNamespaces()).body);
 });
 ipcMain.handle('readNamespacedHorizontalPodAutoscaler', async (event, name, namespace) => (await k8sAutoscalingV2Api.readNamespacedHorizontalPodAutoscaler(name, namespace)).body);
+ipcMain.handle('deleteNamespacedHorizontalPodAutoscaler', async (event, name, namespace) => (await k8sAutoscalingV2Api.deleteNamespacedHorizontalPodAutoscaler(name, namespace)).body);
 
 
 ipcMain.handle('listPodDisruptionBudgetForAllNamespaces', async () => {
   return handleK8sListRequest(async () => (await k8sPolicyV1Api.listPodDisruptionBudgetForAllNamespaces()).body);
 });
 ipcMain.handle('readNamespacedPodDisruptionBudget', async (event, name, namespace) => (await k8sPolicyV1Api.readNamespacedPodDisruptionBudget(name, namespace)).body);
+ipcMain.handle('deleteNamespacedPodDisruptionBudget', async (event, name, namespace) => (await k8sPolicyV1Api.deleteNamespacedPodDisruptionBudget(name, namespace)).body);
 
 
 ipcMain.handle('listPriorityClass', async () => {
   return handleK8sListRequest(async () => (await k8sSchedulingV1Api.listPriorityClass()).body);
 });
 ipcMain.handle('readPriorityClass', async (event, name) => (await k8sSchedulingV1Api.readPriorityClass(name)).body);
+ipcMain.handle('deletePriorityClass', async (event, name) => (await k8sSchedulingV1Api.deletePriorityClass(name)).body);
 
 
 ipcMain.handle('listRuntimeClass', async () => {
   return handleK8sListRequest(async () => (await k8sNodeV1Api.listRuntimeClass()).body);
 });
 ipcMain.handle('readRuntimeClass', async (event, name) => (await k8sNodeV1Api.readRuntimeClass(name)).body);
+ipcMain.handle('deleteRuntimeClass', async (event, name) => (await k8sNodeV1Api.deleteRuntimeClass(name)).body);
 
 
 ipcMain.handle('listMutatingWebhookConfiguration', async () => {
@@ -716,9 +737,13 @@ ipcMain.handle('listClusterRoleBinding', async () => {
   return handleK8sListRequest(async () => (await k8sRbacAuthorizationV1Api.listClusterRoleBinding()).body);
 });
 ipcMain.handle('readClusterRoleBinding', async (event, name) => (await k8sRbacAuthorizationV1Api.readClusterRoleBinding(name)).body);
+ipcMain.handle('deleteClusterRoleBinding', async (event, name) => (await k8sRbacAuthorizationV1Api.deleteClusterRoleBinding(name)).body);
 ipcMain.handle('readClusterRole', async (event, name) => (await k8sRbacAuthorizationV1Api.readClusterRole(name)).body);
+ipcMain.handle('deleteClusterRole', async (event, name) => (await k8sRbacAuthorizationV1Api.deleteClusterRole(name)).body);
 ipcMain.handle('readNamespacedRoleBinding', async (event, name, namespace) => (await k8sRbacAuthorizationV1Api.readNamespacedRoleBinding(name, namespace)).body);
+ipcMain.handle('deleteNamespacedRoleBinding', async (event, name, namespace) => (await k8sRbacAuthorizationV1Api.deleteNamespacedRoleBinding(name, namespace)).body);
 ipcMain.handle('readNamespacedRole', async (event, name, namespace) => (await k8sRbacAuthorizationV1Api.readNamespacedRole(name, namespace)).body);
+ipcMain.handle('deleteNamespacedRole', async (event, name, namespace) => (await k8sRbacAuthorizationV1Api.deleteNamespacedRole(name, namespace)).body);
 
 
 // Custom Resource Definitions

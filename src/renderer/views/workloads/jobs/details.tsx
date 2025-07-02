@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -14,6 +14,7 @@ import { MetadataDetails } from '@components/metadata';
 import { Heading, Subheading } from '@components/base/heading';
 import { PodList } from '@components/workloads/pod/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -22,7 +23,7 @@ function getLabelSelectorString(selector: { [key: string]: string }): string {
 }
 
 export const JobsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [job, setJob] = useState<k8s.V1Job>();
   const [pods, setPods] = useState<k8s.V1PodList>();
@@ -55,9 +56,25 @@ export const JobsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(job);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedJob(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.Jobs, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.Jobs}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={job}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <JobBadge />{viewContext.name}
         </Heading>

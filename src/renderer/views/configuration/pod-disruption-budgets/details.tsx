@@ -10,6 +10,7 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { PodDisruptionBudgetBadge } from '@components/configuration/pod-disruption-budget/badge';
 import { MetadataDetails } from '@components/metadata';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const PodDisruptionBudgetsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -40,16 +41,36 @@ export const PodDisruptionBudgetsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(pdb);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedPodDisruptionBudget(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.PodDisruptionBudgets, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}><PodDisruptionBudgetBadge /> {viewContext.name}</DetailsHeader>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.PodDisruptionBudgets}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={pdb}
+            onDelete={handleDelete}
+          />
+        }
+      >
+        <Heading>
+          <PodDisruptionBudgetBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
-          <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
-          <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
-        </NavbarSection>
-      </Navbar>
+        <Navbar>
+          <NavbarSection>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
+          </NavbarSection>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && pdb && (
         <div className='m-2'>

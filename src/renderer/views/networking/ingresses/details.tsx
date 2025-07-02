@@ -10,6 +10,7 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { IngressBadge } from '@components/networking/ingress/badge';
 import { IngressRules } from '@components/networking/ingress/ingress-rules';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const IngressesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -40,16 +41,36 @@ export const IngressesDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(ingress);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedIngress(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.Ingresses, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}><IngressBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.Ingresses}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={ingress}
+            onDelete={handleDelete}
+          />
+        }
+      >
+        <Heading>
+          <IngressBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && ingress && <>
         <div className="grid grid-cols-2 gap-4">

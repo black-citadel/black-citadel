@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { MetadataDetails } from '@components/metadata';
 import { Editor } from '@components/editor';
@@ -16,9 +16,10 @@ import { StatefulSetSpec } from '@components/workloads/statefulset/spec';
 import { PodList } from '@components/workloads/pod/table';
 import { Heading, Subheading } from '@components/base/heading';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const StatefulSetsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [statefulSet, setStatefulSet] = useState<k8s.V1StatefulSet>();
   const [pods, setPods] = useState<k8s.V1PodList>();
@@ -61,9 +62,25 @@ export const StatefulSetsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(statefulSet);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedStatefulSet(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.StatefulSets, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.StatefulSets}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={statefulSet}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <StatefulSetBadge />{viewContext.name}
         </Heading>

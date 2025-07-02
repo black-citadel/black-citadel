@@ -9,6 +9,7 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { EndpointBadge } from '@components/networking/endpoint/badge';
 import { EndpointSubsets } from '@components/networking/endpoint/endpoint-subsets';
+import { Heading } from '@components/base/heading';
 
 export const EndpointsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
@@ -41,14 +42,18 @@ export const EndpointsDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader error={error}><EndpointBadge />{viewContext.name}</DetailsHeader>
+      <DetailsHeader error={error}>
+        <Heading>
+          <EndpointBadge />{viewContext.name}
+        </Heading>
 
-      <Navbar>
-        <NavbarSection>
+        <Navbar>
+          <NavbarSection>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
           <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
         </NavbarSection>
-      </Navbar>
+        </Navbar>
+      </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && endpoints && (
         <div className="m-2">

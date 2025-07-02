@@ -1,7 +1,7 @@
 import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
@@ -14,9 +14,10 @@ import { StorageDetails } from '@components/storage/persistent-volume-claim/stor
 import { PVCStatus } from '@components/storage/persistent-volume-claim/status';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [pvc, setPVC] = useState<k8s.V1PersistentVolumeClaim>();
   const [error, setError] = useState(null);
@@ -44,9 +45,25 @@ export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(pvc);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteNamespacedPersistentVolumeClaim(viewContext.name, viewContext.namespace);
+    setViewContext({ resource: Resources.PersistentVolumeClaims, action: ResourceAction.List });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.PersistentVolumeClaims}
+            resourceName={viewContext.name}
+            namespace={viewContext.namespace}
+            resource={persistentVolumeClaim}
+            onDelete={handleDelete}
+          />
+        }
+      >
         <Heading>
           <PersistentVolumeClaimBadge />{viewContext.name}
         </Heading>
