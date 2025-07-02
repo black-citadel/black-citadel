@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -141,16 +141,17 @@ export const ServicesCreateView = (): JSX.Element => {
               <Description>
                 Select the service type.
               </Description>
-              <Select 
-                name="type" 
-                value={type} 
-                onChange={(event) => setType(event.target.value as any)}
-              >
-                <option value="ClusterIP">ClusterIP</option>
-                <option value="NodePort">NodePort</option>
-                <option value="LoadBalancer">LoadBalancer</option>
-                <option value="ExternalName">ExternalName</option>
-              </Select>
+              <Dropdown
+                name="type"
+                value={type}
+                onChange={(value) => setType(value)}
+                options={[
+                  { value: 'ClusterIP', label: 'ClusterIP' },
+                  { value: 'NodePort', label: 'NodePort' },
+                  { value: 'LoadBalancer', label: 'LoadBalancer' },
+                  { value: 'ExternalName', label: 'ExternalName' }
+                ] as DropdownOption<'ClusterIP' | 'NodePort' | 'LoadBalancer' | 'ExternalName'>[]}
+              />
             </Field>
 
             {type !== 'ExternalName' && (
@@ -195,14 +196,15 @@ export const ServicesCreateView = (): JSX.Element => {
               <Description>
                 Route requests from the same client to the same pod.
               </Description>
-              <Select 
-                name="sessionAffinity" 
-                value={sessionAffinity} 
-                onChange={(event) => setSessionAffinity(event.target.value as any)}
-              >
-                <option value="None">None</option>
-                <option value="ClientIP">ClientIP</option>
-              </Select>
+              <Dropdown
+                name="sessionAffinity"
+                value={sessionAffinity}
+                onChange={(value) => setSessionAffinity(value)}
+                options={[
+                  { value: 'None', label: 'None' },
+                  { value: 'ClientIP', label: 'ClientIP' }
+                ] as DropdownOption<'None' | 'ClientIP'>[]}
+              />
             </Field>
 
             {(type === 'NodePort' || type === 'LoadBalancer') && (
@@ -211,14 +213,15 @@ export const ServicesCreateView = (): JSX.Element => {
                 <Description>
                   Control how external traffic is distributed.
                 </Description>
-                <Select 
-                  name="externalTrafficPolicy" 
-                  value={externalTrafficPolicy} 
-                  onChange={(event) => setExternalTrafficPolicy(event.target.value as any)}
-                >
-                  <option value="Cluster">Cluster</option>
-                  <option value="Local">Local</option>
-                </Select>
+                <Dropdown
+                  name="externalTrafficPolicy"
+                  value={externalTrafficPolicy}
+                  onChange={(value) => setExternalTrafficPolicy(value)}
+                  options={[
+                    { value: 'Cluster', label: 'Cluster' },
+                    { value: 'Local', label: 'Local' }
+                  ] as DropdownOption<'Cluster' | 'Local'>[]}
+                />
               </Field>
             )}
           </div>
@@ -233,14 +236,15 @@ export const ServicesCreateView = (): JSX.Element => {
                     value={port.name}
                     onChange={(e) => handlePortChange(index, 'name', e.target.value)}
                   />
-                  <Select
+                  <Dropdown
                     value={port.protocol}
-                    onChange={(e) => handlePortChange(index, 'protocol', e.target.value)}
-                  >
-                    <option value="TCP">TCP</option>
-                    <option value="UDP">UDP</option>
-                    <option value="SCTP">SCTP</option>
-                  </Select>
+                    onChange={(value) => handlePortChange(index, 'protocol', value)}
+                    options={[
+                      { value: 'TCP', label: 'TCP' },
+                      { value: 'UDP', label: 'UDP' },
+                      { value: 'SCTP', label: 'SCTP' }
+                    ] as DropdownOption<'TCP' | 'UDP' | 'SCTP'>[]}
+                  />
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <Input
