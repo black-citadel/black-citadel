@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -187,15 +187,16 @@ export const HorizontalPodAutoscalersCreateView = (): JSX.Element => {
               <Description>
                 Type of resource to scale.
               </Description>
-              <Select 
+              <Dropdown 
                 name="targetKind" 
                 value={targetKind} 
-                onChange={(event) => setTargetKind(event.target.value)}
-              >
-                <option value="Deployment">Deployment</option>
-                <option value="StatefulSet">StatefulSet</option>
-                <option value="ReplicaSet">ReplicaSet</option>
-              </Select>
+                onChange={(value) => setTargetKind(value)}
+                options={[
+                  { value: 'Deployment', label: 'Deployment' },
+                  { value: 'StatefulSet', label: 'StatefulSet' },
+                  { value: 'ReplicaSet', label: 'ReplicaSet' }
+                ]}
+              />
             </Field>
 
             <Field>
@@ -267,25 +268,27 @@ export const HorizontalPodAutoscalersCreateView = (): JSX.Element => {
               <div key={index} className="border border-gray-200 dark:border-gray-700 rounded p-3 mb-3">
                 <Field>
                   <Label>Resource</Label>
-                  <Select
+                  <Dropdown
                     value={metric.name}
-                    onChange={(e) => handleResourceMetricChange(index, 'name', e.target.value)}
-                  >
-                    <option value="cpu">CPU</option>
-                    <option value="memory">Memory</option>
-                  </Select>
+                    onChange={(value) => handleResourceMetricChange(index, 'name', value)}
+                    options={[
+                      { value: 'cpu', label: 'CPU' },
+                      { value: 'memory', label: 'Memory' }
+                    ]}
+                  />
                 </Field>
 
                 <Field>
                   <Label>Target Type</Label>
-                  <Select
+                  <Dropdown
                     value={metric.targetType}
-                    onChange={(e) => handleResourceMetricChange(index, 'targetType', e.target.value)}
-                  >
-                    <option value="Utilization">Utilization (%)</option>
-                    <option value="Value">Value (absolute)</option>
-                    <option value="AverageValue">Average Value (per pod)</option>
-                  </Select>
+                    onChange={(value) => handleResourceMetricChange(index, 'targetType', value)}
+                    options={[
+                      { value: 'Utilization', label: 'Utilization (%)' },
+                      { value: 'Value', label: 'Value (absolute)' },
+                      { value: 'AverageValue', label: 'Average Value (per pod)' }
+                    ]}
+                  />
                 </Field>
 
                 {metric.targetType === 'Utilization' && (

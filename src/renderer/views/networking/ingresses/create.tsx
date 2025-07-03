@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -231,14 +231,15 @@ export const IngressesCreateView = (): JSX.Element => {
                         value={path.path}
                         onChange={(e) => handlePathChange(ruleIndex, pathIndex, 'path', e.target.value)}
                       />
-                      <Select
+                      <Dropdown
                         value={path.pathType}
-                        onChange={(e) => handlePathChange(ruleIndex, pathIndex, 'pathType', e.target.value)}
-                      >
-                        <option value="Prefix">Prefix</option>
-                        <option value="Exact">Exact</option>
-                        <option value="ImplementationSpecific">ImplementationSpecific</option>
-                      </Select>
+                        onChange={(value) => handlePathChange(ruleIndex, pathIndex, 'pathType', value)}
+                        options={[
+                          { value: 'Prefix', label: 'Prefix' },
+                          { value: 'Exact', label: 'Exact' },
+                          { value: 'ImplementationSpecific', label: 'ImplementationSpecific' }
+                        ]}
+                      />
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <Input

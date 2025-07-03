@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -154,14 +154,15 @@ export const RoleBindingsCreateView = (): JSX.Element => {
               <Description>
                 Choose whether to bind to a Role (namespace-scoped) or ClusterRole.
               </Description>
-              <Select 
+              <Dropdown 
                 name="roleKind" 
                 value={roleKind} 
-                onChange={(event) => setRoleKind(event.target.value as any)}
-              >
-                <option value="Role">Role</option>
-                <option value="ClusterRole">ClusterRole</option>
-              </Select>
+                onChange={(value) => setRoleKind(value as any)}
+                options={[
+                  { value: 'Role', label: 'Role' },
+                  { value: 'ClusterRole', label: 'ClusterRole' }
+                ]}
+              />
             </Field>
 
             <Field>
@@ -197,14 +198,15 @@ export const RoleBindingsCreateView = (): JSX.Element => {
               <div key={index} className="border border-gray-200 dark:border-gray-700 rounded p-4 mb-4">
                 <Field>
                   <Label>Subject Type</Label>
-                  <Select 
+                  <Dropdown 
                     value={subject.kind} 
-                    onChange={(event) => handleSubjectChange(index, 'kind', event.target.value)}
-                  >
-                    <option value="User">User</option>
-                    <option value="Group">Group</option>
-                    <option value="ServiceAccount">ServiceAccount</option>
-                  </Select>
+                    onChange={(value) => handleSubjectChange(index, 'kind', value)}
+                    options={[
+                      { value: 'User', label: 'User' },
+                      { value: 'Group', label: 'Group' },
+                      { value: 'ServiceAccount', label: 'ServiceAccount' }
+                    ]}
+                  />
                 </Field>
 
                 <Field>

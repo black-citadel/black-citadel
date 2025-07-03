@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -185,15 +185,14 @@ export const RuntimeClassesCreateView = (): JSX.Element => {
             
             <Field>
               <Label>Handler Type</Label>
-              <Select
+              <Dropdown
                 value={handlerType}
-                onChange={(e) => handleHandlerTypeChange(e.target.value)}
-              >
-                <option value="custom">Custom</option>
-                {Object.entries(commonHandlers).map(([value, label]) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
-              </Select>
+                onChange={(value) => handleHandlerTypeChange(value)}
+                options={[
+                  { value: 'custom', label: 'Custom' },
+                  ...Object.entries(commonHandlers).map(([value, label]) => ({ value, label }))
+                ]}
+              />
             </Field>
 
             {handlerType === 'custom' && (
@@ -298,13 +297,14 @@ export const RuntimeClassesCreateView = (): JSX.Element => {
                       
                       <Field>
                         <Label>Operator</Label>
-                        <Select
+                        <Dropdown
                           value={toleration.operator}
-                          onChange={(e) => handleTolerationChange(index, 'operator', e.target.value)}
-                        >
-                          <option value="Equal">Equal</option>
-                          <option value="Exists">Exists</option>
-                        </Select>
+                          onChange={(value) => handleTolerationChange(index, 'operator', value)}
+                          options={[
+                            { value: 'Equal', label: 'Equal' },
+                            { value: 'Exists', label: 'Exists' }
+                          ] as DropdownOption<'Equal' | 'Exists'>[]}
+                        />
                       </Field>
 
                       {toleration.operator === 'Equal' && (
@@ -320,15 +320,16 @@ export const RuntimeClassesCreateView = (): JSX.Element => {
 
                       <Field>
                         <Label>Effect</Label>
-                        <Select
+                        <Dropdown
                           value={toleration.effect}
-                          onChange={(e) => handleTolerationChange(index, 'effect', e.target.value)}
-                        >
-                          <option value="">None</option>
-                          <option value="NoSchedule">NoSchedule</option>
-                          <option value="PreferNoSchedule">PreferNoSchedule</option>
-                          <option value="NoExecute">NoExecute</option>
-                        </Select>
+                          onChange={(value) => handleTolerationChange(index, 'effect', value)}
+                          options={[
+                            { value: '', label: 'None' },
+                            { value: 'NoSchedule', label: 'NoSchedule' },
+                            { value: 'PreferNoSchedule', label: 'PreferNoSchedule' },
+                            { value: 'NoExecute', label: 'NoExecute' }
+                          ] as DropdownOption<'NoSchedule' | 'PreferNoSchedule' | 'NoExecute' | ''>[]}
+                        />
                       </Field>
 
                       {toleration.effect === 'NoExecute' && (

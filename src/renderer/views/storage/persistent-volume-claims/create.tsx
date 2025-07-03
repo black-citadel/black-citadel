@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -159,14 +159,15 @@ export const PersistentVolumeClaimsCreateView = (): JSX.Element => {
               <Description>
                 Defines what type of volume is required.
               </Description>
-              <Select 
+              <Dropdown 
                 name="volumeMode" 
                 value={volumeMode} 
-                onChange={(event) => setVolumeMode(event.target.value as any)}
-              >
-                <option value="Filesystem">Filesystem</option>
-                <option value="Block">Block</option>
-              </Select>
+                onChange={(value) => setVolumeMode(value as any)}
+                options={[
+                  { value: 'Filesystem', label: 'Filesystem' },
+                  { value: 'Block', label: 'Block' }
+                ]}
+              />
             </Field>
 
             <div>
@@ -230,14 +231,15 @@ export const PersistentVolumeClaimsCreateView = (): JSX.Element => {
                   <Description>
                     Type of resource to clone from.
                   </Description>
-                  <Select 
+                  <Dropdown 
                     name="dataSourceKind" 
                     value={dataSourceKind} 
-                    onChange={(event) => setDataSourceKind(event.target.value)}
-                  >
-                    <option value="PersistentVolumeClaim">PersistentVolumeClaim</option>
-                    <option value="VolumeSnapshot">VolumeSnapshot</option>
-                  </Select>
+                    onChange={(value) => setDataSourceKind(value)}
+                    options={[
+                      { value: 'PersistentVolumeClaim', label: 'PersistentVolumeClaim' },
+                      { value: 'VolumeSnapshot', label: 'VolumeSnapshot' }
+                    ]}
+                  />
                 </Field>
 
                 <Field>

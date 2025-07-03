@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -148,13 +148,14 @@ export const PriorityClassesCreateView = (): JSX.Element => {
               <Description>
                 Whether pods with this priority can preempt lower priority pods.
               </Description>
-              <Select
+              <Dropdown
                 value={preemptionPolicy}
-                onChange={(e) => setPreemptionPolicy(e.target.value as 'PreemptLowerPriority' | 'Never')}
-              >
-                <option value="PreemptLowerPriority">PreemptLowerPriority (default)</option>
-                <option value="Never">Never</option>
-              </Select>
+                onChange={(value) => setPreemptionPolicy(value as 'PreemptLowerPriority' | 'Never')}
+                options={[
+                  { value: 'PreemptLowerPriority', label: 'PreemptLowerPriority (default)' },
+                  { value: 'Never', label: 'Never' }
+                ]}
+              />
             </Field>
           </div>
         </div>

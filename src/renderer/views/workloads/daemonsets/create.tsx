@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -195,14 +195,15 @@ export const DaemonSetsCreateView = (): JSX.Element => {
               <Description>
                 How pods should be updated.
               </Description>
-              <Select 
+              <Dropdown 
                 name="updateStrategyType" 
                 value={updateStrategyType} 
-                onChange={(event) => setUpdateStrategyType(event.target.value as any)}
-              >
-                <option value="RollingUpdate">RollingUpdate</option>
-                <option value="OnDelete">OnDelete</option>
-              </Select>
+                onChange={(value) => setUpdateStrategyType(value as any)}
+                options={[
+                  { value: 'RollingUpdate', label: 'RollingUpdate' },
+                  { value: 'OnDelete', label: 'OnDelete' }
+                ]}
+              />
             </Field>
 
             {updateStrategyType === 'RollingUpdate' && (
@@ -369,13 +370,14 @@ export const DaemonSetsCreateView = (): JSX.Element => {
                 <div className="grid grid-cols-2 gap-2">
                   <Field>
                     <Label>Operator</Label>
-                    <Select
+                    <Dropdown
                       value={toleration.operator}
-                      onChange={(e) => handleTolerationChange(index, 'operator', e.target.value)}
-                    >
-                      <option value="Equal">Equal</option>
-                      <option value="Exists">Exists</option>
-                    </Select>
+                      onChange={(value) => handleTolerationChange(index, 'operator', value)}
+                      options={[
+                        { value: 'Equal', label: 'Equal' },
+                        { value: 'Exists', label: 'Exists' }
+                      ]}
+                    />
                   </Field>
                   {toleration.operator === 'Equal' && (
                     <Field>
@@ -391,15 +393,16 @@ export const DaemonSetsCreateView = (): JSX.Element => {
                 <div className="grid grid-cols-2 gap-2">
                   <Field>
                     <Label>Effect</Label>
-                    <Select
+                    <Dropdown
                       value={toleration.effect}
-                      onChange={(e) => handleTolerationChange(index, 'effect', e.target.value)}
-                    >
-                      <option value="">Any</option>
-                      <option value="NoSchedule">NoSchedule</option>
-                      <option value="PreferNoSchedule">PreferNoSchedule</option>
-                      <option value="NoExecute">NoExecute</option>
-                    </Select>
+                      onChange={(value) => handleTolerationChange(index, 'effect', value)}
+                      options={[
+                        { value: '', label: 'Any' },
+                        { value: 'NoSchedule', label: 'NoSchedule' },
+                        { value: 'PreferNoSchedule', label: 'PreferNoSchedule' },
+                        { value: 'NoExecute', label: 'NoExecute' }
+                      ]}
+                    />
                   </Field>
                   {toleration.effect === 'NoExecute' && (
                     <Field>

@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -205,15 +205,16 @@ export const CronJobsCreateView = (): JSX.Element => {
               <Description>
                 How to treat concurrent executions of a Job.
               </Description>
-              <Select 
+              <Dropdown 
                 name="concurrencyPolicy" 
                 value={concurrencyPolicy} 
-                onChange={(event) => setConcurrencyPolicy(event.target.value as any)}
-              >
-                <option value="Allow">Allow</option>
-                <option value="Forbid">Forbid</option>
-                <option value="Replace">Replace</option>
-              </Select>
+                onChange={(value) => setConcurrencyPolicy(value as any)}
+                options={[
+                  { value: 'Allow', label: 'Allow' },
+                  { value: 'Forbid', label: 'Forbid' },
+                  { value: 'Replace', label: 'Replace' }
+                ]}
+              />
             </Field>
 
             <Field>
@@ -327,14 +328,15 @@ export const CronJobsCreateView = (): JSX.Element => {
               <Description>
                 Pod restart policy for failed containers.
               </Description>
-              <Select 
+              <Dropdown 
                 name="restartPolicy" 
                 value={restartPolicy} 
-                onChange={(event) => setRestartPolicy(event.target.value as any)}
-              >
-                <option value="Never">Never</option>
-                <option value="OnFailure">OnFailure</option>
-              </Select>
+                onChange={(value) => setRestartPolicy(value as any)}
+                options={[
+                  { value: 'Never', label: 'Never' },
+                  { value: 'OnFailure', label: 'OnFailure' }
+                ]}
+              />
             </Field>
           </div>
 

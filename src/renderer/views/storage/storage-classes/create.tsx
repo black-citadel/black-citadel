@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -238,15 +238,17 @@ export const StorageClassesCreateView = (): JSX.Element => {
             
             <Field>
               <Label>Provisioner Type</Label>
-              <Select
+              <Dropdown
                 value={provisionerType}
-                onChange={(e) => handleProvisionerTypeChange(e.target.value)}
-              >
-                <option value="custom">Custom</option>
-                {Object.entries(commonProvisioners).map(([value, label]) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
-              </Select>
+                onChange={(value) => handleProvisionerTypeChange(value)}
+                options={[
+                  { value: 'custom', label: 'Custom' },
+                  ...Object.entries(commonProvisioners).map(([value, label]) => ({
+                    value,
+                    label
+                  }))
+                ]}
+              />
             </Field>
 
             {provisionerType === 'custom' && (
@@ -314,13 +316,14 @@ export const StorageClassesCreateView = (): JSX.Element => {
               <Description>
                 What happens to PVs when PVCs are deleted.
               </Description>
-              <Select
+              <Dropdown
                 value={reclaimPolicy}
-                onChange={(e) => setReclaimPolicy(e.target.value as 'Retain' | 'Delete')}
-              >
-                <option value="Delete">Delete</option>
-                <option value="Retain">Retain</option>
-              </Select>
+                onChange={(value) => setReclaimPolicy(value as 'Retain' | 'Delete')}
+                options={[
+                  { value: 'Delete', label: 'Delete' },
+                  { value: 'Retain', label: 'Retain' }
+                ]}
+              />
             </Field>
 
             <Field>
@@ -328,13 +331,14 @@ export const StorageClassesCreateView = (): JSX.Element => {
               <Description>
                 When volume binding and provisioning should occur.
               </Description>
-              <Select
+              <Dropdown
                 value={volumeBindingMode}
-                onChange={(e) => setVolumeBindingMode(e.target.value as 'Immediate' | 'WaitForFirstConsumer')}
-              >
-                <option value="Immediate">Immediate</option>
-                <option value="WaitForFirstConsumer">WaitForFirstConsumer</option>
-              </Select>
+                onChange={(value) => setVolumeBindingMode(value as 'Immediate' | 'WaitForFirstConsumer')}
+                options={[
+                  { value: 'Immediate', label: 'Immediate' },
+                  { value: 'WaitForFirstConsumer', label: 'WaitForFirstConsumer' }
+                ]}
+              />
             </Field>
 
             <Field>

@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Textarea } from '@components/base/textarea';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
@@ -179,20 +179,21 @@ export const SecretsCreateView = (): JSX.Element => {
               <Description>
                 Select the secret type. This determines the expected keys and usage.
               </Description>
-              <Select 
+              <Dropdown 
                 name="type" 
                 value={type} 
-                onChange={(event) => handleTypeChange(event.target.value)}
-              >
-                <option value="Opaque">Opaque (Generic)</option>
-                <option value="kubernetes.io/service-account-token">Service Account Token</option>
-                <option value="kubernetes.io/dockercfg">Docker Config (.dockercfg)</option>
-                <option value="kubernetes.io/dockerconfigjson">Docker Config (.dockerconfigjson)</option>
-                <option value="kubernetes.io/basic-auth">Basic Authentication</option>
-                <option value="kubernetes.io/ssh-auth">SSH Authentication</option>
-                <option value="kubernetes.io/tls">TLS</option>
-                <option value="bootstrap.kubernetes.io/token">Bootstrap Token</option>
-              </Select>
+                onChange={(value) => handleTypeChange(value)}
+                options={[
+                  { value: 'Opaque', label: 'Opaque (Generic)' },
+                  { value: 'kubernetes.io/service-account-token', label: 'Service Account Token' },
+                  { value: 'kubernetes.io/dockercfg', label: 'Docker Config (.dockercfg)' },
+                  { value: 'kubernetes.io/dockerconfigjson', label: 'Docker Config (.dockerconfigjson)' },
+                  { value: 'kubernetes.io/basic-auth', label: 'Basic Authentication' },
+                  { value: 'kubernetes.io/ssh-auth', label: 'SSH Authentication' },
+                  { value: 'kubernetes.io/tls', label: 'TLS' },
+                  { value: 'bootstrap.kubernetes.io/token', label: 'Bootstrap Token' }
+                ]}
+              />
             </Field>
 
             {type === 'Opaque' && (

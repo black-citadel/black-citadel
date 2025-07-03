@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -143,15 +143,17 @@ export const IngressClassesCreateView = (): JSX.Element => {
             
             <Field>
               <Label>Controller Type</Label>
-              <Select
+              <Dropdown
                 value={controllerType}
-                onChange={(e) => handleControllerTypeChange(e.target.value)}
-              >
-                <option value="custom">Custom</option>
-                {Object.entries(commonControllers).map(([value, label]) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}
-              </Select>
+                onChange={(value) => handleControllerTypeChange(value)}
+                options={[
+                  { value: 'custom', label: 'Custom' },
+                  ...Object.entries(commonControllers).map(([value, label]) => ({
+                    value,
+                    label
+                  }))
+                ]}
+              />
             </Field>
 
             {controllerType === 'custom' && (
@@ -226,13 +228,14 @@ export const IngressClassesCreateView = (): JSX.Element => {
 
                 <Field>
                   <Label>Scope</Label>
-                  <Select
+                  <Dropdown
                     value={paramScope}
-                    onChange={(e) => setParamScope(e.target.value as 'Cluster' | 'Namespace')}
-                  >
-                    <option value="Cluster">Cluster</option>
-                    <option value="Namespace">Namespace</option>
-                  </Select>
+                    onChange={(value) => setParamScope(value as 'Cluster' | 'Namespace')}
+                    options={[
+                      { value: 'Cluster', label: 'Cluster' },
+                      { value: 'Namespace', label: 'Namespace' }
+                    ]}
+                  />
                 </Field>
 
                 {paramScope === 'Namespace' && (

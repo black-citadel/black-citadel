@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -221,14 +221,15 @@ export const StatefulSetsCreateView = (): JSX.Element => {
               <Description>
                 How pods should be updated.
               </Description>
-              <Select 
+              <Dropdown 
                 name="updateStrategyType" 
                 value={updateStrategyType} 
-                onChange={(event) => setUpdateStrategyType(event.target.value as any)}
-              >
-                <option value="RollingUpdate">RollingUpdate</option>
-                <option value="OnDelete">OnDelete</option>
-              </Select>
+                onChange={(value) => setUpdateStrategyType(value as any)}
+                options={[
+                  { value: 'RollingUpdate', label: 'RollingUpdate' },
+                  { value: 'OnDelete', label: 'OnDelete' }
+                ]}
+              />
             </Field>
 
             {updateStrategyType === 'RollingUpdate' && (
@@ -252,14 +253,15 @@ export const StatefulSetsCreateView = (): JSX.Element => {
               <Description>
                 How pods should be created and terminated.
               </Description>
-              <Select 
+              <Dropdown 
                 name="podManagementPolicy" 
                 value={podManagementPolicy} 
-                onChange={(event) => setPodManagementPolicy(event.target.value as any)}
-              >
-                <option value="OrderedReady">OrderedReady</option>
-                <option value="Parallel">Parallel</option>
-              </Select>
+                onChange={(value) => setPodManagementPolicy(value as any)}
+                options={[
+                  { value: 'OrderedReady', label: 'OrderedReady' },
+                  { value: 'Parallel', label: 'Parallel' }
+                ]}
+              />
             </Field>
           </div>
 
@@ -401,14 +403,15 @@ export const StatefulSetsCreateView = (): JSX.Element => {
                 </Field>
                 <Field>
                   <Label>Access Mode</Label>
-                  <Select
+                  <Dropdown
                     value={vct.accessMode}
-                    onChange={(e) => handleVolumeClaimTemplateChange(index, 'accessMode', e.target.value)}
-                  >
-                    <option value="ReadWriteOnce">ReadWriteOnce</option>
-                    <option value="ReadOnlyMany">ReadOnlyMany</option>
-                    <option value="ReadWriteMany">ReadWriteMany</option>
-                  </Select>
+                    onChange={(value) => handleVolumeClaimTemplateChange(index, 'accessMode', value)}
+                    options={[
+                      { value: 'ReadWriteOnce', label: 'ReadWriteOnce' },
+                      { value: 'ReadOnlyMany', label: 'ReadOnlyMany' },
+                      { value: 'ReadWriteMany', label: 'ReadWriteMany' }
+                    ]}
+                  />
                 </Field>
                 <Field>
                   <Label>Storage Class</Label>

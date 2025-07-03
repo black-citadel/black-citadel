@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -319,19 +319,20 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
                     <p className="text-sm font-medium mb-2">From (Sources)</p>
                     {rule.peers.map((peer, peerIndex) => (
                       <div key={peerIndex} className="border border-gray-100 dark:border-gray-800 rounded p-2 mb-2">
-                        <Select
+                        <Dropdown
                           value={peer.type}
-                          onChange={(e) => {
+                          onChange={(value) => {
                             const newRules = [...ingressRules];
-                            newRules[ruleIndex].peers[peerIndex].type = e.target.value as any;
+                            newRules[ruleIndex].peers[peerIndex].type = value as any;
                             setIngressRules(newRules);
                           }}
                           className="mb-2"
-                        >
-                          <option value="pod">Pod Selector</option>
-                          <option value="namespace">Namespace Selector</option>
-                          <option value="ipBlock">IP Block</option>
-                        </Select>
+                          options={[
+                            { value: 'pod', label: 'Pod Selector' },
+                            { value: 'namespace', label: 'Namespace Selector' },
+                            { value: 'ipBlock', label: 'IP Block' }
+                          ]}
+                        />
                         
                         {peer.type === 'pod' && (
                           <FieldLabels 
@@ -404,18 +405,19 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
                     <p className="text-sm font-medium mb-2">Ports</p>
                     {rule.ports.map((port, portIndex) => (
                       <div key={portIndex} className="flex gap-2 mb-2">
-                        <Select
+                        <Dropdown
                           value={port.protocol}
-                          onChange={(e) => {
+                          onChange={(value) => {
                             const newRules = [...ingressRules];
-                            newRules[ruleIndex].ports[portIndex].protocol = e.target.value as any;
+                            newRules[ruleIndex].ports[portIndex].protocol = value as any;
                             setIngressRules(newRules);
                           }}
-                        >
-                          <option value="TCP">TCP</option>
-                          <option value="UDP">UDP</option>
-                          <option value="SCTP">SCTP</option>
-                        </Select>
+                          options={[
+                            { value: 'TCP', label: 'TCP' },
+                            { value: 'UDP', label: 'UDP' },
+                            { value: 'SCTP', label: 'SCTP' }
+                          ]}
+                        />
                         <Input
                           placeholder="Port"
                           value={port.port}
@@ -483,19 +485,20 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
                     <p className="text-sm font-medium mb-2">To (Destinations)</p>
                     {rule.peers.map((peer, peerIndex) => (
                       <div key={peerIndex} className="border border-gray-100 dark:border-gray-800 rounded p-2 mb-2">
-                        <Select
+                        <Dropdown
                           value={peer.type}
-                          onChange={(e) => {
+                          onChange={(value) => {
                             const newRules = [...egressRules];
-                            newRules[ruleIndex].peers[peerIndex].type = e.target.value as any;
+                            newRules[ruleIndex].peers[peerIndex].type = value as any;
                             setEgressRules(newRules);
                           }}
                           className="mb-2"
-                        >
-                          <option value="pod">Pod Selector</option>
-                          <option value="namespace">Namespace Selector</option>
-                          <option value="ipBlock">IP Block</option>
-                        </Select>
+                          options={[
+                            { value: 'pod', label: 'Pod Selector' },
+                            { value: 'namespace', label: 'Namespace Selector' },
+                            { value: 'ipBlock', label: 'IP Block' }
+                          ]}
+                        />
                         
                         {peer.type === 'pod' && (
                           <FieldLabels 
@@ -568,18 +571,19 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
                     <p className="text-sm font-medium mb-2">Ports</p>
                     {rule.ports.map((port, portIndex) => (
                       <div key={portIndex} className="flex gap-2 mb-2">
-                        <Select
+                        <Dropdown
                           value={port.protocol}
-                          onChange={(e) => {
+                          onChange={(value) => {
                             const newRules = [...egressRules];
-                            newRules[ruleIndex].ports[portIndex].protocol = e.target.value as any;
+                            newRules[ruleIndex].ports[portIndex].protocol = value as any;
                             setEgressRules(newRules);
                           }}
-                        >
-                          <option value="TCP">TCP</option>
-                          <option value="UDP">UDP</option>
-                          <option value="SCTP">SCTP</option>
-                        </Select>
+                          options={[
+                            { value: 'TCP', label: 'TCP' },
+                            { value: 'UDP', label: 'UDP' },
+                            { value: 'SCTP', label: 'SCTP' }
+                          ]}
+                        />
                         <Input
                           placeholder="Port"
                           value={port.port}

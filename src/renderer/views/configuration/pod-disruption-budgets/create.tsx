@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -167,13 +167,14 @@ export const PodDisruptionBudgetsCreateView = (): JSX.Element => {
             
             <Field>
               <Label>Selector Type</Label>
-              <Select
+              <Dropdown
                 value={selectorType}
-                onChange={(e) => setSelectorType(e.target.value as 'matchLabels' | 'matchExpressions')}
-              >
-                <option value="matchLabels">Match Labels</option>
-                <option value="matchExpressions">Match Expressions</option>
-              </Select>
+                onChange={(value) => setSelectorType(value as 'matchLabels' | 'matchExpressions')}
+                options={[
+                  { value: 'matchLabels', label: 'Match Labels' },
+                  { value: 'matchExpressions', label: 'Match Expressions' }
+                ]}
+              />
             </Field>
 
             {selectorType === 'matchLabels' ? (
@@ -202,15 +203,16 @@ export const PodDisruptionBudgetsCreateView = (): JSX.Element => {
                     </Field>
                     <Field>
                       <Label>Operator</Label>
-                      <Select
+                      <Dropdown
                         value={expr.operator}
-                        onChange={(e) => handleMatchExpressionChange(index, 'operator', e.target.value)}
-                      >
-                        <option value="In">In</option>
-                        <option value="NotIn">NotIn</option>
-                        <option value="Exists">Exists</option>
-                        <option value="DoesNotExist">DoesNotExist</option>
-                      </Select>
+                        onChange={(value) => handleMatchExpressionChange(index, 'operator', value)}
+                        options={[
+                          { value: 'In', label: 'In' },
+                          { value: 'NotIn', label: 'NotIn' },
+                          { value: 'Exists', label: 'Exists' },
+                          { value: 'DoesNotExist', label: 'DoesNotExist' }
+                        ]}
+                      />
                     </Field>
                     {['In', 'NotIn'].includes(expr.operator) && (
                       <Field>
@@ -246,13 +248,14 @@ export const PodDisruptionBudgetsCreateView = (): JSX.Element => {
               <Description>
                 Choose whether to specify minimum available or maximum unavailable pods.
               </Description>
-              <Select
+              <Dropdown
                 value={disruptionType}
-                onChange={(e) => setDisruptionType(e.target.value as 'minAvailable' | 'maxUnavailable')}
-              >
-                <option value="minAvailable">Min Available</option>
-                <option value="maxUnavailable">Max Unavailable</option>
-              </Select>
+                onChange={(value) => setDisruptionType(value as 'minAvailable' | 'maxUnavailable')}
+                options={[
+                  { value: 'minAvailable', label: 'Min Available' },
+                  { value: 'maxUnavailable', label: 'Max Unavailable' }
+                ]}
+              />
             </Field>
 
             {disruptionType === 'minAvailable' ? (

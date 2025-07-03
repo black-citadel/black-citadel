@@ -6,7 +6,7 @@ import { Button } from '@components/base/button';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Select } from '@components/base/select';
+import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -308,25 +308,27 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
 
             <Field>
               <Label>Volume Mode</Label>
-              <Select
+              <Dropdown
                 value={volumeMode}
-                onChange={(e) => setVolumeMode(e.target.value as 'Filesystem' | 'Block')}
-              >
-                <option value="Filesystem">Filesystem</option>
-                <option value="Block">Block</option>
-              </Select>
+                onChange={(value) => setVolumeMode(value as 'Filesystem' | 'Block')}
+                options={[
+                  { value: 'Filesystem', label: 'Filesystem' },
+                  { value: 'Block', label: 'Block' }
+                ]}
+              />
             </Field>
 
             <Field>
               <Label>Reclaim Policy</Label>
-              <Select
+              <Dropdown
                 value={reclaimPolicy}
-                onChange={(e) => setReclaimPolicy(e.target.value as 'Retain' | 'Recycle' | 'Delete')}
-              >
-                <option value="Retain">Retain</option>
-                <option value="Recycle">Recycle</option>
-                <option value="Delete">Delete</option>
-              </Select>
+                onChange={(value) => setReclaimPolicy(value as 'Retain' | 'Recycle' | 'Delete')}
+                options={[
+                  { value: 'Retain', label: 'Retain' },
+                  { value: 'Recycle', label: 'Recycle' },
+                  { value: 'Delete', label: 'Delete' }
+                ]}
+              />
             </Field>
           </div>
 
@@ -335,17 +337,18 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
             
             <Field>
               <Label>Volume Type</Label>
-              <Select
+              <Dropdown
                 value={volumeType}
-                onChange={(e) => setVolumeType(e.target.value as any)}
-              >
-                <option value="hostPath">Host Path (Development Only)</option>
-                <option value="nfs">NFS</option>
-                <option value="local">Local</option>
-                <option value="awsElasticBlockStore">AWS EBS</option>
-                <option value="gcePersistentDisk">GCE Persistent Disk</option>
-                <option value="azureDisk">Azure Disk</option>
-              </Select>
+                onChange={(value) => setVolumeType(value as any)}
+                options={[
+                  { value: 'hostPath', label: 'Host Path (Development Only)' },
+                  { value: 'nfs', label: 'NFS' },
+                  { value: 'local', label: 'Local' },
+                  { value: 'awsElasticBlockStore', label: 'AWS EBS' },
+                  { value: 'gcePersistentDisk', label: 'GCE Persistent Disk' },
+                  { value: 'azureDisk', label: 'Azure Disk' }
+                ]}
+              />
             </Field>
 
             {volumeType === 'hostPath' && (
@@ -360,19 +363,20 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
                 </Field>
                 <Field>
                   <Label>Type</Label>
-                  <Select
+                  <Dropdown
                     value={hostPathType}
-                    onChange={(e) => setHostPathType(e.target.value)}
-                  >
-                    <option value="">Default</option>
-                    <option value="DirectoryOrCreate">DirectoryOrCreate</option>
-                    <option value="Directory">Directory</option>
-                    <option value="FileOrCreate">FileOrCreate</option>
-                    <option value="File">File</option>
-                    <option value="Socket">Socket</option>
-                    <option value="CharDevice">CharDevice</option>
-                    <option value="BlockDevice">BlockDevice</option>
-                  </Select>
+                    onChange={(value) => setHostPathType(value)}
+                    options={[
+                      { value: '', label: 'Default' },
+                      { value: 'DirectoryOrCreate', label: 'DirectoryOrCreate' },
+                      { value: 'Directory', label: 'Directory' },
+                      { value: 'FileOrCreate', label: 'FileOrCreate' },
+                      { value: 'File', label: 'File' },
+                      { value: 'Socket', label: 'Socket' },
+                      { value: 'CharDevice', label: 'CharDevice' },
+                      { value: 'BlockDevice', label: 'BlockDevice' }
+                    ]}
+                  />
                 </Field>
               </>
             )}
@@ -436,15 +440,16 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
                     </Field>
                     <Field>
                       <Label>Operator</Label>
-                      <Select
+                      <Dropdown
                         value={nodeAffinityOperator}
-                        onChange={(e) => setNodeAffinityOperator(e.target.value as any)}
-                      >
-                        <option value="In">In</option>
-                        <option value="NotIn">NotIn</option>
-                        <option value="Exists">Exists</option>
-                        <option value="DoesNotExist">DoesNotExist</option>
-                      </Select>
+                        onChange={(value) => setNodeAffinityOperator(value as any)}
+                        options={[
+                          { value: 'In', label: 'In' },
+                          { value: 'NotIn', label: 'NotIn' },
+                          { value: 'Exists', label: 'Exists' },
+                          { value: 'DoesNotExist', label: 'DoesNotExist' }
+                        ]}
+                      />
                     </Field>
                     {['In', 'NotIn'].includes(nodeAffinityOperator) && (
                       <Field>
@@ -557,14 +562,15 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
                 </Field>
                 <Field>
                   <Label>Caching Mode</Label>
-                  <Select
+                  <Dropdown
                     value={azureCachingMode}
-                    onChange={(e) => setAzureCachingMode(e.target.value as any)}
-                  >
-                    <option value="None">None</option>
-                    <option value="ReadOnly">ReadOnly</option>
-                    <option value="ReadWrite">ReadWrite</option>
-                  </Select>
+                    onChange={(value) => setAzureCachingMode(value as any)}
+                    options={[
+                      { value: 'None', label: 'None' },
+                      { value: 'ReadOnly', label: 'ReadOnly' },
+                      { value: 'ReadWrite', label: 'ReadWrite' }
+                    ]}
+                  />
                 </Field>
                 <Field>
                   <Label>File System Type</Label>
