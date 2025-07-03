@@ -75,6 +75,7 @@ export interface ElectronAPI {
   readNamespacedCronJob: (name: string, namespace: string) => Promise<k8s.V1CronJob>;
   readNamespacedDaemonSet: (name: string, namespace: string) => Promise<k8s.V1DaemonSet>;
   readNamespacedDeployment: (name: string, namespace: string) => Promise<k8s.V1Deployment>;
+  patchNamespacedDeployment: (name: string, namespace: string, body: any) => Promise<k8s.V1Deployment>;
   readNamespacedJob: (name: string, namespace: string) => Promise<k8s.V1Job>;
   readNamespacedPod: (name: string, namespace: string) => Promise<k8s.V1Pod>;
   readNamespacedReplicaSet: (name: string, namespace: string) => Promise<k8s.V1ReplicaSet>;
@@ -219,6 +220,7 @@ try {
     readNamespacedCronJob: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedCronJob', name, namespace),
     readNamespacedDaemonSet: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedDaemonSet', name, namespace),
     readNamespacedDeployment: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedDeployment', name, namespace),
+    patchNamespacedDeployment: (name: string, namespace: string, body: any) => ipcRenderer.invoke('patchNamespacedDeployment', name, namespace, body),
     readNamespacedJob: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedJob', name, namespace),
     readNamespacedPod: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedPod', name, namespace),
     readNamespacedReplicaSet: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedReplicaSet', name, namespace),

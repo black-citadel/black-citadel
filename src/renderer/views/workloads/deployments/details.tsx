@@ -1,10 +1,9 @@
-import k8s = require('@kubernetes/client-node');
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
-import { Editor } from '@components/editor';
+import { YamlEditor } from '@components/common/YamlEditor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { DeploymentBadge } from '@components/workloads/deployment/badge';
@@ -20,6 +19,8 @@ import { Badge } from '@components/base/badge';
 import { PodList } from '@components/workloads/pod/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { ScaleAction } from '@components/resources/ResourceActions/actions/ScaleAction';
+import type { V1Deployment, V1PodList } from '@utils/k8s-types';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -30,8 +31,8 @@ function getLabelSelectorString(selector: { [key: string]: string }): string {
 export const DeploymentsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [deployment, setDeployment] = useState<k8s.V1Deployment>();
-  const [pods, setPods] = useState<k8s.V1PodList>();
+  const [deployment, setDeployment] = useState<V1Deployment>();
+  const [pods, setPods] = useState<V1PodList>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {
@@ -65,18 +66,38 @@ export const DeploymentsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.Deployments, action: ResourceAction.List });
   };
 
+  const handleScale = async (replicas: number) => {
+    const scalePatch = {
+      spec: {
+        replicas: replicas
+      }
+    };
+    await window.electronAPI.patchNamespacedDeployment(viewContext.name, viewContext.namespace, scalePatch);
+    await fetchData();
+  };
+
   return (
     <>
       <DetailsHeader 
         error={error}
         actions={
-          <ResourceActions
-            resourceType={Resources.Deployments}
-            resourceName={viewContext.name}
-            namespace={viewContext.namespace}
-            resource={deployment}
-            onDelete={handleDelete}
-          />
+          <div className="flex items-center gap-2">
+            {deployment && (
+              <ScaleAction
+                resourceName={viewContext.name}
+                namespace={viewContext.namespace}
+                currentReplicas={deployment.spec?.replicas || 0}
+                onScale={handleScale}
+              />
+            )}
+            <ResourceActions
+              resourceType={Resources.Deployments}
+              resourceName={viewContext.name}
+              namespace={viewContext.namespace}
+              resource={deployment}
+              onDelete={handleDelete}
+            />
+          </div>
         }
       >
         <Heading>
@@ -115,7 +136,7 @@ export const DeploymentsDetailsView = (): JSX.Element => {
         </div>
       )}
 
-      {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
+      {activeTab === ResourceTabs.YAML && <YamlEditor value={yamlContent} />}
     </>
   );
 };

@@ -28,8 +28,19 @@ export const rules: Required<ModuleOptions>['rules'] = [
       },
     },
   },
+  // CSS rule for Monaco Editor - without PostCSS
   {
     test: /\.css$/,
+    include: /monaco-editor/,
+    use: [
+      { loader: "style-loader" },
+      { loader: "css-loader" }
+    ],
+  },
+  // CSS rule for all other CSS files - with PostCSS for Tailwind
+  {
+    test: /\.css$/,
+    exclude: /monaco-editor/,
     use: [
       { loader: "style-loader" },
       { loader: "css-loader" },

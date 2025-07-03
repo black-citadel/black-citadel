@@ -486,6 +486,7 @@ ipcMain.handle('listDeploymentForAllNamespaces', async () => {
 });
 ipcMain.handle('readNamespacedDeployment', async (event, name, namespace) => (await k8sAppsV1Api.readNamespacedDeployment(name, namespace)).body);
 ipcMain.handle('deleteNamespacedDeployment', async (event, name, namespace) => (await k8sAppsV1Api.deleteNamespacedDeployment(name, namespace)).body);
+ipcMain.handle('patchNamespacedDeployment', async (event, name, namespace, body) => (await k8sAppsV1Api.patchNamespacedDeployment(name, namespace, body, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/strategic-merge-patch+json' } })).body);
 
 
 // ReplicaSets
