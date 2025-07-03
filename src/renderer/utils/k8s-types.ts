@@ -1,86 +1,71 @@
-// Kubernetes type definitions for renderer process
-// These are extracted type definitions that mirror the @kubernetes/client-node types
-// but don't require importing the actual library which has Node.js dependencies
+// Re-export only the types from @kubernetes/client-node
+// This works because TypeScript will strip these during compilation
+// and won't try to bundle the actual runtime code
 
-export interface V1ObjectMeta {
-  name?: string;
-  namespace?: string;
-  uid?: string;
-  resourceVersion?: string;
-  creationTimestamp?: Date;
-  labels?: { [key: string]: string };
-  annotations?: { [key: string]: string };
-  ownerReferences?: any[];
-  finalizers?: string[];
-  managedFields?: any[];
-}
-
-export interface V1DeploymentSpec {
-  replicas?: number;
-  selector?: {
-    matchLabels?: { [key: string]: string };
-  };
-  template?: any;
-  strategy?: any;
-  minReadySeconds?: number;
-  revisionHistoryLimit?: number;
-  progressDeadlineSeconds?: number;
-}
-
-export interface V1DeploymentStatus {
-  observedGeneration?: number;
-  replicas?: number;
-  updatedReplicas?: number;
-  readyReplicas?: number;
-  availableReplicas?: number;
-  unavailableReplicas?: number;
-  conditions?: any[];
-}
-
-export interface V1Deployment {
-  apiVersion?: string;
-  kind?: string;
-  metadata?: V1ObjectMeta;
-  spec?: V1DeploymentSpec;
-  status?: V1DeploymentStatus;
-}
-
-export interface V1Pod {
-  apiVersion?: string;
-  kind?: string;
-  metadata?: V1ObjectMeta;
-  spec?: any;
-  status?: any;
-}
-
-export interface V1ListMeta {
-  resourceVersion?: string;
-  continue?: string;
-  remainingItemCount?: number;
-}
-
-export interface V1PodList {
-  apiVersion?: string;
-  kind?: string;
-  metadata?: V1ListMeta;
-  items: V1Pod[];
-}
-
-export interface V1DeploymentList {
-  apiVersion?: string;
-  kind?: string;
-  metadata?: V1ListMeta;
-  items: V1Deployment[];
-}
-
-export interface V1RoleBinding {
-  apiVersion?: string;
-  kind?: string;
-  metadata?: V1ObjectMeta;
-  subjects?: any[];
-  roleRef?: {
-    apiGroup?: string;
-    kind?: string;
-    name?: string;
-  };
-}
+export type {
+  V1Deployment,
+  V1DeploymentList,
+  V1DeploymentSpec,
+  V1DeploymentStatus,
+  V1Pod,
+  V1PodList,
+  V1PodSpec,
+  V1PodStatus,
+  V1Container,
+  V1ContainerPort,
+  V1ContainerStatus,
+  V1ObjectMeta,
+  V1ListMeta,
+  V1RoleBinding,
+  V1RoleBindingList,
+  V1ClusterRoleBinding,
+  V1ClusterRoleBindingList,
+  V1Role,
+  V1RoleList,
+  V1ClusterRole,
+  V1ClusterRoleList,
+  V1Service,
+  V1ServiceList,
+  V1ServiceSpec,
+  V1ServiceStatus,
+  V1Namespace,
+  V1NamespaceList,
+  V1ConfigMap,
+  V1ConfigMapList,
+  V1Secret,
+  V1SecretList,
+  V1Node,
+  V1NodeList,
+  V1PersistentVolume,
+  V1PersistentVolumeList,
+  V1PersistentVolumeClaim,
+  V1PersistentVolumeClaimList,
+  V1StorageClass,
+  V1StorageClassList,
+  V1StatefulSet,
+  V1StatefulSetList,
+  V1DaemonSet,
+  V1DaemonSetList,
+  V1ReplicaSet,
+  V1ReplicaSetList,
+  V1Job,
+  V1JobList,
+  V1CronJob,
+  V1CronJobList,
+  V1Ingress,
+  V1IngressList,
+  V1NetworkPolicy,
+  V1NetworkPolicyList,
+  V1ResourceQuota,
+  V1ResourceQuotaList,
+  V1LimitRange,
+  V1LimitRangeList,
+  V1HorizontalPodAutoscaler,
+  V1HorizontalPodAutoscalerList,
+  V1ServiceAccount,
+  V1ServiceAccountList,
+  V1Endpoints,
+  V1EndpointsList,
+  V1Event,
+  V1EventList,
+} from '@kubernetes/client-node';

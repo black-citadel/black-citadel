@@ -3,7 +3,7 @@ import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
-import { YamlEditor } from '@components/common/YamlEditor';
+import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { DeploymentBadge } from '@components/workloads/deployment/badge';
@@ -136,7 +136,7 @@ export const DeploymentsDetailsView = (): JSX.Element => {
         </div>
       )}
 
-      {activeTab === ResourceTabs.YAML && <YamlEditor value={yamlContent} />}
+      {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );
 };
