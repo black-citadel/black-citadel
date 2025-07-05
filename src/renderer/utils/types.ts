@@ -53,3 +53,21 @@ export interface MCPConnection {
   toolsUsed: number;
   agentName?: string;
 }
+
+export interface ExecRequest {
+  podName: string;
+  namespace: string;
+  containerName?: string;
+  command?: string[];
+  tty?: boolean;
+  stdin?: boolean;
+}
+
+export interface ExecSession {
+  id: string;
+  podName: string;
+  namespace: string;
+  containerName?: string;
+  status: 'connecting' | 'connected' | 'disconnected' | 'error';
+  error?: string;
+}

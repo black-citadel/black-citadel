@@ -37,6 +37,7 @@ export interface ResourceActionConfig {
   supportsPortForward: boolean;
   supportsScale: boolean;
   supportsLogs: boolean;
+  supportsTerminal: boolean;
   customActions?: (resource: any) => CustomAction[];
 }
 

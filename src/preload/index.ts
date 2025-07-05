@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 import k8s = require('@kubernetes/client-node');
-import { PortForwardInfo, PortForwardRequest, MCPConnection, MCPToolCallHistory } from '../renderer/utils/types';
+import { PortForwardInfo, PortForwardRequest, MCPConnection, MCPToolCallHistory, ExecRequest, ExecSession } from '../renderer/utils/types';
 
 export interface ElectronAPI {
   // External links
@@ -141,6 +141,13 @@ export interface ElectronAPI {
   createPortForward: (request: PortForwardRequest) => Promise<{ success: boolean, forwardId?: string, localPort?: number, error?: string }>;
   stopPortForward: (forwardId: string) => Promise<{ success: boolean, error?: string }>;
   listPortForwards: () => Promise<PortForwardInfo[]>;
+  // Exec/Terminal
+  createExecSession: (request: ExecRequest) => Promise<{ success: boolean, sessionId?: string, error?: string }>;
+  execSend: (sessionId: string, data: string) => Promise<{ success: boolean, error?: string }>;
+  execReceive: (sessionId: string) => Promise<{ success: boolean, data?: string | null, channel?: number, error?: string }>;
+  execResize: (sessionId: string, rows: number, cols: number) => Promise<{ success: boolean, error?: string }>;
+  closeExecSession: (sessionId: string) => Promise<{ success: boolean, error?: string }>;
+  listExecSessions: () => Promise<ExecSession[]>;
   // MCP Server
   getMCPConnections: () => Promise<MCPConnection[]>;
   getMCPToolCallHistory: (limit?: number) => Promise<MCPToolCallHistory[]>;
@@ -287,6 +294,13 @@ try {
     createPortForward: (request: PortForwardRequest) => ipcRenderer.invoke('createPortForward', request),
     stopPortForward: (forwardId: string) => ipcRenderer.invoke('stopPortForward', forwardId),
     listPortForwards: () => ipcRenderer.invoke('listPortForwards'),
+    // Exec/Terminal
+    createExecSession: (request: ExecRequest) => ipcRenderer.invoke('createExecSession', request),
+    execSend: (sessionId: string, data: string) => ipcRenderer.invoke('execSend', sessionId, data),
+    execReceive: (sessionId: string) => ipcRenderer.invoke('execReceive', sessionId),
+    execResize: (sessionId: string, rows: number, cols: number) => ipcRenderer.invoke('execResize', sessionId, rows, cols),
+    closeExecSession: (sessionId: string) => ipcRenderer.invoke('closeExecSession', sessionId),
+    listExecSessions: () => ipcRenderer.invoke('listExecSessions'),
     // MCP Server
     getMCPConnections: () => ipcRenderer.invoke('getMCPConnections'),
     getMCPToolCallHistory: (limit?: number) => ipcRenderer.invoke('getMCPToolCallHistory', limit),

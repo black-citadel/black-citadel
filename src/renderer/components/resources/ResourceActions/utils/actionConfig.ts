@@ -8,6 +8,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: true,
     supportsScale: false,
     supportsLogs: true,
+    supportsTerminal: true,
   },
   [Resources.Deployments]: {
     supportsDelete: true,
@@ -15,6 +16,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: true,
     supportsLogs: true,
+    supportsTerminal: false,
   },
   [Resources.Services]: {
     supportsDelete: true,
@@ -22,6 +24,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: true,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.Namespaces]: {
     supportsDelete: true,
@@ -29,6 +32,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.Nodes]: {
     supportsDelete: false,
@@ -36,6 +40,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.Secrets]: {
     supportsDelete: true,
@@ -43,6 +48,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.ConfigMaps]: {
     supportsDelete: true,
@@ -50,6 +56,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.StatefulSets]: {
     supportsDelete: true,
@@ -57,6 +64,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: true,
     supportsLogs: true,
+    supportsTerminal: false,
   },
   [Resources.DaemonSets]: {
     supportsDelete: true,
@@ -64,6 +72,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: true,
+    supportsTerminal: false,
   },
   [Resources.ReplicaSets]: {
     supportsDelete: true,
@@ -71,6 +80,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: true,
     supportsLogs: true,
+    supportsTerminal: false,
   },
   [Resources.Jobs]: {
     supportsDelete: true,
@@ -78,6 +88,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: true,
+    supportsTerminal: false,
   },
   [Resources.CronJobs]: {
     supportsDelete: true,
@@ -85,6 +96,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.Ingresses]: {
     supportsDelete: true,
@@ -92,6 +104,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.NetworkPolicies]: {
     supportsDelete: true,
@@ -99,6 +112,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.PersistentVolumes]: {
     supportsDelete: true,
@@ -106,6 +120,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.PersistentVolumeClaims]: {
     supportsDelete: true,
@@ -113,6 +128,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.StorageClasses]: {
     supportsDelete: true,
@@ -120,6 +136,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.ServiceAccounts]: {
     supportsDelete: true,
@@ -127,6 +144,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.Roles]: {
     supportsDelete: true,
@@ -134,6 +152,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.RoleBindings]: {
     supportsDelete: true,
@@ -141,6 +160,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.ClusterRoles]: {
     supportsDelete: true,
@@ -148,6 +168,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.ClusterRoleBindings]: {
     supportsDelete: true,
@@ -155,6 +176,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.ResourceQuotas]: {
     supportsDelete: true,
@@ -162,6 +184,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.LimitRanges]: {
     supportsDelete: true,
@@ -169,6 +192,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.HorizontalPodAutoscalers]: {
     supportsDelete: true,
@@ -176,6 +200,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.VerticalPodAutoscalers]: {
     supportsDelete: true,
@@ -183,6 +208,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.PodDisruptionBudgets]: {
     supportsDelete: true,
@@ -190,6 +216,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.PriorityClasses]: {
     supportsDelete: true,
@@ -197,6 +224,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.RuntimeClasses]: {
     supportsDelete: true,
@@ -204,6 +232,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
   [Resources.CustomResourceDefinitions]: {
     supportsDelete: true,
@@ -211,6 +240,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   },
 };
 
@@ -221,5 +251,6 @@ export function getResourceActionConfig(resourceType: Resources): ResourceAction
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,
+    supportsTerminal: false,
   };
 }

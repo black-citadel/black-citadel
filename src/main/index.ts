@@ -7,8 +7,9 @@ import * as os from 'os';
 import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import { spawn, ChildProcess } from 'child_process';
-import { PortForwardInfo, PortForwardRequest } from '../renderer/utils/types';
+import { PortForwardInfo, PortForwardRequest, ExecRequest, ExecSession } from '../renderer/utils/types';
 import { PortForwardStatus } from '../renderer/utils/enums';
+import { WebSocket } from 'ws';
 import { startMCPServer, stopMCPServer, getToolCallHistory, getActiveConnections, clearToolCallHistory } from './mcp-server';
 import { CDPDevUtils } from './cdp-dev-utils';
 
@@ -943,12 +944,216 @@ ipcMain.handle('listPortForwards', async () => {
   return Array.from(activePortForwards.values()).map(({ process, ...info }) => info);
 });
 
+// Exec/Terminal functionality
+const activeExecSessions = new Map<string, { 
+  session: ExecSession,
+  stdin?: any,
+  stdout?: any,
+  stderr?: any,
+  outputBuffer?: string,
+  ws?: WebSocket 
+}>();
+
+ipcMain.handle('createExecSession', async (event, request: ExecRequest) => {
+  try {
+    if (!isK8sInitialized) {
+      return { success: false, error: 'Kubernetes not initialized' };
+    }
+
+    const sessionId = uuidv4();
+    const session: ExecSession = {
+      id: sessionId,
+      podName: request.podName,
+      namespace: request.namespace,
+      containerName: request.containerName,
+      status: 'connecting'
+    };
+
+    activeExecSessions.set(sessionId, { session });
+
+    // Create exec instance
+    const exec = new k8s.Exec(kc);
+    
+    // Default command if not provided
+    const command = request.command || ['/bin/sh'];
+    
+    // Create a PassThrough stream to handle stdin/stdout/stderr
+    const { PassThrough } = require('stream');
+    const stdout = new PassThrough();
+    const stderr = new PassThrough();
+    const stdin = new PassThrough();
+    
+    // Store the streams for later use
+    const sessionInfo = activeExecSessions.get(sessionId);
+    if (sessionInfo) {
+      sessionInfo.stdin = stdin;
+      sessionInfo.stdout = stdout;
+      sessionInfo.stderr = stderr;
+      sessionInfo.outputBuffer = '';
+      sessionInfo.session.status = 'connected';
+      activeExecSessions.set(sessionId, sessionInfo);
+      
+      // Update output buffer on data
+      stdout.on('data', (data: Buffer) => {
+        const info = activeExecSessions.get(sessionId);
+        if (info) {
+          info.outputBuffer = (info.outputBuffer || '') + data.toString();
+          activeExecSessions.set(sessionId, info);
+        }
+      });
+      
+      stderr.on('data', (data: Buffer) => {
+        const info = activeExecSessions.get(sessionId);
+        if (info) {
+          info.outputBuffer = (info.outputBuffer || '') + data.toString();
+          activeExecSessions.set(sessionId, info);
+        }
+      });
+    }
+    
+    // Start the exec session
+    exec.exec(
+      request.namespace,
+      request.podName,
+      request.containerName || undefined,
+      command,
+      stdout,
+      stderr,
+      stdin,
+      request.tty !== false,
+      (status) => {
+        console.log('Exec status:', status);
+        const sessionInfo = activeExecSessions.get(sessionId);
+        if (sessionInfo) {
+          if (status.status === 'Failure') {
+            sessionInfo.session.status = 'error';
+            sessionInfo.session.error = status.message;
+          }
+          activeExecSessions.set(sessionId, sessionInfo);
+        }
+      }
+    ).catch((err) => {
+      console.error('Exec error:', err);
+      const sessionInfo = activeExecSessions.get(sessionId);
+      if (sessionInfo) {
+        sessionInfo.session.status = 'error';
+        sessionInfo.session.error = err.message;
+        activeExecSessions.set(sessionId, sessionInfo);
+      }
+    });
+
+    return { success: true, sessionId };
+  } catch (error: any) {
+    console.error('Failed to create exec session:', error);
+    activeExecSessions.delete(sessionId);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('execSend', async (event, sessionId: string, data: string) => {
+  try {
+    const sessionInfo = activeExecSessions.get(sessionId);
+    if (!sessionInfo || !sessionInfo.stdin) {
+      return { success: false, error: 'Session not found or not connected' };
+    }
+
+    // Write data to stdin
+    sessionInfo.stdin.write(data);
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('Failed to send to exec session:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('execReceive', async (event, sessionId: string) => {
+  try {
+    const sessionInfo = activeExecSessions.get(sessionId);
+    if (!sessionInfo) {
+      return { success: false, error: 'Session not found' };
+    }
+
+    // Get any buffered output and clear it
+    const output = sessionInfo.outputBuffer || '';
+    sessionInfo.outputBuffer = '';
+    
+    if (output) {
+      return { success: true, data: output, channel: 1 };
+    }
+    
+    return { success: true, data: null };
+  } catch (error: any) {
+    console.error('Failed to receive from exec session:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('execResize', async (event, sessionId: string, rows: number, cols: number) => {
+  try {
+    const sessionInfo = activeExecSessions.get(sessionId);
+    if (!sessionInfo) {
+      return { success: false, error: 'Session not found' };
+    }
+
+    // Terminal resize is not supported with stream-based exec
+    // Would need to use WebSocket-based approach for full PTY support
+    return { success: true };
+  } catch (error: any) {
+    console.error('Failed to resize exec session:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('closeExecSession', async (event, sessionId: string) => {
+  try {
+    const sessionInfo = activeExecSessions.get(sessionId);
+    if (!sessionInfo) {
+      return { success: false, error: 'Session not found' };
+    }
+
+    // Close streams
+    if (sessionInfo.stdin) {
+      sessionInfo.stdin.end();
+    }
+    if (sessionInfo.stdout) {
+      sessionInfo.stdout.destroy();
+    }
+    if (sessionInfo.stderr) {
+      sessionInfo.stderr.destroy();
+    }
+
+    activeExecSessions.delete(sessionId);
+    return { success: true };
+  } catch (error: any) {
+    console.error('Failed to close exec session:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('listExecSessions', async () => {
+  return Array.from(activeExecSessions.values()).map(info => info.session);
+});
+
 // Clean up on app quit
 app.on('before-quit', async () => {
   // Clean up port forwards
   activePortForwards.forEach((portForward, id) => {
     if (portForward.process && !portForward.process.killed) {
       portForward.process.kill('SIGTERM');
+    }
+  });
+  
+  // Clean up exec sessions
+  activeExecSessions.forEach((sessionInfo, id) => {
+    if (sessionInfo.stdin) {
+      sessionInfo.stdin.end();
+    }
+    if (sessionInfo.stdout) {
+      sessionInfo.stdout.destroy();
+    }
+    if (sessionInfo.stderr) {
+      sessionInfo.stderr.destroy();
     }
   });
   

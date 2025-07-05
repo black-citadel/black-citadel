@@ -18,6 +18,7 @@ import { ContainerResources } from '@components/base/container-resources';
 import { Badge } from '@components/base/badge';
 import { Button } from '@components/base/button';
 import { PortForwardDialog } from '@components/tools/port-forward/dialog';
+import { TerminalDialog } from '@components/tools/terminal/dialog';
 import { PortOption, PortForwardRequest } from '@utils/types';
 import { ResourceActions } from '@components/resources/ResourceActions';
 
@@ -27,6 +28,7 @@ export const PodsDetailsView = (): JSX.Element => {
   const [pod, setPod] = useState<k8s.V1Pod>();
   const [error, setError] = useState(null);
   const [showPortForwardDialog, setShowPortForwardDialog] = useState(false);
+  const [showTerminalDialog, setShowTerminalDialog] = useState(false);
   const [portForwardSuccess, setPortForwardSuccess] = useState<string | null>(null);
 
   const fetchData = async () => {
@@ -104,12 +106,20 @@ export const PodsDetailsView = (): JSX.Element => {
             onDelete={handleDelete}
             onNavigate={(path) => console.log('Navigate to:', path)}
             customActions={
-              pod?.status?.phase === 'Running' && getAvailablePorts().length > 0 ? [{
-                id: 'port-forward',
-                label: 'Port Forward',
-                onClick: () => setShowPortForwardDialog(true),
-                variant: 'secondary' as const,
-              }] : []
+              pod?.status?.phase === 'Running' ? [
+                {
+                  id: 'terminal',
+                  label: 'Terminal',
+                  onClick: () => setShowTerminalDialog(true),
+                  variant: 'secondary' as const,
+                },
+                ...(getAvailablePorts().length > 0 ? [{
+                  id: 'port-forward',
+                  label: 'Port Forward',
+                  onClick: () => setShowPortForwardDialog(true),
+                  variant: 'secondary' as const,
+                }] : [])
+              ] : []
             }
           />
         }
@@ -327,6 +337,15 @@ export const PodsDetailsView = (): JSX.Element => {
         availablePorts={getAvailablePorts()}
         onSubmit={handlePortForward}
       />
+
+      {pod && (
+        <TerminalDialog
+          isOpen={showTerminalDialog}
+          onClose={() => setShowTerminalDialog(false)}
+          pod={pod}
+          namespace={viewContext.namespace}
+        />
+      )}
     </>
   );
 };
