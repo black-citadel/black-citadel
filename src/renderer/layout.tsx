@@ -49,6 +49,7 @@ import { CustomResourceDetailsView } from '@views/cluster/custom-resources';
 import { EventsListView, EventsDetailsView } from '@views/cluster/events';
 import { PortForwardsListView } from '@views/tools/port-forwards';
 import { MCPServerListView, MCPServerDetailsView } from '@views/operations/mcp-server';
+import { PreferencesListView } from '@views/settings/preferences';
 
 export const Layout = () => {
   const { viewContext, setViewContext, drawerOpen, setDrawerOpen, helpTitle, helpContent, canGoBack, canGoForward, goBack, goForward } = useView()
@@ -478,6 +479,9 @@ export const Layout = () => {
         {viewContext.resource === Resources.PortForwards && viewContext.action === ResourceAction.List && <PortForwardsListView />}
         {viewContext.resource === Resources.MCPServer && viewContext.action === ResourceAction.List && <MCPServerListView />}
         {viewContext.resource === Resources.MCPServer && viewContext.action === ResourceAction.Details && <MCPServerDetailsView />}
+
+        {/* Settings */}
+        {viewContext.resource === Resources.Preferences && viewContext.action === ResourceAction.List && <PreferencesListView />}
       </div>
 
       <Drawer title={helpTitle} open={drawerOpen} onClose={() => setDrawerOpen(false)}>{helpContent}</Drawer>

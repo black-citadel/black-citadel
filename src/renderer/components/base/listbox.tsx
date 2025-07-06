@@ -44,7 +44,7 @@ export function Listbox<T>({
           placeholder={placeholder && <span className="block truncate text-zinc-500">{placeholder}</span>}
           className={clsx([
             // Basic layout
-            'relative block w-full appearance-none rounded-lg py-[calc(theme(spacing[2.5])-1px)] sm:py-[calc(theme(spacing[1.5])-1px)]',
+            'relative block w-full appearance-none rounded-xs py-[calc(theme(spacing[2.5])-1px)] sm:py-[calc(theme(spacing[1.5])-1px)]',
             // Set minimum height for when no value is selected
             'min-h-11 sm:min-h-9',
             // Horizontal padding
@@ -54,7 +54,7 @@ export function Listbox<T>({
             // Border
             'border border-zinc-950/10 group-data-[active]:border-zinc-950/20 group-data-[hover]:border-zinc-950/20 dark:border-white/10 dark:group-data-[active]:border-white/20 dark:group-data-[hover]:border-white/20',
             // Background color
-            'bg-transparent dark:bg-white/5',
+            'bg-transparent dark:bg-[#101010]',
             // Invalid state
             'group-data-[invalid]:border-red-500 group-data-[invalid]:group-data-[hover]:border-red-500 group-data-[invalid]:dark:border-red-600 group-data-[invalid]:data-[hover]:dark:border-red-600',
             // Disabled state
@@ -80,13 +80,13 @@ export function Listbox<T>({
           // Anchor positioning
           '[--anchor-offset:-1.625rem] [--anchor-padding:theme(spacing.4)] sm:[--anchor-offset:-1.375rem]',
           // Base styles
-          'isolate w-max min-w-[calc(var(--button-width)+1.75rem)] select-none scroll-py-1 rounded-xl p-1',
+          'isolate w-max min-w-[calc(var(--button-width)+1.75rem)] select-none scroll-py-1 rounded-xs p-1',
           // Invisible border that is only visible in `forced-colors` mode for accessibility purposes
           'outline outline-1 outline-transparent focus:outline-none',
           // Handle scrolling when menu won't fit in viewport
           'overflow-y-scroll overscroll-contain',
           // Popover background
-          'bg-white/75 backdrop-blur-xl dark:bg-zinc-800/75',
+          'bg-white/75 backdrop-blur-xl dark:bg-[#101010]',
           // Shadows
           'shadow-lg ring-1 ring-zinc-950/10 dark:ring-inset dark:ring-white/10',
           // Transitions

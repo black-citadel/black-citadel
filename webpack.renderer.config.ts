@@ -26,7 +26,9 @@ export const rendererConfig: Configuration = {
       '@views': path.resolve(__dirname, 'src/renderer/views'),
       '@templates': path.resolve(__dirname, 'src/renderer/templates'),
       '@help': path.resolve(__dirname, 'src/renderer/help'),
-      '@assets': path.resolve(__dirname, 'src/renderer/assets')
+      '@assets': path.resolve(__dirname, 'src/renderer/assets'),
+      'react': path.resolve(__dirname, 'node_modules/react'),
+      'react-dom': path.resolve(__dirname, 'node_modules/react-dom')
     },
     fallback: {
       // Monaco Editor might try to use some Node.js modules, provide empty mocks

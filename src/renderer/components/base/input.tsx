@@ -72,13 +72,13 @@ export const Input = forwardRef(function Input(
               '[&::-webkit-datetime-edit-meridiem-field]:p-0',
             ],
           // Basic layout
-          'relative block w-full appearance-none rounded-lg px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing[3])-1px)] sm:py-[calc(theme(spacing[1.5])-1px)]',
+          'relative block w-full appearance-none rounded-xs px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing[3])-1px)] sm:py-[calc(theme(spacing[1.5])-1px)]',
           // Typography
           'text-base/6 text-zinc-950 placeholder:text-zinc-500 sm:text-sm/6 dark:text-white',
           // Border
           'border border-zinc-950/10 data-[hover]:border-zinc-950/20 dark:border-white/10 dark:data-[hover]:border-white/20',
           // Background color
-          'bg-transparent dark:bg-white/5',
+          'bg-transparent dark:bg-[#101010]',
           // Hide default focus styles
           'focus:outline-none',
           // Invalid state

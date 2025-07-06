@@ -90,7 +90,7 @@ export const WelcomeView = () => {
 
         {/* Main Content */}
         <div className="bg-[#101010] border border-neutral-800 rounded-sm p-8 mb-8">
-          <Heading size="lg" className="mb-6">
+          <Heading className="mb-6">
             Select a Kubernetes context
           </Heading>
           
@@ -124,7 +124,7 @@ export const WelcomeView = () => {
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <Heading size="sm" className="mb-1 group-hover:text-blue-400 transition-colors">
+                        <Heading className="mb-1 group-hover:text-blue-400 transition-colors">
                           {context.name}
                         </Heading>
                         <Text className="text-sm text-gray-600 dark:text-gray-400">
@@ -140,7 +140,7 @@ export const WelcomeView = () => {
                         )}
                       </div>
                       {context.name === currentContext && (
-                        <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+                        <span className="text-xs text-blue-600 dark:text-blue-400 font-medium uppercase">
                           Current
                         </span>
                       )}

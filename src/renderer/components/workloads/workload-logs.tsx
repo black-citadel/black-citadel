@@ -374,7 +374,7 @@ export const WorkloadLogs = ({
       <div 
         ref={logContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-auto bg-black text-green-400 p-4 rounded-lg font-mono text-sm whitespace-pre-wrap"
+        className="flex-1 overflow-auto bg-[#101010] text-green-400 p-4 font-mono text-sm whitespace-pre-wrap"
         style={{ minHeight: '400px' }}
       >
         {combinedLogs.length === 0 ? (

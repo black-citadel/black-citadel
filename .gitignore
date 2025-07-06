@@ -91,3 +91,6 @@ out/
 # IDEs
 .vscode/
 .idea/
+
+*storybook.log
+storybook-static

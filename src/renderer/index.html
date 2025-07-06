@@ -28,6 +28,16 @@
 
 <body class="h-full dark">
   <div id="app" class="h-full"></div>
+  <script>
+    // Check for saved theme preference or default to 'dark'
+    const theme = localStorage.getItem('theme') || 'dark';
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+    }
+  </script>
 </body>
 
 </html>

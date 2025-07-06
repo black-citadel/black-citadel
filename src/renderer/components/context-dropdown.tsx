@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import k8s from '@kubernetes/client-node';
 import { Field } from '@components/base/fieldset';
 import { Listbox, ListboxLabel, ListboxOption } from '@components/base/listbox';
@@ -18,9 +18,6 @@ export const ContextDropdown = (): JSX.Element => {
       if (currentContext && (!activeContext || activeContext !== currentContext)) {
         setActiveContext(currentContext);
       }
-
-      console.log('Contexts:', contextList);
-      console.log('Current context:', currentContext);
     } catch (e) {
       console.error("Failed to fetch Context:", e);
     }

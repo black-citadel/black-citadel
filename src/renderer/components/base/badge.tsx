@@ -67,7 +67,7 @@ const colors = {
   teal: 'border text-teal-700/75 border-teal-700/25 dark:text-teal-400/75 dark:border-teal-400/25',
   cyan: 'border text-cyan-700/75 border-cyan-700/25 dark:text-cyan-400/75 dark:border-cyan-400/25',
   sky: 'border text-sky-700/75 border-sky-700/25 dark:text-sky-400/75 dark:border-sky-400/25',
-  blue: 'border text-blue-700/75 border-blue-700/25 dark:text-blue-400/75 dark:border-blue-400/25',
+  blue: 'border text-blue-400 border-blue-400/50 dark:text-blue-400 dark:border-blue-400/50',
   indigo: 'border text-indigo-700/75 border-indigo-700/25 dark:text-indigo-400/75 dark:border-indigo-400/25',
   violet: 'border text-violet-700/75 border-violet-700/25 dark:text-violet-400/75 dark:border-violet-400/25',
   purple: 'border text-purple-700/75 border-purple-700/25 dark:text-purple-400/75 dark:border-purple-400/25',
@@ -85,7 +85,7 @@ export function Badge({ color = 'zinc', className, ...props }: BadgeProps & Reac
       {...props}
       className={clsx(
         className,
-        'inline-flex items-center gap-x-1.5 rounded-md px-1.5 py-0.5 text-xs font-medium forced-colors:outline',
+        'inline-flex items-center gap-x-1.5 rounded-md px-1.5 py-0.5 text-xs font-medium tracking-  forced-colors:outline',
         colors[color]
       )}
     />
