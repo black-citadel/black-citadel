@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { Context } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { Resources, ResourceAction } from '@utils/enums';
 import { ContextList } from '@components/cluster/context/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { useView } from '@context/viewProvider';
 
 export const ContextsListView = (): JSX.Element => {
-  const [contexts, setContexts] = useState<k8s.Context[]>();
+  const [contexts, setContexts] = useState<Context[]>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -38,9 +38,9 @@ export const ContextsListView = (): JSX.Element => {
         resource={Resources.Contexts} 
         error={error}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.Contexts, action: ResourceAction.Create })} 
-            outline
+            
           >
             Add new Context
           </Button>

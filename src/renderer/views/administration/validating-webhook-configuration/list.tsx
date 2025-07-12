@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1ValidatingWebhookConfigurationList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { ValidatingWebhookConfigurationList } from '@components/administration/validating-webhook-configuration/table';
 import { Button } from '@components/base/button';
@@ -8,7 +8,7 @@ import { useView } from '@context/viewProvider';
 
 
 export const ValidatingWebhookConfigurationsListView = (): JSX.Element => {
-  const [validatingWebhookConfigs, setValidatingWebhookConfigs] = useState<k8s.V1ValidatingWebhookConfigurationList>();
+  const [validatingWebhookConfigs, setValidatingWebhookConfigs] = useState<V1ValidatingWebhookConfigurationList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 

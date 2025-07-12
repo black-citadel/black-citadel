@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1ConfigMap } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -16,7 +16,7 @@ import { ResourceActions } from '@components/resources/ResourceActions';
 export const ConfigMapsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [configMap, setConfigMap] = useState<k8s.V1ConfigMap>();
+  const [configMap, setConfigMap] = useState<V1ConfigMap>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

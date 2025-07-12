@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1RuntimeClass } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -17,7 +17,7 @@ import { ResourceActions } from '@components/resources/ResourceActions';
 export const RuntimeClassesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [runtimeClass, setRuntimeClass] = useState<k8s.V1RuntimeClass>();
+  const [runtimeClass, setRuntimeClass] = useState<V1RuntimeClass>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

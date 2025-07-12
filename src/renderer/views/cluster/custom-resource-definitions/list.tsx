@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import k8s from '@kubernetes/client-node';
+import { V1CustomResourceDefinitionList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { Button } from '@components/base/button';
 import { Resources, ResourceAction } from '@utils/enums';
@@ -7,7 +7,7 @@ import { CustomResourceDefinitionList } from '@components/cluster/custom-resourc
 import { useView } from '@context/viewProvider';
 
 export const CustomResourceDefinitionsListView = () => {
-  const [crds, setCrds] = useState<k8s.V1CustomResourceDefinitionList>();
+  const [crds, setCrds] = useState<V1CustomResourceDefinitionList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1CronJobList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { CronJobList } from '@components/workloads/cronjob/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const CronJobsListView = (): JSX.Element => {
-  const [cronJobs, setCronJobs] = useState<k8s.V1CronJobList>();
+  const [cronJobs, setCronJobs] = useState<V1CronJobList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -39,9 +39,9 @@ export const CronJobsListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.CronJobs, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create CronJob
           </Button>

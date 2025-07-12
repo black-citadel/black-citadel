@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogDescription, DialogActions } from '@components/base/dialog';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 
 interface ScaleDeploymentDialogProps {
   isOpen: boolean;
@@ -107,13 +107,14 @@ export const ScaleDeploymentDialog: React.FC<ScaleDeploymentDialogProps> = ({
 
       <DialogActions className="flex justify-end gap-3">
         <Button
+          variant="secondary"
           onClick={onClose}
           disabled={isScaling}
-          outline
         >
           Cancel
         </Button>
         <Button
+          variant="primary"
           onClick={handleConfirm}
           disabled={isScaling || replicas === currentReplicas}
         >

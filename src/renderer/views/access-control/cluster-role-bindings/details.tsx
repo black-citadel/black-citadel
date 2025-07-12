@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1ClusterRoleBinding } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -17,7 +17,7 @@ import { ResourceActions } from '@components/resources/ResourceActions';
 export const ClusterRoleBindingsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [clusterRoleBinding, setClusterRoleBinding] = useState<k8s.V1ClusterRoleBinding>();
+  const [clusterRoleBinding, setClusterRoleBinding] = useState<V1ClusterRoleBinding>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1PodList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { PodList } from '@components/workloads/pod/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const PodsListView = (): JSX.Element => {
-  const [pods, setPods] = useState<k8s.V1PodList>();
+  const [pods, setPods] = useState<V1PodList>();
   const [error, setError] = useState(null);
   const { setViewContext } = useView();
 
@@ -40,9 +40,9 @@ export const PodsListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.Pods, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create Pod
           </Button>

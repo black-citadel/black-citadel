@@ -1,4 +1,7 @@
-import k8s = require('@kubernetes/client-node');
+import {
+  V1PodList,
+  V1Service
+} from '@utils/k8s-types';
 import { Heading, Subheading } from "@components/base/heading";
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
@@ -26,8 +29,8 @@ function getLabelSelectorString(selector: { [key: string]: string }): string {
 export const ServicesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [service, setService] = useState<k8s.V1Service>();
-  const [pods, setPods] = useState<k8s.V1PodList>();
+  const [service, setService] = useState<V1Service>();
+  const [pods, setPods] = useState<V1PodList>();
   const [error, setError] = useState(null);
   const [showPortForwardDialog, setShowPortForwardDialog] = useState(false);
   const [portForwardSuccess, setPortForwardSuccess] = useState<string | null>(null);

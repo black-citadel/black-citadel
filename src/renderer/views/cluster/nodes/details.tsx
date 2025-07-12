@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import k8s from '@kubernetes/client-node';
+import {
+  NodeStatus,
+  V1EventList,
+  V1Node
+} from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs } from "@utils/enums";
@@ -25,9 +29,9 @@ import { Resources } from '@utils/enums';
 export const NodeDetailsView = (): JSX.Element => {
     const { viewContext } = useView()
     const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-    const [node, setNode] = useState<k8s.V1Node>();
-    const [nodeMetrics, setNodeMetrics] = useState<k8s.NodeStatus[]>();
-    const [events, setEvents] = useState<k8s.V1EventList>();
+    const [node, setNode] = useState<V1Node>();
+    const [nodeMetrics, setNodeMetrics] = useState<NodeStatus[]>();
+    const [events, setEvents] = useState<V1EventList>();
     const [error, setError] = useState<string | null>(null);
     const [cordonAlertOpen, setCordonAlertOpen] = useState(false);
     const [uncordonAlertOpen, setUncordonAlertOpen] = useState(false);

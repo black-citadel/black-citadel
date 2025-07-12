@@ -1,10 +1,10 @@
 import React from 'react';
 import { Description, Field, Label } from "@components/base/fieldset";
 import { Input } from "@components/base/input";
-import { Button } from "@components/base/button";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { HelpButton } from '@components/help-button';
 import helpObjects from '@help/index';
+import { Button } from '@protoku/design-system';
 
 export interface Label {
   key: string;
@@ -73,7 +73,7 @@ export function FieldLabels({ labels, setLabels }: FieldLabelsProps) {
           </div>
         ))}
       </Field>
-      <Button onClick={handleAddLabel} outline className="uppercase">
+      <Button onClick={handleAddLabel} variant="secondary">
         Add another label
       </Button>
     </>

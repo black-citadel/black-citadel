@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1VolumeAttachment } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs } from "@utils/enums";
@@ -19,7 +19,7 @@ import { MetadataDetails } from '@components/metadata';
 export const VolumeAttachmentsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [volumeAttachment, setVolumeAttachment] = useState<k8s.V1VolumeAttachment>();
+  const [volumeAttachment, setVolumeAttachment] = useState<V1VolumeAttachment>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

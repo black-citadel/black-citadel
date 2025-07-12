@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useView } from '@context/viewProvider';
 import { HorizontalPodAutoscalerBadge } from '@components/configuration/horizontal-pod-autoscaler/badge';
 import { CreateHeader } from '@components/create-header';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
@@ -379,7 +379,7 @@ export const HorizontalPodAutoscalersCreateView = (): JSX.Element => {
           <CodePanel code={dump(payload)}><code>{dump(payload)}</code></CodePanel>
 
           <div className="mt-4">
-            <Button onClick={() => handleCreate()} color='white' className='uppercase'>Apply</Button>
+            <Button variant="primary" onClick={() => handleCreate()}>Apply</Button>
           </div>
         </div>
       </div>

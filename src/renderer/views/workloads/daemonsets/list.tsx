@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1DaemonSetList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { DaemonSetList } from '@components/workloads/daemonset/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const DaemonSetsListView = (): JSX.Element => {
-  const [daemonSets, setDaemonSets] = useState<k8s.V1DaemonSetList>();
+  const [daemonSets, setDaemonSets] = useState<V1DaemonSetList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -39,9 +39,9 @@ export const DaemonSetsListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.DaemonSets, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create DaemonSet
           </Button>

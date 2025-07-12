@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1MutatingWebhookConfiguration } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs } from "@utils/enums";
@@ -15,7 +15,7 @@ import { MetadataDetails } from '@components/metadata';
 export const MutatingWebhookConfigurationsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [mutatingWebhookConfiguration, setMutatingWebhookConfiguration] = useState<k8s.V1MutatingWebhookConfiguration>();
+  const [mutatingWebhookConfiguration, setMutatingWebhookConfiguration] = useState<V1MutatingWebhookConfiguration>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

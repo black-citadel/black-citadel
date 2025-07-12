@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1PodDisruptionBudgetList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { PodDisruptionBudgetList } from '@components/configuration/pod-disruption-budget/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const PodDisruptionBudgetsListView = (): JSX.Element => {
-  const [pdbs, setPDBs] = useState<k8s.V1PodDisruptionBudgetList>();
+  const [pdbs, setPDBs] = useState<V1PodDisruptionBudgetList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -35,9 +35,9 @@ export const PodDisruptionBudgetsListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.PodDisruptionBudgets, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create Pod Disruption Budget
           </Button>

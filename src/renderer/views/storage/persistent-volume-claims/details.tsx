@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1PersistentVolumeClaim } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -19,7 +19,7 @@ import { ResourceActions } from '@components/resources/ResourceActions';
 export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [pvc, setPVC] = useState<k8s.V1PersistentVolumeClaim>();
+  const [pvc, setPVC] = useState<V1PersistentVolumeClaim>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

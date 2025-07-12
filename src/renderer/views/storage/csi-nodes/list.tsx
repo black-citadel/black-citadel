@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1CSINodeList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { CSINodeList } from '@components/storage/csi-node/table';
 import { Resources } from '@utils/enums';
 
 export const CSINodesListView = (): JSX.Element => {
-  const [csiNodes, setCSINodes] = useState<k8s.V1CSINodeList>();
+  const [csiNodes, setCSINodes] = useState<V1CSINodeList>();
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {

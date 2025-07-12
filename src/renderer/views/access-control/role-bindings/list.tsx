@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1RoleBindingList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { RoleBindingList } from '@components/access-control/role-binding/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const RoleBindingsListView = (): JSX.Element => {
-  const [roleBindings, setRoleBindings] = useState<k8s.V1RoleBindingList>();
+  const [roleBindings, setRoleBindings] = useState<V1RoleBindingList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -35,9 +35,9 @@ export const RoleBindingsListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.RoleBindings, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create Role Binding
           </Button>

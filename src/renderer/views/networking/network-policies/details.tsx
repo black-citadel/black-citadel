@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1NetworkPolicy } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -16,7 +16,7 @@ import { Heading } from '@components/base/heading';
 export const NetworkPoliciesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [networkPolicy, setNetworkPolicy] = useState<k8s.V1NetworkPolicy>();
+  const [networkPolicy, setNetworkPolicy] = useState<V1NetworkPolicy>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

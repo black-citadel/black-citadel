@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import {
+  V1LimitRange,
+  V1LimitRangeItem
+} from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar';
 import { useView } from '@context/viewProvider';
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -15,7 +18,7 @@ import { ResourceActions } from '@components/resources/ResourceActions';
 export const LimitRangesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView();
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details);
-  const [limitRange, setLimitRange] = useState<k8s.V1LimitRange>();
+  const [limitRange, setLimitRange] = useState<V1LimitRange>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {
@@ -86,7 +89,7 @@ export const LimitRangesDetailsView = (): JSX.Element => {
   );
 };
 
-const renderLimitRangeItem = (item: k8s.V1LimitRangeItem) => {
+const renderLimitRangeItem = (item: V1LimitRangeItem) => {
   return (
     <div className="mb-4 p-2">
       <div className="font-semibold mb-2">Type: {item.type}</div>
@@ -144,7 +147,7 @@ const renderLimitRangeItem = (item: k8s.V1LimitRangeItem) => {
   );
 };
 
-const renderLimitRangeSpec = (limitRange: k8s.V1LimitRange) => {
+const renderLimitRangeSpec = (limitRange: V1LimitRange) => {
   if (!limitRange || !limitRange.spec || !limitRange.spec.limits) return "No limits specified";
   return limitRange.spec.limits.map((item, index) => (
     <React.Fragment key={index}>

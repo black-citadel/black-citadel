@@ -76,6 +76,7 @@ export enum ResourceTabs {
     Details = 'Details',
     Environment = 'Environment',
     Logs = 'Logs',
+    Terminal = 'Terminal',
     Events = 'Events',
     YAML = 'YAML',
     Pods = 'Pods',

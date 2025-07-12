@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1IngressClassList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { IngressClassList } from '@components/networking/ingress-class/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const IngressClassesListView = (): JSX.Element => {
-  const [ingressClasses, setIngressClasses] = useState<k8s.V1IngressClassList>();
+  const [ingressClasses, setIngressClasses] = useState<V1IngressClassList>();
   const [error, setError] = useState(null);
   const { setViewContext } = useView();
 
@@ -37,9 +37,9 @@ export const IngressClassesListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={false}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.IngressClasses, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create Ingress Class
           </Button>

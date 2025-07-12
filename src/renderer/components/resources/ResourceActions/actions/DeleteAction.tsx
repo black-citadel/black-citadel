@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { DeleteConfirmationDialog } from '@components/dialogs/DeleteConfirmationDialog';
 
 interface DeleteActionProps {
@@ -49,17 +49,17 @@ export const DeleteAction: React.FC<DeleteActionProps> = ({
       case 'inline':
         return 'px-2 py-1 text-sm';
       default:
-        return 'uppercase';
+        return '';
     }
   };
 
   return (
     <>
       <Button
+        variant="caution"
         onClick={() => setShowDialog(true)}
         disabled={disabled}
         className={getButtonClass()}
-        outline
         aria-label={`Delete ${resourceType} ${resourceName}`}
       >
         Delete

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useView } from '@context/viewProvider';
 import { NetworkPolicyBadge } from '@components/networking/network-policy/badge';
 import { CreateHeader } from '@components/create-header';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
@@ -642,7 +642,7 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
           <CodePanel code={dump(payload)}><code>{dump(payload)}</code></CodePanel>
 
           <div className="mt-4">
-            <Button onClick={() => handleCreate()} color='white' className='uppercase'>Apply</Button>
+            <Button variant="primary" onClick={() => handleCreate()}>Apply</Button>
           </div>
         </div>
       </div>

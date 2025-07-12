@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import k8s from '@kubernetes/client-node';
+import { V1NodeList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { Resources } from '@utils/enums';
 import { NodeList } from '@components/cluster/node/table';
 export const NodesListView = () => {
-  const [nodes, setNodes] = useState<k8s.V1NodeList>();
+  const [nodes, setNodes] = useState<V1NodeList>();
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {

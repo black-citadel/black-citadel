@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1ReplicaSetList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { ReplicaSetList } from '@components/workloads/replicaset/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const ReplicaSetsListView = (): JSX.Element => {
-  const [replicaSets, setReplicaSets] = useState<k8s.V1ReplicaSetList>();
+  const [replicaSets, setReplicaSets] = useState<V1ReplicaSetList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -39,9 +39,9 @@ export const ReplicaSetsListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.ReplicaSets, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create ReplicaSet
           </Button>

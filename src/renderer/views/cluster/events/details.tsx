@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import k8s from '@kubernetes/client-node';
+import { CoreV1Event } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs } from "@utils/enums";
@@ -15,7 +15,7 @@ import { calculateAge } from '@utils/helpers';
 export const EventsDetailsView = (): JSX.Element => {
     const { viewContext } = useView()
     const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-    const [event, setEvent] = useState<k8s.CoreV1Event>();
+    const [event, setEvent] = useState<CoreV1Event>();
     const [error, setError] = useState<string | null>(null);
   
     const fetchData = async () => {

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button } from "./base/button"
+import { Button } from '@protoku/design-system'
 import { Heading } from "./base/heading"
 import { Alert, AlertTitle, AlertDescription, AlertActions } from "./base/alert"
 
@@ -25,17 +25,17 @@ export const DetailsHeader = ({ children, error, onDelete, actions }: Props): JS
         {children}
         <div className="flex gap-4">
           {actions}
-          {onDelete && <Button onClick={() => setIsOpen(true)} className="uppercase" outline>Delete</Button>}
+          {onDelete && <Button variant="caution" onClick={() => setIsOpen(true)}>Delete</Button>}
         </div>
       </div>
 
       <Alert open={isOpen} onClose={setIsOpen}>
         <AlertTitle>Are you sure you want to delete this resource?</AlertTitle>
         <AlertActions>
-          <Button plain onClick={() => setIsOpen(false)}>
+          <Button variant="secondary" onClick={() => setIsOpen(false)}>
             Cancel
           </Button>
-          <Button onClick={onDelete}>Delete</Button>
+          <Button variant="caution" onClick={onDelete}>Delete</Button>
         </AlertActions>
       </Alert>
     </>

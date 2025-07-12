@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1JobList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { JobList } from '@components/workloads/job/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const JobsListView = (): JSX.Element => {
-  const [jobs, setJobs] = useState<k8s.V1JobList>();
+  const [jobs, setJobs] = useState<V1JobList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -39,9 +39,9 @@ export const JobsListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.Jobs, action: ResourceAction.Create })} 
-            outline
+            
           >
             Create Job
           </Button>

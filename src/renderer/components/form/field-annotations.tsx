@@ -1,7 +1,7 @@
 import React from 'react';
 import { Description, Field, Label } from "@components/base/fieldset";
 import { Input } from "@components/base/input";
-import { Button } from "@components/base/button";
+import { Button } from '@protoku/design-system';
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { HelpButton } from '@components/help-button';
 import helpObjects from '@help/index';
@@ -75,7 +75,7 @@ export function FieldAnnotations({ annotations, setAnnotations }: Props) {
           </div>
         ))}
       </Field>
-      <Button onClick={handleAddAnnotation} outline className="uppercase">
+      <Button onClick={handleAddAnnotation} variant="secondary">
         Add another annotation
       </Button>
     </>

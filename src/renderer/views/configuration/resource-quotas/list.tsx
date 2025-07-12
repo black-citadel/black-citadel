@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1ResourceQuotaList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { ResourceQuotaList } from '@components/configuration/resource-quota/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const ResourceQuotasListView = (): JSX.Element => {
-  const [resourceQuotas, setResourceQuotas] = useState<k8s.V1ResourceQuotaList>();
+  const [resourceQuotas, setResourceQuotas] = useState<V1ResourceQuotaList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -35,9 +35,9 @@ export const ResourceQuotasListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.ResourceQuotas, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create Resource Quota
           </Button>

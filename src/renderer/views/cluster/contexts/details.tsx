@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import k8s from '@kubernetes/client-node';
+import { Context } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs } from "@utils/enums";
@@ -13,7 +13,7 @@ import { ContextBadge } from '@components/cluster/context/badge';
 export const ContextsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [context, setContext] = useState<k8s.Context>();
+  const [context, setContext] = useState<Context>();
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {

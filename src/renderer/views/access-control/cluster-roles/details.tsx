@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1ClusterRole } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -18,7 +18,7 @@ import { ResourceActions } from '@components/resources/ResourceActions';
 export const ClusterRolesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [clusterRole, setClusterRole] = useState<k8s.V1ClusterRole>();
+  const [clusterRole, setClusterRole] = useState<V1ClusterRole>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

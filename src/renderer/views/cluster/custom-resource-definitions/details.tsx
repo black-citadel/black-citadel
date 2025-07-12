@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import k8s from '@kubernetes/client-node';
+import { V1CustomResourceDefinition } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -23,7 +23,7 @@ enum CustomResourceTabs {
 export const CustomResourceDefinitionsDetailsView = (): JSX.Element => {
     const { viewContext, setViewContext } = useView()
     const [activeTab, setActiveTab] = useState<CustomResourceTabs>(CustomResourceTabs.Details)
-    const [crd, setCrd] = useState<k8s.V1CustomResourceDefinition>();
+    const [crd, setCrd] = useState<V1CustomResourceDefinition>();
     const [customResources, setCustomResources] = useState<any[]>([]);
     const [customResourcesError, setCustomResourcesError] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -44,7 +44,7 @@ export const CustomResourceDefinitionsDetailsView = (): JSX.Element => {
       }
     };
     
-    const fetchCustomResources = async (group: string, plural: string, crdData: k8s.V1CustomResourceDefinition) => {
+    const fetchCustomResources = async (group: string, plural: string, crdData: V1CustomResourceDefinition) => {
       try {
         // Get the preferred version from the passed CRD data
         const preferredVersion = crdData.spec?.versions?.find(v => v.storage)?.name || crdData.spec?.versions?.[0]?.name;

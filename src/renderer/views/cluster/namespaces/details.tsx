@@ -1,5 +1,29 @@
 import { useEffect, useState, memo, useCallback } from 'react';
-import k8s from '@kubernetes/client-node';
+import {
+  V1ConfigMapList,
+  V1CronJobList,
+  V1DaemonSetList,
+  V1DeploymentList,
+  V1EndpointSliceList,
+  V1EndpointsList,
+  V1IngressList,
+  V1JobList,
+  V1LimitRangeList,
+  V1Namespace,
+  V1NetworkPolicyList,
+  V1PersistentVolumeClaimList,
+  V1PodDisruptionBudgetList,
+  V1PodList,
+  V1ReplicaSetList,
+  V1ResourceQuotaList,
+  V1RoleBindingList,
+  V1RoleList,
+  V1SecretList,
+  V1ServiceAccountList,
+  V1ServiceList,
+  V1StatefulSetList,
+  V2HorizontalPodAutoscalerList
+} from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceAction, Resources, ResourceTabs } from "@utils/enums";
@@ -19,33 +43,33 @@ export const NamespacesDetailsView = (): JSX.Element => {
   // Debug imports
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [namespace, setNamespace] = useState<k8s.V1Namespace>();
+  const [namespace, setNamespace] = useState<V1Namespace>();
   const [error, setError] = useState<string | null>(null);
   const [initialLoad, setInitialLoad] = useState(true);
   
   // Separate state for each resource type
-  const [deployments, setDeployments] = useState<k8s.V1DeploymentList>();
-  const [pods, setPods] = useState<k8s.V1PodList>();
-  const [replicaSets, setReplicaSets] = useState<k8s.V1ReplicaSetList>();
-  const [statefulSets, setStatefulSets] = useState<k8s.V1StatefulSetList>();
-  const [daemonSets, setDaemonSets] = useState<k8s.V1DaemonSetList>();
-  const [jobs, setJobs] = useState<k8s.V1JobList>();
-  const [cronJobs, setCronJobs] = useState<k8s.V1CronJobList>();
-  const [services, setServices] = useState<k8s.V1ServiceList>();
-  const [ingresses, setIngresses] = useState<k8s.V1IngressList>();
-  const [endpoints, setEndpoints] = useState<k8s.V1EndpointsList>();
-  const [endpointSlices, setEndpointSlices] = useState<k8s.V1EndpointSliceList>();
-  const [networkPolicies, setNetworkPolicies] = useState<k8s.V1NetworkPolicyList>();
-  const [configMaps, setConfigMaps] = useState<k8s.V1ConfigMapList>();
-  const [secrets, setSecrets] = useState<k8s.V1SecretList>();
-  const [resourceQuotas, setResourceQuotas] = useState<k8s.V1ResourceQuotaList>();
-  const [limitRanges, setLimitRanges] = useState<k8s.V1LimitRangeList>();
-  const [horizontalPodAutoscalers, setHorizontalPodAutoscalers] = useState<k8s.V2HorizontalPodAutoscalerList>();
-  const [podDisruptionBudgets, setPodDisruptionBudgets] = useState<k8s.V1PodDisruptionBudgetList>();
-  const [persistentVolumeClaims, setPersistentVolumeClaims] = useState<k8s.V1PersistentVolumeClaimList>();
-  const [serviceAccounts, setServiceAccounts] = useState<k8s.V1ServiceAccountList>();
-  const [roles, setRoles] = useState<k8s.V1RoleList>();
-  const [roleBindings, setRoleBindings] = useState<k8s.V1RoleBindingList>();
+  const [deployments, setDeployments] = useState<V1DeploymentList>();
+  const [pods, setPods] = useState<V1PodList>();
+  const [replicaSets, setReplicaSets] = useState<V1ReplicaSetList>();
+  const [statefulSets, setStatefulSets] = useState<V1StatefulSetList>();
+  const [daemonSets, setDaemonSets] = useState<V1DaemonSetList>();
+  const [jobs, setJobs] = useState<V1JobList>();
+  const [cronJobs, setCronJobs] = useState<V1CronJobList>();
+  const [services, setServices] = useState<V1ServiceList>();
+  const [ingresses, setIngresses] = useState<V1IngressList>();
+  const [endpoints, setEndpoints] = useState<V1EndpointsList>();
+  const [endpointSlices, setEndpointSlices] = useState<V1EndpointSliceList>();
+  const [networkPolicies, setNetworkPolicies] = useState<V1NetworkPolicyList>();
+  const [configMaps, setConfigMaps] = useState<V1ConfigMapList>();
+  const [secrets, setSecrets] = useState<V1SecretList>();
+  const [resourceQuotas, setResourceQuotas] = useState<V1ResourceQuotaList>();
+  const [limitRanges, setLimitRanges] = useState<V1LimitRangeList>();
+  const [horizontalPodAutoscalers, setHorizontalPodAutoscalers] = useState<V2HorizontalPodAutoscalerList>();
+  const [podDisruptionBudgets, setPodDisruptionBudgets] = useState<V1PodDisruptionBudgetList>();
+  const [persistentVolumeClaims, setPersistentVolumeClaims] = useState<V1PersistentVolumeClaimList>();
+  const [serviceAccounts, setServiceAccounts] = useState<V1ServiceAccountList>();
+  const [roles, setRoles] = useState<V1RoleList>();
+  const [roleBindings, setRoleBindings] = useState<V1RoleBindingList>();
 
   const fetchData = async () => {
     try {

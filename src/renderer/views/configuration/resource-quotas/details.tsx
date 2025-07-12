@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1ResourceQuota } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar';
 import { useView } from '@context/viewProvider';
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -15,7 +15,7 @@ import { ResourceActions } from '@components/resources/ResourceActions';
 export const ResourceQuotasDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView();
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details);
-  const [resourceQuota, setResourceQuota] = useState<k8s.V1ResourceQuota>();
+  const [resourceQuota, setResourceQuota] = useState<V1ResourceQuota>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {
@@ -89,7 +89,7 @@ export const ResourceQuotasDetailsView = (): JSX.Element => {
   );
 };
 
-const renderQuotaSpec = (resourceQuota: k8s.V1ResourceQuota) => {
+const renderQuotaSpec = (resourceQuota: V1ResourceQuota) => {
   if (!resourceQuota || !resourceQuota.spec || !resourceQuota.spec.hard) return "No quota specified";
   return Object.entries(resourceQuota.spec.hard).map(([key, value]) => (
     <div key={key} className="mb-2">
@@ -98,7 +98,7 @@ const renderQuotaSpec = (resourceQuota: k8s.V1ResourceQuota) => {
   ));
 };
 
-const renderQuotaStatus = (resourceQuota: k8s.V1ResourceQuota) => {
+const renderQuotaStatus = (resourceQuota: V1ResourceQuota) => {
   if (!resourceQuota || !resourceQuota.status || !resourceQuota.status.hard) return "No status available";
   return Object.entries(resourceQuota.status.hard).map(([key, hardValue]) => {
     const usedValue = resourceQuota.status.used?.[key] || "0";

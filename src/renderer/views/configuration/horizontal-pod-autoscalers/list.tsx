@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V2HorizontalPodAutoscalerList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { HorizontalPodAutoscalerList } from '@components/configuration/horizontal-pod-autoscaler/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const HorizontalPodAutoscalersListView = (): JSX.Element => {
-  const [hpas, setHPAs] = useState<k8s.V2HorizontalPodAutoscalerList>();
+  const [hpas, setHPAs] = useState<V2HorizontalPodAutoscalerList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -35,9 +35,9 @@ export const HorizontalPodAutoscalersListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.HorizontalPodAutoscalers, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create Horizontal Pod Autoscaler
           </Button>

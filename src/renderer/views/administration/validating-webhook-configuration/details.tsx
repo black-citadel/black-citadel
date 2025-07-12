@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1ValidatingWebhookConfiguration } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs } from "@utils/enums";
@@ -15,7 +15,7 @@ import { MetadataDetails } from '@components/metadata';
 export const ValidatingWebhookConfigurationsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [validatingWebhookConfiguration, setValidatingWebhookConfiguration] = useState<k8s.V1ValidatingWebhookConfiguration>();
+  const [validatingWebhookConfiguration, setValidatingWebhookConfiguration] = useState<V1ValidatingWebhookConfiguration>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

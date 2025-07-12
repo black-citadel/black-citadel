@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1Role } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -17,7 +17,7 @@ import { ResourceActions } from '@components/resources/ResourceActions';
 export const RolesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [role, setRole] = useState<k8s.V1Role>();
+  const [role, setRole] = useState<V1Role>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

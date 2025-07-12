@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1CSIDriverList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { CSIDriverList } from '@components/storage/csi-driver/table';
 import { Button } from '@components/base/button';
@@ -7,7 +7,7 @@ import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const CSIDriversListView = (): JSX.Element => {
-  const [csiDrivers, setCSIDrivers] = useState<k8s.V1CSIDriverList>();
+  const [csiDrivers, setCSIDrivers] = useState<V1CSIDriverList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 

@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1EndpointSlice } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs } from "@utils/enums";
@@ -14,7 +14,7 @@ import { Heading } from '@components/base/heading';
 export const EndpointSlicesDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [endpointSlice, setEndpointSlice] = useState<k8s.V1EndpointSlice>();
+  const [endpointSlice, setEndpointSlice] = useState<V1EndpointSlice>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

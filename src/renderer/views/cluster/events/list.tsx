@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
-import k8s from '@kubernetes/client-node';
+import { CoreV1EventList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { Resources } from '@utils/enums';
 import { EventList } from '@components/cluster/event/table';
 import { useView } from '@context/viewProvider';
 
 export const EventsListView = () => {
-  const [events, setEvents] = useState<k8s.CoreV1EventList>();
+  const [events, setEvents] = useState<CoreV1EventList>();
   const [error, setError] = useState<string | null>(null);
   const { activeNamespace } = useView();
 
   const fetchData = async () => {
     try {
-      let data: k8s.CoreV1EventList;
+      let data: CoreV1EventList;
       
       if (activeNamespace && activeNamespace !== 'all') {
         // Fetch events for specific namespace

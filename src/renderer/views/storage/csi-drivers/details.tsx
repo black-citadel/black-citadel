@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1CSIDriver } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs } from "@utils/enums";
@@ -16,7 +16,7 @@ import { MetadataDetails } from '@components/metadata';
 export const CSIDriversDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [csiDriver, setCSIDriver] = useState<k8s.V1CSIDriver>();
+  const [csiDriver, setCSIDriver] = useState<V1CSIDriver>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

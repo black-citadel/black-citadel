@@ -1,4 +1,7 @@
-import k8s = require('@kubernetes/client-node');
+import {
+  V1Job,
+  V1PodList
+} from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -25,8 +28,8 @@ function getLabelSelectorString(selector: { [key: string]: string }): string {
 export const JobsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [job, setJob] = useState<k8s.V1Job>();
-  const [pods, setPods] = useState<k8s.V1PodList>();
+  const [job, setJob] = useState<V1Job>();
+  const [pods, setPods] = useState<V1PodList>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

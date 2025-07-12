@@ -1,4 +1,8 @@
-import k8s = require('@kubernetes/client-node');
+import {
+  V1CronJob,
+  V1JobList,
+  V1PodList
+} from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -19,9 +23,9 @@ import { ResourceActions } from '@components/resources/ResourceActions';
 export const CronJobsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [cronJob, setCronJob] = useState<k8s.V1CronJob>();
-  const [jobs, setJobs] = useState<k8s.V1JobList>();
-  const [pods, setPods] = useState<k8s.V1PodList>();
+  const [cronJob, setCronJob] = useState<V1CronJob>();
+  const [jobs, setJobs] = useState<V1JobList>();
+  const [pods, setPods] = useState<V1PodList>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {

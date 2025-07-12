@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogDescription, DialogActions } from '@components/base/dialog';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 
 interface DeleteConfirmationDialogProps {
   isOpen: boolean;
@@ -93,16 +93,16 @@ export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> =
 
           <DialogActions className="flex justify-end gap-3">
             <Button
+              variant="secondary"
               onClick={onClose}
               disabled={isDeleting}
-              outline
             >
               Cancel
             </Button>
             <Button
+              variant="caution"
               onClick={handleConfirm}
               disabled={isDeleting}
-              className="bg-red-600 hover:bg-red-700 text-white"
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </Button>

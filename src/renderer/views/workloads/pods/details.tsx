@@ -1,4 +1,4 @@
-import k8s = require('@kubernetes/client-node');
+import { V1Pod } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceAction, Resources, ResourceTabs } from "@utils/enums";
@@ -18,17 +18,16 @@ import { ContainerResources } from '@components/base/container-resources';
 import { Badge } from '@components/base/badge';
 import { Button } from '@components/base/button';
 import { PortForwardDialog } from '@components/tools/port-forward/dialog';
-import { TerminalDialog } from '@components/tools/terminal/dialog';
+import { TerminalTab } from '@components/tools/terminal/terminal-tab';
 import { PortOption, PortForwardRequest } from '@utils/types';
 import { ResourceActions } from '@components/resources/ResourceActions';
 
 export const PodsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [pod, setPod] = useState<k8s.V1Pod>();
+  const [pod, setPod] = useState<V1Pod>();
   const [error, setError] = useState(null);
   const [showPortForwardDialog, setShowPortForwardDialog] = useState(false);
-  const [showTerminalDialog, setShowTerminalDialog] = useState(false);
   const [portForwardSuccess, setPortForwardSuccess] = useState<string | null>(null);
 
   const fetchData = async () => {
@@ -106,20 +105,12 @@ export const PodsDetailsView = (): JSX.Element => {
             onDelete={handleDelete}
             onNavigate={(path) => console.log('Navigate to:', path)}
             customActions={
-              pod?.status?.phase === 'Running' ? [
-                {
-                  id: 'terminal',
-                  label: 'Terminal',
-                  onClick: () => setShowTerminalDialog(true),
-                  variant: 'secondary' as const,
-                },
-                ...(getAvailablePorts().length > 0 ? [{
-                  id: 'port-forward',
-                  label: 'Port Forward',
-                  onClick: () => setShowPortForwardDialog(true),
-                  variant: 'secondary' as const,
-                }] : [])
-              ] : []
+              pod?.status?.phase === 'Running' && getAvailablePorts().length > 0 ? [{
+                id: 'port-forward',
+                label: 'Port Forward',
+                onClick: () => setShowPortForwardDialog(true),
+                variant: 'secondary' as const,
+              }] : []
             }
           />
         }
@@ -132,6 +123,9 @@ export const PodsDetailsView = (): JSX.Element => {
           <NavbarSection>
             <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
             <NavbarItem onClick={() => setActiveTab(ResourceTabs.Logs)} current={activeTab == ResourceTabs.Logs}>{ResourceTabs.Logs}</NavbarItem>
+            {pod?.status?.phase === 'Running' && (
+              <NavbarItem onClick={() => setActiveTab(ResourceTabs.Terminal)} current={activeTab == ResourceTabs.Terminal}>{ResourceTabs.Terminal}</NavbarItem>
+            )}
             <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
           </NavbarSection>
         </Navbar>
@@ -316,6 +310,15 @@ export const PodsDetailsView = (): JSX.Element => {
         </div>
       )}
 
+      {activeTab === ResourceTabs.Terminal && pod && (
+        <div className='m-2'>
+          <TerminalTab
+            pod={pod}
+            namespace={viewContext.namespace}
+          />
+        </div>
+      )}
+
       {activeTab === ResourceTabs.YAML && (
         <Editor content={yamlContent} />
       )}
@@ -338,14 +341,6 @@ export const PodsDetailsView = (): JSX.Element => {
         onSubmit={handlePortForward}
       />
 
-      {pod && (
-        <TerminalDialog
-          isOpen={showTerminalDialog}
-          onClose={() => setShowTerminalDialog(false)}
-          pod={pod}
-          namespace={viewContext.namespace}
-        />
-      )}
     </>
   );
 };

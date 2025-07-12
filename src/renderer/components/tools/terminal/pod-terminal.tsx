@@ -85,6 +85,9 @@ export const PodTerminal: React.FC<PodTerminalProps> = ({
       if (pollIntervalRef.current) {
         clearInterval(pollIntervalRef.current);
       }
+      if (sessionId) {
+        window.electronAPI.closeExecSession(sessionId);
+      }
       term.dispose();
     };
   }, []);
@@ -152,12 +155,14 @@ export const PodTerminal: React.FC<PodTerminalProps> = ({
     pollIntervalRef.current = setInterval(poll, 50);
   };
 
-  const handleClose = async () => {
+  const handleDisconnect = async () => {
     if (sessionId) {
       await window.electronAPI.closeExecSession(sessionId);
-    }
-    if (onClose) {
-      onClose();
+      setSessionId(null);
+      if (terminal) {
+        terminal.clear();
+        terminal.writeln('\x1b[33mSession disconnected. Refresh the page to reconnect.\x1b[0m');
+      }
     }
   };
 
@@ -171,11 +176,12 @@ export const PodTerminal: React.FC<PodTerminalProps> = ({
           </span>
         </div>
         <button
-          onClick={handleClose}
+          onClick={handleDisconnect}
           className="text-gray-400 hover:text-gray-200 transition-colors"
+          title="Disconnect terminal session"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
         </button>
       </div>

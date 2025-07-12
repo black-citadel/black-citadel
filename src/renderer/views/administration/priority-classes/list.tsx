@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1PriorityClassList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { PriorityClassList } from '@components/administration/priority-class/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const PriorityClassesListView = (): JSX.Element => {
-  const [priorityClasses, setPriorityClasses] = useState<k8s.V1PriorityClassList>();
+  const [priorityClasses, setPriorityClasses] = useState<V1PriorityClassList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -35,9 +35,9 @@ export const PriorityClassesListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={false}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.PriorityClasses, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create Priority Class
           </Button>

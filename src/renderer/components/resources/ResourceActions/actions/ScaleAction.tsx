@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { ScaleDeploymentDialog } from '@components/dialogs/ScaleDeploymentDialog';
 
 interface ScaleActionProps {
@@ -43,17 +43,17 @@ export const ScaleAction: React.FC<ScaleActionProps> = ({
       case 'inline':
         return 'px-2 py-1 text-sm';
       default:
-        return 'uppercase';
+        return '';
     }
   };
 
   return (
     <>
       <Button
+        variant="secondary"
         onClick={() => setShowDialog(true)}
         disabled={disabled}
         className={getButtonClass()}
-        outline
         aria-label={`Scale deployment ${resourceName}`}
       >
         Scale

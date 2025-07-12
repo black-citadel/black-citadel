@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1VolumeAttachmentList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { VolumeAttachmentList } from '@components/storage/volume-attachment/table';
 import { Resources } from '@utils/enums';
 
 export const VolumeAttachmentsListView = (): JSX.Element => {
-  const [volumeAttachments, setVolumeAttachments] = useState<k8s.V1VolumeAttachmentList>();
+  const [volumeAttachments, setVolumeAttachments] = useState<V1VolumeAttachmentList>();
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {

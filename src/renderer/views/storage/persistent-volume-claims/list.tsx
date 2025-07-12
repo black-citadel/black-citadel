@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import k8s = require('@kubernetes/client-node');
+import { V1PersistentVolumeClaimList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { PersistentVolumeClaimList } from '@components/storage/persistent-volume-claim/table';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
 export const PersistentVolumeClaimsListView = (): JSX.Element => {
-  const [pvcs, setPVCs] = useState<k8s.V1PersistentVolumeClaimList>();
+  const [pvcs, setPVCs] = useState<V1PersistentVolumeClaimList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
 
@@ -35,9 +35,9 @@ export const PersistentVolumeClaimsListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button 
+          <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.PersistentVolumeClaims, action: ResourceAction.Create})} 
-            outline
+            
           >
             Create Persistent Volume Claim
           </Button>

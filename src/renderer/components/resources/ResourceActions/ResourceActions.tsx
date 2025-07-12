@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { DeleteAction } from './actions/DeleteAction';
 import { getResourceActionConfig } from './utils/actionConfig';
 import { getResourceTypeName } from './utils/resourceTypeNames';
@@ -41,7 +41,7 @@ export const ResourceActions: React.FC<ResourceActionsProps> = ({
   const getButtonVariantClass = (actionVariant?: string) => {
     if (variant === 'compact') return 'p-1';
     if (variant === 'inline') return 'px-2 py-1 text-sm';
-    return 'uppercase';
+    return '';
   };
 
   const getResourceCustomActions = () => {
@@ -64,10 +64,10 @@ export const ResourceActions: React.FC<ResourceActionsProps> = ({
         return (
           <Button
             key={action.id}
+            variant={isPrimary ? 'primary' : 'secondary'}
             onClick={() => handleActionClick(action)}
             disabled={action.disabled || isLoading}
             className={getButtonVariantClass(action.variant)}
-            outline={!isPrimary}
             aria-label={action.label}
           >
             {action.label}
