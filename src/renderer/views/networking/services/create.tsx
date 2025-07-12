@@ -47,7 +47,7 @@ export const ServicesCreateView = (): JSX.Element => {
     nodePort: port.nodePort ? parseInt(port.nodePort) : undefined
   }));
 
-  let payload = serviceTemplate({
+  const payload = serviceTemplate({
     name,
     namespace,
     labels,

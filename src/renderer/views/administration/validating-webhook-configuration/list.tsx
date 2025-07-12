@@ -2,15 +2,11 @@ import { useEffect, useState } from 'react';
 import { V1ValidatingWebhookConfigurationList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { ValidatingWebhookConfigurationList } from '@components/administration/validating-webhook-configuration/table';
-import { Button } from '@components/base/button';
-import { Resources, ResourceAction } from '@utils/enums';
-import { useView } from '@context/viewProvider';
-
+import { Resources } from '@utils/enums';
 
 export const ValidatingWebhookConfigurationsListView = (): JSX.Element => {
   const [validatingWebhookConfigs, setValidatingWebhookConfigs] = useState<V1ValidatingWebhookConfigurationList>();
   const [error, setError] = useState<string | null>(null);
-  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {

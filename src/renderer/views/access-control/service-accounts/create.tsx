@@ -55,7 +55,7 @@ export const ServiceAccountsCreateView = (): JSX.Element => {
     setSecrets(newSecrets);
   };
 
-  let payload = serviceAccountTemplate({
+  const payload = serviceAccountTemplate({
     name,
     namespace,
     labels,

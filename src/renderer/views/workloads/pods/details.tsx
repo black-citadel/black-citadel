@@ -16,7 +16,6 @@ import helpObjects from '@help/index';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ContainerResources } from '@components/base/container-resources';
 import { Badge } from '@components/base/badge';
-import { Button } from '@components/base/button';
 import { PortForwardDialog } from '@components/tools/port-forward/dialog';
 import { TerminalTab } from '@components/tools/terminal/terminal-tab';
 import { PortOption, PortForwardRequest } from '@utils/types';

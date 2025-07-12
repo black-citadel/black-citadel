@@ -11,7 +11,7 @@ interface Props {
     nodeMetrics?: any;
 }
 
-export const NodeStatus = ({ node, nodeMetrics }: Props): JSX.Element => {
+export const NodeStatus2 = ({ node, nodeMetrics }: Props): JSX.Element => {
     if (!node?.status) return <></>;
 
     const conditions = node.status.conditions || [];

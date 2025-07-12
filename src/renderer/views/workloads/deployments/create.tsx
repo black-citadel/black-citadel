@@ -51,7 +51,7 @@ export const DeploymentsCreateView = (): JSX.Element => {
 
   const hasResources = cpuRequest || memoryRequest || cpuLimit || memoryLimit;
 
-  let payload = deploymentTemplate({
+  const payload = deploymentTemplate({
     name,
     namespace,
     labels,

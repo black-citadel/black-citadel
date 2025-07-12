@@ -1,7 +1,6 @@
 import k8s from '@kubernetes/client-node';
 import { ListTable } from '@components/list-table';
 import { calculateAge } from '@utils/helpers';
-import { EventResourceLink } from './resource-link';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 
 interface Props {

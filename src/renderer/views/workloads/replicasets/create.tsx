@@ -51,7 +51,7 @@ export const ReplicaSetsCreateView = (): JSX.Element => {
 
   const hasResources = cpuRequest || memoryRequest || cpuLimit || memoryLimit;
 
-  let payload = replicaSetTemplate({
+  const payload = replicaSetTemplate({
     name,
     namespace,
     labels,

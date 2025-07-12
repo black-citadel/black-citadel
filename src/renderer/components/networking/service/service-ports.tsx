@@ -19,7 +19,7 @@ export const ServicePorts = ({ ports }: ServicePortsProps): JSX.Element => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {ports.map((port, index) => (
+        {ports.map((port, _index) => (
           <TableRow key={port.name}>
             <TableCell>{port.name}</TableCell>
             <TableCell><ServiceBadge />{port.port}</TableCell>

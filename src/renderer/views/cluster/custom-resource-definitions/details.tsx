@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { V1CustomResourceDefinition } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { DetailsItem } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
@@ -21,7 +20,7 @@ enum CustomResourceTabs {
 }
 
 export const CustomResourceDefinitionsDetailsView = (): JSX.Element => {
-    const { viewContext, setViewContext } = useView()
+    const { viewContext } = useView()
     const [activeTab, setActiveTab] = useState<CustomResourceTabs>(CustomResourceTabs.Details)
     const [crd, setCrd] = useState<V1CustomResourceDefinition>();
     const [customResources, setCustomResources] = useState<any[]>([]);

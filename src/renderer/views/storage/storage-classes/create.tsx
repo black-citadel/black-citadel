@@ -6,7 +6,6 @@ import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -160,7 +159,7 @@ export const StorageClassesCreateView = (): JSX.Element => {
     updatedAnnotations.push({ key: 'storageclass.kubernetes.io/is-default-class', value: 'true' });
   }
 
-  let payload = storageClassTemplate({
+  const payload = storageClassTemplate({
     name,
     labels,
     annotations: updatedAnnotations,

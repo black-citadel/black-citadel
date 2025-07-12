@@ -38,7 +38,7 @@ export const ResourceActions: React.FC<ResourceActionsProps> = ({
     }
   };
 
-  const getButtonVariantClass = (actionVariant?: string) => {
+  const getButtonVariantClass = (_actionVariant?: string) => {
     if (variant === 'compact') return 'p-1';
     if (variant === 'inline') return 'px-2 py-1 text-sm';
     return '';

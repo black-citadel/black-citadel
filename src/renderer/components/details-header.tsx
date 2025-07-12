@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Button } from '@protoku/design-system'
-import { Heading } from "./base/heading"
-import { Alert, AlertTitle, AlertDescription, AlertActions } from "./base/alert"
+import { Alert, AlertTitle, AlertActions } from './base/alert'
 
 interface Props {
   children: React.ReactNode,
@@ -11,7 +10,7 @@ interface Props {
 }
 
 export const DetailsHeader = ({ children, error, onDelete, actions }: Props): JSX.Element => {
-  let [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <>

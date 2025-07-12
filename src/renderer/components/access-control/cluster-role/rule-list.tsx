@@ -10,7 +10,7 @@ const NewLineList: React.FC<{ items?: string[] }> = ({ items }) => {
   if (!items || items.length === 0) return <span>*</span>;
   return (
     <ul className="list-none p-0 m-0">
-      {items.map((item, index) => (
+      {items.map((item, _index) => (
         <li key={index}>{item}</li>
       ))}
     </ul>
@@ -24,7 +24,7 @@ export const RuleList = ({ rules }: RuleListProps): JSX.Element => {
 
   const headers = ['API Groups', 'Resources', 'Verbs', 'Resource Names', 'Non-Resource URLs'];
 
-  const rows = rules.map((rule, index) => ({
+  const rows = rules.map((rule, _index) => ({
     'API Groups': <NewLineList items={rule.apiGroups} />,
     'Resources': <NewLineList items={rule.resources} />,
     'Verbs': <NewLineList items={rule.verbs} />,

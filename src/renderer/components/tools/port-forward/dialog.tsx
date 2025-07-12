@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Dialog } from '@components/base/dialog';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Input } from '@components/base/input';
 import { Select } from '@components/base/select';
 import { Checkbox } from '@components/base/checkbox';

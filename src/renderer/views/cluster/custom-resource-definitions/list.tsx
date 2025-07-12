@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react';
 import { V1CustomResourceDefinitionList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
-import { Button } from '@components/base/button';
-import { Resources, ResourceAction } from '@utils/enums';
 import { CustomResourceDefinitionList } from '@components/cluster/custom-resource-definition/table';
-import { useView } from '@context/viewProvider';
+import { Resources } from '@utils/enums';
 
 export const CustomResourceDefinitionsListView = () => {
   const [crds, setCrds] = useState<V1CustomResourceDefinitionList>();
   const [error, setError] = useState<string | null>(null);
-  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {

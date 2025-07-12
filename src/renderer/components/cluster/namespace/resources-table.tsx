@@ -1,5 +1,4 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@components/base/table';
-import { ResourceType } from '@utils/types';
 import k8s from '@kubernetes/client-node';
 
 // Import badges and resource links for each resource type

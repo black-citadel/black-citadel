@@ -84,7 +84,7 @@ export const RolesCreateView = (): JSX.Element => {
     resourceNames: rule.resourceNames ? parseCommaSeparated(rule.resourceNames) : undefined
   }));
 
-  let payload = roleTemplate({
+  const payload = roleTemplate({
     name,
     namespace,
     labels,

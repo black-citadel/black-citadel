@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { ListTable } from '@components/list-table';
 import { Badge } from '@components/base/badge';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { PortForwardInfo } from '@utils/types';
 import { calculateAge } from '@utils/helpers';
 import { ResourceLink } from '@components/base/resource-link';

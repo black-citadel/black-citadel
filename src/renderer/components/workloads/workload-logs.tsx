@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Select } from '@components/base/select';
 import k8s = require('@kubernetes/client-node');
 

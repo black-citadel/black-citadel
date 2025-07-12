@@ -26,7 +26,7 @@ export const ConfigMapsCreateView = (): JSX.Element => {
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
   const [data, setData] = useState<FieldLabel[]>([{ key: '', value: '' }]);
 
-  let payload = configMapTemplate(name, namespace, labels, annotations, data);
+  const payload = configMapTemplate(name, namespace, labels, annotations, data);
 
   const handleCreate = async () => {
     try {

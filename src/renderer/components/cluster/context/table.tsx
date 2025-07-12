@@ -3,7 +3,7 @@ import { ListTable } from '@components/list-table';
 import { ContextResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
 import { CheckIcon } from '@heroicons/react/16/solid';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 
 interface Props {
   contexts: k8s.Context[];

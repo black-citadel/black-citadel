@@ -3,13 +3,11 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { ClusterRoleBadge } from '@components/access-control/cluster-role/badge';
 import { RuleList } from '@components/access-control/cluster-role/rule-list';
-import { AggregationRuleList } from '@components/access-control/cluster-role/aggregation-rule-list';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';

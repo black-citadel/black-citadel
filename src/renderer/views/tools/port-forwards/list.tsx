@@ -3,7 +3,6 @@ import { ListHeader } from '@components/list-header';
 import { PortForwardTable } from '@components/tools/port-forward/table';
 import { PortForwardInfo } from '@utils/types';
 import { Resources } from '@utils/enums';
-import { Heading, Subheading } from '@components/base/heading';
 import { EmptyState } from '@components/base/empty-state';
 
 export const PortForwardsListView = (): JSX.Element => {

@@ -3,12 +3,10 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { EndpointBadge } from '@components/networking/endpoint/badge';
-import { EndpointSubsets } from '@components/networking/endpoint/endpoint-subsets';
 import { Heading } from '@components/base/heading';
 
 export const EndpointsDetailsView = (): JSX.Element => {

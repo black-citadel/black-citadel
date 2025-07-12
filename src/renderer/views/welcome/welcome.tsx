@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Logo } from '@components/base/logo';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Heading } from '@components/base/heading';
 import { Text } from '@components/base/text';
 import { Dialog, DialogTitle, DialogBody, DialogActions } from '@components/base/dialog';
@@ -100,6 +100,7 @@ export const WelcomeView = () => {
                 No Kubernetes contexts found. Import your kubeconfig to get started.
               </Text>
               <Button 
+                variant="secondary"
                 onClick={() => setIsImportDialogOpen(true)}
                 className="mx-auto"
               >
@@ -152,8 +153,8 @@ export const WelcomeView = () => {
               <div className="mt-8">
                 <div className="flex justify-end">
                   <Button 
+                    variant="secondary"
                     onClick={() => setIsImportDialogOpen(true)}
-                    outline
                   >
                     Add new Context
                   </Button>
@@ -212,16 +213,17 @@ clusters:
         {!importSuccess && (
           <DialogActions>
             <Button
+              variant="secondary"
               onClick={() => {
                 setIsImportDialogOpen(false);
                 setKubeconfigYaml('');
                 setImportError(null);
               }}
-              outline
             >
               Cancel
             </Button>
             <Button
+              variant="primary"
               onClick={handleImportKubeconfig}
               disabled={!kubeconfigYaml.trim()}
             >

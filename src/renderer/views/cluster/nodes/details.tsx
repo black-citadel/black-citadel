@@ -6,8 +6,7 @@ import {
 } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
-import { DetailsItem } from '@components/details-item';
+import { ResourceTabs , Resources } from "@utils/enums";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
@@ -16,14 +15,13 @@ import { NodeBadge } from '@components/cluster/node/badge';
 import { MetadataDetails } from '@components/metadata';
 import { EventList } from '@components/cluster/event/table';
 import { NodeSpec } from '@components/cluster/node/spec';
-import { NodeStatus } from '@components/cluster/node/status';
+import { NodeStatus2 } from '@components/cluster/node/status';
 import { NodeImages } from '@components/cluster/node/images';
-import { Button } from '@components/base/button';
+import { Button } from '@protoku/design-system';
 import { Alert, AlertTitle, AlertDescription, AlertActions } from '@components/base/alert';
 import { NodeLabels } from '@components/cluster/node/labels';
 import { NodeTaints } from '@components/cluster/node/taints';
 import { ResourceActions } from '@components/resources/ResourceActions';
-import { Resources } from '@utils/enums';
 
 
 export const NodeDetailsView = (): JSX.Element => {
@@ -160,7 +158,7 @@ export const NodeDetailsView = (): JSX.Element => {
             <NodeSpec node={node} />
 
             <Subheading className='mt-8 mb-4'>Status</Subheading>
-            <NodeStatus node={node} nodeMetrics={currentNodeMetrics} />
+            <NodeStatus2 node={node} nodeMetrics={currentNodeMetrics} />
           </div>
         )}
 

@@ -2,14 +2,11 @@ import { useEffect, useState } from 'react';
 import { V1EndpointSliceList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { EndpointSliceList } from '@components/networking/endpoint-slice/table';
-import { Button } from '@components/base/button';
-import { Resources, ResourceAction } from '@utils/enums';
-import { useView } from '@context/viewProvider';
+import { Resources } from '@utils/enums';
 
 export const EndpointSlicesListView = (): JSX.Element => {
   const [endpointSlices, setEndpointSlices] = useState<V1EndpointSliceList>();
   const [error, setError] = useState<string | null>(null);
-  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {

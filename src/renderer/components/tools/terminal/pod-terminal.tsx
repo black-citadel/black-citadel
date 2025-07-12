@@ -9,7 +9,7 @@ interface PodTerminalProps {
   podName: string;
   namespace: string;
   containerName?: string;
-  onClose?: () => void;
+  _onClose?: () => void;
 }
 
 export const PodTerminal: React.FC<PodTerminalProps> = ({

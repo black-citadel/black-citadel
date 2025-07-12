@@ -120,7 +120,7 @@ export const RuntimeClassesCreateView = (): JSX.Element => {
     };
   };
 
-  let payload = runtimeClassTemplate({
+  const payload = runtimeClassTemplate({
     name,
     labels,
     annotations,

@@ -23,7 +23,7 @@ export const NamespacesCreateView = (): JSX.Element => {
   const [labels, setLabels] = useState<FieldLabel[]>([{ key: '', value: '' }]);
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
 
-  let payload = namespaceTemplate(name, labels, annotations);
+  const payload = namespaceTemplate(name, labels, annotations);
 
   const handleCreate = async () => {
     try {

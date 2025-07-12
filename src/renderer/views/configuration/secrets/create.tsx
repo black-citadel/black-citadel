@@ -6,7 +6,6 @@ import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Textarea } from '@components/base/textarea';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
@@ -65,7 +64,7 @@ export const SecretsCreateView = (): JSX.Element => {
     }
   };
 
-  let payload = secretTemplate({
+  const payload = secretTemplate({
     name,
     namespace,
     labels,

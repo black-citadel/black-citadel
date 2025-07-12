@@ -1,6 +1,5 @@
 import k8s from '@kubernetes/client-node';
 import { useState, useEffect } from 'react';
-import { Field } from '@components/base/fieldset';
 import { Listbox, ListboxLabel, ListboxOption } from '@components/base/listbox';
 import { NamespaceBadge } from '../cluster/namespace/badge';
 

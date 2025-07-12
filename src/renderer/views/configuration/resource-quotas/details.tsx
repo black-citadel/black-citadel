@@ -3,7 +3,6 @@ import { V1ResourceQuota } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar';
 import { useView } from '@context/viewProvider';
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
-import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';

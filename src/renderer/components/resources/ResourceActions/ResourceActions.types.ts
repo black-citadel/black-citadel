@@ -10,7 +10,7 @@ export interface ResourceActionsProps {
   
   onDelete?: () => Promise<void>;
   onActionComplete?: (action: string, success: boolean) => void;
-  onNavigate?: (path: string) => void;
+  _onNavigate?: (path: string) => void;
   
   variant?: 'header' | 'inline' | 'compact';
   showLabels?: boolean;

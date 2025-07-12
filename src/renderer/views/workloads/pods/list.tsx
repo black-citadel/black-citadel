@@ -40,10 +40,7 @@ export const PodsListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={true}
         actions={
-          <Button variant="primary"
-            onClick={() => setViewContext({resource: Resources.Pods, action: ResourceAction.Create})} 
-            
-          >
+          <Button variant="primary" onClick={() => setViewContext({resource: Resources.Pods, action: ResourceAction.Create})}>
             Create Pod
           </Button>
         }

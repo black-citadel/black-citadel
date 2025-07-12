@@ -36,20 +36,3 @@ export const ResourceQuotaList = ({ resourceQuotas }: Props): JSX.Element => {
     <ListTable headers={headers} rows={processedRows} />
   );
 };
-
-// Helper function to format ResourceQuota data
-const formatResourceQuota = (quota: k8s.V1ResourceQuota): Array<{ name: string; used: string; hard: string }> => {
-  const result: Array<{ name: string; used: string; hard: string }> = [];
-
-  if (quota.spec?.hard && quota.status?.hard && quota.status?.used) {
-    for (const [key, hardValue] of Object.entries(quota.spec.hard)) {
-      result.push({
-        name: key,
-        used: quota.status.used[key] || '0',
-        hard: hardValue
-      });
-    }
-  }
-
-  return result;
-};

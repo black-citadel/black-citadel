@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Heading, Subheading } from '@components/base/heading';
 import { DetailsHeader } from '@components/details-header';
-import { DetailsItem, DetailsName } from '@components/details-item';
 import { MCPBadge } from '@components/operations/mcp-server/badge';
 import { Badge } from '@components/base/badge';
 import { Text } from '@components/base/text';
@@ -9,7 +8,6 @@ import { MCPConnection, MCPToolCallHistory } from '@utils/types';
 import { useView } from '@context/viewProvider';
 import { format, formatDistanceToNow } from 'date-fns';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar';
-import { ResourceTabs } from '@utils/enums';
 
 export const MCPServerDetailsView = (): JSX.Element => {
   const { viewContext } = useView();

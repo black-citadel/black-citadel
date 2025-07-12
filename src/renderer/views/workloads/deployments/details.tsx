@@ -2,20 +2,14 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { DeploymentBadge } from '@components/workloads/deployment/badge';
-import { PodTemplate } from '@components/workloads/pod/template';
-import { DeploymentStrategy } from '@components/workloads/deployment/strategy';
 import { DeploymentStatus } from '@components/workloads/deployment/status';
-import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@components/base/description-list';
-import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { DeploymentSpec } from '@components/workloads/deployment/spec';
-import { Badge } from '@components/base/badge';
 import { PodList } from '@components/workloads/pod/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';

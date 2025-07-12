@@ -181,7 +181,7 @@ const createWindow = (): BrowserWindow => {
   // Development-only CDP features
   if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
     // Initialize CDP utilities
-    const cdpUtils = new CDPDevUtils(mainWindow);
+    const _cdpUtils = new CDPDevUtils(mainWindow);
     
     // Log CDP debugging URL
     mainWindow.webContents.on('did-finish-load', () => {

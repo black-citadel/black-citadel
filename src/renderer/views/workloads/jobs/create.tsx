@@ -6,7 +6,6 @@ import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -71,7 +70,7 @@ export const JobsCreateView = (): JSX.Element => {
     return parseCommand(argsStr);
   };
 
-  let payload = jobTemplate({
+  const payload = jobTemplate({
     name,
     namespace,
     labels,

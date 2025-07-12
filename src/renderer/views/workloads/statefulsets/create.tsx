@@ -6,7 +6,6 @@ import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
-import { Dropdown, DropdownOption } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -33,7 +32,7 @@ export const StatefulSetsCreateView = (): JSX.Element => {
   const { setViewContext, activeNamespace } = useView();
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
-  const [namespace, setNamespace] = useState<string>(activeNamespace === 'all' ? 'default' : activeNamespace);
+  const [namespace] = useState<string>(activeNamespace === 'all' ? 'default' : activeNamespace);
   const [labels, setLabels] = useState<FieldLabel[]>([{ key: 'app', value: '' }]);
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
   const [replicas, setReplicas] = useState<number>(3);
@@ -73,7 +72,7 @@ export const StatefulSetsCreateView = (): JSX.Element => {
     })
   };
 
-  let payload = statefulSetTemplate({
+  const payload = statefulSetTemplate({
     name,
     namespace,
     labels,
@@ -176,10 +175,7 @@ export const StatefulSetsCreateView = (): JSX.Element => {
               <Description>
                 Select the namespace for this statefulset.
               </Description>
-              <NamespaceDropdown 
-                value={namespace} 
-                onChange={setNamespace}
-              />
+              <NamespaceDropdown /> // TODO use the namespace from the dropdown field not with setNamespace
             </Field>
 
             <FieldLabels labels={labels} setLabels={setLabels} />

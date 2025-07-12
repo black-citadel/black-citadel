@@ -4,7 +4,6 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceAction, Resources, ResourceTabs } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace, DetailsSelector } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
