@@ -67,6 +67,7 @@ export type {
   V1HorizontalPodAutoscalerList,
   V1ServiceAccount,
   V1ServiceAccountList,
+  V1Endpoint,
   V1Endpoints,
   V1EndpointsList,
   V1EndpointSlice,
@@ -91,4 +92,9 @@ export type {
   V1CustomResourceDefinitionList,
   CoreV1Event,
   CoreV1EventList,
+  V2HorizontalPodAutoscaler,
+  V2HorizontalPodAutoscalerList,
+  NodeStatus,
+  V1OwnerReference,
+  Context,
 } from '@kubernetes/client-node';

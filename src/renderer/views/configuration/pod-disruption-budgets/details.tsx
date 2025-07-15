@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
+import { DetailsItem, DetailsSelector } from '@components/details-item';
 import { PodDisruptionBudgetBadge } from '@components/configuration/pod-disruption-budget/badge';
 import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';

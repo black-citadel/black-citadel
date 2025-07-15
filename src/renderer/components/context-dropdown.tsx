@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import k8s from '@kubernetes/client-node';
-import { Field } from '@components/base/fieldset';
-import { Listbox, ListboxLabel, ListboxOption } from '@components/base/listbox';
+import { Select, SelectOption } from '@protoku/design-system';
 import { useView } from '@context/viewProvider';
-import { ContextBadge } from './cluster/context/badge';
 
 export const ContextDropdown = (): JSX.Element => {
   const [contexts, setContexts] = useState<k8s.Context[]>([]);
@@ -34,22 +32,22 @@ export const ContextDropdown = (): JSX.Element => {
     setActiveContext(value);
   };
 
+  const contextOptions: SelectOption<string>[] = contexts.map(context => ({
+    value: context.name,
+    label: context.name
+  }));
+
   return (
     <>
       {contexts.length > 0 && (
-        <Field>
-          <Listbox
-            name="context"
-            value={activeContext || ''}
-            onChange={handleContextChange}
-          >
-            {contexts.map((context) => (
-              <ListboxOption key={context.name} value={context.name}>
-                <ListboxLabel><ContextBadge /> {context.name}</ListboxLabel>
-              </ListboxOption>
-            ))}
-          </Listbox>
-        </Field>
+        <Select
+          name="context"
+          value={activeContext || ''}
+          onChange={handleContextChange}
+          options={contextOptions}
+          placeholder="Select context"
+          className="w-full"
+        />
       )}
     </>
   );

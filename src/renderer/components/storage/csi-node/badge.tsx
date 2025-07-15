@@ -1,7 +1,7 @@
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 export const CSINodeBadge = (): JSX.Element => {
   return (
-    <Badge color="CSINode" className='mr-2'>csinodes</Badge>
+    <Badge variant="yellow" className='mr-2'>csinodes</Badge>
   )
 }

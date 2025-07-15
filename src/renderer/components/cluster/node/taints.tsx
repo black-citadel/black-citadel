@@ -1,5 +1,5 @@
 import k8s from '@kubernetes/client-node';
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 import { calculateAge } from '@utils/helpers';
 
 interface Props {
@@ -15,16 +15,16 @@ export const NodeTaints = ({ taints }: Props): JSX.Element => {
         );
     }
 
-    const getTaintVariant = (effect?: string): "error" | "warning" | "secondary" => {
+    const getTaintVariant = (effect?: string): "red" | "yellow" | "gray" => {
         switch (effect) {
             case 'NoSchedule':
-                return 'error';
+                return 'red';
             case 'PreferNoSchedule':
-                return 'warning';
+                return 'yellow';
             case 'NoExecute':
-                return 'error';
+                return 'red';
             default:
-                return 'secondary';
+                return 'gray';
         }
     };
 

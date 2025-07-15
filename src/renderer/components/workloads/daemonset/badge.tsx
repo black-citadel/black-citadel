@@ -1,7 +1,7 @@
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 export const DaemonSetBadge = (): JSX.Element => {
   return (
-    <Badge color="blue" className='mr-2'>ds</Badge>
+    <Badge variant="blue" className='mr-2'>ds</Badge>
   )
 }

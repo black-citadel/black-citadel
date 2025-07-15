@@ -26,13 +26,8 @@ export const Editor = ({
   }, []);
 
   const handleEditorWillMount = (monaco: Monaco) => {
-    // Configure YAML language features if needed
-    if (language === 'yaml' && monaco.languages.yaml?.yamlDefaults?.setOptions) {
-      monaco.languages.yaml.yamlDefaults.setOptions({
-        validate: true,
-        schemas: []
-      });
-    }
+    // Monaco editor configuration
+    // YAML language support is provided through the standard languages
   };
 
   return (

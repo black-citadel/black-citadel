@@ -6,6 +6,7 @@ import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
+import { DetailsItem } from '@components/details-item';
 import { SecretBadge } from '@components/configuration/secret/badge';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';

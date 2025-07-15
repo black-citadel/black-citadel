@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
+import { DetailsItem } from '@components/details-item';
 import { CSIDriverBadge } from '@components/storage/csi-driver/badge';
 import { VolumeLifecycleModes } from '@components/storage/csi-driver/volume-lifecycle-modes';
 import { TokenRequests } from '@components/storage/csi-driver/token-requests';

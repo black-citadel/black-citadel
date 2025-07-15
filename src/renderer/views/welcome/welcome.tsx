@@ -5,7 +5,6 @@ import { Heading } from '@components/base/heading';
 import { Text } from '@components/base/text';
 import { Dialog, DialogTitle, DialogBody, DialogActions } from '@components/base/dialog';
 import { Textarea } from '@components/base/textarea';
-import { Alert } from '@components/base/alert';
 import { useView } from '@context/viewProvider';
 import { Resources, ResourceAction } from '@utils/enums';
 
@@ -100,7 +99,7 @@ export const WelcomeView = () => {
                 No Kubernetes contexts found. Import your kubeconfig to get started.
               </Text>
               <Button 
-                variant="secondary"
+                variant="primary"
                 onClick={() => setIsImportDialogOpen(true)}
                 className="mx-auto"
               >
@@ -153,7 +152,7 @@ export const WelcomeView = () => {
               <div className="mt-8">
                 <div className="flex justify-end">
                   <Button 
-                    variant="secondary"
+                    variant="primary"
                     onClick={() => setIsImportDialogOpen(true)}
                   >
                     Add new Context
@@ -178,15 +177,15 @@ export const WelcomeView = () => {
         <DialogTitle>Import Kubeconfig</DialogTitle>
         <DialogBody>
           {importError && (
-            <Alert type="error" className="mb-4">
+            <div className="mb-4 p-4 rounded-md border border-red-500/50 bg-red-500/10 text-red-600 dark:text-red-400">
               {importError}
-            </Alert>
+            </div>
           )}
           
           {importSuccess ? (
-            <Alert type="success">
+            <div className="p-4 rounded-md border border-green-500/50 bg-green-500/10 text-green-600 dark:text-green-400">
               Kubeconfig imported successfully!
-            </Alert>
+            </div>
           ) : (
             <>
               <Text className="text-gray-600 dark:text-gray-400 mb-4">

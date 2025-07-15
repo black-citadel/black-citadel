@@ -1,4 +1,4 @@
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 interface Props {
     labels?: { [key: string]: string };
@@ -32,7 +32,7 @@ export const NodeLabels = ({ labels }: Props): JSX.Element => {
                     <h4 className="text-sm font-medium mb-2 text-zinc-300">Roles</h4>
                     <div className="flex flex-wrap gap-2">
                         {roleLabels.map(([key, value]) => (
-                            <Badge key={key} variant="primary" className="text-sm">
+                            <Badge key={key} variant="blue" className="text-sm">
                                 {key.replace('node-role.kubernetes.io/', '')}
                             </Badge>
                         ))}
@@ -46,7 +46,7 @@ export const NodeLabels = ({ labels }: Props): JSX.Element => {
                     <h4 className="text-sm font-medium mb-2 text-zinc-300">Custom Labels (Node Selectors)</h4>
                     <div className="flex flex-wrap gap-2">
                         {customLabels.map(([key, value]) => (
-                            <Badge key={key} variant="secondary" className="text-sm">
+                            <Badge key={key} variant="gray" className="text-sm">
                                 {key}{value && value !== 'true' ? `=${value}` : ''}
                             </Badge>
                         ))}
@@ -60,7 +60,7 @@ export const NodeLabels = ({ labels }: Props): JSX.Element => {
                     <h4 className="text-sm font-medium mb-2 text-zinc-400">System Labels</h4>
                     <div className="flex flex-wrap gap-2">
                         {kubernetesLabels.map(([key, value]) => (
-                            <Badge key={key} variant="zinc" className="text-xs">
+                            <Badge key={key} variant="gray" className="text-xs">
                                 {key}={value}
                             </Badge>
                         ))}

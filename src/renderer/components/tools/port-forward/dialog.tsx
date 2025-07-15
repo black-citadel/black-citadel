@@ -113,7 +113,7 @@ export const PortForwardDialog = ({
               ))}
             </Select>
             {selectedPortInfo?.targetPort && (
-              <Text size="sm" className="mt-1 text-gray-500">
+              <Text className="mt-1 text-gray-500 text-sm">
                 Target port: {selectedPortInfo.targetPort}
               </Text>
             )}
@@ -129,7 +129,7 @@ export const PortForwardDialog = ({
               min="1"
               max="65535"
             />
-            <Text size="sm" className="mt-1 text-gray-500">
+            <Text className="mt-1 text-gray-500 text-sm">
               The port on your local machine to forward to
             </Text>
           </div>
@@ -141,7 +141,7 @@ export const PortForwardDialog = ({
                   checked={openInBrowser}
                   onChange={(checked) => setOpenInBrowser(checked)}
                 />
-                <Text size="sm">Open in browser after port forward</Text>
+                <Text className="text-sm">Open in browser after port forward</Text>
               </label>
             </div>
           )}
@@ -165,7 +165,7 @@ export const PortForwardDialog = ({
                 onChange={(e) => setLocalAddress(e.target.value)}
                 placeholder="127.0.0.1"
               />
-              <Text size="sm" className="mt-1 text-gray-500">
+              <Text className="mt-1 text-gray-500 text-sm">
                 The local address to bind to (default: 127.0.0.1)
               </Text>
             </div>

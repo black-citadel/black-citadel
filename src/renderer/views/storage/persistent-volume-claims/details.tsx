@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
+import { DetailsItem } from '@components/details-item';
 import { PersistentVolumeClaimBadge } from '@components/storage/persistent-volume-claim/badge';
 import { VolumeMode } from '@components/storage/persistent-volume-claim/volume-mode';
 import { AccessModes } from '@components/storage/persistent-volume-claim/access-modes';
@@ -58,7 +59,7 @@ export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
             resourceType={Resources.PersistentVolumeClaims}
             resourceName={viewContext.name}
             namespace={viewContext.namespace}
-            resource={persistentVolumeClaim}
+            resource={pvc}
             onDelete={handleDelete}
           />
         }

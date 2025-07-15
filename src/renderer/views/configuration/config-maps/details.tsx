@@ -51,10 +51,10 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
   const renderConfigMapData = () => {
     if (!configMap || !configMap.data) return "No data";
     return Object.entries(configMap.data).map(([key, value]) => (
-      <>
+      <div key={key}>
         <DescriptionTerm>{key}</DescriptionTerm>
         <DescriptionDetails><pre className="whitespace-pre-wrap text-xs">{value}</pre></DescriptionDetails>
-      </>
+      </div>
     ));
   };
 

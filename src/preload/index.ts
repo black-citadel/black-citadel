@@ -28,6 +28,7 @@ export interface ElectronAPI {
   listStatefulSetForAllNamespaces: () => Promise<k8s.V1StatefulSetList>;
   listDaemonSetForAllNamespaces: () => Promise<k8s.V1DaemonSetList>;
   listJobForAllNamespaces: () => Promise<k8s.V1JobList>;
+  listNamespacedJob: (namespace: string) => Promise<k8s.V1JobList>;
   listCronJobForAllNamespaces: () => Promise<k8s.V1CronJobList>;
   listNamespace: () => Promise<k8s.V1NamespaceList>;
   listPodForAllNamespaces: () => Promise<k8s.V1PodList>;
@@ -180,6 +181,7 @@ try {
     listStatefulSetForAllNamespaces: () => ipcRenderer.invoke('listStatefulSetForAllNamespaces'),
     listDaemonSetForAllNamespaces: () => ipcRenderer.invoke('listDaemonSetForAllNamespaces'),
     listJobForAllNamespaces: () => ipcRenderer.invoke('listJobForAllNamespaces'),
+    listNamespacedJob: (namespace: string) => ipcRenderer.invoke('listNamespacedJob', namespace),
     listCronJobForAllNamespaces: () => ipcRenderer.invoke('listCronJobForAllNamespaces'),
     listNamespace: () => ipcRenderer.invoke('listNamespace'),
     listPodForAllNamespaces: () => ipcRenderer.invoke('listPodForAllNamespaces'),

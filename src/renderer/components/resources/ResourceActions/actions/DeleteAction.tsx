@@ -22,7 +22,7 @@ export const DeleteAction: React.FC<DeleteActionProps> = ({
   onDelete,
   onActionComplete,
   disabled = false,
-  _showLabel = true,
+  showLabel = true,
   variant = 'header',
   cascadeDelete = false,
   onCascadeDeleteChange,

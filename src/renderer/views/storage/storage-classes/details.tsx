@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
+import { DetailsItem } from '@components/details-item';
 import { StorageClassBadge } from '@components/storage/storage-class/badge';
 import { Parameters } from '@components/storage/storage-class/parameters';
 import { AllowedTopologies } from '@components/storage/storage-class/allowed-topologies';

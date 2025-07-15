@@ -11,7 +11,7 @@ const NewLineList: React.FC<{ items?: string[] }> = ({ items }) => {
   return (
     <ul className="list-none p-0 m-0">
       {items.map((item, _index) => (
-        <li key={index}>{item}</li>
+        <li key={_index}>{item}</li>
       ))}
     </ul>
   );

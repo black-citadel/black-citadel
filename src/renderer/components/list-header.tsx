@@ -1,7 +1,7 @@
 import { Heading } from "./base/heading"
 import { Resources } from "@utils/enums";
 import { ResourceHelp } from "@utils/help";
-import { NamespaceDropdown } from "./namespace-dropdown";
+import { NamespaceSwitch } from "./namespace-switch";
 import { ReactNode } from "react";
 
 interface ListHeaderProps {
@@ -27,7 +27,7 @@ export const ListHeader = ({
 
       <div className="flex w-full flex-wrap items-end justify-between gap-4">
         <Heading>{resource}</Heading>
-        {showNamespaceDropdown && <NamespaceDropdown />}
+        {showNamespaceDropdown && <NamespaceSwitch />}
       </div>
 
       <div className="flex items-start justify-between gap-4 py-3">

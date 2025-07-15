@@ -6,6 +6,7 @@ import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
+import { Dropdown } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -13,7 +14,7 @@ import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/for
 import { cronJobTemplate } from '@templates/cronjob.yaml';
 import { dump } from 'js-yaml';
 import { HelpButton } from '@components/help-button';
-import { NamespaceDropdown } from '@components/namespace-dropdown';
+import { NamespaceSelect } from '@components/form/field-namespace-select';
 import helpObjects from '@help/index';
 
 interface EnvVar {
@@ -159,7 +160,7 @@ export const CronJobsCreateView = (): JSX.Element => {
               <Description>
                 Select the namespace for this cronjob.
               </Description>
-              <NamespaceDropdown 
+              <NamespaceSelect 
                 value={namespace} 
                 onChange={setNamespace}
               />

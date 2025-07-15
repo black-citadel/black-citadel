@@ -61,6 +61,50 @@ export const networkPolicyTemplate = (params: NetworkPolicyTemplateParams): k8s.
     return acc;
   }, {} as Record<string, string>);
 
+  // Transform ingress rules
+  const transformedIngress = params.ingress?.map(rule => ({
+    from: rule.from?.map(peer => {
+      const result: k8s.V1NetworkPolicyPeer = {};
+      if (peer.podSelector) {
+        result.podSelector = {
+          matchLabels: peer.podSelector.reduce((acc, label) => ({ ...acc, [label.key]: label.value }), {})
+        };
+      }
+      if (peer.namespaceSelector) {
+        result.namespaceSelector = {
+          matchLabels: peer.namespaceSelector.reduce((acc, label) => ({ ...acc, [label.key]: label.value }), {})
+        };
+      }
+      if (peer.ipBlock) {
+        result.ipBlock = peer.ipBlock;
+      }
+      return result;
+    }),
+    ports: rule.ports
+  }));
+
+  // Transform egress rules
+  const transformedEgress = params.egress?.map(rule => ({
+    to: rule.to?.map(peer => {
+      const result: k8s.V1NetworkPolicyPeer = {};
+      if (peer.podSelector) {
+        result.podSelector = {
+          matchLabels: peer.podSelector.reduce((acc, label) => ({ ...acc, [label.key]: label.value }), {})
+        };
+      }
+      if (peer.namespaceSelector) {
+        result.namespaceSelector = {
+          matchLabels: peer.namespaceSelector.reduce((acc, label) => ({ ...acc, [label.key]: label.value }), {})
+        };
+      }
+      if (peer.ipBlock) {
+        result.ipBlock = peer.ipBlock;
+      }
+      return result;
+    }),
+    ports: rule.ports
+  }));
+
   const networkPolicy: k8s.V1NetworkPolicy = {
     apiVersion: 'networking.k8s.io/v1',
     kind: 'NetworkPolicy',
@@ -75,8 +119,8 @@ export const networkPolicyTemplate = (params: NetworkPolicyTemplateParams): k8s.
         matchLabels: podSelectorObject
       },
       policyTypes: params.policyTypes,
-      ingress: params.ingress,
-      egress: params.egress
+      ingress: transformedIngress,
+      egress: transformedEgress
     }
   };
 

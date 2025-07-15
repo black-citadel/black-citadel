@@ -5,7 +5,13 @@ interface ViewContext {
   resource: Resources,
   action: ResourceAction,
   name?: string,
-  namespace?: string
+  namespace?: string,
+  customResource?: {
+    group: string,
+    version: string,
+    plural: string,
+    kind: string
+  }
 }
 
 type ViewContextType = {

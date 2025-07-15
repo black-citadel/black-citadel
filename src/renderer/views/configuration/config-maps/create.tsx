@@ -13,7 +13,7 @@ import { dump } from 'js-yaml';
 import { ConfigMapBadge } from '@components/configuration/config-map/badge';
 import { configMapTemplate } from '@templates/config-map.yaml';
 import { FieldData } from '@components/form/field-data';
-import { NamespaceDropdown } from '@components/namespace-dropdown';
+import { NamespaceSelect } from '@components/form/field-namespace-select';
 import { HelpButton } from '@components/help-button';
 import helpObjects from '@help/index';
 
@@ -74,7 +74,7 @@ export const ConfigMapsCreateView = (): JSX.Element => {
             <Description>
               Select the namespace for this ConfigMap.
             </Description>
-            <NamespaceDropdown 
+            <NamespaceSelect 
               value={namespace} 
               onChange={setNamespace}
             />

@@ -2,7 +2,7 @@ import { ListTable } from '@components/list-table';
 import { MCPConnection } from '@utils/types';
 import { MCPConnectionResourceLink } from './resource-link';
 import { formatDistanceToNow } from 'date-fns';
-import { Badge } from '@components/base/badge';
+import { Status } from '@protoku/design-system';
 import { useState } from 'react';
 
 interface Props {
@@ -26,7 +26,7 @@ export const MCPConnectionList = ({ connections }: Props): JSX.Element => {
   const processedRows = sortedConnections.map(connection => ({
     'Name': <MCPConnectionResourceLink connectionId={connection.id} agentName={connection.agentName} />,
     'Session ID': <>{connection.id}</>,
-    'Status': <Badge color="green">Active</Badge>,
+    'Status': <Status variant="success">Active</Status>,
     'Connected': formatDistanceToNow(new Date(connection.connectedAt), { addSuffix: true }),
     'Last Activity': formatDistanceToNow(new Date(connection.lastActivity), { addSuffix: true }),
     'Tools Used': connection.toolsUsed

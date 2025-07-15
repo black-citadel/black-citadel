@@ -1,7 +1,7 @@
 import React from 'react';
 import k8s from '@kubernetes/client-node';
 import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@components/base/description-list';
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 import { calculateAge } from '@utils/helpers';
 import { ResourceUsageBar } from '@components/base/resource-usage-bar';
 import { parseCPU, parseBytes, formatCPU, formatBytes } from '@utils/resource-parser';
@@ -169,7 +169,7 @@ export const NodeStatus2 = ({ node, nodeMetrics }: Props): JSX.Element => {
                         <div key={index} className="flex items-center justify-between py-2 border-neutral-800 border-b last:border-0">
                             <div className="flex items-center gap-2">
                                 <span className="text-sm font-medium">{condition.type}</span>
-                                <Badge variant={condition.status === 'True' ? 'success' : 'secondary'}>
+                                <Badge variant={condition.status === 'True' ? 'green' : 'gray'}>
                                     {condition.status}
                                 </Badge>
                             </div>

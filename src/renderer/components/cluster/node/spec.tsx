@@ -1,6 +1,6 @@
 import k8s from '@kubernetes/client-node';
 import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@components/base/description-list';
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 interface Props {
     node?: k8s.V1Node;
@@ -16,7 +16,7 @@ export const NodeSpec = ({ node }: Props): JSX.Element => {
             <DescriptionList>
                 <DescriptionTerm>Schedulable</DescriptionTerm>
                 <DescriptionDetails>
-                    <Badge variant={unschedulable ? 'error' : 'success'}>
+                    <Badge variant={unschedulable ? 'red' : 'green'}>
                         {unschedulable ? 'No (Cordoned)' : 'Yes'}
                     </Badge>
                 </DescriptionDetails>

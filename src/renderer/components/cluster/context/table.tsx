@@ -25,7 +25,7 @@ export const ContextList = ({ contexts }: Props): JSX.Element => {
       ) : (
         <Button className='font-xs'
           onClick={() => handleContextChange(ctx.name)}
-          outline
+          variant="secondary"
         >
           Use context
         </Button>

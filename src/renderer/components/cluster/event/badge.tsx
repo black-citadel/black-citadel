@@ -1,7 +1,7 @@
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 export const EventBadge = (): JSX.Element => {
   return (
-    <Badge color="blue" className='mr-2'>event</Badge>
+    <Badge variant="gray" className='mr-2'>event</Badge>
   )
 }

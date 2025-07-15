@@ -5,6 +5,7 @@ import { MCPConnection, MCPToolCallHistory } from '@utils/types';
 import { MCPConnectionList } from '@components/operations/mcp-server/table';
 import { Resources } from '@utils/enums';
 import { EmptyState } from '@components/base/empty-state';
+import { Status } from '@protoku/design-system';
 
 export const MCPServerListView = (): JSX.Element => {
   const [connections, setConnections] = useState<MCPConnection[]>([]);
@@ -46,7 +47,7 @@ export const MCPServerListView = (): JSX.Element => {
           <div key="server_status" className="px-4 py-4 border-zinc-900 border rounded-md">
             <p className="text-sm font-medium text-gray-400">Server status</p>
             <p className="mt-2 flex items-baseline gap-x-2">
-              <span className="font-semibold tracking-tight text-green-500">Running (Port: 3333)</span>
+              <Status variant="success">Running (Port: 3333)</Status>
             </p>
           </div>
 

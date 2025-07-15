@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
+import { DetailsItem } from '@components/details-item';
 import { PersistentVolumeBadge } from '@components/storage/persistent-volume/badge';
 import { PersistentVolumeSource } from '@components/storage/persistent-volume/source';
 import { ClaimRef } from '@components/storage/persistent-volume/claim-ref';
@@ -59,7 +60,7 @@ export const PersistentVolumesDetailsView = (): JSX.Element => {
           <ResourceActions
             resourceType={Resources.PersistentVolumes}
             resourceName={viewContext.name}
-            resource={persistentVolume}
+            resource={pv}
             onDelete={handleDelete}
           />
         }

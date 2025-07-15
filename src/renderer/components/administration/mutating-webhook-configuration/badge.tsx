@@ -1,7 +1,7 @@
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 export const MutatingWebhookConfigurationBadge = (): JSX.Element => {
   return (
-    <Badge color="mutatingWebhookConfiguration" className='mr-2'>mutatingwebhookconfigurations</Badge>
+    <Badge variant="purple" className='mr-2'>mutatingwebhookconfigurations</Badge>
   )
 }

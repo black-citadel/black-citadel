@@ -130,8 +130,6 @@ export const ServicesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && service &&
         <div className='m-2'>
-          <MetadataDetails metadata={service.metadata} />
-
           <Subheading className='mt-8 mb-4'>Configuration</Subheading>
           <div className="grid grid-cols-3 gap-4">
             <DetailsSelector labels={service.spec.selector} />
@@ -150,6 +148,8 @@ export const ServicesDetailsView = (): JSX.Element => {
 
           <Subheading className='mt-8 mb-4'>Pods</Subheading>
           {pods && <PodList pods={pods} />}
+
+          <MetadataDetails metadata={service.metadata} />
         </div>
       }
 

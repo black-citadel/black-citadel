@@ -13,7 +13,7 @@ import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/for
 import { serviceAccountTemplate } from '@templates/serviceaccount.yaml';
 import { dump } from 'js-yaml';
 import { HelpButton } from '@components/help-button';
-import { NamespaceDropdown } from '@components/namespace-dropdown';
+import { NamespaceSelect } from '@components/form/field-namespace-select';
 import helpObjects from '@help/index';
 
 export const ServiceAccountsCreateView = (): JSX.Element => {
@@ -113,7 +113,7 @@ export const ServiceAccountsCreateView = (): JSX.Element => {
               <Description>
                 Select the namespace for this service account.
               </Description>
-              <NamespaceDropdown 
+              <NamespaceSelect 
                 value={namespace} 
                 onChange={setNamespace}
               />

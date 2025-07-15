@@ -1,7 +1,7 @@
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 export const NamespaceBadge = (): JSX.Element => {
   return (
-    <Badge color="namespace" className='mr-2'>ns</Badge>
+    <Badge variant="gray" className='mr-2'>ns</Badge>
   )
 }

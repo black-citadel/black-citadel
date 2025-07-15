@@ -100,12 +100,12 @@ users:
         )}
 
         <div className="flex gap-3">
-          <Button onClick={handleCreate} outline>
+          <Button onClick={handleCreate} variant="secondary">
             Add Context
           </Button>
           <Button 
             onClick={() => setViewContext({ resource: Resources.Contexts, action: ResourceAction.List })} 
-            outline
+            variant="secondary"
           >
             Cancel
           </Button>

@@ -38,9 +38,9 @@ export const deploymentTemplate = (params: DeploymentTemplateParams): k8s.V1Depl
     resources
   } = params;
 
-  const labelsObject = labels
+  const labelsObject: Record<string, string> = labels
     .filter(label => label.key && label.value)
-    .reduce((acc, label) => ({ ...acc, [label.key]: label.value }), {});
+    .reduce((acc, label) => ({ ...acc, [label.key]: label.value }), {} as Record<string, string>);
 
   const annotationsObject = annotations
     .filter(annotation => annotation.key && annotation.value)

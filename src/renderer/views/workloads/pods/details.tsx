@@ -15,7 +15,7 @@ import { HelpButton } from '@components/help-button';
 import helpObjects from '@help/index';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ContainerResources } from '@components/base/container-resources';
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 import { PortForwardDialog } from '@components/tools/port-forward/dialog';
 import { TerminalTab } from '@components/tools/terminal/terminal-tab';
 import { PortOption, PortForwardRequest } from '@utils/types';
@@ -102,7 +102,6 @@ export const PodsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={pod}
             onDelete={handleDelete}
-            onNavigate={(path) => console.log('Navigate to:', path)}
             customActions={
               pod?.status?.phase === 'Running' && getAvailablePorts().length > 0 ? [{
                 id: 'port-forward',
@@ -204,7 +203,7 @@ export const PodsDetailsView = (): JSX.Element => {
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-sm font-medium">{container.name}</h4>
                     {containerStatus && (
-                      <Badge variant={containerStatus.ready ? 'success' : 'error'}>
+                      <Badge variant={containerStatus.ready ? 'green' : 'red'}>
                         {containerStatus.ready ? 'Ready' : 'Not Ready'}
                       </Badge>
                     )}
@@ -263,7 +262,7 @@ export const PodsDetailsView = (): JSX.Element => {
                       <div className="flex items-center justify-between mb-4">
                         <h4 className="text-sm font-medium">{container.name}</h4>
                         {containerStatus && (
-                          <Badge variant={containerStatus.ready ? 'success' : 'secondary'}>
+                          <Badge variant={containerStatus.ready ? 'green' : 'gray'}>
                             {containerStatus.ready ? 'Complete' : 'Pending'}
                           </Badge>
                         )}

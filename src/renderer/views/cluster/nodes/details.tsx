@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   NodeStatus,
-  V1EventList,
+  CoreV1EventList,
   V1Node
 } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
@@ -29,7 +29,7 @@ export const NodeDetailsView = (): JSX.Element => {
     const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
     const [node, setNode] = useState<V1Node>();
     const [nodeMetrics, setNodeMetrics] = useState<NodeStatus[]>();
-    const [events, setEvents] = useState<V1EventList>();
+    const [events, setEvents] = useState<CoreV1EventList>();
     const [error, setError] = useState<string | null>(null);
     const [cordonAlertOpen, setCordonAlertOpen] = useState(false);
     const [uncordonAlertOpen, setUncordonAlertOpen] = useState(false);
@@ -182,10 +182,10 @@ export const NodeDetailsView = (): JSX.Element => {
             Are you sure you want to cordon this node? This will prevent new pods from being scheduled on this node.
           </AlertDescription>
           <AlertActions>
-            <Button plain onClick={() => setCordonAlertOpen(false)}>
+            <Button variant="secondary" onClick={() => setCordonAlertOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleCordon}>Cordon</Button>
+            <Button variant="primary" onClick={handleCordon}>Cordon</Button>
           </AlertActions>
         </Alert>
 
@@ -195,10 +195,10 @@ export const NodeDetailsView = (): JSX.Element => {
             Are you sure you want to uncordon this node? This will allow new pods to be scheduled on this node again.
           </AlertDescription>
           <AlertActions>
-            <Button plain onClick={() => setUncordonAlertOpen(false)}>
+            <Button variant="secondary" onClick={() => setUncordonAlertOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleUncordon}>Uncordon</Button>
+            <Button variant="primary" onClick={handleUncordon}>Uncordon</Button>
           </AlertActions>
         </Alert>
       </>

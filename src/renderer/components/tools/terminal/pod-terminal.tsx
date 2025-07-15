@@ -16,7 +16,7 @@ export const PodTerminal: React.FC<PodTerminalProps> = ({
   podName,
   namespace,
   containerName,
-  onClose
+  _onClose
 }) => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const [terminal, setTerminal] = useState<Terminal | null>(null);

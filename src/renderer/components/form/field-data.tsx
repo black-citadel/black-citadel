@@ -70,7 +70,7 @@ export function FieldData({ data, setData }: FieldDataProps) {
           </div>
         ))}
       </Field>
-      <Button onClick={handleAddData} outline className="uppercase">
+      <Button onClick={handleAddData} variant="secondary" className="uppercase">
         Add another data item
       </Button>
     </>

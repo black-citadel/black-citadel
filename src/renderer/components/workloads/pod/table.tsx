@@ -5,6 +5,7 @@ import { NamespaceResourceLink } from '@components/cluster/namespace/resource-li
 import { PodResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
 import { useState } from 'react';
+import { Status } from '@protoku/design-system';
 
 interface Props {
   pods: k8s.V1PodList
@@ -33,7 +34,7 @@ export const PodList = ({ pods }: Props): JSX.Element => {
     Name: <PodResourceLink name={pod.metadata.name} namespace={pod.metadata.namespace} />,
     Namespace: <NamespaceResourceLink name={pod.metadata.namespace} />,
     Containers: getContainers(pod),
-    Status: pod.status.phase,
+    Status: formatPodStatus(pod.status),
     Restarts: getRestarts(pod),
     Ports: getPorts(pod)
   }));
@@ -47,6 +48,26 @@ export const PodList = ({ pods }: Props): JSX.Element => {
     />
   )
 }
+
+const formatPodStatus = (status: k8s.V1PodStatus): JSX.Element => {
+  const phase = status.phase || 'Unknown';
+  
+  // Map pod phases to Status variants
+  switch (phase) {
+    case 'Running':
+      return <Status variant="success">{phase}</Status>;
+    case 'Succeeded':
+      return <Status variant="success">{phase}</Status>;
+    case 'Failed':
+      return <Status variant="error">{phase}</Status>;
+    case 'Pending':
+      return <Status variant="warning">{phase}</Status>;
+    case 'Unknown':
+      return <Status variant="default">{phase}</Status>;
+    default:
+      return <Status variant="default">{phase}</Status>;
+  }
+};
 
 const getRestarts = (pod: k8s.V1Pod): React.ReactNode => {
   const allContainerStatuses = [

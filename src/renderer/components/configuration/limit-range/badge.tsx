@@ -1,7 +1,7 @@
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 export const LimitRangeBadge = (): JSX.Element => {
   return (
-    <Badge color="limitRange" className='mr-2'>limits</Badge>
+    <Badge variant="orange" className='mr-2'>limits</Badge>
   )
 }

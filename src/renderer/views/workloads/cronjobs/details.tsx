@@ -1,7 +1,10 @@
 import {
   V1CronJob,
+  V1Job,
   V1JobList,
-  V1PodList
+  V1Pod,
+  V1PodList,
+  V1OwnerReference
 } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
@@ -36,8 +39,8 @@ export const CronJobsDetailsView = (): JSX.Element => {
 
       // Fetch jobs created by this CronJob
       const jobsData = await window.electronAPI.listNamespacedJob(data.metadata.namespace);
-      const filteredJobs = jobsData.items.filter(job => 
-        job.metadata?.ownerReferences?.some(ref => 
+      const filteredJobs = jobsData.items.filter((job: V1Job) => 
+        job.metadata?.ownerReferences?.some((ref: V1OwnerReference) => 
           ref.kind === 'CronJob' && ref.name === data.metadata.name
         )
       );
@@ -46,9 +49,9 @@ export const CronJobsDetailsView = (): JSX.Element => {
       // Fetch pods from active jobs
       if (filteredJobs.length > 0) {
         const podsData = await window.electronAPI.listNamespacedPod(data.metadata.namespace);
-        const filteredPods = podsData.items.filter(pod => 
-          pod.metadata?.ownerReferences?.some(ref => 
-            ref.kind === 'Job' && filteredJobs.some(job => job.metadata.name === ref.name)
+        const filteredPods = podsData.items.filter((pod: V1Pod) => 
+          pod.metadata?.ownerReferences?.some((ref: V1OwnerReference) => 
+            ref.kind === 'Job' && filteredJobs.some((job: V1Job) => job.metadata.name === ref.name)
           )
         );
         setPods({ items: filteredPods });

@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Heading, Subheading } from '@components/base/heading';
 import { DetailsHeader } from '@components/details-header';
+import { DetailsItem } from '@components/details-item';
 import { MCPBadge } from '@components/operations/mcp-server/badge';
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 import { Text } from '@components/base/text';
 import { MCPConnection, MCPToolCallHistory } from '@utils/types';
 import { useView } from '@context/viewProvider';
@@ -66,7 +67,7 @@ export const MCPServerDetailsView = (): JSX.Element => {
             <code className="text-sm">{connection.id}</code>
           </DetailsItem>
           <DetailsItem label="Status">
-            <Badge color="green">Active</Badge>
+            <Badge variant="cyan">Active</Badge>
           </DetailsItem>
           <DetailsItem label="Connected">
             {format(new Date(connection.connectedAt), 'PPpp')}
@@ -85,8 +86,8 @@ export const MCPServerDetailsView = (): JSX.Element => {
         <Subheading className="mt-8 mb-4">Statistics</Subheading>
         <div className="grid grid-cols-3 gap-4">
           <div className="bg-zinc-900 p-4 rounded-lg">
-            <Text size="sm" className="text-zinc-400">Success Rate</Text>
-            <Text size="2xl" className="mt-2 font-semibold">
+            <Text className="text-zinc-400">Success Rate</Text>
+            <Text className="mt-2 font-semibold">
               {history.length > 0 
                 ? `${Math.round((history.filter(h => h.status === 'success').length / history.length) * 100)}%`
                 : 'N/A'
@@ -94,8 +95,8 @@ export const MCPServerDetailsView = (): JSX.Element => {
             </Text>
           </div>
           <div className="bg-zinc-900 p-4 rounded-lg">
-            <Text size="sm" className="text-zinc-400">Avg Response Time</Text>
-            <Text size="2xl" className="mt-2 font-semibold">
+            <Text className="text-zinc-400">Avg Response Time</Text>
+            <Text className="mt-2 font-semibold">
               {history.length > 0
                 ? formatDuration(history.reduce((sum, h) => sum + h.duration, 0) / history.length)
                 : 'N/A'
@@ -103,8 +104,8 @@ export const MCPServerDetailsView = (): JSX.Element => {
             </Text>
           </div>
           <div className="bg-zinc-900 p-4 rounded-lg">
-            <Text size="sm" className="text-zinc-400">Most Used Tool</Text>
-            <Text size="lg" className="mt-2 font-semibold">
+            <Text className="text-zinc-400">Most Used Tool</Text>
+            <Text className="mt-2 font-semibold">
               {history.length > 0
                 ? Object.entries(history.reduce((acc, h) => {
                     acc[h.toolName] = (acc[h.toolName] || 0) + 1;
@@ -148,29 +149,29 @@ export const MCPServerDetailsView = (): JSX.Element => {
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <Text className="font-medium">{call.toolName}</Text>
-                          <Text size="sm" className="text-zinc-400">
+                          <Text className="text-zinc-400">
                             {format(new Date(call.timestamp), 'HH:mm:ss.SSS')}
                             {' • '}
                             {formatDistanceToNow(new Date(call.timestamp), { addSuffix: true })}
                           </Text>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge color={call.status === 'success' ? 'green' : 'red'}>
+                          <Badge variant={call.status === 'success' ? 'green' : 'red'}>
                             {call.status}
                           </Badge>
-                          <Badge color="gray">{formatDuration(call.duration)}</Badge>
+                          <Badge variant="gray">{formatDuration(call.duration)}</Badge>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <Text size="sm" className="text-zinc-400 mb-1">Input</Text>
+                          <Text className="text-zinc-400 mb-1">Input</Text>
                           <pre className="bg-zinc-800 p-2 rounded text-xs overflow-auto max-h-32">
                             {formatJson(call.input)}
                           </pre>
                         </div>
                         <div>
-                          <Text size="sm" className="text-zinc-400 mb-1">
+                          <Text className="text-zinc-400 mb-1">
                             {call.status === 'success' ? 'Output' : 'Error'}
                           </Text>
                           <pre className="bg-zinc-800 p-2 rounded text-xs overflow-auto max-h-32">

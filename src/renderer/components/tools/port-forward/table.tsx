@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { ListTable } from '@components/list-table';
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 import { Button } from '@protoku/design-system';
 import { PortForwardInfo } from '@utils/types';
 import { calculateAge } from '@utils/helpers';
@@ -44,14 +44,14 @@ export const PortForwardTable = ({
           </div>
         ),
         Type: (
-          <Badge color={pf.resourceType === 'pod' ? 'pod' : 'blue'}>
+          <Badge variant={pf.resourceType === 'pod' ? 'blue' : 'green'}>
             {pf.resourceType}
           </Badge>
         ),
         Namespace: pf.namespace,
         'Local → Remote': `${pf.localPort} → ${pf.remotePort}`,
         Status: (
-          <Badge color={statusColor as any}>
+          <Badge variant={statusColor as any}>
             {pf.status}
           </Badge>
         ),
@@ -61,7 +61,6 @@ export const PortForwardTable = ({
             {pf.status === PortForwardStatus.Active && (
               <>
                 <Button
-                  size="sm"
                   variant="secondary"
                   onClick={() => onStop(pf.id)}
                 >
@@ -70,14 +69,12 @@ export const PortForwardTable = ({
                 {(isHttp || isHttps) && (
                   <>
                     <Button
-                      size="sm"
                       variant="secondary"
                       onClick={() => onCopyUrl(pf)}
                     >
                       Copy URL
                     </Button>
                     <Button
-                      size="sm"
                       variant="secondary"
                       onClick={() => onOpen(pf)}
                     >

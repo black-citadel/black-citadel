@@ -210,7 +210,6 @@ export const ClusterRolesCreateView = (): JSX.Element => {
               <FieldLabels 
                 labels={aggregationLabels} 
                 setLabels={setAggregationLabels}
-                placeholder={{ key: "rbac.example.com/aggregate-to-admin", value: "true" }}
               />
             </div>
           ) : (

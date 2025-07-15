@@ -67,7 +67,7 @@ export const TerminalDialog: React.FC<TerminalDialogProps> = ({
             podName={pod.metadata?.name || ''}
             namespace={namespace}
             containerName={selectedContainer || undefined}
-            onClose={onClose}
+            _onClose={onClose}
           />
         )}
       </div>

@@ -1,6 +1,9 @@
 import { Resources } from "./enums";
 
 export const ResourceHelp: { [key in Resources]: string } = {
+    // General
+    Welcome: "Welcome to Black Citadel - a modern Kubernetes GUI for managing your clusters.",
+    
     // Cluster
     Contexts: "Defines a cluster, user, and namespace for the kubectl command-line tool to interact with the Kubernetes cluster.",
     Preferences: "Specifies user preferences for the kubectl command-line tool.",

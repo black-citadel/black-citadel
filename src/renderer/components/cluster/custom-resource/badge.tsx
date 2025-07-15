@@ -1,4 +1,4 @@
-import { Badge } from "@components/base/badge";
+import { Badge } from '@protoku/design-system';
 
 interface Props {
   plural?: string;
@@ -11,5 +11,5 @@ export const CustomResourceBadge = ({ plural, group, kind }: Props): JSX.Element
     ? `${plural}.${group}` 
     : kind?.toLowerCase() || 'custom';
     
-  return <Badge color="purple" className='mr-2'>{badgeText}</Badge>
+  return <Badge variant="gray" className='mr-2'>{badgeText}</Badge>
 }

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '@protoku/design-system';
-import { Select } from '@components/base/select';
+import { Button, Select, SelectOption } from '@protoku/design-system';
 import k8s = require('@kubernetes/client-node');
 
 interface WorkloadLogsProps {
@@ -214,12 +213,8 @@ export const WorkloadLogs = ({
     }
   };
 
-  const handlePodSelectionChange = (podName: string, selected: boolean) => {
-    if (selected) {
-      setSelectedPods([...selectedPods, podName]);
-    } else {
-      setSelectedPods(selectedPods.filter(p => p !== podName));
-    }
+  const handlePodSelectionChange = (selected: string[]) => {
+    setSelectedPods(selected);
   };
 
   const handleClearLogs = () => {
@@ -270,65 +265,52 @@ export const WorkloadLogs = ({
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-[calc(100vh-8rem)]">
       {/* Controls */}
-      <div className="mb-4 p-2">
+      <div className="flex-shrink-0 p-2">
         {/* Container selection for single pod mode */}
         {isSinglePod && allContainers.length > 1 && (
           <div className="mb-3 flex items-center gap-2">
             <label className="text-sm font-medium text-white">Container:</label>
             <Select
               value={selectedContainer}
-              onChange={(e) => setSelectedContainer(e.target.value)}
-            >
-              {allContainers.map(container => (
-                <option key={container} value={container}>{container}</option>
-              ))}
-            </Select>
+              onChange={setSelectedContainer}
+              options={allContainers.map(container => ({
+                value: container,
+                label: container
+              }))}
+              className="w-48"
+            />
           </div>
         )}
         
-        {/* Pod selection for multi-pod mode */}
-        {!isSinglePod && (
-          <div className="mb-3">
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-white">Select Pods:</label>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {pods.map(pod => (
-                <label key={pod.metadata.name} className="flex items-center gap-1 px-2 py-1 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={selectedPods.includes(pod.metadata.name)}
-                    onChange={(e) => handlePodSelectionChange(pod.metadata.name, e.target.checked)}
-                    className="rounded"
-                  />
-                  <span 
-                    className="text-sm"
-                    style={{ color: getPodColor(pod.metadata.name) }}
-                  >
-                    {pod.metadata.name}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Other controls */}
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-white">Lines per pod:</label>
+          {/* Pod selection for multi-pod mode */}
+          {!isSinglePod && (
             <Select
-              value={tailLines.toString()}
-              onChange={(e) => setTailLines(parseInt(e.target.value))}
-            >
-              <option value="50">50</option>
-              <option value="100">100</option>
-              <option value="200">200</option>
-              <option value="500">500</option>
-            </Select>
-          </div>
+              value={selectedPods}
+              onChange={handlePodSelectionChange}
+              options={pods.map(pod => ({
+                value: pod.metadata.name,
+                label: pod.metadata.name
+              }))}
+              placeholder="Select pods"
+              multiple={true}
+              className="w-64"
+            />
+          )}
+
+          <Select
+            value={tailLines}
+            onChange={setTailLines}
+            options={[
+              { value: 100, label: '100 lines' },
+              { value: 500, label: '500 lines' },
+              { value: 1000, label: '1000 lines' }
+            ]}
+            className="w-32"
+          />
 
           {!isSinglePod && (
             <label className="flex items-center gap-2">
@@ -343,21 +325,22 @@ export const WorkloadLogs = ({
           )}
 
           <Button
+            variant="secondary"
             onClick={() => setIsFollowing(!isFollowing)}
             className={isFollowing ? 'bg-green-600 hover:bg-green-700' : ''}
           >
             {isFollowing ? 'Following' : 'Follow'}
           </Button>
 
-          <Button onClick={fetchLogs}>
+          <Button variant="secondary" onClick={fetchLogs}>
             Refresh
           </Button>
 
-          <Button onClick={handleClearLogs}>
+          <Button variant="secondary" onClick={handleClearLogs}>
             Clear
           </Button>
 
-          <Button onClick={handleDownloadLogs}>
+          <Button variant="secondary" onClick={handleDownloadLogs}>
             Download
           </Button>
         </div>
@@ -365,7 +348,7 @@ export const WorkloadLogs = ({
 
       {/* Error display */}
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm whitespace-pre-wrap">
+        <div className="flex-shrink-0 mx-2 mb-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm whitespace-pre-wrap">
           {error}
         </div>
       )}
@@ -374,8 +357,7 @@ export const WorkloadLogs = ({
       <div 
         ref={logContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-auto bg-[#101010] text-green-400 p-4 font-mono text-sm whitespace-pre-wrap"
-        style={{ minHeight: '400px' }}
+        className="flex-1 min-h-0 overflow-auto bg-[#101010] text-zinc-400 p-4 font-mono text-sm whitespace-pre-wrap"
       >
         {combinedLogs.length === 0 ? (
           <div className="text-zinc-500">

@@ -1,7 +1,7 @@
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 export const RoleBindingBadge = (): JSX.Element => {
   return (
-    <Badge color="roleBinding" className='mr-2'>rolebindings</Badge>
+    <Badge variant="pink" className='mr-2'>rolebindings</Badge>
   )
 }

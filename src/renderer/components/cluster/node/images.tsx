@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import k8s from '@kubernetes/client-node';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@components/base/table';
 import { Text } from '@components/base/text';
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 import { formatBytes } from '@utils/resource-parser';
 
 interface NodeImagesProps {
@@ -68,7 +68,7 @@ export const NodeImages = ({ node }: NodeImagesProps): JSX.Element => {
   return (
     <div>
       <div className="mb-4">
-        <Badge color="zinc">{images.length} images</Badge>
+        <Badge variant="gray">{images.length} images</Badge>
       </div>
       
       <Table>

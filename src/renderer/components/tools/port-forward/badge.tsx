@@ -1,7 +1,7 @@
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 export const PortForwardBadge = (): JSX.Element => {
   return (
-    <Badge color="green" className='mr-2'>pf</Badge>
+    <Badge variant="teal" className='mr-2'>pf</Badge>
   )
 }

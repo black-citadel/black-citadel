@@ -1,5 +1,5 @@
-import { Badge } from "@components/base/badge";
+import { Badge } from '@protoku/design-system';
 
 export const MCPBadge = () => {
-  return <Badge color="purple">MCP Client</Badge>;
+  return <Badge variant="cyan">MCP Client</Badge>;
 };

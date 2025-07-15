@@ -11,7 +11,6 @@ import { PortForwardInfo, PortForwardRequest, ExecRequest, ExecSession } from '.
 import { PortForwardStatus } from '../renderer/utils/enums';
 import { WebSocket } from 'ws';
 import { startMCPServer, stopMCPServer, getToolCallHistory, getActiveConnections, clearToolCallHistory } from './mcp-server';
-import { CDPDevUtils } from './cdp-dev-utils';
 
 // Initialize KubeConfig with error handling
 let kc: k8s.KubeConfig;
@@ -50,9 +49,8 @@ function initializeK8sClients() {
     }
     
     // Apply the agent to the kc before creating API clients
-    kc.applytoHTTPSOptions = (opts) => {
+    kc.applyToHTTPSOptions = async (opts) => {
       opts.agent = httpsAgent;
-      return opts;
     };
     
     k8sCoreV1Api = kc.makeApiClient(k8s.CoreV1Api);
@@ -135,40 +133,8 @@ const createWindow = (): BrowserWindow => {
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
 
-  // Handle mouse navigation buttons
-  mainWindow.webContents.on('before-input-event', (event, input) => {
-    // Log all mouse events for debugging
-    if (input.type === 'mouseDown' || input.type === 'mouseUp') {
-      console.log('Mouse event:', input.type, 'button:', input.button, 'typeof:', typeof input.button);
-    }
-    
-    if (input.type === 'mouseDown') {
-      // Check for string-based button names
-      if (input.button === 'back') {
-        console.log('Back button pressed (string)');
-        event.preventDefault();
-        mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'back' });
-      } else if (input.button === 'forward') {
-        console.log('Forward button pressed (string)');
-        event.preventDefault();
-        mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'forward' });
-      }
-      // Check for numeric button codes (3 = back, 4 = forward on many mice)
-      else if (input.button === 3) {
-        console.log('Back button pressed (button 3)');
-        event.preventDefault();
-        mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'back' });
-      } else if (input.button === 4) {
-        console.log('Forward button pressed (button 4)');
-        event.preventDefault();
-        mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'forward' });
-      }
-    }
-  });
-
-  // Alternative method using app-command event
+  // Handle mouse navigation buttons on Windows
   mainWindow.on('app-command', (event, cmd) => {
-    console.log('App command:', cmd);
     if (cmd === 'browser-backward') {
       event.preventDefault();
       mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'back' });
@@ -177,26 +143,9 @@ const createWindow = (): BrowserWindow => {
       mainWindow.webContents.send('navigation', { type: 'navigation', direction: 'forward' });
     }
   });
-  
-  // Development-only CDP features
-  if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
-    // Initialize CDP utilities
-    const _cdpUtils = new CDPDevUtils(mainWindow);
-    
-    // Log CDP debugging URL
-    mainWindow.webContents.on('did-finish-load', () => {
-      console.log('\n=== Chrome DevTools Protocol Debugging ===');
-      console.log('Main process debugging URL: http://localhost:9223');
-      console.log('Renderer process debugging URL:', mainWindow.webContents.getURL());
-      console.log('Use chrome://inspect in Chrome/Chromium to connect');
-      console.log('=========================================\n');
-    });
 
-    // Enable additional CDP features
-    mainWindow.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
-      callback(true);
-    });
-  }
+
+  
   
   return mainWindow;
 };
@@ -306,9 +255,8 @@ ipcMain.handle('setCurrentContext', (event, name) => {
   kc.setCurrentContext(name);
   
   // Reconfigure the HTTPS agent for the new context
-  kc.applytoHTTPSOptions = (opts) => {
+  kc.applyToHTTPSOptions = async (opts) => {
     opts.agent = httpsAgent;
-    return opts;
   };
   
   // Reinitialize API clients with the new context
@@ -587,6 +535,9 @@ ipcMain.handle('deleteNamespacedConfigMap', async (event, name, namespace) => (a
 
 ipcMain.handle('listJobForAllNamespaces', async () => {
   return handleK8sListRequest(async () => (await k8sBatchV1Api.listJobForAllNamespaces()).body);
+});
+ipcMain.handle('listNamespacedJob', async (event, namespace) => {
+  return handleK8sListRequest(async () => (await k8sBatchV1Api.listNamespacedJob(namespace)).body);
 });
 ipcMain.handle('listCronJobForAllNamespaces', async () => {
   return handleK8sListRequest(async () => (await k8sBatchV1Api.listCronJobForAllNamespaces()).body);
@@ -955,12 +906,13 @@ const activeExecSessions = new Map<string, {
 }>();
 
 ipcMain.handle('createExecSession', async (event, request: ExecRequest) => {
+  let sessionId: string | undefined;
   try {
     if (!isK8sInitialized) {
       return { success: false, error: 'Kubernetes not initialized' };
     }
 
-    const sessionId = uuidv4();
+    sessionId = uuidv4();
     const session: ExecSession = {
       id: sessionId,
       podName: request.podName,
@@ -1045,7 +997,9 @@ ipcMain.handle('createExecSession', async (event, request: ExecRequest) => {
     return { success: true, sessionId };
   } catch (error: any) {
     console.error('Failed to create exec session:', error);
-    activeExecSessions.delete(sessionId);
+    if (sessionId) {
+      activeExecSessions.delete(sessionId);
+    }
     return { success: false, error: error.message };
   }
 });
@@ -1284,19 +1238,19 @@ ipcMain.handle('apply', async (event, yamlContent: string) => {
             let result;
             switch (resource.kind) {
               case 'Namespace':
-                result = await k8sCoreV1Api.patchNamespace(name, resource, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+                result = await k8sCoreV1Api.patchNamespace(name, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
                 break;
               case 'Deployment':
-                result = await k8sAppsV1Api.patchNamespacedDeployment(name, namespace, resource, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+                result = await k8sAppsV1Api.patchNamespacedDeployment(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
                 break;
               case 'Service':
-                result = await k8sCoreV1Api.patchNamespacedService(name, namespace, resource, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+                result = await k8sCoreV1Api.patchNamespacedService(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
                 break;
               case 'ConfigMap':
-                result = await k8sCoreV1Api.patchNamespacedConfigMap(name, namespace, resource, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+                result = await k8sCoreV1Api.patchNamespacedConfigMap(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
                 break;
               case 'Secret':
-                result = await k8sCoreV1Api.patchNamespacedSecret(name, namespace, resource, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+                result = await k8sCoreV1Api.patchNamespacedSecret(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
                 break;
               // Add more patch cases as needed
               default:

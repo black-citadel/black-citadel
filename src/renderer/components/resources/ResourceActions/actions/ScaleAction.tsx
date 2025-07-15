@@ -20,7 +20,7 @@ export const ScaleAction: React.FC<ScaleActionProps> = ({
   onScale,
   onActionComplete,
   disabled = false,
-  _showLabel = true,
+  showLabel = true,
   variant = 'header',
 }) => {
   const [showDialog, setShowDialog] = useState(false);

@@ -8,7 +8,7 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 export const CustomResourceDetailsView = (): JSX.Element => {
     const { viewContext } = useView()
@@ -58,7 +58,7 @@ export const CustomResourceDetailsView = (): JSX.Element => {
       <>
         <DetailsHeader error={error}>
           <Heading>
-            <Badge color="purple">{crdName}</Badge> {viewContext.name}
+            <Badge variant="gray">{crdName}</Badge> {viewContext.name}
           </Heading>
           
           <Navbar>

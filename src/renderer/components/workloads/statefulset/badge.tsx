@@ -1,7 +1,7 @@
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 
 export const StatefulSetBadge = (): JSX.Element => {
   return (
-    <Badge color="statefulSet" className='mr-2'>sts</Badge>
+    <Badge variant="blue" className='mr-2'>sts</Badge>
   )
 }

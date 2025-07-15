@@ -41,7 +41,7 @@ import { Resources, ResourceAction } from '@utils/enums';
 import { Sidebar, SidebarBody, SidebarItem, SidebarLabel, SidebarSection, SidebarHeading, SidebarHeader } from '@components/base/sidebar'
 import { ContextsListView, ContextsDetailsView, ContextsCreateView } from '@views/cluster/contexts';
 import { ContextDropdown } from '@components/context-dropdown';
-import { Badge } from '@components/base/badge';
+import { Badge } from '@protoku/design-system';
 import { Drawer } from '@components/base/drawer';
 import { NodeDetailsView, NodesListView } from '@views/cluster/nodes';
 import { CustomResourceDefinitionsListView, CustomResourceDefinitionsDetailsView } from '@views/cluster/custom-resource-definitions';
@@ -282,7 +282,7 @@ export const Layout = () => {
                 <SidebarLabel>
                   {Resources.PortForwards}
                   {activePortForwards > 0 && (
-                    <Badge color="green" className="ml-2">{activePortForwards}</Badge>
+                    <Badge variant="teal" className="ml-2">{activePortForwards}</Badge>
                   )}
                 </SidebarLabel>
               </SidebarItem>
@@ -290,7 +290,7 @@ export const Layout = () => {
                 <SidebarLabel>
                   {Resources.MCPServer}
                   {activeMCPConnections > 0 && (
-                    <Badge color="green" className="ml-2">{activeMCPConnections}</Badge>
+                    <Badge variant="cyan" className="ml-2">{activeMCPConnections}</Badge>
                   )}
                 </SidebarLabel>
               </SidebarItem>

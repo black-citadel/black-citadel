@@ -1,9 +1,7 @@
-export const formatStatus = (status: string | undefined): JSX.Element => {
-    if (!status) return <span>-</span>;
+import { Status } from "@protoku/design-system";
 
-    let statusColor = 'text-gray-600';
-    if (status === 'Active') statusColor = 'text-green-500';
-    else if (status === 'Terminating') statusColor = 'text-red-600';
+export const formatStatus = (statusText: string | undefined): JSX.Element => {
+    if (!statusText) return <span>-</span>;
 
-    return <span className={ statusColor }> { status } </span>;
+    return <Status variant={ statusText === 'Active' ? 'success' : 'default' }>{ statusText }</Status>;
 };

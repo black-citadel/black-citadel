@@ -1,5 +1,5 @@
 import { Resources } from '@utils/enums';
-import { ResourceActionConfigs } from '../ResourceActions.types';
+import { ResourceActionConfig, ResourceActionConfigs } from '../ResourceActions.types';
 
 export const resourceActionConfigs: ResourceActionConfigs = {
   [Resources.Pods]: {
@@ -195,14 +195,6 @@ export const resourceActionConfigs: ResourceActionConfigs = {
     supportsTerminal: false,
   },
   [Resources.HorizontalPodAutoscalers]: {
-    supportsDelete: true,
-    supportsEdit: true,
-    supportsPortForward: false,
-    supportsScale: false,
-    supportsLogs: false,
-    supportsTerminal: false,
-  },
-  [Resources.VerticalPodAutoscalers]: {
     supportsDelete: true,
     supportsEdit: true,
     supportsPortForward: false,

@@ -13,7 +13,6 @@ export const ResourceActions: React.FC<ResourceActionsProps> = ({
   isLoading = false,
   onDelete,
   onActionComplete,
-  onNavigate,
   variant = 'header',
   showLabels = true,
   className = '',
@@ -59,12 +58,21 @@ export const ResourceActions: React.FC<ResourceActionsProps> = ({
       {allCustomActions.map((action) => {
         if (action.hidden) return null;
         
-        const isPrimary = action.variant === 'primary';
+        const getButtonVariant = (): 'primary' | 'secondary' | 'caution' => {
+          switch (action.variant) {
+            case 'primary':
+              return 'primary';
+            case 'danger':
+              return 'caution';
+            default:
+              return 'secondary';
+          }
+        };
         
         return (
           <Button
             key={action.id}
-            variant={isPrimary ? 'primary' : 'secondary'}
+            variant={getButtonVariant()}
             onClick={() => handleActionClick(action)}
             disabled={action.disabled || isLoading}
             className={getButtonVariantClass(action.variant)}

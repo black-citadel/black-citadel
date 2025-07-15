@@ -13,7 +13,7 @@ interface RuleListProps {
     return (
       <DetailsItem label="Rules">
         {rules.map((rule, _index) => (
-          <div key={index} className="mb-2 p-2 border border-gray-200 rounded">
+          <div key={_index} className="mb-2 p-2 border border-gray-200 rounded">
             <div>API Groups: {rule.apiGroups?.join(', ') || '*'}</div>
             <div>Resources: {rule.resources?.join(', ') || '*'}</div>
             <div>Verbs: {rule.verbs.join(', ')}</div>

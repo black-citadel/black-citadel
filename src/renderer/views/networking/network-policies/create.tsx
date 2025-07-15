@@ -6,6 +6,7 @@ import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
+import { Dropdown } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
@@ -13,7 +14,7 @@ import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/for
 import { networkPolicyTemplate } from '@templates/networkpolicy.yaml';
 import { dump } from 'js-yaml';
 import { HelpButton } from '@components/help-button';
-import { NamespaceDropdown } from '@components/namespace-dropdown';
+import { NamespaceSelect } from '@components/form/field-namespace-select';
 import helpObjects from '@help/index';
 
 interface NetworkPort {
@@ -240,7 +241,7 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
               <Description>
                 Select the namespace for this network policy.
               </Description>
-              <NamespaceDropdown 
+              <NamespaceSelect 
                 value={namespace} 
                 onChange={setNamespace}
               />
@@ -336,7 +337,7 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
                         {peer.type === 'pod' && (
                           <FieldLabels 
                             labels={peer.podSelector} 
-                            setLabels={(newLabels) => {
+                            setLabels={(newLabels: FieldLabel[]) => {
                               const newRules = [...ingressRules];
                               newRules[ruleIndex].peers[peerIndex].podSelector = newLabels;
                               setIngressRules(newRules);
@@ -347,7 +348,7 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
                         {peer.type === 'namespace' && (
                           <FieldLabels 
                             labels={peer.namespaceSelector} 
-                            setLabels={(newLabels) => {
+                            setLabels={(newLabels: FieldLabel[]) => {
                               const newRules = [...ingressRules];
                               newRules[ruleIndex].peers[peerIndex].namespaceSelector = newLabels;
                               setIngressRules(newRules);
@@ -502,7 +503,7 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
                         {peer.type === 'pod' && (
                           <FieldLabels 
                             labels={peer.podSelector} 
-                            setLabels={(newLabels) => {
+                            setLabels={(newLabels: FieldLabel[]) => {
                               const newRules = [...egressRules];
                               newRules[ruleIndex].peers[peerIndex].podSelector = newLabels;
                               setEgressRules(newRules);
@@ -513,7 +514,7 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
                         {peer.type === 'namespace' && (
                           <FieldLabels 
                             labels={peer.namespaceSelector} 
-                            setLabels={(newLabels) => {
+                            setLabels={(newLabels: FieldLabel[]) => {
                               const newRules = [...egressRules];
                               newRules[ruleIndex].peers[peerIndex].namespaceSelector = newLabels;
                               setEgressRules(newRules);

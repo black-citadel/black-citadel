@@ -61,8 +61,8 @@ interface ResourceItem {
   category: string;
   name: string;
   resource: any;
-  BadgeComponent: React.ComponentType<{ resource: any }>;
-  LinkComponent: React.ComponentType<{ resource: any }>;
+  BadgeComponent: React.ComponentType<{ resource?: any }>;
+  LinkComponent: React.ComponentType<{ name: string; namespace: string }>;
 }
 
 interface NamespaceResourcesTableProps {
@@ -107,8 +107,8 @@ export function NamespaceResourcesTable(props: NamespaceResourcesTableProps) {
     list: any,
     type: string,
     category: string,
-    BadgeComponent: React.ComponentType<{ resource: any }>,
-    LinkComponent: React.ComponentType<{ resource: any }>
+    BadgeComponent: React.ComponentType<{ resource?: any }>,
+    LinkComponent: React.ComponentType<{ name: string; namespace: string }>
   ) => {
     if (list?.items?.length > 0) {
       list.items.forEach((item: any) => {

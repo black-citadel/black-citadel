@@ -2,6 +2,7 @@ import k8s from '@kubernetes/client-node';
 import { ListTable } from '@components/list-table';
 import { calculateAge } from '@utils/helpers';
 import { NodeResourceLink } from './resource-link';
+import { Status } from '@protoku/design-system';
 
 interface Props {
   nodes: k8s.V1NodeList;
@@ -25,9 +26,9 @@ export const NodeList = ({ nodes }: Props): JSX.Element => {
   );
 };
 
-function formatNodeStatus(status: k8s.V1NodeStatus): string {
+function formatNodeStatus(status: k8s.V1NodeStatus): JSX.Element {
   if (!status.conditions) {
-    return 'Unknown';
+    return <Status variant="default">Unknown</Status>;
   }
 
   const readyCondition = status.conditions.find(
@@ -35,14 +36,14 @@ function formatNodeStatus(status: k8s.V1NodeStatus): string {
   );
 
   if (!readyCondition) {
-    return 'Unknown';
+    return <Status variant="default">Unknown</Status>;
   }
 
   if (readyCondition.status === 'True') {
-    return 'Ready';
+    return <Status variant="success">Ready</Status>;
   } else if (readyCondition.status === 'False') {
-    return `NotReady (${readyCondition.reason})`;
+    return <Status variant="error">NotReady{readyCondition.reason ? ` (${readyCondition.reason})` : ''}</Status>;
   } else {
-    return `Unknown (${readyCondition.reason})`;
+    return <Status variant="warning">Unknown{readyCondition.reason ? ` (${readyCondition.reason})` : ''}</Status>;
   }
 }

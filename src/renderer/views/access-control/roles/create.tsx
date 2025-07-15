@@ -13,7 +13,7 @@ import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/for
 import { roleTemplate } from '@templates/role.yaml';
 import { dump } from 'js-yaml';
 import { HelpButton } from '@components/help-button';
-import { NamespaceDropdown } from '@components/namespace-dropdown';
+import { NamespaceSelect } from '@components/form/field-namespace-select';
 import helpObjects from '@help/index';
 
 interface Rule {
@@ -152,7 +152,7 @@ export const RolesCreateView = (): JSX.Element => {
               <Description>
                 Select the namespace for this role.
               </Description>
-              <NamespaceDropdown 
+              <NamespaceSelect 
                 value={namespace} 
                 onChange={setNamespace}
               />
