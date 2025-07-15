@@ -55,6 +55,8 @@ const config: ForgeConfig = {
           },
         ],
       },
+      port: 7463,
+      loggerPort: 9001,  // Changed from default 9000 to avoid conflict
     }),
   ],
 };
