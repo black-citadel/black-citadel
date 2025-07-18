@@ -75,7 +75,7 @@ export const WelcomeView = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#08090a] flex flex-col items-center justify-center p-8">
+    <div className="min-h-screen bg-[#171717] flex flex-col items-center justify-center p-8">
       <div className="max-w-4xl w-full">
         {/* Logo and Title */}
         <div className="text-center mb-12">

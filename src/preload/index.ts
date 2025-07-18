@@ -155,6 +155,13 @@ export interface ElectronAPI {
   clearMCPToolCallHistory: () => Promise<void>;
   // Generic Apply
   apply: (yamlContent: string) => Promise<{ success: boolean; data?: any; error?: string }>;
+  // Helm
+  helmList: () => Promise<{ success: boolean; data?: any[]; error?: string }>;
+  helmRepoList: () => Promise<{ success: boolean; data?: any[]; error?: string }>;
+  helmSearchRepo: (keyword?: string) => Promise<{ success: boolean; data?: any[]; error?: string }>;
+  helmInstall: (releaseName: string, chart: string, namespace?: string, values?: string) => Promise<{ success: boolean; data?: string; error?: string }>;
+  helmUninstall: (releaseName: string, namespace?: string) => Promise<{ success: boolean; data?: string; error?: string }>;
+  helmGetValues: (releaseName: string, namespace?: string) => Promise<{ success: boolean; data?: string; error?: string }>;
 }
 
 try {
@@ -309,6 +316,13 @@ try {
     clearMCPToolCallHistory: () => ipcRenderer.invoke('clearMCPToolCallHistory'),
     // Generic Apply
     apply: (yamlContent: string) => ipcRenderer.invoke('apply', yamlContent),
+    // Helm
+    helmList: () => ipcRenderer.invoke('helm-list'),
+    helmRepoList: () => ipcRenderer.invoke('helm-repo-list'),
+    helmSearchRepo: (keyword?: string) => ipcRenderer.invoke('helm-search-repo', keyword),
+    helmInstall: (releaseName: string, chart: string, namespace?: string, values?: string) => ipcRenderer.invoke('helm-install', releaseName, chart, namespace, values),
+    helmUninstall: (releaseName: string, namespace?: string) => ipcRenderer.invoke('helm-uninstall', releaseName, namespace),
+    helmGetValues: (releaseName: string, namespace?: string) => ipcRenderer.invoke('helm-get-values', releaseName, namespace),
   } as ElectronAPI);
 } catch (error) {
   console.error(error)

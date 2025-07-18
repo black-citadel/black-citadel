@@ -63,7 +63,8 @@ export enum Resources {
     
     // Operations
     PortForwards = 'Port Forwards',
-    MCPServer = 'MCP Server'
+    MCPServer = 'MCP Server',
+    Helm = 'Helm'
 }
 
 export enum ResourceAction {

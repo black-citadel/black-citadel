@@ -23,13 +23,11 @@ export const ContextsCreateView = (): JSX.Element => {
       }
 
       // Parse the kubeconfig to validate it
-      let parsedConfig;
       try {
-        parsedConfig = JSON.parse(kubeconfig);
+        JSON.parse(kubeconfig);
       } catch {
         // If JSON parse fails, try YAML parse
         // For now, we'll assume the backend handles YAML parsing
-        parsedConfig = { raw: kubeconfig };
       }
 
       const result = await window.electronAPI.mergeKubeconfig(kubeconfig);

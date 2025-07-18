@@ -288,7 +288,7 @@ export const WorkloadLogs = ({
         <div className="flex items-center gap-4">
           {/* Pod selection for multi-pod mode */}
           {!isSinglePod && (
-            <Select
+            <Select<string>
               value={selectedPods}
               onChange={handlePodSelectionChange}
               options={pods.map(pod => ({

@@ -11,7 +11,7 @@ interface ContainerResourcesProps {
 
 export const ContainerResources: React.FC<ContainerResourcesProps> = ({
     container,
-    containerStatus,
+    containerStatus: _containerStatus,
     containerMetrics
 }) => {
     // Get resource requests and limits

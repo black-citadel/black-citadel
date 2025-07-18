@@ -28,7 +28,7 @@ let k8sNodeV1Api: k8s.NodeV1Api;
 let k8sAdmissionregistrationV1Api: k8s.AdmissionregistrationV1Api;
 let k8sApiextensionsV1Api: k8s.ApiextensionsV1Api;
 let k8sCustomObjectsApi: k8s.CustomObjectsApi;
-let k8sMetricsClient: k8s.Metrics;
+let _k8sMetricsClient: k8s.Metrics;
 
 // Configure axios defaults for the kubernetes client to handle certificates better
 const https = require('https');
@@ -67,7 +67,7 @@ function initializeK8sClients() {
     k8sAdmissionregistrationV1Api = kc.makeApiClient(k8s.AdmissionregistrationV1Api);
     k8sApiextensionsV1Api = kc.makeApiClient(k8s.ApiextensionsV1Api);
     k8sCustomObjectsApi = kc.makeApiClient(k8s.CustomObjectsApi);
-    k8sMetricsClient = new k8s.Metrics(kc);
+    _k8sMetricsClient = new k8s.Metrics(kc);
     
     isK8sInitialized = true;
     console.log('Kubernetes clients initialized successfully with context:', kc.getCurrentContext());
@@ -314,7 +314,7 @@ ipcMain.handle('mergeKubeconfig', async (event, kubeconfigYaml) => {
     k8sNodeV1Api = kc.makeApiClient(k8s.NodeV1Api);
     k8sAdmissionregistrationV1Api = kc.makeApiClient(k8s.AdmissionregistrationV1Api);
     k8sApiextensionsV1Api = kc.makeApiClient(k8s.ApiextensionsV1Api);
-    k8sMetricsClient = new k8s.Metrics(kc);
+    _k8sMetricsClient = new k8s.Metrics(kc);
     
     return { success: true };
   } catch (error) {
@@ -892,7 +892,7 @@ ipcMain.handle('stopPortForward', async (event, forwardId: string) => {
 });
 
 ipcMain.handle('listPortForwards', async () => {
-  return Array.from(activePortForwards.values()).map(({ process, ...info }) => info);
+  return Array.from(activePortForwards.values()).map(({ process: _process, ...info }) => info);
 });
 
 // Exec/Terminal functionality
@@ -1043,7 +1043,7 @@ ipcMain.handle('execReceive', async (event, sessionId: string) => {
   }
 });
 
-ipcMain.handle('execResize', async (event, sessionId: string, rows: number, cols: number) => {
+ipcMain.handle('execResize', async (event, sessionId: string, _rows: number, _cols: number) => {
   try {
     const sessionInfo = activeExecSessions.get(sessionId);
     if (!sessionInfo) {
@@ -1092,14 +1092,14 @@ ipcMain.handle('listExecSessions', async () => {
 // Clean up on app quit
 app.on('before-quit', async () => {
   // Clean up port forwards
-  activePortForwards.forEach((portForward, id) => {
+  activePortForwards.forEach((portForward, _id) => {
     if (portForward.process && !portForward.process.killed) {
       portForward.process.kill('SIGTERM');
     }
   });
   
   // Clean up exec sessions
-  activeExecSessions.forEach((sessionInfo, id) => {
+  activeExecSessions.forEach((sessionInfo, _id) => {
     if (sessionInfo.stdin) {
       sessionInfo.stdin.end();
     }
@@ -1234,32 +1234,28 @@ ipcMain.handle('apply', async (event, yamlContent: string) => {
       } catch (error) {
         // If create fails, try to update instead
         if (error.response?.statusCode === 409 && name) {
-          try {
-            let result;
-            switch (resource.kind) {
-              case 'Namespace':
-                result = await k8sCoreV1Api.patchNamespace(name, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
-                break;
-              case 'Deployment':
-                result = await k8sAppsV1Api.patchNamespacedDeployment(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
-                break;
-              case 'Service':
-                result = await k8sCoreV1Api.patchNamespacedService(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
-                break;
-              case 'ConfigMap':
-                result = await k8sCoreV1Api.patchNamespacedConfigMap(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
-                break;
-              case 'Secret':
-                result = await k8sCoreV1Api.patchNamespacedSecret(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
-                break;
-              // Add more patch cases as needed
-              default:
-                throw error;
-            }
-            results.push(result.body);
-          } catch (patchError) {
-            throw patchError;
+          let result;
+          switch (resource.kind) {
+            case 'Namespace':
+              result = await k8sCoreV1Api.patchNamespace(name, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+              break;
+            case 'Deployment':
+              result = await k8sAppsV1Api.patchNamespacedDeployment(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+              break;
+            case 'Service':
+              result = await k8sCoreV1Api.patchNamespacedService(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+              break;
+            case 'ConfigMap':
+              result = await k8sCoreV1Api.patchNamespacedConfigMap(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+              break;
+            case 'Secret':
+              result = await k8sCoreV1Api.patchNamespacedSecret(name, namespace, resource, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/merge-patch+json' } });
+              break;
+            // Add more patch cases as needed
+            default:
+              throw error;
           }
+          results.push(result.body);
         } else {
           throw error;
         }
@@ -1273,5 +1269,279 @@ ipcMain.handle('apply', async (event, yamlContent: string) => {
       success: false, 
       error: error.response?.body?.message || error.message || 'Failed to apply resource' 
     };
+  }
+});
+
+// Helm handlers
+ipcMain.handle('helm-list', async () => {
+  try {
+    return await new Promise((resolve, reject) => {
+      const helm = spawn('helm', ['list', '--all-namespaces', '-o', 'json']);
+      let stdout = '';
+      let stderr = '';
+
+      helm.stdout.on('data', (data) => {
+        stdout += data.toString();
+      });
+
+      helm.stderr.on('data', (data) => {
+        stderr += data.toString();
+      });
+
+      helm.on('close', (code) => {
+        if (code !== 0) {
+          reject({ success: false, error: stderr || 'Failed to list helm releases' });
+        } else {
+          try {
+            const releases = JSON.parse(stdout || '[]');
+            resolve({ success: true, data: releases });
+          } catch (error) {
+            resolve({ success: true, data: [] });
+          }
+        }
+      });
+
+      helm.on('error', (error) => {
+        reject({ success: false, error: error.message });
+      });
+    });
+  } catch (error) {
+    return { success: false, error: error.message || 'Failed to list helm releases' };
+  }
+});
+
+ipcMain.handle('helm-repo-list', async () => {
+  try {
+    return await new Promise((resolve, reject) => {
+      const helm = spawn('helm', ['repo', 'list', '-o', 'json']);
+      let stdout = '';
+      let stderr = '';
+
+      helm.stdout.on('data', (data) => {
+        stdout += data.toString();
+      });
+
+      helm.stderr.on('data', (data) => {
+        stderr += data.toString();
+      });
+
+      helm.on('close', (code) => {
+        if (code !== 0) {
+          reject({ success: false, error: stderr || 'Failed to list helm repositories' });
+        } else {
+          try {
+            const repos = JSON.parse(stdout || '[]');
+            resolve({ success: true, data: repos });
+          } catch (error) {
+            resolve({ success: true, data: [] });
+          }
+        }
+      });
+
+      helm.on('error', (error) => {
+        reject({ success: false, error: error.message });
+      });
+    });
+  } catch (error) {
+    return { success: false, error: error.message || 'Failed to list helm repositories' };
+  }
+});
+
+ipcMain.handle('helm-search-repo', async (event, keyword) => {
+  try {
+    return await new Promise((resolve, reject) => {
+      const args = ['search', 'repo'];
+      if (keyword) {
+        args.push(keyword);
+      }
+      args.push('-o', 'json');
+      
+      const helm = spawn('helm', args);
+      let stdout = '';
+      let stderr = '';
+
+      helm.stdout.on('data', (data) => {
+        stdout += data.toString();
+      });
+
+      helm.stderr.on('data', (data) => {
+        stderr += data.toString();
+      });
+
+      helm.on('close', (code) => {
+        if (code !== 0) {
+          reject({ success: false, error: stderr || 'Failed to search helm charts' });
+        } else {
+          try {
+            const charts = JSON.parse(stdout || '[]');
+            resolve({ success: true, data: charts });
+          } catch (error) {
+            resolve({ success: true, data: [] });
+          }
+        }
+      });
+
+      helm.on('error', (error) => {
+        reject({ success: false, error: error.message });
+      });
+    });
+  } catch (error) {
+    return { success: false, error: error.message || 'Failed to search helm charts' };
+  }
+});
+
+ipcMain.handle('helm-install', async (event, releaseName, chart, namespace, values) => {
+  try {
+    return await new Promise((resolve, reject) => {
+      const args = ['install', releaseName, chart];
+      
+      if (namespace) {
+        args.push('--namespace', namespace, '--create-namespace');
+      }
+      
+      if (values) {
+        // Write values to a temporary file
+        const tempFile = path.join(os.tmpdir(), `helm-values-${uuidv4()}.yaml`);
+        fs.writeFileSync(tempFile, values);
+        args.push('-f', tempFile);
+        
+        // Clean up temp file after helm completes
+        const cleanup = () => {
+          try {
+            fs.unlinkSync(tempFile);
+          } catch (error) {
+            console.error('Failed to clean up temp file:', error);
+          }
+        };
+        
+        const helm = spawn('helm', args);
+        let stdout = '';
+        let stderr = '';
+
+        helm.stdout.on('data', (data) => {
+          stdout += data.toString();
+        });
+
+        helm.stderr.on('data', (data) => {
+          stderr += data.toString();
+        });
+
+        helm.on('close', (code) => {
+          cleanup();
+          if (code !== 0) {
+            reject({ success: false, error: stderr || 'Failed to install helm chart' });
+          } else {
+            resolve({ success: true, data: stdout });
+          }
+        });
+
+        helm.on('error', (error) => {
+          cleanup();
+          reject({ success: false, error: error.message });
+        });
+      } else {
+        const helm = spawn('helm', args);
+        let stdout = '';
+        let stderr = '';
+
+        helm.stdout.on('data', (data) => {
+          stdout += data.toString();
+        });
+
+        helm.stderr.on('data', (data) => {
+          stderr += data.toString();
+        });
+
+        helm.on('close', (code) => {
+          if (code !== 0) {
+            reject({ success: false, error: stderr || 'Failed to install helm chart' });
+          } else {
+            resolve({ success: true, data: stdout });
+          }
+        });
+
+        helm.on('error', (error) => {
+          reject({ success: false, error: error.message });
+        });
+      }
+    });
+  } catch (error) {
+    return { success: false, error: error.message || 'Failed to install helm chart' };
+  }
+});
+
+ipcMain.handle('helm-uninstall', async (event, releaseName, namespace) => {
+  try {
+    return await new Promise((resolve, reject) => {
+      const args = ['uninstall', releaseName];
+      
+      if (namespace) {
+        args.push('--namespace', namespace);
+      }
+      
+      const helm = spawn('helm', args);
+      let stdout = '';
+      let stderr = '';
+
+      helm.stdout.on('data', (data) => {
+        stdout += data.toString();
+      });
+
+      helm.stderr.on('data', (data) => {
+        stderr += data.toString();
+      });
+
+      helm.on('close', (code) => {
+        if (code !== 0) {
+          reject({ success: false, error: stderr || 'Failed to uninstall helm release' });
+        } else {
+          resolve({ success: true, data: stdout });
+        }
+      });
+
+      helm.on('error', (error) => {
+        reject({ success: false, error: error.message });
+      });
+    });
+  } catch (error) {
+    return { success: false, error: error.message || 'Failed to uninstall helm release' };
+  }
+});
+
+ipcMain.handle('helm-get-values', async (event, releaseName, namespace) => {
+  try {
+    return await new Promise((resolve, reject) => {
+      const args = ['get', 'values', releaseName];
+      
+      if (namespace) {
+        args.push('--namespace', namespace);
+      }
+      
+      const helm = spawn('helm', args);
+      let stdout = '';
+      let stderr = '';
+
+      helm.stdout.on('data', (data) => {
+        stdout += data.toString();
+      });
+
+      helm.stderr.on('data', (data) => {
+        stderr += data.toString();
+      });
+
+      helm.on('close', (code) => {
+        if (code !== 0) {
+          reject({ success: false, error: stderr || 'Failed to get helm values' });
+        } else {
+          resolve({ success: true, data: stdout });
+        }
+      });
+
+      helm.on('error', (error) => {
+        reject({ success: false, error: error.message });
+      });
+    });
+  } catch (error) {
+    return { success: false, error: error.message || 'Failed to get helm values' };
   }
 });

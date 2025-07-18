@@ -19,7 +19,6 @@ export const PodsListView = (): JSX.Element => {
     } catch (e) {
       console.error("Failed to fetch pods:", e);
       setError("Failed to fetch pods.");
-    } finally {
     }
   };
 

@@ -136,7 +136,7 @@ export const MCPServerDetailsView = (): JSX.Element => {
             
             {/* Timeline items */}
             <div className="space-y-6">
-              {history.map((call, index) => (
+              {history.map((call, _index) => (
                 <div key={call.id} className="relative flex">
                   {/* Timeline dot */}
                   <div className={`absolute left-7 w-3 h-3 rounded-full border-2 border-zinc-900 ${

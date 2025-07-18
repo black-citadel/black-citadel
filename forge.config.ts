@@ -10,7 +10,8 @@ import { rendererConfig } from './webpack.renderer.config';
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name: 'Black Citadel'
+    name: 'Black Citadel',
+    executableName: 'black-citadel'
   },
   makers: [
     {

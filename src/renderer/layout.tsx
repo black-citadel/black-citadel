@@ -49,6 +49,7 @@ import { CustomResourceDetailsView } from '@views/cluster/custom-resources';
 import { EventsListView, EventsDetailsView } from '@views/cluster/events';
 import { PortForwardsListView } from '@views/tools/port-forwards';
 import { MCPServerListView, MCPServerDetailsView } from '@views/operations/mcp-server';
+import { HelmListView, HelmDetailsView, HelmInstallView } from '@views/operations/helm';
 import { PreferencesListView } from '@views/settings/preferences';
 
 export const Layout = () => {
@@ -294,6 +295,9 @@ export const Layout = () => {
                   )}
                 </SidebarLabel>
               </SidebarItem>
+              <SidebarItem onClick={() => setViewContext({ resource: Resources.Helm, action: ResourceAction.List })} current={viewContext.resource === Resources.Helm}>
+                <SidebarLabel>{Resources.Helm}</SidebarLabel>
+              </SidebarItem>
             </SidebarSection>
 
             <SidebarSection>
@@ -479,6 +483,9 @@ export const Layout = () => {
         {viewContext.resource === Resources.PortForwards && viewContext.action === ResourceAction.List && <PortForwardsListView />}
         {viewContext.resource === Resources.MCPServer && viewContext.action === ResourceAction.List && <MCPServerListView />}
         {viewContext.resource === Resources.MCPServer && viewContext.action === ResourceAction.Details && <MCPServerDetailsView />}
+        {viewContext.resource === Resources.Helm && viewContext.action === ResourceAction.List && <HelmListView />}
+        {viewContext.resource === Resources.Helm && viewContext.action === ResourceAction.Details && <HelmDetailsView />}
+        {viewContext.resource === Resources.Helm && viewContext.action === ResourceAction.Create && <HelmInstallView />}
 
         {/* Settings */}
         {viewContext.resource === Resources.Preferences && viewContext.action === ResourceAction.List && <PreferencesListView />}
