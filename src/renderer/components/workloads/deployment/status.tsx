@@ -2,6 +2,7 @@ import k8s = require('@kubernetes/client-node');
 import { Subheading } from '@components/base/heading';
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from '@protoku/design-system';
 import { DetailsItem } from '@components/details-item';
+import { Container } from '@components/base/container';
 
 interface Props {
   status: k8s.V1DeploymentStatus;
@@ -10,7 +11,7 @@ interface Props {
 export const DeploymentStatus = ({ status }: Props): JSX.Element => {
   return (
     <>
-      <Subheading className='mt-8 mb-4'>Status</Subheading>
+      <Container title='Status'>
 
       <div className="grid grid-cols-5 gap-4">
         <DetailsItem label="Replicas">
@@ -34,11 +35,9 @@ export const DeploymentStatus = ({ status }: Props): JSX.Element => {
         </DetailsItem>
       </div >
 
-      <Subheading className='mt-8 mb-4 text-sm'>
-        <span title="Condition describes the state of a deployment at a certain point." className='cursor-help'>
-          Conditions
-        </span>
-      </Subheading>
+      </Container>
+
+      <Container title='Conditions'>
       <Table className='m-2'>
         <TableHead>
           <TableRow>
@@ -86,6 +85,7 @@ export const DeploymentStatus = ({ status }: Props): JSX.Element => {
           ))}
         </TableBody>
       </Table>
+      </Container>
     </>
   );
 };

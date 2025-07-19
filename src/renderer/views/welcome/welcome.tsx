@@ -75,7 +75,7 @@ export const WelcomeView = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#171717] flex flex-col items-center justify-center p-8">
+    <div className="min-h-screen bg-neutral-100 dark:bg-neutral-950 flex flex-col items-center justify-center p-8">
       <div className="max-w-4xl w-full">
         {/* Logo and Title */}
         <div className="text-center mb-12">
@@ -85,7 +85,7 @@ export const WelcomeView = () => {
         </div>
 
         {/* Main Content */}
-        <div className="bg-[#101010] border border-neutral-800 rounded-sm p-8 mb-8">
+        <div className="border border-dashed border-neutral-800 p-8 mb-8">
           <Heading className="mb-6">
             Select a Kubernetes context
           </Heading>

@@ -21,7 +21,7 @@ export function Subheading({ className, level = 2, ...props }: HeadingProps) {
   return (
     <Element
       {...props}
-      className={clsx(className, 'text-lg font-semibold text-zinc-950 dark:text-white')}
+      className={clsx(className, 'text-sm font-semibold text-zinc-950 dark:text-white uppercase tracking-wider m-0')}
     />
   )
 }

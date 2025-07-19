@@ -176,7 +176,7 @@ export const PortForwardDialog = ({
           <Button variant="secondary" onClick={onClose} disabled={isSubmitting}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting}>
+          <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
             {isSubmitting ? 'Creating...' : 'Start Port Forward'}
           </Button>
         </div>

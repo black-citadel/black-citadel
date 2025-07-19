@@ -15,6 +15,7 @@ import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
 import { ScaleAction } from '@components/resources/ResourceActions/actions/ScaleAction';
 import type { V1Deployment, V1PodList } from '@utils/k8s-types';
+import { Container } from '@components/base/container';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -109,14 +110,15 @@ export const DeploymentsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && deployment && (
         <div className='m-2'>
-          <MetadataDetails metadata={deployment.metadata} />
-
           <DeploymentSpec spec={deployment.spec} />
 
-          <Subheading className='mt-8'>Pods</Subheading>
-          {pods && <PodList pods={pods} />}
-
           <DeploymentStatus status={deployment.status} />
+
+          <Container title='Pods'>
+            {pods && <PodList pods={pods} />}
+          </Container>
+
+          <MetadataDetails metadata={deployment.metadata} />
         </div>
 
       )}

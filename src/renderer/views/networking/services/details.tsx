@@ -18,6 +18,7 @@ import { MetadataDetails } from '@components/metadata';
 import { PortForwardDialog } from '@components/tools/port-forward/dialog';
 import { PortOption, PortForwardRequest } from '@utils/types';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -68,7 +69,7 @@ export const ServicesDetailsView = (): JSX.Element => {
 
   const getAvailablePorts = (): PortOption[] => {
     if (!service?.spec?.ports) return [];
-    
+
     return service.spec.ports.map(port => ({
       name: port.name,
       port: port.port,
@@ -82,7 +83,7 @@ export const ServicesDetailsView = (): JSX.Element => {
     if (result.success) {
       setPortForwardSuccess(`Port forward established on localhost:${result.localPort}`);
       setTimeout(() => setPortForwardSuccess(null), 5000);
-      
+
       // Open in browser if requested
       if (openInBrowser && result.localPort) {
         const isHttps = request.remotePort === 443 || request.remotePort === 8443;
@@ -96,7 +97,7 @@ export const ServicesDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader 
+      <DetailsHeader
         error={error}
         actions={
           <ResourceActions
@@ -130,24 +131,31 @@ export const ServicesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && service &&
         <div className='m-2'>
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <div className="grid grid-cols-3 gap-4">
-            <DetailsSelector labels={service.spec.selector} />
 
-            <DetailsItem label="Type">
-              {service.spec.type}
-            </DetailsItem>
+          <Container title="Configuration">
 
-            <DetailsItem label="Cluster IP">
-              {service.spec.clusterIP}
-            </DetailsItem>
-          </div>
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsSelector labels={service.spec.selector} />
 
-          <Subheading className='mt-8 mb-4'>Ports</Subheading>
-          <ServicePorts ports={service.spec.ports} />
+              <DetailsItem label="Type">
+                {service.spec.type}
+              </DetailsItem>
 
-          <Subheading className='mt-8 mb-4'>Pods</Subheading>
-          {pods && <PodList pods={pods} />}
+              <DetailsItem label="Cluster IP">
+                {service.spec.clusterIP}
+              </DetailsItem>
+            </div>
+          </Container>
+
+          <Container title="Ports">
+            <ServicePorts ports={service.spec.ports} />
+          </Container>
+
+
+          <Container title="Pods">
+            {pods && <PodList pods={pods} />}
+          </Container>
+
 
           <MetadataDetails metadata={service.metadata} />
         </div>

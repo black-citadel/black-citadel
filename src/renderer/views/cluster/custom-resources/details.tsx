@@ -9,6 +9,7 @@ import { DetailsHeader } from '@components/details-header';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { Badge } from '@protoku/design-system';
+import { Container } from '@components/base/container';
 
 export const CustomResourceDetailsView = (): JSX.Element => {
     const { viewContext } = useView()
@@ -70,8 +71,8 @@ export const CustomResourceDetailsView = (): JSX.Element => {
         </DetailsHeader>
   
         {activeTab === ResourceTabs.Details && customResource && (
-          <div className='m-2 flex flex-col gap-8'>
-            <MetadataDetails metadata={customResource.metadata} />
+          <div className='m-2'>
+            
             
             {customResource.spec && (
               <div>
@@ -93,9 +94,7 @@ export const CustomResourceDetailsView = (): JSX.Element => {
             )}
 
             {customResource.status && (
-              <div>
-                <Subheading>Status</Subheading>
-                <div className='mt-4 space-y-2'>
+              <Container title='Status'>
                   {Object.entries(customResource.status).map(([key, value]) => (
                     <DetailsItem key={key} label={key}>
                       {typeof value === 'object' ? (
@@ -107,9 +106,11 @@ export const CustomResourceDetailsView = (): JSX.Element => {
                       )}
                     </DetailsItem>
                   ))}
-                </div>
-              </div>
+              </Container>
             )}
+
+
+            <MetadataDetails metadata={customResource.metadata} />
           </div>
         )}
   

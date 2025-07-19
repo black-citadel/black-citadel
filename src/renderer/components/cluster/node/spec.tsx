@@ -12,7 +12,7 @@ export const NodeSpec = ({ node }: Props): JSX.Element => {
     const unschedulable = node.spec.unschedulable || false;
 
     return (
-        <div className="border p-4 rounded-md border-neutral-800">
+        <div>
             <DescriptionList>
                 <DescriptionTerm>Schedulable</DescriptionTerm>
                 <DescriptionDetails>
@@ -38,7 +38,7 @@ export const NodeSpec = ({ node }: Props): JSX.Element => {
                 {node.spec.providerID && (
                     <>
                         <DescriptionTerm>Provider ID</DescriptionTerm>
-                        <DescriptionDetails className="font-mono text-xs">{node.spec.providerID}</DescriptionDetails>
+                        <DescriptionDetails>{node.spec.providerID}</DescriptionDetails>
                     </>
                 )}
             </DescriptionList>

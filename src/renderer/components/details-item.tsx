@@ -13,7 +13,7 @@ interface DetailsItemProps {
 export const DetailsItem = ({ label, help, children }: DetailsItemProps): JSX.Element => {
   return (
     <div className="">
-      <dt className="text-sm leading-6 text-zinc-400">{label} {help && <HelpButton title={label} content={help.help} />}</dt>
+      <dt className="text-xs leading-6 text-neutral-400 uppercase tracking-wider">{label}</dt>
       <dd className="mt-1 text-sm leading-6 text-white sm:mt-2 mb-6">{children}</dd>
     </div>
   )
@@ -79,7 +79,7 @@ export const DetailsSelector = ({ labels }: DetailsSelectorProps): JSX.Element =
         <>
           {Object.entries(labels).map(([key, value]) => (
             <div key={key}>
-              <span className="bg-zinc-800 py-0.5 px-2 mb-2 rounded text-xs">
+              <span className="bg-neutral-900 py-0.5 px-2 mb-2 rounded text-xs">
                 {key}: {value}
               </span>
             </div>
@@ -138,7 +138,7 @@ export const DetailsAnnotations = ({ annotations }: DetailsAnnotationsProps): JS
             .filter(([key]) => key !== 'kubectl.kubernetes.io/last-applied-configuration')
             .map(([key, value]) => (
               <div key={key} className="mb-2">
-                <span className="bg-zinc-800 py-0.5 px-2 rounded text-xs">
+                <span className="bg-neutral-900 py-0.5 px-2 rounded text-xs">
                   {key}:
                 </span>
                 {renderAnnotationValue(key, value)}

@@ -22,6 +22,7 @@ import { Alert, AlertTitle, AlertDescription, AlertActions } from '@components/b
 import { NodeLabels } from '@components/cluster/node/labels';
 import { NodeTaints } from '@components/cluster/node/taints';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 
 export const NodeDetailsView = (): JSX.Element => {
@@ -142,23 +143,19 @@ export const NodeDetailsView = (): JSX.Element => {
   
         {activeTab === ResourceTabs.Details && node && (
           <div className='m-2'>
-            <Subheading className='mb-4'>Labels</Subheading>
-            <div className="border p-4 rounded-md border-neutral-800 mb-8">
-              <NodeLabels labels={node.metadata?.labels} />
-            </div>
-
             <Subheading className='mb-4'>Taints</Subheading>
             <div className="mb-8">
               <NodeTaints taints={node.spec?.taints} />
             </div>
 
+            <NodeStatus2 node={node} nodeMetrics={currentNodeMetrics} />
+
+            <Container title="Spec">
+              <NodeSpec node={node} />
+            </Container>
+
             <MetadataDetails metadata={node.metadata} />
 
-            <Subheading className='mt-8 mb-4'>Spec</Subheading>
-            <NodeSpec node={node} />
-
-            <Subheading className='mt-8 mb-4'>Status</Subheading>
-            <NodeStatus2 node={node} nodeMetrics={currentNodeMetrics} />
           </div>
         )}
 

@@ -9,7 +9,7 @@ interface Props {
 export const NodeTaints = ({ taints }: Props): JSX.Element => {
     if (!taints || taints.length === 0) {
         return (
-            <div className="p-4 bg-green-800/20 border border-green-500 rounded-md">
+            <div className="p-4 bg-green-800/20 border border-green-500">
                 <p className="text-sm text-green-500">No taints - All pods can be scheduled on this node</p>
             </div>
         );
@@ -44,7 +44,7 @@ export const NodeTaints = ({ taints }: Props): JSX.Element => {
     return (
         <div className="space-y-3">
             {taints.map((taint, index) => (
-                <div key={index} className="p-4 bg-neutral-900 border border-neutral-700 rounded-md">
+                <div key={index} className="p-4 bg-neutral-900 border border-neutral-800">
                     <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-3">
                             <Badge variant={getTaintVariant(taint.effect)} className="text-sm">

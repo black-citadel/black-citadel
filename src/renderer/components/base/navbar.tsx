@@ -43,7 +43,7 @@ export const NavbarItem = forwardRef(function NavbarItem(
 ) {
   const classes = clsx(
     // Base
-    'relative flex min-w-0 items-center gap-3 rounded-lg p-2 text-left text-base/6 font-medium text-zinc-950 sm:text-sm/5',
+    'relative flex min-w-0 items-center gap-3 p-2 text-left text-xs font-semibold text-zinc-950 uppercase tracking-widest',
     // Leading icon/icon-only
     'data-[slot=icon]:*:size-6 data-[slot=icon]:*:shrink-0 data-[slot=icon]:*:fill-zinc-500 sm:data-[slot=icon]:*:size-5',
     // Trailing icon (down chevron or similar)
@@ -65,7 +65,7 @@ export const NavbarItem = forwardRef(function NavbarItem(
       {current && (
         <motion.span
           layoutId="current-indicator"
-          className="absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full bg-zinc-950 dark:bg-white"
+          className="absolute inset-x-2 -bottom-2.5 h-0.5 bg-zinc-950 dark:bg-white"
         />
       )}
       {'href' in props ? (
