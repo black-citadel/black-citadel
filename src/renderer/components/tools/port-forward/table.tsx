@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { ListTable } from '@components/list-table';
 import { Badge } from '@protoku/design-system';
 import { Button } from '@protoku/design-system';
@@ -6,6 +6,7 @@ import { PortForwardInfo } from '@utils/types';
 import { calculateAge } from '@utils/helpers';
 import { ResourceLink } from '@components/base/resource-link';
 import { Resources, PortForwardStatus } from '@utils/enums';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface PortForwardTableProps {
   portForwards: PortForwardInfo[];
@@ -20,8 +21,11 @@ export const PortForwardTable = ({
   onCopyUrl, 
   onOpen 
 }: PortForwardTableProps) => {
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
+  
   const rows = useMemo(() => {
-    return portForwards.map((pf) => {
+    // Create data rows with raw values for sorting
+    const dataRows = portForwards.map((pf) => {
       const statusColor = {
         [PortForwardStatus.Active]: 'green',
         [PortForwardStatus.Connecting]: 'yellow',
@@ -33,6 +37,25 @@ export const PortForwardTable = ({
       const isHttps = pf.remotePort === 443 || pf.remotePort === 8443;
       const url = `${isHttps ? 'https' : 'http'}://${pf.localAddress}:${pf.localPort}`;
 
+      return {
+        Resource: pf.resourceName,
+        Type: pf.resourceType,
+        Namespace: pf.namespace,
+        'Local → Remote': `${pf.localPort} → ${pf.remotePort}`,
+        Status: pf.status,
+        Uptime: pf.startTime.getTime(),
+        Actions: pf.id,
+        _raw: { pf, statusColor, isHttp, isHttps, url }
+      };
+    });
+
+    // Sort the data rows
+    const sortedRows = sortRows(dataRows, sortConfig);
+
+    // Map sorted data to React components
+    return sortedRows.map(row => {
+      const { pf, statusColor, isHttp, isHttps, url } = row._raw;
+      
       return {
         Resource: (
           <div className="flex items-center space-x-2">
@@ -91,12 +114,14 @@ export const PortForwardTable = ({
         )
       };
     });
-  }, [portForwards, onStop, onCopyUrl, onOpen]);
+  }, [portForwards, onStop, onCopyUrl, onOpen, sortConfig]);
 
   return (
     <ListTable
       headers={['Resource', 'Type', 'Namespace', 'Local → Remote', 'Status', 'Uptime', 'Actions']}
       rows={rows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
     />
   );
 };

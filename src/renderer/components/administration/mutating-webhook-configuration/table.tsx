@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListTable } from '@components/list-table';
 import { calculateAge } from '@utils/helpers';
+import { SortConfig, sortRows } from '@utils/sorting';
 import { MutatingWebhookConfigurationResourceLink } from './resource-link';
 
 interface Props {
@@ -8,18 +10,36 @@ interface Props {
 }
 
 export const MutatingWebhookConfigurationList = ({ mutatingWebhookConfigurations }: Props): JSX.Element => {
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
   const headers = ['Name', 'Webhooks', 'Age'];
 
-  const processedRows = mutatingWebhookConfigurations.items.map(mwc => ({
-    Name: <MutatingWebhookConfigurationResourceLink name={mwc.metadata.name} />,
-    Webhooks: formatWebhooks(mwc.webhooks),
-    Age: mwc.metadata.creationTimestamp 
-      ? calculateAge(new Date(mwc.metadata.creationTimestamp))
+  // Create data rows with raw values for sorting
+  const dataRows = mutatingWebhookConfigurations.items.map(mwc => ({
+    Name: mwc.metadata.name || '',
+    Webhooks: mwc.webhooks?.length || 0,
+    Age: mwc.metadata.creationTimestamp || '',
+    _raw: mwc
+  }));
+
+  // Sort the data rows
+  const sortedRows = sortRows(dataRows, sortConfig);
+
+  // Map sorted data to React components
+  const processedRows = sortedRows.map(row => ({
+    Name: <MutatingWebhookConfigurationResourceLink name={row._raw.metadata.name} />,
+    Webhooks: formatWebhooks(row._raw.webhooks),
+    Age: row._raw.metadata.creationTimestamp 
+      ? calculateAge(new Date(row._raw.metadata.creationTimestamp))
       : 'N/A'
   }));
 
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   );
 };
 

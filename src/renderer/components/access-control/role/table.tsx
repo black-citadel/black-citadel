@@ -3,6 +3,8 @@ import { ListTable } from '@components/list-table';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { RoleResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
+import { useState } from 'react';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface Props {
   roles: k8s.V1RoleList;
@@ -10,6 +12,7 @@ interface Props {
 
 export const RoleList = ({ roles }: Props): JSX.Element => {
   const { activeNamespace } = useView();
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
 
   const headers = ['Name', 'Namespace', 'Rules', 'Age'];
 
@@ -17,17 +20,40 @@ export const RoleList = ({ roles }: Props): JSX.Element => {
   ? roles.items 
   : roles.items.filter(role => role.metadata.namespace === activeNamespace);
 
-  const processedRows = filteredRoles.map(role => ({
-    Name: <RoleResourceLink name={role.metadata.name} namespace={role.metadata.namespace} />,
-    Namespace: <NamespaceResourceLink name={role.metadata.namespace} />,
-    Rules: formatRules(role.rules),
+  // First, create rows with raw data for sorting
+  const dataRows = filteredRoles.map(role => ({
+    Name: role.metadata.name,
+    Namespace: role.metadata.namespace,
+    Rules: role.rules?.length || 0,
     Age: role.metadata.creationTimestamp 
       ? calculateAge(new Date(role.metadata.creationTimestamp))
-      : 'N/A'
+      : 'N/A',
+    _role: role // Keep reference to original role
   }));
 
+  // Sort the data rows
+  const sortedRows = sortRows(dataRows, sortConfig);
+
+  // Then map to React components after sorting
+  const processedRows = sortedRows.map(row => {
+    const role = row._role;
+    return {
+      Name: <RoleResourceLink name={role.metadata.name} namespace={role.metadata.namespace} />,
+      Namespace: <NamespaceResourceLink name={role.metadata.namespace} />,
+      Rules: formatRules(role.rules),
+      Age: role.metadata.creationTimestamp 
+        ? calculateAge(new Date(role.metadata.creationTimestamp))
+        : 'N/A'
+    };
+  });
+
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   );
 };
 

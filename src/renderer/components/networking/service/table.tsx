@@ -3,6 +3,8 @@ import { ListTable } from '@components/list-table';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { ServiceResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
+import { useState } from 'react';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface Props {
   services: k8s.V1ServiceList
@@ -10,6 +12,7 @@ interface Props {
 
 export const ServiceList = ({ services }: Props): JSX.Element => {
   const { activeNamespace } = useView();
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
 
   const headers = ['Name', 'Namespace', 'Type', 'Cluster IP', 'External IP', 'Ports'];
 
@@ -17,17 +20,40 @@ export const ServiceList = ({ services }: Props): JSX.Element => {
   ? services.items 
   : services.items.filter(service => service.metadata.namespace === activeNamespace);
 
-  const processedRows = filteredServices.map(service => ({
-    Name: <ServiceResourceLink name={service.metadata.name} namespace={service.metadata.namespace} />,
-    Namespace: <NamespaceResourceLink name={service.metadata.namespace} />,
+  // First, create rows with raw data for sorting
+  const dataRows = filteredServices.map(service => ({
+    Name: service.metadata.name,
+    Namespace: service.metadata.namespace,
     Type: getServiceType(service),
     'Cluster IP': getClusterIP(service),
     'External IP': getExternalIP(service),
-    Ports: getPorts(service)
+    Ports: service.spec?.ports?.length || 0,
+    _service: service // Keep reference to original service
   }));
 
+  // Sort the data rows
+  const sortedServices = sortRows(dataRows, sortConfig);
+
+  // Then map to React components after sorting
+  const processedRows = sortedServices.map(row => {
+    const service = row._service;
+    return {
+      Name: <ServiceResourceLink name={service.metadata.name} namespace={service.metadata.namespace} />,
+      Namespace: <NamespaceResourceLink name={service.metadata.namespace} />,
+      Type: getServiceType(service),
+      'Cluster IP': getClusterIP(service),
+      'External IP': getExternalIP(service),
+      Ports: getPorts(service)
+    };
+  });
+
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   )
 }
 

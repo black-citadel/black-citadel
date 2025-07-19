@@ -1,23 +1,44 @@
+import { useState } from 'react';
 import k8s from '@kubernetes/client-node';
 import { ListTable } from '@components/list-table';
 import { calculateAge } from '@utils/helpers';
+import { sortRows, type SortConfig } from '@utils/sorting';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 
 interface Props {
   events: k8s.CoreV1EventList;
 }
 
+interface DataRow {
+  Type: string;
+  Age: number;
+  Object: string;
+  Namespace: string;
+  'Event Details': string;
+  _display: {
+    Type: JSX.Element;
+    Age: JSX.Element;
+    Object: JSX.Element;
+    Namespace: JSX.Element;
+    'Event Details': JSX.Element;
+  };
+}
+
 export const EventList = ({ events }: Props): JSX.Element => {
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>({
+    column: 'Age',
+    direction: 'desc'
+  });
   const headers = ['Type', 'Age', 'Object', 'Namespace', 'Event Details'];
 
-  const processedRows = events.items
-    .sort((a, b) => {
-      // Sort by lastTimestamp (most recent first)
-      const aTime = a.lastTimestamp ? new Date(a.lastTimestamp).getTime() : 0;
-      const bTime = b.lastTimestamp ? new Date(b.lastTimestamp).getTime() : 0;
-      return bTime - aTime;
-    })
-    .map(event => ({
+  // Create data rows with raw values for sorting
+  const dataRows: DataRow[] = events.items.map(event => ({
+    Type: event.type || 'Unknown',
+    Age: event.lastTimestamp ? new Date(event.lastTimestamp).getTime() : 0,
+    Object: event.involvedObject ? `${event.involvedObject.kind}/${event.involvedObject.name}` : 'N/A',
+    Namespace: event.metadata?.namespace || '',
+    'Event Details': `${event.reason || 'N/A'} ${event.message || ''}`,
+    _display: {
       Type: (
         <span className={`font-medium ${event.type === 'Warning' ? 'text-red-600' : 'text-green-500'}`}>
           {event.type || 'Unknown'}
@@ -52,9 +73,27 @@ export const EventList = ({ events }: Props): JSX.Element => {
           )}
         </div>
       )
-    }));
+    }
+  }));
+
+  // Sort the data rows
+  const sortedRows = sortRows(dataRows, sortConfig);
+
+  // Map sorted data to display components
+  const processedRows = sortedRows.map(row => ({
+    Type: row._display.Type,
+    Age: row._display.Age,
+    Object: row._display.Object,
+    Namespace: row._display.Namespace,
+    'Event Details': row._display['Event Details']
+  }));
 
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   );
 };

@@ -1,43 +1,50 @@
+import { useState } from 'react';
 import { ListTable } from '@components/list-table';
 import { MCPConnection } from '@utils/types';
 import { MCPConnectionResourceLink } from './resource-link';
 import { formatDistanceToNow } from 'date-fns';
 import { Status } from '@protoku/design-system';
-import { useState } from 'react';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface Props {
   connections: MCPConnection[];
 }
 
 export const MCPConnectionList = ({ connections }: Props): JSX.Element => {
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
 
   const headers = ['Name', 'Session ID', 'Status', 'Connected', 'Last Activity', 'Tools Used'];
 
-  const sortedConnections = [...connections].sort((a, b) => {
-    if (!sortDirection) return 0;
-    const nameA = (a.agentName || a.id).toLowerCase();
-    const nameB = (b.agentName || b.id).toLowerCase();
-    return sortDirection === 'asc'
-      ? nameA.localeCompare(nameB)
-      : nameB.localeCompare(nameA);
-  });
+  // Create data rows with raw values for sorting
+  const dataRows = connections.map(connection => ({
+    Name: connection.agentName || connection.id,
+    'Session ID': connection.id,
+    Status: 'Active',
+    Connected: connection.connectedAt,
+    'Last Activity': connection.lastActivity,
+    'Tools Used': connection.toolsUsed,
+    _raw: connection
+  }));
 
-  const processedRows = sortedConnections.map(connection => ({
-    'Name': <MCPConnectionResourceLink connectionId={connection.id} agentName={connection.agentName} />,
-    'Session ID': <>{connection.id}</>,
+  // Sort the data rows
+  const sortedRows = sortRows(dataRows, sortConfig);
+
+  // Map sorted data to React components
+  const processedRows = sortedRows.map(row => ({
+    'Name': <MCPConnectionResourceLink connectionId={row._raw.id} agentName={row._raw.agentName} />,
+    'Session ID': <>{row._raw.id}</>,
     'Status': <Status variant="success">Active</Status>,
-    'Connected': formatDistanceToNow(new Date(connection.connectedAt), { addSuffix: true }),
-    'Last Activity': formatDistanceToNow(new Date(connection.lastActivity), { addSuffix: true }),
-    'Tools Used': connection.toolsUsed
+    'Connected': formatDistanceToNow(new Date(row._raw.connectedAt), { addSuffix: true }),
+    'Last Activity': formatDistanceToNow(new Date(row._raw.lastActivity), { addSuffix: true }),
+    'Tools Used': row._raw.toolsUsed
   }));
 
   return (
     <ListTable
       headers={headers}
       rows={processedRows}
-      sortDirection={sortDirection}
-      onSort={setSortDirection}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
     />
   );
 };

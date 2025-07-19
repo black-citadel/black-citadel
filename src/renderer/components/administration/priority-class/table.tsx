@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListTable } from '@components/list-table';
 import { calculateAge } from '@utils/helpers';
+import { SortConfig, sortRows } from '@utils/sorting';
 import { PriorityClassResourceLink } from './resource-link';
 
 interface Props {
@@ -8,21 +10,42 @@ interface Props {
 }
 
 export const PriorityClassList = ({ priorityClasses }: Props): JSX.Element => {
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
   const headers = ['Name', 'Value', 'Global Default', 'Non-Preempting', 'Description', 'Age'];
 
-  const processedRows = priorityClasses.items.map(pc => ({
-    Name: <PriorityClassResourceLink name={pc.metadata.name} />,
+  // Create data rows with raw values for sorting
+  const dataRows = priorityClasses.items.map(pc => ({
+    Name: pc.metadata.name || '',
     Value: pc.value,
-    'Global Default': formatGlobalDefault(pc.globalDefault),
-    'Non-Preempting': formatNonPreempting(pc.preemptionPolicy),
-    Description: formatDescription(pc.description),
-    Age: pc.metadata.creationTimestamp 
-      ? calculateAge(new Date(pc.metadata.creationTimestamp))
+    'Global Default': pc.globalDefault === true,
+    'Non-Preempting': pc.preemptionPolicy === 'Never',
+    Description: pc.description || '',
+    Age: pc.metadata.creationTimestamp || '',
+    _raw: pc
+  }));
+
+  // Sort the data rows
+  const sortedRows = sortRows(dataRows, sortConfig);
+
+  // Map sorted data to React components
+  const processedRows = sortedRows.map(row => ({
+    Name: <PriorityClassResourceLink name={row._raw.metadata.name} />,
+    Value: row._raw.value,
+    'Global Default': formatGlobalDefault(row._raw.globalDefault),
+    'Non-Preempting': formatNonPreempting(row._raw.preemptionPolicy),
+    Description: formatDescription(row._raw.description),
+    Age: row._raw.metadata.creationTimestamp 
+      ? calculateAge(new Date(row._raw.metadata.creationTimestamp))
       : 'N/A'
   }));
 
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   );
 };
 

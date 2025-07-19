@@ -6,6 +6,7 @@ import { PodResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
 import { useState } from 'react';
 import { Status } from '@protoku/design-system';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface Props {
   pods: k8s.V1PodList
@@ -13,7 +14,7 @@ interface Props {
 
 export const PodList = ({ pods }: Props): JSX.Element => {
   const { activeNamespace } = useView();
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
 
   const headers = ['Name', 'Namespace', 'Containers', 'Status', 'Restarts', 'Ports'];
 
@@ -21,30 +22,40 @@ export const PodList = ({ pods }: Props): JSX.Element => {
     ? pods.items
     : pods.items.filter(pod => pod.metadata.namespace === activeNamespace);
 
-  const sortedPods = [...filteredPods].sort((a, b) => {
-    if (!sortDirection) return 0;
-    const nameA = a.metadata.name.toLowerCase();
-    const nameB = b.metadata.name.toLowerCase();
-    return sortDirection === 'asc'
-      ? nameA.localeCompare(nameB)
-      : nameB.localeCompare(nameA);
-  });
-
-  const processedRows = sortedPods.map(pod => ({
-    Name: <PodResourceLink name={pod.metadata.name} namespace={pod.metadata.namespace} />,
-    Namespace: <NamespaceResourceLink name={pod.metadata.namespace} />,
-    Containers: getContainers(pod),
-    Status: formatPodStatus(pod.status),
-    Restarts: getRestarts(pod),
-    Ports: getPorts(pod)
+  // First, create rows with raw data for sorting
+  const dataRows = filteredPods.map(pod => ({
+    Name: pod.metadata.name,
+    Namespace: pod.metadata.namespace,
+    Containers: pod.status?.containerStatuses?.length || 0,
+    Status: pod.status?.phase || 'Unknown',
+    Restarts: [...(pod.status?.containerStatuses ?? []), ...(pod.status?.initContainerStatuses ?? [])]
+      .reduce((sum, status) => sum + (status.restartCount ?? 0), 0),
+    Ports: pod.spec?.containers.flatMap(c => c.ports || []).length || 0,
+    _pod: pod // Keep reference to original pod
   }));
+
+  // Sort the data rows
+  const sortedPods = sortRows(dataRows, sortConfig);
+
+  // Then map to React components after sorting
+  const processedRows = sortedPods.map(row => {
+    const pod = row._pod;
+    return {
+      Name: <PodResourceLink name={pod.metadata.name} namespace={pod.metadata.namespace} />,
+      Namespace: <NamespaceResourceLink name={pod.metadata.namespace} />,
+      Containers: getContainers(pod),
+      Status: formatPodStatus(pod.status),
+      Restarts: getRestarts(pod),
+      Ports: getPorts(pod)
+    };
+  });
 
   return (
     <ListTable
       headers={headers}
       rows={processedRows}
-      sortDirection={sortDirection}
-      onSort={setSortDirection}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
     />
   )
 }

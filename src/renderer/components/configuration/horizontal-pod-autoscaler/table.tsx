@@ -4,6 +4,8 @@ import { calculateAge } from '@utils/helpers';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { HorizontalPodAutoscalerResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
+import { useState } from 'react';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface Props {
   hpas: k8s.V2HorizontalPodAutoscalerList;
@@ -11,6 +13,7 @@ interface Props {
 
 export const HorizontalPodAutoscalerList = ({ hpas }: Props): JSX.Element => {
   const { activeNamespace } = useView();
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
 
   const headers = ['Name', 'Namespace', 'Reference', 'Targets', 'Min Pods', 'Max Pods', 'Replicas', 'Age'];
 
@@ -18,21 +21,48 @@ export const HorizontalPodAutoscalerList = ({ hpas }: Props): JSX.Element => {
   ? hpas.items 
   : hpas.items.filter(hpa => hpa.metadata.namespace === activeNamespace);
 
-  const processedRows = filteredHPAs.map(hpa => ({
-    Name: <HorizontalPodAutoscalerResourceLink name={hpa.metadata.name} namespace={hpa.metadata.namespace} />,
-    Namespace: <NamespaceResourceLink name={hpa.metadata.namespace} />,
+  // First, create rows with raw data for sorting
+  const dataRows = filteredHPAs.map(hpa => ({
+    Name: hpa.metadata.name,
+    Namespace: hpa.metadata.namespace,
     Reference: formatScaleTargetRef(hpa.spec?.scaleTargetRef),
-    Targets: formatMetrics(hpa.spec?.metrics, hpa.status?.currentMetrics),
-    'Min Pods': hpa.spec?.minReplicas || '-',
-    'Max Pods': hpa.spec?.maxReplicas || '-',
-    Replicas: `${hpa.status?.currentReplicas || '-'} / ${hpa.status?.desiredReplicas || '-'}`,
+    Targets: hpa.spec?.metrics?.length || 0,
+    'Min Pods': hpa.spec?.minReplicas || 0,
+    'Max Pods': hpa.spec?.maxReplicas || 0,
+    Replicas: hpa.status?.currentReplicas || 0,
     Age: hpa.metadata.creationTimestamp 
-      ? calculateAge(new Date(hpa.metadata.creationTimestamp))
-      : 'N/A'
+      ? new Date(hpa.metadata.creationTimestamp).getTime()
+      : 0,
+    _hpa: hpa // Keep reference to original hpa
   }));
 
+  // Sort the data rows
+  const sortedHPAs = sortRows(dataRows, sortConfig);
+
+  // Then map to React components after sorting
+  const processedRows = sortedHPAs.map(row => {
+    const hpa = row._hpa;
+    return {
+      Name: <HorizontalPodAutoscalerResourceLink name={hpa.metadata.name} namespace={hpa.metadata.namespace} />,
+      Namespace: <NamespaceResourceLink name={hpa.metadata.namespace} />,
+      Reference: formatScaleTargetRef(hpa.spec?.scaleTargetRef),
+      Targets: formatMetrics(hpa.spec?.metrics, hpa.status?.currentMetrics),
+      'Min Pods': hpa.spec?.minReplicas || '-',
+      'Max Pods': hpa.spec?.maxReplicas || '-',
+      Replicas: `${hpa.status?.currentReplicas || '-'} / ${hpa.status?.desiredReplicas || '-'}`,
+      Age: hpa.metadata.creationTimestamp 
+        ? calculateAge(new Date(hpa.metadata.creationTimestamp))
+        : 'N/A'
+    };
+  });
+
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   );
 };
 

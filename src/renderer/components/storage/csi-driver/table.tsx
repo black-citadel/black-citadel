@@ -2,28 +2,57 @@ import k8s = require('@kubernetes/client-node');
 import { ListTable } from '@components/list-table';
 import { calculateAge } from '@utils/helpers';
 import { CSIDriverResourceLink } from './resource-link';
+import { useState } from 'react';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface CSIDriverListProps {
   csiDrivers: k8s.V1CSIDriverList;
 }
 
 export const CSIDriverList = ({ csiDrivers }: CSIDriverListProps): JSX.Element => {
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
   const headers = ['Name', 'Attachment Required', 'Pod Info on Mount', 'Volume Lifecycle Modes', 'Storage Capacity', 'Token Requests', 'Age'];
 
-  const processedRows = csiDrivers.items.map(driver => ({
-    Name: <CSIDriverResourceLink name={driver.metadata.name} />,
-    'Attachment Required': formatBooleanValue(driver.spec?.attachRequired),
-    'Pod Info on Mount': formatBooleanValue(driver.spec?.podInfoOnMount),
+  // First, create rows with raw data for sorting
+  const dataRows = csiDrivers.items.map(driver => ({
+    Name: driver.metadata.name,
+    'Attachment Required': driver.spec?.attachRequired === true ? 'Yes' : driver.spec?.attachRequired === false ? 'No' : '-',
+    'Pod Info on Mount': driver.spec?.podInfoOnMount === true ? 'Yes' : driver.spec?.podInfoOnMount === false ? 'No' : '-',
     'Volume Lifecycle Modes': formatVolumeLifecycleModes(driver.spec?.volumeLifecycleModes),
-    'Storage Capacity': formatBooleanValue(driver.spec?.storageCapacity),
-    'Token Requests': formatTokenRequests(driver.spec?.tokenRequests),
+    'Storage Capacity': driver.spec?.storageCapacity === true ? 'Yes' : driver.spec?.storageCapacity === false ? 'No' : '-',
+    'Token Requests': driver.spec?.tokenRequests?.length || 0,
     Age: driver.metadata.creationTimestamp 
-      ? calculateAge(new Date(driver.metadata.creationTimestamp))
-      : 'N/A'
+      ? new Date(driver.metadata.creationTimestamp).getTime()
+      : 0,
+    _driver: driver // Keep reference to original driver
   }));
 
+  // Sort the data rows
+  const sortedDrivers = sortRows(dataRows, sortConfig);
+
+  // Then map to React components after sorting
+  const processedRows = sortedDrivers.map(row => {
+    const driver = row._driver;
+    return {
+      Name: <CSIDriverResourceLink name={driver.metadata.name} />,
+      'Attachment Required': formatBooleanValue(driver.spec?.attachRequired),
+      'Pod Info on Mount': formatBooleanValue(driver.spec?.podInfoOnMount),
+      'Volume Lifecycle Modes': formatVolumeLifecycleModes(driver.spec?.volumeLifecycleModes),
+      'Storage Capacity': formatBooleanValue(driver.spec?.storageCapacity),
+      'Token Requests': formatTokenRequests(driver.spec?.tokenRequests),
+      Age: driver.metadata.creationTimestamp 
+        ? calculateAge(new Date(driver.metadata.creationTimestamp))
+        : 'N/A'
+    };
+  });
+
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   );
 };
 

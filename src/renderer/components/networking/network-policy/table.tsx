@@ -4,6 +4,8 @@ import { calculateAge } from '@utils/helpers';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { NetworkPolicyResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
+import { useState } from 'react';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface Props {
   networkPolicies: k8s.V1NetworkPolicyList;
@@ -11,6 +13,7 @@ interface Props {
 
 export const NetworkPolicyList = ({ networkPolicies }: Props): JSX.Element => {
   const { activeNamespace } = useView();
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
 
   const headers = ['Name', 'Namespace', 'Pod Selector', 'Policy Types', 'Age'];
 
@@ -18,18 +21,40 @@ export const NetworkPolicyList = ({ networkPolicies }: Props): JSX.Element => {
   ? networkPolicies.items 
   : networkPolicies.items.filter(networkPolicy => networkPolicy.metadata.namespace === activeNamespace);
 
-  const processedRows = filteredNetworkPolicies.map(networkPolicy => ({
-    Name: <NetworkPolicyResourceLink name={networkPolicy.metadata.name} namespace={networkPolicy.metadata.namespace} />,
-    Namespace: <NamespaceResourceLink name={networkPolicy.metadata.namespace} />,
+  // First, create rows with raw data for sorting
+  const dataRows = filteredNetworkPolicies.map(networkPolicy => ({
+    Name: networkPolicy.metadata.name,
+    Namespace: networkPolicy.metadata.namespace,
     'Pod Selector': formatLabelSelector(networkPolicy.spec.podSelector),
     'Policy Types': formatPolicyTypes(networkPolicy.spec.policyTypes),
-    Age: networkPolicy.metadata.creationTimestamp 
-      ? calculateAge(new Date(networkPolicy.metadata.creationTimestamp))
-      : 'N/A'
+    Age: networkPolicy.metadata.creationTimestamp ? new Date(networkPolicy.metadata.creationTimestamp).getTime() : 0,
+    _networkPolicy: networkPolicy // Keep reference to original network policy
   }));
 
+  // Sort the data rows
+  const sortedNetworkPolicies = sortRows(dataRows, sortConfig);
+
+  // Then map to React components after sorting
+  const processedRows = sortedNetworkPolicies.map(row => {
+    const networkPolicy = row._networkPolicy;
+    return {
+      Name: <NetworkPolicyResourceLink name={networkPolicy.metadata.name} namespace={networkPolicy.metadata.namespace} />,
+      Namespace: <NamespaceResourceLink name={networkPolicy.metadata.namespace} />,
+      'Pod Selector': formatLabelSelector(networkPolicy.spec.podSelector),
+      'Policy Types': formatPolicyTypes(networkPolicy.spec.policyTypes),
+      Age: networkPolicy.metadata.creationTimestamp 
+        ? calculateAge(new Date(networkPolicy.metadata.creationTimestamp))
+        : 'N/A'
+    };
+  });
+
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   );
 };
 

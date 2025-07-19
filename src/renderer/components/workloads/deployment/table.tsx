@@ -4,6 +4,8 @@ import { calculateAge, getReplicaStatus } from '@utils/helpers';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { DeploymentResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
+import { useState } from 'react';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface Props {
   deployments: k8s.V1DeploymentList
@@ -11,6 +13,7 @@ interface Props {
 
 export const DeploymentList = ({ deployments }: Props): JSX.Element => {
   const { activeNamespace } = useView();
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
   
   const headers = ['Name', 'Namespace', 'Ready', 'Up-to-date', 'Available', 'Age'];
 
@@ -28,7 +31,14 @@ export const DeploymentList = ({ deployments }: Props): JSX.Element => {
     Age: calculateAge(deployment.metadata.creationTimestamp),
   }));
 
+  const sortedRows = sortRows(processedRows, sortConfig);
+
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={sortedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   )
 }

@@ -11,31 +11,41 @@ import {
 type Row = { [key: string]: React.ReactNode };
 type SortDirection = 'asc' | 'desc' | null;
 
+interface SortConfig {
+  column: string;
+  direction: SortDirection;
+}
+
 interface ListTableProps {
   headers: string[];
   rows: Row[];
-  sortDirection?: SortDirection;
-  onSort?: (direction: SortDirection) => void;
+  sortConfig?: SortConfig;
+  onSort?: (config: SortConfig) => void;
 }
 
 export const ListTable: React.FC<ListTableProps> = ({
   headers,
   rows,
-  sortDirection = null,
+  sortConfig,
   onSort
 }) => {
-  const handleSort = () => {
+  const handleSort = (column: string) => {
     if (!onSort) return;
     
     // Cycle through sort states: null -> asc -> desc -> null
-    const nextDirection = !sortDirection ? 'asc' :
-                         sortDirection === 'asc' ? 'desc' : null;
-    onSort(nextDirection);
+    const currentDirection = sortConfig?.column === column ? sortConfig.direction : null;
+    const nextDirection = !currentDirection ? 'asc' :
+                         currentDirection === 'asc' ? 'desc' : null;
+    
+    onSort({
+      column,
+      direction: nextDirection
+    });
   };
 
-  const getSortIcon = () => {
-    if (!sortDirection) return '↕';
-    return sortDirection === 'asc' ? '↑' : '↓';
+  const getSortIcon = (column: string) => {
+    if (!sortConfig || sortConfig.column !== column) return '↕';
+    return sortConfig.direction === 'asc' ? '↑' : '↓';
   };
   return (
     <Table dense>
@@ -44,15 +54,13 @@ export const ListTable: React.FC<ListTableProps> = ({
           {headers.map((header, index) => (
             <TableHeader
               key={index}
-              onClick={index === 0 ? handleSort : undefined}
-              className={index === 0 ? 'cursor-pointer hover:bg-zinc-900 select-none' : undefined}
+              onClick={() => handleSort(header)}
+              className="cursor-pointer hover:bg-zinc-900 select-none"
             >
               {header}
-              {index === 0 && (
-                <span className="ml-1 text-gray-400 inline-block">
-                  {getSortIcon()}
-                </span>
-              )}
+              <span className="ml-1 text-gray-400 inline-block">
+                {getSortIcon(header)}
+              </span>
             </TableHeader>
           ))}
         </TableRow>

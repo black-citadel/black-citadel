@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import k8s = require('@kubernetes/client-node');
 import { ListTable } from '@components/list-table';
 import { calculateAge } from '@utils/helpers';
+import { SortConfig, sortRows } from '@utils/sorting';
 import { RuntimeClassResourceLink } from './resource-link';
 
 interface RuntimeClassListProps {
@@ -8,20 +10,40 @@ interface RuntimeClassListProps {
 }
 
 export const RuntimeClassList = ({ runtimeClasses }: RuntimeClassListProps): JSX.Element => {
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
   const headers = ['Name', 'Handler', 'Scheduling', 'Overhead', 'Age'];
 
-  const processedRows = runtimeClasses.items.map(rc => ({
-    Name: <RuntimeClassResourceLink name={rc.metadata.name} />,
+  // Create data rows with raw values for sorting
+  const dataRows = runtimeClasses.items.map(rc => ({
+    Name: rc.metadata.name || '',
     Handler: rc.handler,
-    Scheduling: formatScheduling(rc.scheduling),
-    Overhead: formatOverhead(rc.overhead),
-    Age: rc.metadata.creationTimestamp 
-      ? calculateAge(new Date(rc.metadata.creationTimestamp))
+    Scheduling: rc.scheduling ? 'Configured' : 'Not Configured',
+    Overhead: rc.overhead?.podFixed ? 'Configured' : '-',
+    Age: rc.metadata.creationTimestamp || '',
+    _raw: rc
+  }));
+
+  // Sort the data rows
+  const sortedRows = sortRows(dataRows, sortConfig);
+
+  // Map sorted data to React components
+  const processedRows = sortedRows.map(row => ({
+    Name: <RuntimeClassResourceLink name={row._raw.metadata.name} />,
+    Handler: row._raw.handler,
+    Scheduling: formatScheduling(row._raw.scheduling),
+    Overhead: formatOverhead(row._raw.overhead),
+    Age: row._raw.metadata.creationTimestamp 
+      ? calculateAge(new Date(row._raw.metadata.creationTimestamp))
       : 'N/A'
   }));
 
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   );
 };
 

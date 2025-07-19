@@ -5,6 +5,8 @@ import { NamespaceResourceLink } from '@components/cluster/namespace/resource-li
 import { RoleBindingResourceLink } from './resource-link';
 import { RoleResourceLink } from '../role/resource-link';
 import { useView } from '@context/viewProvider';
+import { useState } from 'react';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface Props {
   roleBindings: k8s.V1RoleBindingList;
@@ -12,6 +14,7 @@ interface Props {
 
 export const RoleBindingList = ({ roleBindings }: Props): JSX.Element => {
   const { activeNamespace } = useView();
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
 
   const headers = ['Name', 'Namespace', 'Role', 'Subjects', 'Age'];
 
@@ -19,18 +22,42 @@ export const RoleBindingList = ({ roleBindings }: Props): JSX.Element => {
   ? roleBindings.items 
   : roleBindings.items.filter(roleBinding => roleBinding.metadata.namespace === activeNamespace);
 
-  const processedRows = filteredRoleBindings.map(roleBinding => ({
-    Name: <RoleBindingResourceLink name={roleBinding.metadata.name} namespace={roleBinding.metadata.namespace} />,
-    Namespace: <NamespaceResourceLink name={roleBinding.metadata.namespace} />,
-    Role: <RoleResourceLink name={roleBinding.roleRef.name} namespace={roleBinding.metadata.namespace} />,
-    Subjects: formatSubjects(roleBinding.subjects),
+  // First, create rows with raw data for sorting
+  const dataRows = filteredRoleBindings.map(roleBinding => ({
+    Name: roleBinding.metadata.name,
+    Namespace: roleBinding.metadata.namespace,
+    Role: roleBinding.roleRef.name,
+    Subjects: roleBinding.subjects?.length || 0,
     Age: roleBinding.metadata.creationTimestamp 
       ? calculateAge(new Date(roleBinding.metadata.creationTimestamp))
-      : 'N/A'
+      : 'N/A',
+    _roleBinding: roleBinding // Keep reference to original role binding
   }));
 
+  // Sort the data rows
+  const sortedRows = sortRows(dataRows, sortConfig);
+
+  // Then map to React components after sorting
+  const processedRows = sortedRows.map(row => {
+    const roleBinding = row._roleBinding;
+    return {
+      Name: <RoleBindingResourceLink name={roleBinding.metadata.name} namespace={roleBinding.metadata.namespace} />,
+      Namespace: <NamespaceResourceLink name={roleBinding.metadata.namespace} />,
+      Role: <RoleResourceLink name={roleBinding.roleRef.name} namespace={roleBinding.metadata.namespace} />,
+      Subjects: formatSubjects(roleBinding.subjects),
+      Age: roleBinding.metadata.creationTimestamp 
+        ? calculateAge(new Date(roleBinding.metadata.creationTimestamp))
+        : 'N/A'
+    };
+  });
+
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   );
 };
 

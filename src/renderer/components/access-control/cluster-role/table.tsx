@@ -2,25 +2,52 @@ import k8s = require('@kubernetes/client-node');
 import { ListTable } from '@components/list-table';
 import { calculateAge } from '@utils/helpers';
 import { ClusterRoleResourceLink } from './resource-link';
+import { useState } from 'react';
+import { SortConfig, sortRows } from '@utils/sorting';
 
 interface Props {
   clusterRoles: k8s.V1ClusterRoleList;
 }
 
 export const ClusterRoleList = ({ clusterRoles }: Props): JSX.Element => {
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>(undefined);
+  
   const headers = ['Name', 'Rules', 'Aggregation Rule', 'Age'];
 
-  const processedRows = clusterRoles.items.map(clusterRole => ({
-    Name: <ClusterRoleResourceLink name={clusterRole.metadata.name} />,
-    Rules: formatRules(clusterRole.rules),
-    'Aggregation Rule': formatAggregationRule(clusterRole.aggregationRule),
+  // First, create rows with raw data for sorting
+  const dataRows = clusterRoles.items.map(clusterRole => ({
+    Name: clusterRole.metadata.name,
+    Rules: clusterRole.rules?.length || 0,
+    'Aggregation Rule': clusterRole.aggregationRule?.clusterRoleSelectors?.length || 0,
     Age: clusterRole.metadata.creationTimestamp 
       ? calculateAge(new Date(clusterRole.metadata.creationTimestamp))
-      : 'N/A'
+      : 'N/A',
+    _clusterRole: clusterRole // Keep reference to original cluster role
   }));
 
+  // Sort the data rows
+  const sortedRows = sortRows(dataRows, sortConfig);
+
+  // Then map to React components after sorting
+  const processedRows = sortedRows.map(row => {
+    const clusterRole = row._clusterRole;
+    return {
+      Name: <ClusterRoleResourceLink name={clusterRole.metadata.name} />,
+      Rules: formatRules(clusterRole.rules),
+      'Aggregation Rule': formatAggregationRule(clusterRole.aggregationRule),
+      Age: clusterRole.metadata.creationTimestamp 
+        ? calculateAge(new Date(clusterRole.metadata.creationTimestamp))
+        : 'N/A'
+    };
+  });
+
   return (
-    <ListTable headers={headers} rows={processedRows} />
+    <ListTable 
+      headers={headers} 
+      rows={processedRows}
+      sortConfig={sortConfig}
+      onSort={setSortConfig}
+    />
   );
 };
 
