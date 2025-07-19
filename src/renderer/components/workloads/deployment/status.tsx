@@ -1,6 +1,6 @@
 import k8s = require('@kubernetes/client-node');
 import { Subheading } from '@components/base/heading';
-import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from '@components/base/table';
+import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from '@protoku/design-system';
 import { DetailsItem } from '@components/details-item';
 
 interface Props {

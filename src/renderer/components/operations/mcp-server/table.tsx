@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { ListTable } from '@components/list-table';
+import { ListTable, type SortConfig } from '@protoku/design-system';
 import { MCPConnection } from '@utils/types';
 import { MCPConnectionResourceLink } from './resource-link';
 import { formatDistanceToNow } from 'date-fns';
 import { Status } from '@protoku/design-system';
-import { SortConfig, sortRows } from '@utils/sorting';
+import { sortRows } from '@utils/sorting';
 
 interface Props {
   connections: MCPConnection[];

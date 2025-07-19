@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import k8s from '@kubernetes/client-node';
-import { ListTable } from '@components/list-table';
-import { sortRows, type SortConfig } from '@utils/sorting';
+import { ListTable, type SortConfig } from '@protoku/design-system';
+import { sortRows } from '@utils/sorting';
 import { ContextResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
 import { CheckIcon } from '@heroicons/react/16/solid';

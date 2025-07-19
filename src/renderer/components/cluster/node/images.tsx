@@ -1,15 +1,18 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import k8s from '@kubernetes/client-node';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@components/base/table';
+import { ListTable, type SortConfig, Badge } from '@protoku/design-system';
 import { Text } from '@components/base/text';
-import { Badge } from '@protoku/design-system';
 import { formatBytes } from '@utils/resource-parser';
+import { sortRows } from '@utils/sorting';
 
 interface NodeImagesProps {
   node: k8s.V1Node;
 }
 
 export const NodeImages = ({ node }: NodeImagesProps): JSX.Element => {
+  const [sortConfig, setSortConfig] = useState<SortConfig | undefined>();
+  const headers = ['Image', 'Size', 'SHA Digests'];
+  
   const images = useMemo(() => {
     if (!node.status?.images) return [];
     
@@ -65,54 +68,57 @@ export const NodeImages = ({ node }: NodeImagesProps): JSX.Element => {
     );
   }, [node.status?.images]);
 
+  // Create data rows with raw values for sorting
+  const dataRows = images.map(image => ({
+    Image: image.primaryName,
+    Size: image.sizeBytes || 0,
+    'SHA Digests': image.shas.join(' '),
+    _image: image
+  }));
+
+  // Sort the data rows
+  const sortedRows = sortRows(dataRows, sortConfig);
+
+  // Map sorted data to display components
+  const processedRows = sortedRows.map(row => {
+    const image = row._image;
+    return {
+      Image: <Text className="font-medium">{image.primaryName}</Text>,
+      Size: <Text>{image.sizeDisplay}</Text>,
+      'SHA Digests': (
+        <div className="space-y-1">
+          {image.shas.length > 0 ? (
+            image.shas.map((sha, shaIndex) => (
+              <Text key={shaIndex} className="text-xs text-gray-500 font-mono">
+                {sha}
+              </Text>
+            ))
+          ) : (
+            <Text className="text-xs text-gray-500">-</Text>
+          )}
+        </div>
+      )
+    };
+  });
+
   return (
     <div>
       <div className="mb-4">
         <Badge variant="gray">{images.length} images</Badge>
       </div>
       
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableHeader>Image</TableHeader>
-            <TableHeader>Size</TableHeader>
-            <TableHeader>SHA Digests</TableHeader>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {images.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={3} className="text-center">
-                <Text className="text-gray-500">No images found</Text>
-              </TableCell>
-            </TableRow>
-          ) : (
-            images.map((image, index) => (
-              <TableRow key={index}>
-                <TableCell>
-                  <Text className="font-medium">{image.primaryName}</Text>
-                </TableCell>
-                <TableCell>
-                  <Text>{image.sizeDisplay}</Text>
-                </TableCell>
-                <TableCell>
-                  <div className="space-y-1">
-                    {image.shas.length > 0 ? (
-                      image.shas.map((sha, shaIndex) => (
-                        <Text key={shaIndex} className="text-xs text-gray-500 font-mono">
-                          {sha}
-                        </Text>
-                      ))
-                    ) : (
-                      <Text className="text-xs text-gray-500">-</Text>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+      {images.length === 0 ? (
+        <div className="text-center py-8 text-zinc-500">
+          No images found
+        </div>
+      ) : (
+        <ListTable 
+          headers={headers} 
+          rows={processedRows}
+          sortConfig={sortConfig}
+          onSort={setSortConfig}
+        />
+      )}
     </div>
   );
 };

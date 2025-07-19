@@ -1,9 +1,4 @@
-export type SortDirection = 'asc' | 'desc' | null;
-
-export interface SortConfig {
-  column: string;
-  direction: SortDirection;
-}
+import type { SortConfig } from '@protoku/design-system';
 
 export const compareValues = (a: any, b: any, direction: 'asc' | 'desc'): number => {
   // Handle null/undefined values

@@ -1,12 +1,10 @@
 import { useState, useMemo } from 'react';
-import { ListTable } from '@components/list-table';
-import { Badge } from '@protoku/design-system';
-import { Button } from '@protoku/design-system';
+import { ListTable, type SortConfig, Badge, Button, Status } from '@protoku/design-system';
 import { PortForwardInfo } from '@utils/types';
 import { calculateAge } from '@utils/helpers';
 import { ResourceLink } from '@components/base/resource-link';
 import { Resources, PortForwardStatus } from '@utils/enums';
-import { SortConfig, sortRows } from '@utils/sorting';
+import { sortRows } from '@utils/sorting';
 
 interface PortForwardTableProps {
   portForwards: PortForwardInfo[];
@@ -26,12 +24,12 @@ export const PortForwardTable = ({
   const rows = useMemo(() => {
     // Create data rows with raw values for sorting
     const dataRows = portForwards.map((pf) => {
-      const statusColor = {
-        [PortForwardStatus.Active]: 'green',
-        [PortForwardStatus.Connecting]: 'yellow',
-        [PortForwardStatus.Failed]: 'red',
-        [PortForwardStatus.Stopping]: 'gray'
-      }[pf.status] || 'gray';
+      const statusVariant = {
+        [PortForwardStatus.Active]: 'success',
+        [PortForwardStatus.Connecting]: 'warning',
+        [PortForwardStatus.Failed]: 'error',
+        [PortForwardStatus.Stopping]: 'default'
+      }[pf.status] || 'default';
 
       const isHttp = pf.remotePort === 80 || pf.remotePort === 8080 || pf.remotePort === 3000;
       const isHttps = pf.remotePort === 443 || pf.remotePort === 8443;
@@ -39,13 +37,12 @@ export const PortForwardTable = ({
 
       return {
         Resource: pf.resourceName,
-        Type: pf.resourceType,
         Namespace: pf.namespace,
         'Local → Remote': `${pf.localPort} → ${pf.remotePort}`,
         Status: pf.status,
         Uptime: pf.startTime.getTime(),
         Actions: pf.id,
-        _raw: { pf, statusColor, isHttp, isHttps, url }
+        _raw: { pf, statusVariant, isHttp, isHttps, url }
       };
     });
 
@@ -54,11 +51,14 @@ export const PortForwardTable = ({
 
     // Map sorted data to React components
     return sortedRows.map(row => {
-      const { pf, statusColor, isHttp, isHttps, url } = row._raw;
+      const { pf, statusVariant, isHttp, isHttps, url } = row._raw;
       
       return {
         Resource: (
           <div className="flex items-center space-x-2">
+            <Badge variant={pf.resourceType === 'pod' ? 'blue' : 'green'}>
+              {pf.resourceType}
+            </Badge>
             <ResourceLink 
               resource={pf.resourceType === 'pod' ? Resources.Pods : Resources.Services}
               name={pf.resourceName}
@@ -66,17 +66,12 @@ export const PortForwardTable = ({
             />
           </div>
         ),
-        Type: (
-          <Badge variant={pf.resourceType === 'pod' ? 'blue' : 'green'}>
-            {pf.resourceType}
-          </Badge>
-        ),
         Namespace: pf.namespace,
         'Local → Remote': `${pf.localPort} → ${pf.remotePort}`,
         Status: (
-          <Badge variant={statusColor as any}>
+          <Status variant={statusVariant as any}>
             {pf.status}
-          </Badge>
+          </Status>
         ),
         Uptime: calculateAge(pf.startTime),
         Actions: (
@@ -118,7 +113,7 @@ export const PortForwardTable = ({
 
   return (
     <ListTable
-      headers={['Resource', 'Type', 'Namespace', 'Local → Remote', 'Status', 'Uptime', 'Actions']}
+      headers={['Resource', 'Namespace', 'Local → Remote', 'Status', 'Uptime', 'Actions']}
       rows={rows}
       sortConfig={sortConfig}
       onSort={setSortConfig}

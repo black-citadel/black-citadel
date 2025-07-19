@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import k8s = require('@kubernetes/client-node');
-import { ListTable } from '@components/list-table';
+import { ListTable, type SortConfig } from '@protoku/design-system';
 import { calculateAge } from '@utils/helpers';
-import { SortConfig, sortRows } from '@utils/sorting';
+import { sortRows } from '@utils/sorting';
 import { ValidatingWebhookConfigurationResourceLink } from './resource-link';
 
 interface Props {

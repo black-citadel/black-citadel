@@ -8,7 +8,7 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
-import { ListTable } from '@components/list-table';
+import { ListTable } from '@protoku/design-system';
 import { CustomResourceDefinitionBadge } from '@components/cluster/custom-resource-definition/badge';
 import { CustomResourceLink } from '@components/cluster/custom-resource/resource-link';
 import { calculateAge } from '@utils/helpers';

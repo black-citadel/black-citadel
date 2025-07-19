@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
-import { Button } from '@protoku/design-system';
+import { Button, ListTable } from '@protoku/design-system';
 import { Input } from '@components/base/input';
-import { ListTable } from '@components/list-table';
 
 interface HelmChart {
   name: string;

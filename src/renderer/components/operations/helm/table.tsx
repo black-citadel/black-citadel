@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
-import { ListTable } from '@components/list-table';
+import { ListTable, type SortConfig } from '@protoku/design-system';
 import { useView } from '@context/viewProvider';
 import { Resources, ResourceAction } from '@utils/enums';
-import { SortConfig, sortRows } from '@utils/sorting';
+import { sortRows } from '@utils/sorting';
 import { HelmStatusBadge } from './badge';
 
 interface HelmRelease {

@@ -1,12 +1,12 @@
 import k8s = require('@kubernetes/client-node');
-import { ListTable } from '@components/list-table';
+import { ListTable, type SortConfig } from '@protoku/design-system';
 import { StopIcon } from '@heroicons/react/16/solid';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { PodResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
 import { useState } from 'react';
 import { Status } from '@protoku/design-system';
-import { SortConfig, sortRows } from '@utils/sorting';
+import { sortRows } from '@utils/sorting';
 
 interface Props {
   pods: k8s.V1PodList

@@ -1,8 +1,7 @@
 import k8s = require('@kubernetes/client-node');
-import { ListTable } from '@components/list-table';
+import { ListTable, Badge } from '@protoku/design-system';
 import { ServiceAccountResourceLink } from './service-account/resource-link';
 import { useView } from '@context/viewProvider';
-import { Badge } from '@protoku/design-system';
 
 interface Props {
   subjects?: k8s.RbacV1Subject[];

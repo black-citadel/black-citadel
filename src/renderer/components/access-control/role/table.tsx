@@ -1,10 +1,10 @@
 import k8s = require('@kubernetes/client-node');
-import { ListTable } from '@components/list-table';
+import { ListTable, type SortConfig } from '@protoku/design-system';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { RoleResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
 import { useState } from 'react';
-import { SortConfig, sortRows } from '@utils/sorting';
+import { sortRows } from '@utils/sorting';
 
 interface Props {
   roles: k8s.V1RoleList;

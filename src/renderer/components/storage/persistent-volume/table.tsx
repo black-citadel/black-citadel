@@ -1,11 +1,11 @@
 import k8s = require('@kubernetes/client-node');
-import { ListTable } from '@components/list-table';
+import { ListTable, type SortConfig } from '@protoku/design-system';
 import { calculateAge } from '@utils/helpers';
 import { PersistentVolumeResourceLink } from './resource-link';
 import { StorageClassResourceLink } from '@components/storage/storage-class/resource-link';
 import { PersistentVolumeClaimResourceLink } from '@components/storage/persistent-volume-claim/resource-link';
 import { useState } from 'react';
-import { SortConfig, sortRows } from '@utils/sorting';
+import { sortRows } from '@utils/sorting';
 
 interface Props {
   pvs: k8s.V1PersistentVolumeList;

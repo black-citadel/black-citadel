@@ -1,5 +1,5 @@
 import k8s = require('@kubernetes/client-node');
-import { ListTable } from '@components/list-table';
+import { ListTable, type SortConfig } from '@protoku/design-system';
 import { calculateAge } from '@utils/helpers';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { PersistentVolumeClaimResourceLink } from './resource-link';
@@ -7,7 +7,7 @@ import { PersistentVolumeResourceLink } from '@components/storage/persistent-vol
 import { StorageClassResourceLink } from '@components/storage/storage-class/resource-link';
 import { useView } from '@context/viewProvider';
 import { useState } from 'react';
-import { SortConfig, sortRows } from '@utils/sorting';
+import { sortRows } from '@utils/sorting';
 
 interface Props {
   pvcs: k8s.V1PersistentVolumeClaimList;
