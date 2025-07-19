@@ -16,7 +16,7 @@ export const MCPServerListView = (): JSX.Element => {
     try {
       const [connectionsData, historyData] = await Promise.all([
         window.electronAPI.getMCPConnections(),
-        window.electronAPI.getMCPToolCallHistory(100) // Last 100 calls
+        window.electronAPI.getMCPToolCallHistory(100)
       ]);
 
       setConnections(connectionsData);
@@ -30,7 +30,7 @@ export const MCPServerListView = (): JSX.Element => {
 
   useEffect(() => {
     fetchData();
-    const intervalId = setInterval(fetchData, 2000); // Poll every 2 seconds
+    const intervalId = setInterval(fetchData, 5000);
     return () => clearInterval(intervalId);
   }, []);
 

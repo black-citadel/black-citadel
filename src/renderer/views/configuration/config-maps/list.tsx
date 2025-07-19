@@ -37,7 +37,6 @@ export const ConfigMapsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.ConfigMaps, action: ResourceAction.Create})} 
-            
           >
             Create ConfigMap
           </Button>

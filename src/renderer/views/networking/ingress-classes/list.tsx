@@ -39,7 +39,6 @@ export const IngressClassesListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.IngressClasses, action: ResourceAction.Create})} 
-            
           >
             Create Ingress Class
           </Button>

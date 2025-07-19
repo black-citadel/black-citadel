@@ -37,7 +37,6 @@ export const PriorityClassesListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.PriorityClasses, action: ResourceAction.Create})} 
-            
           >
             Create Priority Class
           </Button>

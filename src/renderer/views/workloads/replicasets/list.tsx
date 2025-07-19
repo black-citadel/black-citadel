@@ -41,7 +41,6 @@ export const ReplicaSetsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.ReplicaSets, action: ResourceAction.Create})} 
-            
           >
             Create ReplicaSet
           </Button>

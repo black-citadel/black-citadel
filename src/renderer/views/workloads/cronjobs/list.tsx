@@ -41,7 +41,6 @@ export const CronJobsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.CronJobs, action: ResourceAction.Create})} 
-            
           >
             Create CronJob
           </Button>

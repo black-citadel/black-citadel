@@ -37,7 +37,6 @@ export const RuntimeClassesListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.RuntimeClasses, action: ResourceAction.Create})} 
-            
           >
             Create Runtime Class
           </Button>

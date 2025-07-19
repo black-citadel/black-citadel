@@ -41,7 +41,6 @@ export const IngressesListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.Ingresses, action: ResourceAction.Create})} 
-            
           >
             Create Ingress
           </Button>

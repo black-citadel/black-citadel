@@ -13,7 +13,6 @@ export const ServicesListView = (): JSX.Element => {
 
   const fetchData = async () => {
     try {
-      console.log('fetch services')
       const data = await window.electronAPI.listServiceForAllNamespaces();
       setServices(data);
       setError(null);
@@ -42,7 +41,6 @@ export const ServicesListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.Services, action: ResourceAction.Create})} 
-            
           >
             Create Service
           </Button>

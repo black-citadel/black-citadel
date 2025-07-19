@@ -62,5 +62,3 @@ export const PreferencesListView = (): JSX.Element => {
     </div>
   );
 };
-
-export default PreferencesListView;

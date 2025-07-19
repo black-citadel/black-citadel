@@ -37,7 +37,6 @@ export const HorizontalPodAutoscalersListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.HorizontalPodAutoscalers, action: ResourceAction.Create})} 
-            
           >
             Create Horizontal Pod Autoscaler
           </Button>

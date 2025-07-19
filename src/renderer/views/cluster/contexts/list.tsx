@@ -40,7 +40,6 @@ export const ContextsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.Contexts, action: ResourceAction.Create })} 
-            
           >
             Add new Context
           </Button>

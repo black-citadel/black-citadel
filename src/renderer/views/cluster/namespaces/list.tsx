@@ -6,7 +6,7 @@ import { Button } from '@protoku/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 
-export const NamespacesListView = () => {
+export const NamespacesListView = (): JSX.Element => {
   const [namespaces, setNamespaces] = useState<V1NamespaceList>();
   const [error, setError] = useState<string | null>(null);
   const { setViewContext } = useView();
@@ -37,7 +37,6 @@ export const NamespacesListView = () => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.Namespaces, action: ResourceAction.Create})} 
-            
           >
             Create Namespace
           </Button>
@@ -47,5 +46,3 @@ export const NamespacesListView = () => {
     </>
   );
 };
-
-export default NamespacesListView;

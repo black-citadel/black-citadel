@@ -37,7 +37,6 @@ export const ServiceAccountsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.ServiceAccounts, action: ResourceAction.Create})} 
-            
           >
             Create Service Account
           </Button>

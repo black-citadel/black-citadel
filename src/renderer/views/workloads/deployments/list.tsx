@@ -41,7 +41,6 @@ export const DeploymentsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.Deployments, action: ResourceAction.Create})} 
-            
           >
             Create Deployment
           </Button>

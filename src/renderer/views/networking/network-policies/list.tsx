@@ -37,7 +37,6 @@ export const NetworkPoliciesListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.NetworkPolicies, action: ResourceAction.Create})} 
-            
           >
             Create Network Policy
           </Button>

@@ -3,7 +3,8 @@ import { V1NodeList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { Resources } from '@utils/enums';
 import { NodeList } from '@components/cluster/node/table';
-export const NodesListView = () => {
+
+export const NodesListView = (): JSX.Element => {
   const [nodes, setNodes] = useState<V1NodeList>();
   const [error, setError] = useState<string | null>(null);
 
@@ -35,5 +36,3 @@ export const NodesListView = () => {
     </>
   );
 };
-
-export default NodesListView;

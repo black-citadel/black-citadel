@@ -37,7 +37,6 @@ export const SecretsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.Secrets, action: ResourceAction.Create})} 
-            
           >
             Create Secret
           </Button>

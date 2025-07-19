@@ -37,7 +37,6 @@ export const ClusterRoleBindingsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.ClusterRoleBindings, action: ResourceAction.Create})} 
-            
           >
             Create Cluster Role Binding
           </Button>

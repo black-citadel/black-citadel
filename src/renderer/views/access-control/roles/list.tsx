@@ -37,7 +37,6 @@ export const RolesListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.Roles, action: ResourceAction.Create})} 
-            
           >
             Create Role
           </Button>

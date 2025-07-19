@@ -22,8 +22,6 @@ export const PortForwardsListView = (): JSX.Element => {
 
   useEffect(() => {
     fetchData();
-    
-    // Poll more frequently since port forwards can change quickly
     const intervalId = setInterval(fetchData, 2000);
     return () => clearInterval(intervalId);
   }, []);
@@ -80,5 +78,3 @@ export const PortForwardsListView = (): JSX.Element => {
     </>
   );
 };
-
-export default PortForwardsListView;

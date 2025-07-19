@@ -37,7 +37,6 @@ export const StorageClassesListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.StorageClasses, action: ResourceAction.Create})} 
-            
           >
             Create Storage Class
           </Button>

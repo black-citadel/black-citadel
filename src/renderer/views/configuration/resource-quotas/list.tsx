@@ -37,7 +37,6 @@ export const ResourceQuotasListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.ResourceQuotas, action: ResourceAction.Create})} 
-            
           >
             Create Resource Quota
           </Button>

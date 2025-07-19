@@ -37,7 +37,6 @@ export const RoleBindingsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.RoleBindings, action: ResourceAction.Create})} 
-            
           >
             Create Role Binding
           </Button>

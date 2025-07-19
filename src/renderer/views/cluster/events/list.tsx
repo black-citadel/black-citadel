@@ -5,7 +5,7 @@ import { Resources } from '@utils/enums';
 import { EventList } from '@components/cluster/event/table';
 import { useView } from '@context/viewProvider';
 
-export const EventsListView = () => {
+export const EventsListView = (): JSX.Element => {
   const [events, setEvents] = useState<CoreV1EventList>();
   const [error, setError] = useState<string | null>(null);
   const { activeNamespace } = useView();
@@ -15,15 +15,9 @@ export const EventsListView = () => {
       let data: CoreV1EventList;
       
       if (activeNamespace && activeNamespace !== 'all') {
-        // Fetch events for specific namespace
-        console.log('Fetching events for namespace:', activeNamespace);
         data = await window.electronAPI.listNamespacedEvent(activeNamespace);
-        console.log('Received events for namespace:', activeNamespace, 'Count:', data.items?.length);
       } else {
-        // Fetch events for all namespaces
-        console.log('Fetching events for all namespaces');
         data = await window.electronAPI.listEventForAllNamespaces();
-        console.log('Received all events. Count:', data.items?.length);
       }
       
       setEvents(data);
@@ -51,5 +45,3 @@ export const EventsListView = () => {
     </>
   );
 };
-
-export default EventsListView;

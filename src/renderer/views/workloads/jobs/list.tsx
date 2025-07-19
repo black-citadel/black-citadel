@@ -41,7 +41,6 @@ export const JobsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.Jobs, action: ResourceAction.Create })} 
-            
           >
             Create Job
           </Button>

@@ -37,7 +37,6 @@ export const PodDisruptionBudgetsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.PodDisruptionBudgets, action: ResourceAction.Create})} 
-            
           >
             Create Pod Disruption Budget
           </Button>

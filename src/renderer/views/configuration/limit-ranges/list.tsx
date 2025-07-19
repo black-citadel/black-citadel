@@ -13,9 +13,8 @@ export const LimitRangesListView = (): JSX.Element => {
 
   const fetchData = async () => {
     try {
-      console.log('fetching limit ranges');
       const data = await window.electronAPI.listLimitRangeForAllNamespaces();
-      console.log(data);
+
       setLimitRanges(data);
       setError(null);
     } catch (e) {
@@ -39,7 +38,6 @@ export const LimitRangesListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.LimitRanges, action: ResourceAction.Create})} 
-            
           >
             Create Limit Range
           </Button>

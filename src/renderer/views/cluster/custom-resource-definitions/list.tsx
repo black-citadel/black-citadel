@@ -4,7 +4,7 @@ import { ListHeader } from '@components/list-header';
 import { CustomResourceDefinitionList } from '@components/cluster/custom-resource-definition/table';
 import { Resources } from '@utils/enums';
 
-export const CustomResourceDefinitionsListView = () => {
+export const CustomResourceDefinitionsListView = (): JSX.Element => {
   const [crds, setCrds] = useState<V1CustomResourceDefinitionList>();
   const [error, setError] = useState<string | null>(null);
 
@@ -36,5 +36,3 @@ export const CustomResourceDefinitionsListView = () => {
     </>
   );
 };
-
-export default CustomResourceDefinitionsListView;

@@ -41,7 +41,6 @@ export const DaemonSetsListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({ resource: Resources.DaemonSets, action: ResourceAction.Create})} 
-            
           >
             Create DaemonSet
           </Button>

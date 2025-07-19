@@ -37,7 +37,6 @@ export const PersistentVolumesListView = (): JSX.Element => {
         actions={
           <Button variant="primary"
             onClick={() => setViewContext({resource: Resources.PersistentVolumes, action: ResourceAction.Create})} 
-            
           >
             Create Persistent Volume
           </Button>
