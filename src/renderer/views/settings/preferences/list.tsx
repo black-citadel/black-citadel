@@ -25,8 +25,8 @@ export const PreferencesListView = (): JSX.Element => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#08090a]">
-      <div className="max-w-4xl mx-auto px-6 py-8">
+    <div className="px-6">
+      <div className="max-w-4xl py-8">
         <div className="mb-8">
           <Heading className="text-2xl font-bold mb-2">Preferences</Heading>
           <Text className="text-gray-600 dark:text-gray-400">

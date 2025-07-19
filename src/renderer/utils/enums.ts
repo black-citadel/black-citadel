@@ -5,7 +5,6 @@ export enum Resources {
     // Settings
     Contexts = "Contexts",
     Preferences = 'Preferences',
-    License = 'License',
 
     // Cluster
     Nodes = "Nodes",

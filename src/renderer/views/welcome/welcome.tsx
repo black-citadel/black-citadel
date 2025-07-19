@@ -82,9 +82,6 @@ export const WelcomeView = () => {
           <div className="flex justify-center mb-6">
             <Logo className="w-20 h-20" />
           </div>
-          <Text className="text-gray-600 dark:text-gray-400 text-lg">
-            Unified Interface for Cloud-Native Operations
-          </Text>
         </div>
 
         {/* Main Content */}

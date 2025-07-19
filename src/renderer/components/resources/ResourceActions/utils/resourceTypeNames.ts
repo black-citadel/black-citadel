@@ -7,7 +7,6 @@ export const resourceTypeNames: Partial<Record<Resources, string>> = {
   // Settings
   [Resources.Contexts]: 'Context',
   [Resources.Preferences]: 'Preferences',
-  [Resources.License]: 'License',
   
   // Cluster
   [Resources.Nodes]: 'Node',

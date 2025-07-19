@@ -5,7 +5,6 @@ import { EmptyState } from '@components/base/empty-state';
 import { Button } from '@protoku/design-system';
 import { useView } from '@context/viewProvider';
 import { HelmReleaseTable } from '@components/operations/helm/table';
-import { HelmChartSearch } from '@components/operations/helm/chart-search';
 
 interface HelmRelease {
   name: string;
@@ -21,7 +20,6 @@ export const HelmListView = (): JSX.Element => {
   const [releases, setReleases] = useState<HelmRelease[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showSearch, setShowSearch] = useState(false);
   const { setViewContext } = useView();
 
   const fetchReleases = async () => {
@@ -63,22 +61,11 @@ export const HelmListView = (): JSX.Element => {
         error={error}
         showNamespaceDropdown={false}
         actions={
-          <div className="flex gap-2">
-            <Button onClick={() => setShowSearch(!showSearch)}>
-              {showSearch ? 'Hide Search' : 'Search Charts'}
-            </Button>
-            <Button onClick={handleInstallChart}>
-              Install Chart
-            </Button>
-          </div>
+          <Button variant="primary" onClick={handleInstallChart}>
+            Install Chart
+          </Button>
         }
       />
-
-      {showSearch && (
-        <div className="mb-6">
-          <HelmChartSearch onInstall={handleInstallChart} />
-        </div>
-      )}
 
       {loading ? (
         <div className="flex justify-center items-center h-64">
@@ -89,13 +76,13 @@ export const HelmListView = (): JSX.Element => {
           title="No helm releases found"
           description="Install your first Helm chart to see it listed here."
           action={
-            <Button onClick={handleInstallChart}>
+            <Button variant="primary" onClick={handleInstallChart}>
               Install Chart
             </Button>
           }
         />
       ) : (
-        <HelmReleaseTable releases={releases} onRefresh={fetchReleases} />
+        <HelmReleaseTable releases={releases} />
       )}
     </>
   );

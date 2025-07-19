@@ -311,9 +311,6 @@ export const Layout = () => {
               <SidebarItem onClick={() => setViewContext({ resource: Resources.Preferences, action: ResourceAction.List })} current={viewContext.resource === Resources.Preferences}>
                 <SidebarLabel>{Resources.Preferences}</SidebarLabel>
               </SidebarItem>
-              <SidebarItem onClick={() => setViewContext({ resource: Resources.License, action: ResourceAction.List })} current={viewContext.resource === Resources.License}>
-                <SidebarLabel>{Resources.License}</SidebarLabel>
-              </SidebarItem>
             </SidebarSection>
           </SidebarBody>
         </Sidebar>
