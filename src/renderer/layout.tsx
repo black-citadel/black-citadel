@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { SidebarLayout } from '@components/base/sidebar-layout'
-import { WelcomeView } from '@views/welcome/welcome';
+import { WelcomeView } from '@views/settings/welcome/welcome';
 import { DeploymentsListView, DeploymentsDetailsView, DeploymentsCreateView } from '@views/workloads/deployments'
 import { PodsListView, PodsDetailsView, PodsCreateView } from '@views/workloads/pods'
 import { ReplicaSetsListView, ReplicaSetsDetailsView, ReplicaSetsCreateView } from '@views/workloads/replicasets';
@@ -47,7 +47,7 @@ import { NodeDetailsView, NodesListView } from '@views/cluster/nodes';
 import { CustomResourceDefinitionsListView, CustomResourceDefinitionsDetailsView } from '@views/cluster/custom-resource-definitions';
 import { CustomResourceDetailsView } from '@views/cluster/custom-resources';
 import { EventsListView, EventsDetailsView } from '@views/cluster/events';
-import { PortForwardsListView } from '@views/tools/port-forwards';
+import { PortForwardsListView } from '@views/operations/port-forwards';
 import { MCPServerListView, MCPServerDetailsView } from '@views/operations/mcp-server';
 import { HelmListView, HelmDetailsView, HelmInstallView } from '@views/operations/helm';
 import { PreferencesListView } from '@views/settings/preferences';

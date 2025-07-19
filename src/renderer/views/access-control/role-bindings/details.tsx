@@ -8,10 +8,11 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { RoleBindingBadge } from '@components/access-control/role-binding/badge';
 import { SubjectList } from '@components/access-control/subject-list';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { RoleResourceLink } from '@components/access-control/role/resource-link';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 export const RoleBindingsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -75,13 +76,17 @@ export const RoleBindingsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && roleBinding && (
         <div className='m-2'>
+
+          <Container title="Role Reference">
+            <RoleResourceLink name={roleBinding.roleRef.name} namespace={roleBinding.metadata.namespace} />
+            </Container>
+
+          <Container title="Subjects">
+            <SubjectList subjects={roleBinding.subjects} />
+          </Container>
+
           <MetadataDetails metadata={roleBinding.metadata} />
 
-          <Subheading className='mt-8 mb-4'>Role Reference</Subheading>
-          <RoleResourceLink name={roleBinding.roleRef.name} namespace={roleBinding.metadata.namespace} />
-
-          <Subheading className='mt-8 mb-4'>Subjects</Subheading>
-          <SubjectList subjects={roleBinding.subjects} />
         </div>
       )}
 

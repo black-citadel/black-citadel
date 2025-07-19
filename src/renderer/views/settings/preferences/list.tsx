@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Heading } from '@components/base/heading';
 import { Text } from '@components/base/text';
 import { Toggle } from '@protoku/design-system';
+import { ListHeader } from '@components/list-header';
+import { Resources } from '@utils/enums';
 
 export const PreferencesListView = (): JSX.Element => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -25,40 +27,40 @@ export const PreferencesListView = (): JSX.Element => {
   };
 
   return (
-    <div className="px-6">
-      <div className="max-w-4xl py-8">
-        <div className="mb-8">
-          <Heading className="text-2xl font-bold mb-2">Preferences</Heading>
-          <Text className="text-gray-600 dark:text-gray-400">
-            Customize your Black Citadel experience
-          </Text>
-        </div>
+    <>
+      <ListHeader 
+        resource={Resources.Preferences}
+        showNamespaceDropdown={false}
+      />
 
-        <div className="bg-white dark:bg-[#101010] border border-gray-200 dark:border-neutral-800 rounded-lg">
-          {/* Appearance Section */}
-          <div className="p-6">
-            <Heading className="text-lg font-semibold mb-4">Appearance</Heading>
-            
-            <div className="space-y-4">
-              <label className="flex items-center justify-between cursor-pointer">
-                <div>
-                  <Text className="font-medium text-gray-900 dark:text-white">
-                    Dark Mode
-                  </Text>
-                  <Text className="text-sm text-gray-500 dark:text-gray-400">
-                    Enable dark theme for a comfortable viewing experience in low light
-                  </Text>
-                </div>
-                <Toggle 
-                  checked={isDarkMode}
-                  onChange={(e) => handleThemeToggle(e.target.checked)}
-                  label="Toggle dark mode"
-                />
-              </label>
+      <div className="p-4">
+        <div className="max-w-4xl">
+          <div className="bg-white dark:bg-[#101010] border border-gray-200 dark:border-neutral-800 rounded-lg">
+            {/* Appearance Section */}
+            <div className="p-6">
+              <Heading className="text-lg font-semibold mb-4">Appearance</Heading>
+              
+              <div className="space-y-4">
+                <label className="flex items-center justify-between cursor-pointer">
+                  <div>
+                    <Text className="font-medium text-gray-900 dark:text-white">
+                      Dark Mode
+                    </Text>
+                    <Text className="text-sm text-gray-500 dark:text-gray-400">
+                      Enable dark theme for a comfortable viewing experience in low light
+                    </Text>
+                  </div>
+                  <Toggle 
+                    checked={isDarkMode}
+                    onChange={(e) => handleThemeToggle(e.target.checked)}
+                    label="Toggle dark mode"
+                  />
+                </label>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

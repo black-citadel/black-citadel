@@ -8,9 +8,10 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { ClusterRoleBadge } from '@components/access-control/cluster-role/badge';
 import { RuleList } from '@components/access-control/cluster-role/rule-list';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 
 export const ClusterRolesDetailsView = (): JSX.Element => {
@@ -74,10 +75,11 @@ export const ClusterRolesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && clusterRole && (
         <div className='m-2'>
-          <MetadataDetails metadata={clusterRole.metadata} />
+          <Container title="Rules">
+            <RuleList rules={clusterRole.rules} />
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Rules</Subheading>
-          <RuleList rules={clusterRole.rules} />
+          <MetadataDetails metadata={clusterRole.metadata} />
         </div>
       )}
 

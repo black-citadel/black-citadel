@@ -6,7 +6,7 @@ export const ResourceHelp: { [key in Resources]: string } = {
     
     // Cluster
     Contexts: "Defines a cluster, user, and namespace for the kubectl command-line tool to interact with the Kubernetes cluster.",
-    Preferences: "Specifies user preferences for the kubectl command-line tool.",
+    Preferences: "Customize your experience.",
     Nodes: "Represents a worker node in the Kubernetes cluster.",
     Events: "Provides a record of events that occur within the cluster.",
     "Custom Resource Definitions": "Allows you to define custom resources in Kubernetes.",

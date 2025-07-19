@@ -10,8 +10,9 @@ import { ClusterRoleBindingBadge } from '@components/access-control/cluster-role
 import { SubjectList } from '@components/access-control/subject-list';
 import { ClusterRoleResourceLink } from '@components/access-control/cluster-role/resource-link';
 import { MetadataDetails } from '@components/metadata';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 export const ClusterRoleBindingsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -74,14 +75,15 @@ export const ClusterRoleBindingsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && clusterRoleBinding && (
         <div className='m-2'>
+          <Container title="Role Reference">
+            <ClusterRoleResourceLink name={clusterRoleBinding.roleRef.name} />
+          </Container>
+
+          <Container title="Subjects">
+            <SubjectList subjects={clusterRoleBinding.subjects} />
+          </Container>
+
           <MetadataDetails metadata={clusterRoleBinding.metadata} />
-
-          <Subheading className='mt-8 mb-4'>Role Reference</Subheading>
-          <ClusterRoleResourceLink name={clusterRoleBinding.roleRef.name} />
-
-          <Subheading className='mt-8 mb-4'>Subjects</Subheading>
-          <SubjectList subjects={clusterRoleBinding.subjects} />
-
         </div>
       )}
 

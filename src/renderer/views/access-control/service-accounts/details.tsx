@@ -10,9 +10,10 @@ import { ServiceAccountBadge } from '@components/access-control/service-account/
 import { ImagePullSecretList } from '@components/access-control/service-account/image-pull-secret-list';
 import { SecretList } from '@components/access-control/service-account/secret-list';
 import { MetadataDetails } from '@components/metadata';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { DetailsItem } from '@components/details-item';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 
 export const ServiceAccountsDetailsView = (): JSX.Element => {
@@ -51,7 +52,7 @@ export const ServiceAccountsDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader 
+      <DetailsHeader
         error={error}
         actions={
           <ResourceActions
@@ -69,22 +70,25 @@ export const ServiceAccountsDetailsView = (): JSX.Element => {
 
         <Navbar>
           <NavbarSection>
-          <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
-          <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
-        </NavbarSection>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
+          </NavbarSection>
         </Navbar>
       </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && serviceAccount && (
         <div className='m-2'>
-          <MetadataDetails metadata={serviceAccount.metadata} />
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Automount Service Account Token">
+                {serviceAccount.automountServiceAccountToken === undefined ? 'Default (true)' : serviceAccount.automountServiceAccountToken.toString()}
+              </DetailsItem>
+              <SecretList secrets={serviceAccount.secrets} />
+              <ImagePullSecretList imagePullSecrets={serviceAccount.imagePullSecrets} />
+            </div>
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <DetailsItem label="Automount Service Account Token">
-            {serviceAccount.automountServiceAccountToken === undefined ? 'Default (true)' : serviceAccount.automountServiceAccountToken.toString()}
-          </DetailsItem>
-          <SecretList secrets={serviceAccount.secrets} />
-          <ImagePullSecretList imagePullSecrets={serviceAccount.imagePullSecrets} />
+          <MetadataDetails metadata={serviceAccount.metadata} />
         </div>
       )}
 

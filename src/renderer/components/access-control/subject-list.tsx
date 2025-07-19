@@ -15,7 +15,7 @@ export const SubjectList = ({ subjects }: Props): JSX.Element => {
   const rows = subjects.map((subject) => ({
     'Name': subject.kind === 'ServiceAccount'
       ? <ServiceAccountResourceLink name={subject.name} namespace={subject.namespace ? subject.namespace : viewContext.namespace} />
-      : <><Badge variant="gray">{subject.kind.toLowerCase()}</Badge> {subject.name}</>,
+      : <><Badge variant="gray" className='mr-2'>{subject.kind.toLowerCase()}</Badge> {subject.name}</>,
     'Namespace': subject.namespace,
     'Kind': subject.kind,
     'API Group': subject.apiGroup,

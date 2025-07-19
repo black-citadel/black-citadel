@@ -20,6 +20,8 @@ import { PortForwardDialog } from '@components/tools/port-forward/dialog';
 import { TerminalTab } from '@components/tools/terminal/terminal-tab';
 import { PortOption, PortForwardRequest } from '@utils/types';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { NodeResourceLink } from '@components/cluster/node/resource-link';
+import { Container } from '@components/base/container';
 
 export const PodsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -59,7 +61,7 @@ export const PodsDetailsView = (): JSX.Element => {
 
   const getAvailablePorts = (): PortOption[] => {
     if (!pod?.spec?.containers) return [];
-    
+
     const ports: PortOption[] = [];
     pod.spec.containers.forEach(container => {
       container.ports?.forEach(port => {
@@ -70,7 +72,7 @@ export const PodsDetailsView = (): JSX.Element => {
         });
       });
     });
-    
+
     return ports;
   };
 
@@ -79,7 +81,7 @@ export const PodsDetailsView = (): JSX.Element => {
     if (result.success) {
       setPortForwardSuccess(`Port forward established on localhost:${result.localPort}`);
       setTimeout(() => setPortForwardSuccess(null), 5000);
-      
+
       // Open in browser if requested
       if (openInBrowser && result.localPort) {
         const isHttps = request.remotePort === 443 || request.remotePort === 8443;
@@ -93,7 +95,7 @@ export const PodsDetailsView = (): JSX.Element => {
 
   return (
     <>
-      <DetailsHeader 
+      <DetailsHeader
         error={error}
         actions={
           <ResourceActions
@@ -134,41 +136,28 @@ export const PodsDetailsView = (): JSX.Element => {
       {activeTab === ResourceTabs.Details && pod && (
 
         <div className='m-2'>
-          <MetadataDetails metadata={pod.metadata} />
 
-          <Subheading className='mt-8 mb-4'>Status</Subheading>
+          <Container title="Status">
+            <div className="grid grid-cols-4 gap-4">
+              <DetailsItem label="Phase">
+                {pod.status.phase}
+              </DetailsItem>
+              <DetailsItem label="Pod IP">
+                {pod.status.podIP}
+              </DetailsItem>
+              <DetailsItem label="Host IP">
+                {pod.status.hostIP}
+              </DetailsItem>
+              <DetailsItem label="Start Time">
+                {pod.status.startTime?.toLocaleString()}
+              </DetailsItem>
+            </div>
+          </Container>
 
-          <div>
-
-            <Field className="grid gap-x-8 gap-y-6 grid-cols-2 my-8">
-              <div className='px-4'>
-                <Label>Phase <HelpButton title="Phase" content={helpObjects.pod.phase.help} /></Label>
-                <Description>
-                  The phase of a Pod is a simple, high-level summary of where the Pod is in its lifecycle.
-                </Description>
-              </div>
-              <div className='px-4'>
-                <span style={{ color: pod.status.phase === 'Running' ? 'green' : 'inherit' }}>
-                  {pod.status.phase}
-                </span>
-              </div>
-            </Field>
-            <DetailsItem label="Pod IP">
-              {pod.status.podIP}
-            </DetailsItem>
-            <DetailsItem label="Host IP">
-              {pod.status.hostIP}
-            </DetailsItem>
-            <DetailsItem label="Start Time">
-              {pod.status.startTime?.toLocaleString()}
-            </DetailsItem>
-          </div>
-
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-
-          <div>
+          <Container title='Configuration'>
+          <div className="grid grid-cols-5 gap-4">
             <DetailsItem label="Node">
-              {pod.spec.nodeName}
+              {pod.spec.nodeName && <NodeResourceLink name={pod.spec.nodeName} />}
             </DetailsItem>
             <DetailsItem label="Service Account">
               {pod.spec.serviceAccountName}
@@ -189,15 +178,15 @@ export const PodsDetailsView = (): JSX.Element => {
               ))}
             </DetailsItem>
           </div>
+          </Container>
 
-          {/* Containers Section */}
-          <Subheading className='mt-8 mb-4'>Containers</Subheading>
+          <Container title="Containers">
           <div className="space-y-4">
             {pod.spec.containers.map((container, index) => {
               const containerStatus = pod.status?.containerStatuses?.find(
                 status => status.name === container.name
               );
-              
+
               return (
                 <div key={index} className="border border-neutral-800 rounded-md p-4">
                   <div className="flex items-center justify-between mb-4">
@@ -208,12 +197,12 @@ export const PodsDetailsView = (): JSX.Element => {
                       </Badge>
                     )}
                   </div>
-                  
+
                   <div className="space-y-2 mb-4">
                     <DetailsItem label="Image">
                       <span className="text-sm">{container.image}</span>
                     </DetailsItem>
-                    
+
                     {container.ports && container.ports.length > 0 && (
                       <DetailsItem label="Ports">
                         <span className="text-sm">
@@ -221,7 +210,7 @@ export const PodsDetailsView = (): JSX.Element => {
                         </span>
                       </DetailsItem>
                     )}
-                    
+
                     {containerStatus && (
                       <>
                         <DetailsItem label="Container ID">
@@ -233,11 +222,11 @@ export const PodsDetailsView = (): JSX.Element => {
                       </>
                     )}
                   </div>
-                  
+
                   {/* Resource Usage */}
                   <div className="mt-4">
                     <h5 className="text-sm font-medium mb-2">Resources</h5>
-                    <ContainerResources 
+                    <ContainerResources
                       container={container}
                       containerStatus={containerStatus}
                     />
@@ -246,17 +235,18 @@ export const PodsDetailsView = (): JSX.Element => {
               );
             })}
           </div>
+          </Container>
 
           {/* Init Containers Section (if any) */}
           {pod.spec.initContainers && pod.spec.initContainers.length > 0 && (
             <>
-              <Subheading className='mt-8 mb-4'>Init Containers</Subheading>
+              <Container title="Init Containers">
               <div className="space-y-4">
                 {pod.spec.initContainers.map((container, index) => {
                   const containerStatus = pod.status?.initContainerStatuses?.find(
                     status => status.name === container.name
                   );
-                  
+
                   return (
                     <div key={index} className="border border-neutral-800 rounded-md p-4">
                       <div className="flex items-center justify-between mb-4">
@@ -267,23 +257,23 @@ export const PodsDetailsView = (): JSX.Element => {
                           </Badge>
                         )}
                       </div>
-                      
+
                       <div className="space-y-2 mb-4">
                         <DetailsItem label="Image">
                           <span className="text-sm">{container.image}</span>
                         </DetailsItem>
-                        
+
                         {containerStatus && (
                           <DetailsItem label="Restart Count">
                             <span className="text-sm">{containerStatus.restartCount}</span>
                           </DetailsItem>
                         )}
                       </div>
-                      
+
                       {/* Resource Usage */}
                       <div className="mt-4">
                         <h5 className="text-sm font-medium mb-2">Resources</h5>
-                        <ContainerResources 
+                        <ContainerResources
                           container={container}
                           containerStatus={containerStatus}
                         />
@@ -292,8 +282,11 @@ export const PodsDetailsView = (): JSX.Element => {
                   );
                 })}
               </div>
+              </Container>
             </>
           )}
+
+          <MetadataDetails metadata={pod.metadata} />
 
         </div>
       )}

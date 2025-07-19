@@ -9,8 +9,9 @@ import { DetailsHeader } from '@components/details-header';
 import { RoleBadge } from '@components/access-control/role/badge';
 import { RuleList } from '@components/access-control/cluster-role/rule-list';
 import { MetadataDetails } from '@components/metadata';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 
 export const RolesDetailsView = (): JSX.Element => {
@@ -75,10 +76,12 @@ export const RolesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && role && (
         <div className='m-2'>
-          <MetadataDetails metadata={role.metadata} />
+          
+          <Container title="Rules">
+            <RuleList rules={role.rules} />
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Rules</Subheading>
-          <RuleList rules={role.rules} />
+          <MetadataDetails metadata={role.metadata} />
         </div>
       )}
 
