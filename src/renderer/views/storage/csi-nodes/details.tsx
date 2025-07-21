@@ -8,8 +8,9 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { CSINodeBadge } from '@components/storage/csi-node/badge';
 import { CSIDriversList } from '@components/storage/csi-node/csi-drivers-list';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { Container } from '@components/base/container';
 
 export const CSINodesDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
@@ -57,10 +58,11 @@ export const CSINodesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && csiNode && (
         <div className='m-2'>
-          <MetadataDetails metadata={csiNode.metadata} />
+          <Container title="CSI Drivers">
+            <CSIDriversList drivers={csiNode.spec.drivers} />
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <CSIDriversList drivers={csiNode.spec.drivers} />
+          <MetadataDetails metadata={csiNode.metadata} />
         </div>
       )}
 

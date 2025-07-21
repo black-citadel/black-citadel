@@ -11,8 +11,9 @@ import { AttacherDetails } from '@components/storage/volume-attachment/attacher-
 import { NodeDetails } from '@components/storage/volume-attachment/node-details';
 import { SourceDetails } from '@components/storage/volume-attachment/source-details';
 import { AttachmentStatus } from '@components/storage/volume-attachment/attachment-status';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { Container } from '@components/base/container';
 
 
 export const VolumeAttachmentsDetailsView = (): JSX.Element => {
@@ -61,13 +62,19 @@ export const VolumeAttachmentsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && volumeAttachment && (
         <div className='m-2'>
-          <MetadataDetails metadata={volumeAttachment.metadata} />
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <AttacherDetails attacher={volumeAttachment.spec.attacher} />
+              <NodeDetails nodeName={volumeAttachment.spec.nodeName} />
+              <SourceDetails source={volumeAttachment.spec.source} />
+            </div>
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <AttacherDetails attacher={volumeAttachment.spec.attacher} />
-          <NodeDetails nodeName={volumeAttachment.spec.nodeName} />
-          <SourceDetails source={volumeAttachment.spec.source} />
-          <AttachmentStatus status={volumeAttachment.status} />
+          <Container title="Status">
+            <AttachmentStatus status={volumeAttachment.status} />
+          </Container>
+
+          <MetadataDetails metadata={volumeAttachment.metadata} />
         </div>
       )}
 

@@ -14,9 +14,10 @@ import { PVStatus } from '@components/storage/persistent-volume/status';
 import { VolumeMode } from '@components/storage/persistent-volume/volume-mode';
 import { AccessModes } from '@components/storage/persistent-volume/access-modes';
 import { StorageDetails } from '@components/storage/persistent-volume/storage-details';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 export const PersistentVolumesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -79,21 +80,36 @@ export const PersistentVolumesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && pv && (
         <div className='m-2'>
-          <MetadataDetails metadata={pv.metadata} />
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Storage Class">
+                {pv.spec.storageClassName || 'None'}
+              </DetailsItem>
+              
+              <DetailsItem label="Reclaim Policy">
+                {pv.spec.persistentVolumeReclaimPolicy}
+              </DetailsItem>
+              
+              <VolumeMode volumeMode={pv.spec.volumeMode} />
+              
+              <AccessModes accessModes={pv.spec.accessModes} />
+              
+              <StorageDetails capacity={pv.spec.capacity} />
+            </div>
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <DetailsItem label="Storage Class">
-            {pv.spec.storageClassName || 'None'}
-          </DetailsItem>
-          <DetailsItem label="Reclaim Policy">
-            {pv.spec.persistentVolumeReclaimPolicy}
-          </DetailsItem>
-          <VolumeMode volumeMode={pv.spec.volumeMode} />
-          <AccessModes accessModes={pv.spec.accessModes} />
-          <StorageDetails capacity={pv.spec.capacity} />
-          <PersistentVolumeSource source={pv.spec} />
-          <ClaimRef claimRef={pv.spec.claimRef} />
-          <PVStatus status={pv.status} />
+          <Container title="Volume Source">
+            <PersistentVolumeSource source={pv.spec} />
+          </Container>
+
+          <Container title="Status">
+            <div className="grid grid-cols-3 gap-4">
+              <ClaimRef claimRef={pv.spec.claimRef} />
+              <PVStatus status={pv.status} />
+            </div>
+          </Container>
+
+          <MetadataDetails metadata={pv.metadata} />
         </div>
       )}
 

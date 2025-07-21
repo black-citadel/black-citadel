@@ -8,9 +8,10 @@ import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { PriorityClassBadge } from '@components/administration/priority-class/badge';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 export const PriorityClassesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -73,21 +74,27 @@ export const PriorityClassesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && priorityClass && (
         <div className='m-2'>
-          <MetadataDetails metadata={priorityClass.metadata} />
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Value">
+                {priorityClass.value}
+              </DetailsItem>
+              
+              <DetailsItem label="Global Default">
+                {priorityClass.globalDefault ? 'Yes' : 'No'}
+              </DetailsItem>
+              
+              <DetailsItem label="Preemption Policy">
+                {priorityClass.preemptionPolicy || 'PreemptLowerPriority'}
+              </DetailsItem>
+              
+              <DetailsItem label="Description" className="col-span-3">
+                {priorityClass.description || 'No description provided'}
+              </DetailsItem>
+            </div>
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <DetailsItem label="Value">
-            {priorityClass.value}
-          </DetailsItem>
-          <DetailsItem label="Global Default">
-            {priorityClass.globalDefault ? 'Yes' : 'No'}
-          </DetailsItem>
-          <DetailsItem label="Description">
-            {priorityClass.description || 'No description provided'}
-          </DetailsItem>
-          <DetailsItem label="Preemption Policy">
-            {priorityClass.preemptionPolicy || 'PreemptLowerPriority'}
-          </DetailsItem>
+          <MetadataDetails metadata={priorityClass.metadata} />
         </div>
       )}
 

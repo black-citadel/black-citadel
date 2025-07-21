@@ -10,9 +10,10 @@ import { DetailsItem } from '@components/details-item';
 import { StorageClassBadge } from '@components/storage/storage-class/badge';
 import { Parameters } from '@components/storage/storage-class/parameters';
 import { AllowedTopologies } from '@components/storage/storage-class/allowed-topologies';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 export const StorageClassesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -75,23 +76,39 @@ export const StorageClassesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && storageClass && (
         <div className='m-2'>
-          <MetadataDetails metadata={storageClass.metadata} />
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Provisioner">
+                {storageClass.provisioner}
+              </DetailsItem>
+              
+              <DetailsItem label="Reclaim Policy">
+                {storageClass.reclaimPolicy || 'Delete'}
+              </DetailsItem>
+              
+              <DetailsItem label="Volume Binding Mode">
+                {storageClass.volumeBindingMode || 'Immediate'}
+              </DetailsItem>
+              
+              <DetailsItem label="Allow Volume Expansion">
+                {storageClass.allowVolumeExpansion?.toString() || 'false'}
+              </DetailsItem>
+            </div>
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <DetailsItem label="Provisioner">
-            {storageClass.provisioner}
-          </DetailsItem>
-          <DetailsItem label="Reclaim Policy">
-            {storageClass.reclaimPolicy || 'Delete'}
-          </DetailsItem>
-          <DetailsItem label="Volume Binding Mode">
-            {storageClass.volumeBindingMode || 'Immediate'}
-          </DetailsItem>
-          <DetailsItem label="Allow Volume Expansion">
-            {storageClass.allowVolumeExpansion?.toString() || 'false'}
-          </DetailsItem>
-          <Parameters parameters={storageClass.parameters} />
-          <AllowedTopologies allowedTopologies={storageClass.allowedTopologies} />
+          {storageClass.parameters && Object.keys(storageClass.parameters).length > 0 && (
+            <Container title="Parameters">
+              <Parameters parameters={storageClass.parameters} />
+            </Container>
+          )}
+
+          {storageClass.allowedTopologies && storageClass.allowedTopologies.length > 0 && (
+            <Container title="Allowed Topologies">
+              <AllowedTopologies allowedTopologies={storageClass.allowedTopologies} />
+            </Container>
+          )}
+
+          <MetadataDetails metadata={storageClass.metadata} />
         </div>
       )}
 

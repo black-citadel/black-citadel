@@ -11,8 +11,9 @@ import { RuntimeClassBadge } from '@components/administration/runtime-class/badg
 import { Overhead } from '@components/administration/runtime-class/overhead';
 import { Scheduling } from '@components/administration/runtime-class/scheduling';
 import { MetadataDetails } from '@components/metadata';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 export const RuntimeClassesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -75,14 +76,27 @@ export const RuntimeClassesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && runtimeClass && (
         <div className='m-2'>
-          <MetadataDetails metadata={runtimeClass.metadata} />
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Handler">
+                {runtimeClass.handler}
+              </DetailsItem>
+            </div>
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <DetailsItem label="Handler">
-            {runtimeClass.handler}
-          </DetailsItem>
-          <Overhead overhead={runtimeClass.overhead} />
-          <Scheduling scheduling={runtimeClass.scheduling} />
+          {runtimeClass.overhead && (
+            <Container title="Overhead">
+              <Overhead overhead={runtimeClass.overhead} />
+            </Container>
+          )}
+
+          {runtimeClass.scheduling && (
+            <Container title="Scheduling">
+              <Scheduling scheduling={runtimeClass.scheduling} />
+            </Container>
+          )}
+
+          <MetadataDetails metadata={runtimeClass.metadata} />
         </div>
       )}
 

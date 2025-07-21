@@ -12,9 +12,10 @@ import { VolumeMode } from '@components/storage/persistent-volume-claim/volume-m
 import { AccessModes } from '@components/storage/persistent-volume-claim/access-modes';
 import { StorageDetails } from '@components/storage/persistent-volume-claim/storage-details';
 import { PVCStatus } from '@components/storage/persistent-volume-claim/status';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -78,22 +79,32 @@ export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && pvc && (
         <div className='m-2'>
-          <MetadataDetails metadata={pvc.metadata} />
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Storage Class">
+                {pvc.spec.storageClassName || 'Default'}
+              </DetailsItem>
+              
+              <VolumeMode volumeMode={pvc.spec.volumeMode} />
+              
+              <DetailsItem label="Volume Name">
+                {pvc.spec.volumeName || 'Not bound'}
+              </DetailsItem>
+              
+              <AccessModes accessModes={pvc.spec.accessModes} />
+              
+              <StorageDetails
+                requests={pvc.spec.resources?.requests}
+                limits={pvc.spec.resources?.limits}
+              />
+            </div>
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <DetailsItem label="Storage Class">
-            {pvc.spec.storageClassName || 'Default'}
-          </DetailsItem>
-          <VolumeMode volumeMode={pvc.spec.volumeMode} />
-          <AccessModes accessModes={pvc.spec.accessModes} />
-          <StorageDetails
-            requests={pvc.spec.resources?.requests}
-            limits={pvc.spec.resources?.limits}
-          />
-          <DetailsItem label="Volume Name">
-            {pvc.spec.volumeName || 'Not bound'}
-          </DetailsItem>
-          <PVCStatus status={pvc.status} />
+          <Container title="Status">
+            <PVCStatus status={pvc.status} />
+          </Container>
+
+          <MetadataDetails metadata={pvc.metadata} />
         </div>
       )}
 

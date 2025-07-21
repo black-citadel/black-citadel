@@ -8,8 +8,9 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { MutatingWebhookConfigurationBadge } from '@components/administration/mutating-webhook-configuration/badge';
 import { WebhookList } from '@components/administration/mutating-webhook-configuration/webhook-list';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { Container } from '@components/base/container';
 
 export const MutatingWebhookConfigurationsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
@@ -57,10 +58,11 @@ export const MutatingWebhookConfigurationsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && mutatingWebhookConfiguration && (
         <div className='m-2'>
+          <Container title="Webhooks">
+            <WebhookList webhooks={mutatingWebhookConfiguration.webhooks} />
+          </Container>
+
           <MetadataDetails metadata={mutatingWebhookConfiguration.metadata} />
-          
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <WebhookList webhooks={mutatingWebhookConfiguration.webhooks} />
         </div>
       )}
 

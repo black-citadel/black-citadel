@@ -7,9 +7,10 @@ import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { ValidatingWebhookConfigurationBadge } from '@components/administration/validating-webhook-configuration/badge';
-import { WebhookList } from '@components/administration/mutating-webhook-configuration/webhook-list';
-import { Heading, Subheading } from '@components/base/heading';
+import { WebhookList } from '@components/administration/validating-webhook-configuration/webhook-list';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { Container } from '@components/base/container';
 
 export const ValidatingWebhookConfigurationsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
@@ -57,10 +58,11 @@ export const ValidatingWebhookConfigurationsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && validatingWebhookConfiguration && (
         <div className='m-2'>
-          <MetadataDetails metadata={validatingWebhookConfiguration.metadata} />
+          <Container title="Webhooks">
+            <WebhookList webhooks={validatingWebhookConfiguration.webhooks} />
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <WebhookList webhooks={validatingWebhookConfiguration.webhooks} />
+          <MetadataDetails metadata={validatingWebhookConfiguration.metadata} />
         </div>
       )}
 

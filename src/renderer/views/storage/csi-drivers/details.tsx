@@ -10,8 +10,9 @@ import { DetailsItem } from '@components/details-item';
 import { CSIDriverBadge } from '@components/storage/csi-driver/badge';
 import { VolumeLifecycleModes } from '@components/storage/csi-driver/volume-lifecycle-modes';
 import { TokenRequests } from '@components/storage/csi-driver/token-requests';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
+import { Container } from '@components/base/container';
 
 export const CSIDriversDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
@@ -59,26 +60,39 @@ export const CSIDriversDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && csiDriver && (
         <div className='m-2'>
-          <MetadataDetails metadata={csiDriver.metadata} />
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Attach Required">
+                {csiDriver.spec.attachRequired?.toString() || 'Not specified'}
+              </DetailsItem>
+              
+              <DetailsItem label="Pod Info on Mount">
+                {csiDriver.spec.podInfoOnMount?.toString() || 'Not specified'}
+              </DetailsItem>
+              
+              <DetailsItem label="Storage Capacity">
+                {csiDriver.spec.storageCapacity?.toString() || 'Not specified'}
+              </DetailsItem>
+              
+              <DetailsItem label="FS Group Policy">
+                {csiDriver.spec.fsGroupPolicy || 'Not specified'}
+              </DetailsItem>
+              
+              <DetailsItem label="Requires Volume Attributes">
+                {csiDriver.spec.requiresRepublish?.toString() || 'Not specified'}
+              </DetailsItem>
+              
+              <VolumeLifecycleModes modes={csiDriver.spec.volumeLifecycleModes} />
+            </div>
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <DetailsItem label="Attach Required">
-            {csiDriver.spec.attachRequired?.toString() || 'Not specified'}
-          </DetailsItem>
-          <DetailsItem label="Pod Info on Mount">
-            {csiDriver.spec.podInfoOnMount?.toString() || 'Not specified'}
-          </DetailsItem>
-          <DetailsItem label="Storage Capacity">
-            {csiDriver.spec.storageCapacity?.toString() || 'Not specified'}
-          </DetailsItem>
-          <DetailsItem label="FS Group Policy">
-            {csiDriver.spec.fsGroupPolicy || 'Not specified'}
-          </DetailsItem>
-          <VolumeLifecycleModes modes={csiDriver.spec.volumeLifecycleModes} />
-          <TokenRequests requests={csiDriver.spec.tokenRequests} />
-          <DetailsItem label="Requires Volume Attributes">
-            {csiDriver.spec.requiresRepublish?.toString() || 'Not specified'}
-          </DetailsItem>
+          {csiDriver.spec.tokenRequests && csiDriver.spec.tokenRequests.length > 0 && (
+            <Container title="Token Requests">
+              <TokenRequests requests={csiDriver.spec.tokenRequests} />
+            </Container>
+          )}
+
+          <MetadataDetails metadata={csiDriver.metadata} />
         </div>
       )}
 
