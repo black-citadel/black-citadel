@@ -6,12 +6,15 @@ import { DetailsItem } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { ListTable } from '@protoku/design-system';
 import { CustomResourceDefinitionBadge } from '@components/cluster/custom-resource-definition/badge';
 import { CustomResourceLink } from '@components/cluster/custom-resource/resource-link';
 import { calculateAge } from '@utils/helpers';
+import { Container } from '@components/base/container';
+import { ResourceActions } from '@components/resources/ResourceActions';
+import { Resources, ResourceAction } from '@utils/enums';
 
 enum CustomResourceTabs {
   Details = 'Details',
@@ -20,7 +23,7 @@ enum CustomResourceTabs {
 }
 
 export const CustomResourceDefinitionsDetailsView = (): JSX.Element => {
-    const { viewContext } = useView()
+    const { viewContext, setViewContext } = useView()
     const [activeTab, setActiveTab] = useState<CustomResourceTabs>(CustomResourceTabs.Details)
     const [crd, setCrd] = useState<V1CustomResourceDefinition>();
     const [customResources, setCustomResources] = useState<any[]>([]);
@@ -70,10 +73,27 @@ export const CustomResourceDefinitionsDetailsView = (): JSX.Element => {
     }, []);
   
     const yamlContent = dump(crd);
+    
+    const handleDelete = async () => {
+      // TODO: Implement deleteCustomResourceDefinition in the main process
+      console.warn('Delete Custom Resource Definition not yet implemented');
+      // await window.electronAPI.deleteCustomResourceDefinition(viewContext.name);
+      // setViewContext({ resource: Resources.CustomResourceDefinitions, action: ResourceAction.List });
+    };
   
     return (
       <>
-        <DetailsHeader error={error}>
+        <DetailsHeader 
+          error={error}
+          actions={
+            <ResourceActions
+              resourceType={Resources.CustomResourceDefinitions}
+              resourceName={viewContext.name}
+              resource={crd}
+              onDelete={handleDelete}
+            />
+          }
+        >
           <Heading>
             <CustomResourceDefinitionBadge />{viewContext.name}
           </Heading>
@@ -88,52 +108,49 @@ export const CustomResourceDefinitionsDetailsView = (): JSX.Element => {
         </DetailsHeader>
   
         {activeTab === CustomResourceTabs.Details && crd && (
-          <div className='m-2 flex flex-col gap-8'>
-            <MetadataDetails metadata={crd.metadata} />
-            
-            <div>
-              <Subheading>Specification</Subheading>
-              <div className='mt-4'>
+          <div className='m-2'>
+            <Container title="Specification">
+              <div className="grid grid-cols-3 gap-4">
                 <DetailsItem label="Group">
                   {crd.spec?.group || 'Not specified'}
                 </DetailsItem>
                 <DetailsItem label="Scope">
                   {crd.spec?.scope || 'Not specified'}
                 </DetailsItem>
-                <DetailsItem label="Names">
-                  <div className='space-y-1'>
-                    <div>Kind: {crd.spec?.names?.kind || 'Not specified'}</div>
-                    <div>Plural: {crd.spec?.names?.plural || 'Not specified'}</div>
-                    <div>Singular: {crd.spec?.names?.singular || 'Not specified'}</div>
-                    {crd.spec?.names?.shortNames && crd.spec.names.shortNames.length > 0 && (
-                      <div>Short Names: {crd.spec.names.shortNames.join(', ')}</div>
-                    )}
-                  </div>
+                <DetailsItem label="Kind">
+                  {crd.spec?.names?.kind || 'Not specified'}
                 </DetailsItem>
+                <DetailsItem label="Plural">
+                  {crd.spec?.names?.plural || 'Not specified'}
+                </DetailsItem>
+                <DetailsItem label="Singular">
+                  {crd.spec?.names?.singular || 'Not specified'}
+                </DetailsItem>
+                {crd.spec?.names?.shortNames && crd.spec.names.shortNames.length > 0 && (
+                  <DetailsItem label="Short Names">
+                    {crd.spec.names.shortNames.join(', ')}
+                  </DetailsItem>
+                )}
               </div>
-            </div>
+            </Container>
 
             {crd.spec?.versions && crd.spec.versions.length > 0 && (
-              <div>
-                <Subheading>Versions</Subheading>
-                <div className='mt-4'>
-                  <ListTable
-                    headers={['Name', 'Served', 'Storage', 'Deprecated']}
-                    rows={crd.spec.versions.map(version => ({
-                      Name: version.name || '',
-                      Served: version.served ? 'Yes' : 'No',
-                      Storage: version.storage ? 'Yes' : 'No',
-                      Deprecated: version.deprecated ? 'Yes' : 'No'
-                    }))}
-                  />
-                </div>
-              </div>
+              <Container title="Versions">
+                <ListTable
+                  headers={['Name', 'Served', 'Storage', 'Deprecated']}
+                  rows={crd.spec.versions.map(version => ({
+                    Name: version.name || '',
+                    Served: version.served ? 'Yes' : 'No',
+                    Storage: version.storage ? 'Yes' : 'No',
+                    Deprecated: version.deprecated ? 'Yes' : 'No'
+                  }))}
+                />
+              </Container>
             )}
 
             {crd.status && (
-              <div>
-                <Subheading>Status</Subheading>
-                <div className='mt-4'>
+              <Container title="Status">
+                <div className="grid grid-cols-2 gap-4">
                   {crd.status.conditions?.map((condition, index) => (
                     <DetailsItem key={index} label={condition.type || ''}>
                       <span className={condition.status === 'True' ? 'text-green-600' : 'text-red-600'}>
@@ -148,44 +165,48 @@ export const CustomResourceDefinitionsDetailsView = (): JSX.Element => {
                     </DetailsItem>
                   )}
                 </div>
-              </div>
+              </Container>
             )}
+
+            <MetadataDetails metadata={crd.metadata} />
           </div>
         )}
   
         {activeTab === CustomResourceTabs.Instances && (
           <div className='m-2'>
-            {customResourcesError ? (
-              <div className='text-red-600'>{customResourcesError}</div>
-            ) : customResources.length === 0 ? (
-              <div className='text-gray-500'>No instances found</div>
-            ) : (
-              <ListTable
-                headers={['Name', 'Namespace', 'Age']}
-                rows={customResources.map(resource => {
-                  const isNamespaced = crd?.spec?.scope === 'Namespaced';
-                  const group = crd?.spec?.group || '';
-                  const plural = crd?.spec?.names?.plural || '';
-                  const version = crd?.spec?.versions?.find(v => v.storage)?.name || crd?.spec?.versions?.[0]?.name || '';
-                  const kind = crd?.spec?.names?.kind || '';
-                  
-                  return {
-                    Name: (
-                      <CustomResourceLink
-                        name={resource.metadata?.name || 'Unknown'}
-                        namespace={isNamespaced ? resource.metadata?.namespace : undefined}
-                        group={group}
-                        version={version}
-                        plural={plural}
-                        kind={kind}
-                      />
-                    ),
-                    Namespace: isNamespaced ? (resource.metadata?.namespace || 'default') : '-',
-                    Age: calculateAge(resource.metadata?.creationTimestamp)
-                  };
-                })}
-              />
-            )}
+            <Container title="Custom Resource Instances">
+              {customResourcesError ? (
+                <div className='text-red-600'>{customResourcesError}</div>
+              ) : customResources.length === 0 ? (
+                <div className='text-gray-500 text-center py-4'>No instances found</div>
+              ) : (
+                <ListTable
+                  headers={['Name', 'Namespace', 'Age']}
+                  rows={customResources.map(resource => {
+                    const isNamespaced = crd?.spec?.scope === 'Namespaced';
+                    const group = crd?.spec?.group || '';
+                    const plural = crd?.spec?.names?.plural || '';
+                    const version = crd?.spec?.versions?.find(v => v.storage)?.name || crd?.spec?.versions?.[0]?.name || '';
+                    const kind = crd?.spec?.names?.kind || '';
+                    
+                    return {
+                      Name: (
+                        <CustomResourceLink
+                          name={resource.metadata?.name || 'Unknown'}
+                          namespace={isNamespaced ? resource.metadata?.namespace : undefined}
+                          group={group}
+                          version={version}
+                          plural={plural}
+                          kind={kind}
+                        />
+                      ),
+                      Namespace: isNamespaced ? (resource.metadata?.namespace || 'default') : '-',
+                      Age: calculateAge(resource.metadata?.creationTimestamp)
+                    };
+                  })}
+                />
+              )}
+            </Container>
           </div>
         )}
 

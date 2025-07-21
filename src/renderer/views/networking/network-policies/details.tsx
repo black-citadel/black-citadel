@@ -3,7 +3,7 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
+import { DetailsItem, DetailsSelector } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
@@ -12,6 +12,8 @@ import { PolicyTypes } from '@components/networking/network-policy/policy-types'
 import { PolicyRules } from '@components/networking/network-policy/policy-rules';
 import { ResourceActions } from '@components/resources/ResourceActions';
 import { Heading } from '@components/base/heading';
+import { MetadataDetails } from '@components/metadata';
+import { Container } from '@components/base/container';
 
 export const NetworkPoliciesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -73,33 +75,93 @@ export const NetworkPoliciesDetailsView = (): JSX.Element => {
         </Navbar>
       </DetailsHeader>
 
-      {activeTab === ResourceTabs.Details && networkPolicy && (
-        <div className="grid grid-cols-2 gap-4">
-          <div className='m-2'>
-            <DetailsName name={networkPolicy.metadata.name} />
-            <DetailsNamespace name={networkPolicy.metadata.namespace} />
-            <DetailsLabels labels={networkPolicy.metadata.labels} />
-            <DetailsAnnotations annotations={networkPolicy.metadata.annotations} />
-          </div>
+      {activeTab === ResourceTabs.Details && networkPolicy &&
+        <div className='m-2'>
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsSelector labels={networkPolicy.spec.podSelector.matchLabels} title="Pod Selector" />
+              <DetailsItem label="Policy Types">
+                {networkPolicy.spec.policyTypes?.join(', ') || 'None'}
+              </DetailsItem>
+              <DetailsItem label="Total Rules">
+                {(networkPolicy.spec.ingress?.length || 0) + (networkPolicy.spec.egress?.length || 0)}
+              </DetailsItem>
+            </div>
+          </Container>
 
-          <div className='m-2'>
-            <DetailsItem label="Pod Selector">
-              {Object.entries(networkPolicy.spec.podSelector.matchLabels || {}).map(([key, value]) => (
-                <div key={key}>{key}: {value}</div>
+          {networkPolicy.spec.ingress && networkPolicy.spec.ingress.length > 0 && (
+            <Container title="Ingress Rules">
+              {networkPolicy.spec.ingress.map((rule, index) => (
+                <div key={index} className="mb-4 p-4 border rounded">
+                  <h4 className="font-bold mb-2">Rule {index + 1}</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    {rule.from && rule.from.length > 0 && (
+                      <div>
+                        <p className="font-semibold mb-1">From:</p>
+                        {rule.from.map((from, fromIndex) => (
+                          <div key={fromIndex} className="ml-2">
+                            {from.ipBlock && <div>IP Block: {from.ipBlock.cidr}</div>}
+                            {from.namespaceSelector && <div>Namespace Selector: {JSON.stringify(from.namespaceSelector.matchLabels)}</div>}
+                            {from.podSelector && <div>Pod Selector: {JSON.stringify(from.podSelector.matchLabels)}</div>}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {rule.ports && rule.ports.length > 0 && (
+                      <div>
+                        <p className="font-semibold mb-1">Ports:</p>
+                        {rule.ports.map((port, portIndex) => (
+                          <div key={portIndex} className="ml-2">
+                            {port.port} ({port.protocol || 'TCP'})
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
               ))}
-            </DetailsItem>
-            <PolicyTypes policyTypes={networkPolicy.spec.policyTypes} />
-            <PolicyRules 
-              ingress={networkPolicy.spec.ingress} 
-              egress={networkPolicy.spec.egress} 
-            />
-          </div>
-        </div>
-      )}
+            </Container>
+          )}
 
-      {activeTab === ResourceTabs.YAML && (
-        <Editor content={yamlContent} />
-      )}
+          {networkPolicy.spec.egress && networkPolicy.spec.egress.length > 0 && (
+            <Container title="Egress Rules">
+              {networkPolicy.spec.egress.map((rule, index) => (
+                <div key={index} className="mb-4 p-4 border rounded">
+                  <h4 className="font-bold mb-2">Rule {index + 1}</h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    {rule.to && rule.to.length > 0 && (
+                      <div>
+                        <p className="font-semibold mb-1">To:</p>
+                        {rule.to.map((to, toIndex) => (
+                          <div key={toIndex} className="ml-2">
+                            {to.ipBlock && <div>IP Block: {to.ipBlock.cidr}</div>}
+                            {to.namespaceSelector && <div>Namespace Selector: {JSON.stringify(to.namespaceSelector.matchLabels)}</div>}
+                            {to.podSelector && <div>Pod Selector: {JSON.stringify(to.podSelector.matchLabels)}</div>}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {rule.ports && rule.ports.length > 0 && (
+                      <div>
+                        <p className="font-semibold mb-1">Ports:</p>
+                        {rule.ports.map((port, portIndex) => (
+                          <div key={portIndex} className="ml-2">
+                            {port.port} ({port.protocol || 'TCP'})
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </Container>
+          )}
+
+          <MetadataDetails metadata={networkPolicy.metadata} />
+        </div>
+      }
+
+      {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );
 };

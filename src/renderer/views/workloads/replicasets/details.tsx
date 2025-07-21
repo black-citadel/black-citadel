@@ -11,14 +11,13 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { ReplicaSetBadge } from '@components/workloads/replicaset/badge';
 import { PodTemplate } from '@components/workloads/pod/template';
-import { ReplicaSetStatus } from '@components/workloads/replicaset/status';
-import { ReplicaSetSpec } from '@components/workloads/replicaset/spec';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { PodList } from '@components/workloads/pod/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
 import { Container } from '@components/base/container';
+import { DetailsItem, DetailsSelector } from '@components/details-item';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -93,18 +92,61 @@ export const ReplicaSetsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && replicaSet && (
         <div className='m-2'>
-          <MetadataDetails metadata={replicaSet.metadata} />
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Replicas">
+                {replicaSet.spec.replicas || 0}
+              </DetailsItem>
+              <DetailsItem label="Min Ready Seconds">
+                {replicaSet.spec.minReadySeconds || 0}
+              </DetailsItem>
+              <DetailsSelector labels={replicaSet.spec.selector?.matchLabels} />
+            </div>
+          </Container>
 
-          <ReplicaSetSpec spec={replicaSet.spec} />
+          <Container title="Status">
+            <div className="grid grid-cols-4 gap-4">
+              <DetailsItem label="Replicas">
+                {replicaSet.status?.replicas || 0}
+              </DetailsItem>
+              <DetailsItem label="Ready Replicas">
+                {replicaSet.status?.readyReplicas || 0}
+              </DetailsItem>
+              <DetailsItem label="Available Replicas">
+                {replicaSet.status?.availableReplicas || 0}
+              </DetailsItem>
+              <DetailsItem label="Fully Labeled Replicas">
+                {replicaSet.status?.fullyLabeledReplicas || 0}
+              </DetailsItem>
+            </div>
+            {replicaSet.status?.conditions && replicaSet.status.conditions.length > 0 && (
+              <div className="mt-4">
+                <h4 className="font-semibold mb-2">Conditions</h4>
+                <div className="space-y-2">
+                  {replicaSet.status.conditions.map((condition, index) => (
+                    <div key={index} className="p-3 border rounded">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div><span className="font-medium">Type:</span> {condition.type}</div>
+                        <div><span className="font-medium">Status:</span> {condition.status}</div>
+                        {condition.reason && <div><span className="font-medium">Reason:</span> {condition.reason}</div>}
+                        {condition.message && <div className="col-span-2"><span className="font-medium">Message:</span> {condition.message}</div>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Container>
 
-          <Subheading className='mt-8'>Pod Template</Subheading>
-          <PodTemplate template={replicaSet.spec.template} />
+          <Container title="Pod Template">
+            <PodTemplate template={replicaSet.spec.template} />
+          </Container>
 
           <Container title='Pods'>
             {pods && <PodList pods={pods} />}
           </Container>
 
-          <ReplicaSetStatus status={replicaSet.status} />
+          <MetadataDetails metadata={replicaSet.metadata} />
         </div>
       )}
 
@@ -117,9 +159,7 @@ export const ReplicaSetsDetailsView = (): JSX.Element => {
         </div>
       )}
 
-      {activeTab === ResourceTabs.YAML && (
-        <Editor content={yamlContent} />
-      )}
+      {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );
 };

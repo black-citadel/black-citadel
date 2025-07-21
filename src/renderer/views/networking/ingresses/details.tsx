@@ -1,16 +1,18 @@
 import { V1Ingress } from '@utils/k8s-types';
-import { Heading, Subheading } from "@components/base/heading";
+import { Heading } from "@components/base/heading";
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceAction, Resources, ResourceTabs } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsAnnotations, DetailsItem, DetailsLabels, DetailsName, DetailsNamespace } from '@components/details-item';
+import { DetailsItem } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { IngressBadge } from '@components/networking/ingress/badge';
 import { IngressRules } from '@components/networking/ingress/ingress-rules';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { MetadataDetails } from '@components/metadata';
+import { Container } from '@components/base/container';
 
 export const IngressesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -72,29 +74,25 @@ export const IngressesDetailsView = (): JSX.Element => {
         </Navbar>
       </DetailsHeader>
 
-      {activeTab === ResourceTabs.Details && ingress && <>
-        <div className="grid grid-cols-2 gap-4">
-          <div className='m-2'>
-            <DetailsName name={ingress.metadata.name} />
-            <DetailsNamespace name={ingress.metadata.namespace} />
-            <DetailsLabels labels={ingress.metadata.labels} />
-            <DetailsAnnotations annotations={ingress.metadata.annotations} />
-          </div>
+      {activeTab === ResourceTabs.Details && ingress &&
+        <div className='m-2'>
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Ingress Class">
+                {ingress.spec.ingressClassName || 'None'}
+              </DetailsItem>
+            </div>
+          </Container>
 
-          <div className='m-2'>
-            <DetailsItem label="Ingress Class">
-              {ingress.spec.ingressClassName}
-            </DetailsItem>
-          </div>
+          <Container title="Rules">
+            <IngressRules rules={ingress.spec.rules} />
+          </Container>
+
+          <MetadataDetails metadata={ingress.metadata} />
         </div>
+      }
 
-        <Subheading className='mt-8'>Rules</Subheading>
-        <IngressRules rules={ingress.spec.rules} />
-      </>}
-
-      {activeTab === ResourceTabs.YAML && <>
-        <Editor content={yamlContent} />
-      </>}
+      {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );
 };

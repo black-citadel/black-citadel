@@ -16,9 +16,8 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { CronJobBadge } from '@components/workloads/cronjob/badge';
 import { JobTemplate } from '@components/workloads/cronjob/job-template';
-import { CronJobStatus } from '@components/workloads/cronjob/status';
 import { MetadataDetails } from '@components/metadata';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { JobList } from '@components/workloads/job/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
@@ -111,38 +110,70 @@ export const CronJobsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && cronJob && (
         <div className='m-2'>
-          <MetadataDetails metadata={cronJob.metadata} />
-
-          <Subheading className='mt-8 mb-4'>Spec</Subheading>
-          <div>
-            <DetailsItem label="Schedule">
-              {cronJob.spec.schedule}
-            </DetailsItem>
-            <DetailsItem label="Suspend">
-              {cronJob.spec.suspend ? 'Yes' : 'No'}
-            </DetailsItem>
-            <DetailsItem label="Concurrency Policy">
-              {cronJob.spec.concurrencyPolicy || 'Allow'}
-            </DetailsItem>
-            <DetailsItem label="Starting Deadline Seconds">
-              {cronJob.spec.startingDeadlineSeconds || 'Not set'}
-            </DetailsItem>
-            <DetailsItem label="Successful Jobs History Limit">
-              {cronJob.spec.successfulJobsHistoryLimit || 3}
-            </DetailsItem>
-            <DetailsItem label="Failed Jobs History Limit">
-              {cronJob.spec.failedJobsHistoryLimit || 1}
-            </DetailsItem>
-          </div>
-
-          <Subheading className='mt-8'>Job Template</Subheading>
-          <JobTemplate template={cronJob.spec.jobTemplate} />
-
-          <Container title='Jobs'>
-            {jobs && <JobList jobs={jobs} />}
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Schedule">
+                {cronJob.spec.schedule}
+              </DetailsItem>
+              <DetailsItem label="Suspend">
+                {cronJob.spec.suspend ? 'Yes' : 'No'}
+              </DetailsItem>
+              <DetailsItem label="Concurrency Policy">
+                {cronJob.spec.concurrencyPolicy || 'Allow'}
+              </DetailsItem>
+              <DetailsItem label="Starting Deadline Seconds">
+                {cronJob.spec.startingDeadlineSeconds || 'Not set'}
+              </DetailsItem>
+              <DetailsItem label="Successful Jobs History Limit">
+                {cronJob.spec.successfulJobsHistoryLimit || 3}
+              </DetailsItem>
+              <DetailsItem label="Failed Jobs History Limit">
+                {cronJob.spec.failedJobsHistoryLimit || 1}
+              </DetailsItem>
+            </div>
           </Container>
 
-          <CronJobStatus status={cronJob.status} />
+          <Container title="Status">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Active Jobs">
+                {cronJob.status?.active?.length || 0}
+              </DetailsItem>
+              <DetailsItem label="Last Schedule Time">
+                {cronJob.status?.lastScheduleTime ? new Date(cronJob.status.lastScheduleTime).toLocaleString() : 'Never'}
+              </DetailsItem>
+              <DetailsItem label="Last Successful Time">
+                {cronJob.status?.lastSuccessfulTime ? new Date(cronJob.status.lastSuccessfulTime).toLocaleString() : 'Never'}
+              </DetailsItem>
+            </div>
+            {cronJob.status?.active && cronJob.status.active.length > 0 && (
+              <div className="mt-4">
+                <h4 className="font-semibold mb-2">Active Jobs</h4>
+                <div className="space-y-1">
+                  {cronJob.status.active.map((jobRef, index) => (
+                    <div key={index} className="text-sm">
+                      {jobRef.name}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Container>
+
+          <Container title="Job Template">
+            <JobTemplate template={cronJob.spec.jobTemplate} />
+          </Container>
+
+          <Container title='Job History'>
+            {jobs && jobs.items.length > 0 ? (
+              <JobList jobs={jobs} />
+            ) : (
+              <div className="text-zinc-500 text-center py-4">
+                No jobs created yet
+              </div>
+            )}
+          </Container>
+
+          <MetadataDetails metadata={cronJob.metadata} />
         </div>
       )}
 
@@ -161,9 +192,7 @@ export const CronJobsDetailsView = (): JSX.Element => {
         </div>
       )}
 
-      {activeTab === ResourceTabs.YAML && (
-        <Editor content={yamlContent} />
-      )}
+      {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );
 };

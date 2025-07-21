@@ -128,6 +128,7 @@ export interface ElectronAPI {
   deleteStorageClass: (name: string) => Promise<void>;
   deletePriorityClass: (name: string) => Promise<void>;
   deleteRuntimeClass: (name: string) => Promise<void>;
+  deleteIngressClass: (name: string) => Promise<void>;
   // Custom Resource Definitions
   listCustomResourceDefinition: () => Promise<k8s.V1CustomResourceDefinitionList>;
   readCustomResourceDefinition: (name: string) => Promise<k8s.V1CustomResourceDefinition>;
@@ -289,6 +290,7 @@ try {
     deleteStorageClass: (name: string) => ipcRenderer.invoke('deleteStorageClass', name),
     deletePriorityClass: (name: string) => ipcRenderer.invoke('deletePriorityClass', name),
     deleteRuntimeClass: (name: string) => ipcRenderer.invoke('deleteRuntimeClass', name),
+    deleteIngressClass: (name: string) => ipcRenderer.invoke('deleteIngressClass', name),
     // Custom Resource Definitions
     listCustomResourceDefinition: () => ipcRenderer.invoke('listCustomResourceDefinition'),
     readCustomResourceDefinition: (name: string) => ipcRenderer.invoke('readCustomResourceDefinition', name),

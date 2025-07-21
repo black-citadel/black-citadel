@@ -6,15 +6,14 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
-import {  DetailsItem } from '@components/details-item';
+import { DetailsItem, DetailsSelector } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { JobBadge } from '@components/workloads/job/badge';
 import { PodTemplate } from '@components/workloads/pod/template';
-import { JobStatus } from '@components/workloads/job/status';
 import { MetadataDetails } from '@components/metadata';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { PodList } from '@components/workloads/pod/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
@@ -94,38 +93,83 @@ export const JobsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && job && (
         <div className='m-2'>
-          <MetadataDetails metadata={job.metadata} />
+          <Container title="Configuration">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Parallelism">
+                {job.spec.parallelism || 1}
+              </DetailsItem>
+              <DetailsItem label="Completions">
+                {job.spec.completions || 1}
+              </DetailsItem>
+              <DetailsItem label="Backoff Limit">
+                {job.spec.backoffLimit || 6}
+              </DetailsItem>
+              <DetailsItem label="Active Deadline Seconds">
+                {job.spec.activeDeadlineSeconds || 'Not set'}
+              </DetailsItem>
+              <DetailsItem label="Completion Mode">
+                {job.spec.completionMode || 'NonIndexed'}
+              </DetailsItem>
+              <DetailsItem label="Suspend">
+                {job.spec.suspend ? 'Yes' : 'No'}
+              </DetailsItem>
+              <DetailsSelector labels={job.spec.selector?.matchLabels} />
+            </div>
+          </Container>
 
-          <Subheading className='mt-8 mb-4'>Spec</Subheading>
-          <div>
-            <DetailsItem label="Parallelism">
-              {job.spec.parallelism || 1}
-            </DetailsItem>
-            <DetailsItem label="Completions">
-              {job.spec.completions || 1}
-            </DetailsItem>
-            <DetailsItem label="Active Deadline Seconds">
-              {job.spec.activeDeadlineSeconds || 'Not set'}
-            </DetailsItem>
-            <DetailsItem label="Backoff Limit">
-              {job.spec.backoffLimit || 6}
-            </DetailsItem>
-            <DetailsItem label="Completion Mode">
-              {job.spec.completionMode || 'NonIndexed'}
-            </DetailsItem>
-            <DetailsItem label="Suspend">
-              {job.spec.suspend ? 'Yes' : 'No'}
-            </DetailsItem>
-          </div>
+          <Container title="Status">
+            <div className="grid grid-cols-3 gap-4">
+              <DetailsItem label="Active">
+                {job.status?.active || 0}
+              </DetailsItem>
+              <DetailsItem label="Succeeded">
+                {job.status?.succeeded || 0}
+              </DetailsItem>
+              <DetailsItem label="Failed">
+                {job.status?.failed || 0}
+              </DetailsItem>
+              <DetailsItem label="Start Time">
+                {job.status?.startTime ? new Date(job.status.startTime).toLocaleString() : 'Not started'}
+              </DetailsItem>
+              <DetailsItem label="Completion Time">
+                {job.status?.completionTime ? new Date(job.status.completionTime).toLocaleString() : 'Not completed'}
+              </DetailsItem>
+              <DetailsItem label="Duration">
+                {job.status?.startTime && job.status?.completionTime
+                  ? `${Math.round((new Date(job.status.completionTime).getTime() - new Date(job.status.startTime).getTime()) / 1000)}s`
+                  : job.status?.startTime
+                  ? `${Math.round((Date.now() - new Date(job.status.startTime).getTime()) / 1000)}s (running)`
+                  : 'N/A'}
+              </DetailsItem>
+            </div>
+            {job.status?.conditions && job.status.conditions.length > 0 && (
+              <div className="mt-4">
+                <h4 className="font-semibold mb-2">Conditions</h4>
+                <div className="space-y-2">
+                  {job.status.conditions.map((condition, index) => (
+                    <div key={index} className="p-3 border rounded">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div><span className="font-medium">Type:</span> {condition.type}</div>
+                        <div><span className="font-medium">Status:</span> {condition.status}</div>
+                        {condition.reason && <div><span className="font-medium">Reason:</span> {condition.reason}</div>}
+                        {condition.message && <div className="col-span-2"><span className="font-medium">Message:</span> {condition.message}</div>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Container>
 
-          <Subheading className='mt-8'>Pod Template</Subheading>
-          <PodTemplate template={job.spec.template} />
+          <Container title="Pod Template">
+            <PodTemplate template={job.spec.template} />
+          </Container>
 
           <Container title='Pods'>
             {pods && <PodList pods={pods} />}
           </Container>
 
-          <JobStatus status={job.status} />
+          <MetadataDetails metadata={job.metadata} />
         </div>
       )}
 
@@ -138,9 +182,7 @@ export const JobsDetailsView = (): JSX.Element => {
         </div>
       )}
 
-      {activeTab === ResourceTabs.YAML && (
-        <Editor content={yamlContent} />
-      )}
+      {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );
 };

@@ -610,6 +610,7 @@ ipcMain.handle('listNetworkPolicyForAllNamespaces', async () => {
 ipcMain.handle('readNamespacedIngress', async (event, name, namespace) => (await k8sNetworkingV1Api.readNamespacedIngress(name, namespace)).body);
 ipcMain.handle('deleteNamespacedIngress', async (event, name, namespace) => (await k8sNetworkingV1Api.deleteNamespacedIngress(name, namespace)).body);
 ipcMain.handle('readIngressClass', async (event, name) => (await k8sNetworkingV1Api.readIngressClass(name)).body);
+ipcMain.handle('deleteIngressClass', async (event, name) => (await k8sNetworkingV1Api.deleteIngressClass(name)).body);
 ipcMain.handle('readNamespacedNetworkPolicy', async (event, name, namespace) => (await k8sNetworkingV1Api.readNamespacedNetworkPolicy(name, namespace)).body);
 ipcMain.handle('deleteNamespacedNetworkPolicy', async (event, name, namespace) => (await k8sNetworkingV1Api.deleteNamespacedNetworkPolicy(name, namespace)).body);
 
