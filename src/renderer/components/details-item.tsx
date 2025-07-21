@@ -13,8 +13,8 @@ interface DetailsItemProps {
 export const DetailsItem = ({ label, help, children }: DetailsItemProps): JSX.Element => {
   return (
     <div className="">
-      <dt className="text-xs leading-6 text-neutral-400 uppercase tracking-wider">{label}</dt>
-      <dd className="mt-1 text-sm leading-6 text-white sm:mt-2 mb-6">{children}</dd>
+      <dt className="text-xs leading-6 text-neutral-400 uppercase tracking-wider font-semibold">{label}</dt>
+      <dd className="mt-1 text-sm leading-6 text-white sm:mt-2">{children}</dd>
     </div>
   )
 }

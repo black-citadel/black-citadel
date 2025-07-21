@@ -4,6 +4,7 @@ import { Text } from '@components/base/text';
 import { Toggle } from '@protoku/design-system';
 import { ListHeader } from '@components/list-header';
 import { Resources } from '@utils/enums';
+import { Container } from '@components/base/container';
 
 export const PreferencesListView = (): JSX.Element => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -16,7 +17,7 @@ export const PreferencesListView = (): JSX.Element => {
 
   const handleThemeToggle = (checked: boolean) => {
     setIsDarkMode(checked);
-    
+
     if (checked) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
@@ -28,38 +29,31 @@ export const PreferencesListView = (): JSX.Element => {
 
   return (
     <>
-      <ListHeader 
+      <ListHeader
         resource={Resources.Preferences}
         showNamespaceDropdown={false}
       />
 
-      <div className="p-4">
-        <div className="max-w-4xl">
-          <div className="bg-white dark:bg-[#101010] border border-gray-200 dark:border-neutral-800 rounded-lg">
-            {/* Appearance Section */}
-            <div className="p-6">
-              <Heading className="text-lg font-semibold mb-4">Appearance</Heading>
-              
-              <div className="space-y-4">
-                <label className="flex items-center justify-between cursor-pointer">
-                  <div>
-                    <Text className="font-medium text-gray-900 dark:text-white">
-                      Dark Mode
-                    </Text>
-                    <Text className="text-sm text-gray-500 dark:text-gray-400">
-                      Enable dark theme for a comfortable viewing experience in low light
-                    </Text>
-                  </div>
-                  <Toggle 
-                    checked={isDarkMode}
-                    onChange={(e) => handleThemeToggle(e.target.checked)}
-                    label="Toggle dark mode"
-                  />
-                </label>
+      <div className='m-2'>
+        <Container title="Appearance">
+          <div className="space-y-4">
+            <label className="flex items-center justify-between cursor-pointer">
+              <div>
+                <Text className="font-medium text-gray-900 dark:text-white">
+                  Dark Mode
+                </Text>
+                <Text className="text-sm text-gray-500 dark:text-gray-400">
+                  Enable dark theme for a comfortable viewing experience in low light
+                </Text>
               </div>
-            </div>
+              <Toggle
+                checked={isDarkMode}
+                onChange={(e) => handleThemeToggle(e.target.checked)}
+                label="Toggle dark mode"
+              />
+            </label>
           </div>
-        </div>
+        </Container>
       </div>
     </>
   );

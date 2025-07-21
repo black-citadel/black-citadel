@@ -7,6 +7,7 @@ import { useView } from '@context/viewProvider';
 import { useState } from 'react';
 import { Status } from '@protoku/design-system';
 import { sortRows } from '@utils/sorting';
+import { formatPodStatus } from '@utils/helpers';
 
 interface Props {
   pods: k8s.V1PodList
@@ -59,26 +60,6 @@ export const PodList = ({ pods }: Props): JSX.Element => {
     />
   )
 }
-
-const formatPodStatus = (status: k8s.V1PodStatus): JSX.Element => {
-  const phase = status.phase || 'Unknown';
-  
-  // Map pod phases to Status variants
-  switch (phase) {
-    case 'Running':
-      return <Status variant="success">{phase}</Status>;
-    case 'Succeeded':
-      return <Status variant="success">{phase}</Status>;
-    case 'Failed':
-      return <Status variant="error">{phase}</Status>;
-    case 'Pending':
-      return <Status variant="warning">{phase}</Status>;
-    case 'Unknown':
-      return <Status variant="default">{phase}</Status>;
-    default:
-      return <Status variant="default">{phase}</Status>;
-  }
-};
 
 const getRestarts = (pod: k8s.V1Pod): React.ReactNode => {
   const allContainerStatuses = [

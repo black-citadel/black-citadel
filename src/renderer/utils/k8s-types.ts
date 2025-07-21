@@ -11,6 +11,7 @@ export type {
   V1PodList,
   V1PodSpec,
   V1PodStatus,
+  V1PodCondition,
   V1Container,
   V1ContainerPort,
   V1ContainerStatus,

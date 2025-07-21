@@ -12,7 +12,7 @@ interface Props {
 export const MetadataDetails = ({ metadata }: Props): JSX.Element => {
   return (
     <>
-      <Subheading className='mt-8 mb-4'>Metadata</Subheading>
+      <Subheading className='mt-8 mb-2'>Metadata</Subheading>
       <div className="grid grid-cols-2 gap-4">
         <div className='border border-dotted border-neutral-800 p-4'>
           <DescriptionList>

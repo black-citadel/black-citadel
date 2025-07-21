@@ -7,13 +7,10 @@ import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { ServiceAccountBadge } from '@components/access-control/service-account/badge';
-import { ImagePullSecretList } from '@components/access-control/service-account/image-pull-secret-list';
-import { SecretList } from '@components/access-control/service-account/secret-list';
 import { MetadataDetails } from '@components/metadata';
 import { Heading } from '@components/base/heading';
-import { DetailsItem } from '@components/details-item';
 import { ResourceActions } from '@components/resources/ResourceActions';
-import { Container } from '@components/base/container';
+import { PanelGrid } from '@components/layout/panel';
 
 
 export const ServiceAccountsDetailsView = (): JSX.Element => {
@@ -78,15 +75,47 @@ export const ServiceAccountsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && serviceAccount && (
         <div className='m-2'>
-          <Container title="Configuration">
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsItem label="Automount Service Account Token">
-                {serviceAccount.automountServiceAccountToken === undefined ? 'Default (true)' : serviceAccount.automountServiceAccountToken.toString()}
-              </DetailsItem>
-              <SecretList secrets={serviceAccount.secrets} />
-              <ImagePullSecretList imagePullSecrets={serviceAccount.imagePullSecrets} />
-            </div>
-          </Container>
+
+          <PanelGrid
+            title="Configuration"
+            items={[
+              {
+                label: "Automount Service Account Token",
+                value: serviceAccount.automountServiceAccountToken === undefined
+                  ? 'Default (true)'
+                  : serviceAccount.automountServiceAccountToken.toString()
+              },
+              {
+                label: "Secrets",
+                value: !serviceAccount.secrets || serviceAccount.secrets.length === 0
+                  ? "None"
+                  : (
+                    <div>
+                      {serviceAccount.secrets.map((secret, index) => (
+                        <div key={index} className="mb-1">
+                          {secret.name}
+                        </div>
+                      ))}
+                    </div>
+                  )
+              },
+              {
+                label: "Image Pull Secrets",
+                value: !serviceAccount.imagePullSecrets || serviceAccount.imagePullSecrets.length === 0
+                  ? "None"
+                  : (
+                    <div>
+                      {serviceAccount.imagePullSecrets.map((secret, index) => (
+                        <div key={index} className="mb-1">
+                          {secret.name}
+                        </div>
+                      ))}
+                    </div>
+                  )
+              },
+            ]}
+          />
+
 
           <MetadataDetails metadata={serviceAccount.metadata} />
         </div>

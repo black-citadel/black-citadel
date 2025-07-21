@@ -1,5 +1,6 @@
 import React from "react";
 import k8s = require('@kubernetes/client-node');
+import { Status } from "@protoku/design-system";
 
 
 export function calculateAge(timestamp: Date | string): string {
@@ -97,4 +98,24 @@ export const getTLS = (ingress: k8s.V1Ingress): string => {
     .join(', ');
   
   return tlsHosts || 'Configured';
+};
+
+export const formatPodStatus = (status: k8s.V1PodStatus): JSX.Element => {
+  const phase = status.phase || 'Unknown';
+  
+  // Map pod phases to Status variants
+  switch (phase) {
+    case 'Running':
+      return <Status variant="success">{phase}</Status>;
+    case 'Succeeded':
+      return <Status variant="success">{phase}</Status>;
+    case 'Failed':
+      return <Status variant="error">{phase}</Status>;
+    case 'Pending':
+      return <Status variant="warning">{phase}</Status>;
+    case 'Unknown':
+      return <Status variant="default">{phase}</Status>;
+    default:
+      return <Status variant="default">{phase}</Status>;
+  }
 };

@@ -22,6 +22,9 @@ import { PortOption, PortForwardRequest } from '@utils/types';
 import { ResourceActions } from '@components/resources/ResourceActions';
 import { NodeResourceLink } from '@components/cluster/node/resource-link';
 import { Container } from '@components/base/container';
+import { PanelGrid } from '@components/layout/panel';
+import { formatPodStatus } from '@utils/helpers';
+import { PodConditionList } from '@components/workloads/pod/pod-condition-list';
 
 export const PodsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -34,6 +37,7 @@ export const PodsDetailsView = (): JSX.Element => {
   const fetchData = async () => {
     try {
       const data = await window.electronAPI.readNamespacedPod(viewContext.name, viewContext.namespace);
+      console.log("Fetched pod data:", data);
       setPod(data);
       setError(null);
     } catch (e) {
@@ -137,22 +141,37 @@ export const PodsDetailsView = (): JSX.Element => {
 
         <div className='m-2'>
 
-          <Container title="Status">
-            <div className="grid grid-cols-4 gap-4">
-              <DetailsItem label="Phase">
-                {pod.status.phase}
-              </DetailsItem>
-              <DetailsItem label="Pod IP">
-                {pod.status.podIP}
-              </DetailsItem>
-              <DetailsItem label="Host IP">
-                {pod.status.hostIP}
-              </DetailsItem>
-              <DetailsItem label="Start Time">
-                {pod.status.startTime?.toLocaleString()}
-              </DetailsItem>
-            </div>
-          </Container>
+          <PanelGrid
+            title="Status"
+            items={[
+              { label: 'Phase', value: formatPodStatus(pod.status) },
+              { label: 'Conditions', value:<PodConditionList conditions={pod.status.conditions || []} /> },
+            ]}
+            columns={2}
+          />
+
+          
+
+          <PanelGrid
+            title="Resource Usage"
+            items={[
+              { label: 'Phase', value: formatPodStatus(pod.status) },
+              { label: 'Pod IP', value: pod.status.podIP },
+              { label: 'Host IP', value: pod.status.hostIP },
+              { label: 'Start Time', value: pod.status.startTime?.toLocaleString() },
+            ]}
+            columns={4}
+          />
+
+          <PanelGrid
+            title="Networking"
+            items={[
+              { label: 'Pod IP', value: pod.status.podIP },
+              { label: 'Host IP', value: pod.status.hostIP },
+              { label: 'Start Time', value: pod.status.startTime?.toLocaleString() },
+            ]}
+            columns={3}
+          />
 
           <Container title='Configuration'>
           <div className="grid grid-cols-5 gap-4">
@@ -179,6 +198,8 @@ export const PodsDetailsView = (): JSX.Element => {
             </DetailsItem>
           </div>
           </Container>
+
+
 
           <Container title="Containers">
           <div className="space-y-4">
