@@ -19,6 +19,7 @@ import { PodList } from '@components/workloads/pod/table';
 import { Heading, Subheading } from '@components/base/heading';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 export const DaemonSetsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -109,8 +110,9 @@ export const DaemonSetsDetailsView = (): JSX.Element => {
           <Subheading className='mt-8'>Pod Template</Subheading>
           <PodTemplate template={daemonSet.spec.template} />
 
-          <Subheading className='mt-8'>Pods</Subheading>
-          {pods && <PodList pods={pods} />}
+          <Container title='Pods'>
+            {pods && <PodList pods={pods} />}
+          </Container>
 
           <DaemonSetStatus status={daemonSet.status} />
         </div>

@@ -6,11 +6,11 @@ import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
-import { DetailsItem } from '@components/details-item';
 import { ResourceQuotaBadge } from '@components/configuration/resource-quota/badge';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { PanelGrid } from '@components/layout/panel';
 
 export const ResourceQuotasDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView();
@@ -44,6 +44,29 @@ export const ResourceQuotasDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.ResourceQuotas, action: ResourceAction.List });
   };
 
+  const getQuotaSpecItems = () => {
+    if (!resourceQuota || !resourceQuota.spec || !resourceQuota.spec.hard) return [];
+    return Object.entries(resourceQuota.spec.hard).map(([key, value]) => ({
+      label: key,
+      value: <span className="text-sm">{value}</span>
+    }));
+  };
+
+  const getQuotaStatusItems = () => {
+    if (!resourceQuota || !resourceQuota.status || !resourceQuota.status.hard) return [];
+    return Object.entries(resourceQuota.status.hard).map(([key, hardValue]) => {
+      const usedValue = resourceQuota.status.used?.[key] || "0";
+      return {
+        label: key,
+        value: (
+          <span className="text-sm">
+            {usedValue} / {hardValue}
+          </span>
+        )
+      };
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -71,15 +94,19 @@ export const ResourceQuotasDetailsView = (): JSX.Element => {
       </DetailsHeader>
       {activeTab === ResourceTabs.Details && resourceQuota && (
         <div className='m-2'>
-          <MetadataDetails metadata={resourceQuota.metadata} />
+          <PanelGrid
+            title="Quota Specification"
+            items={getQuotaSpecItems()}
+            columns={2}
+          />
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <DetailsItem label="Quota Spec">
-            {renderQuotaSpec(resourceQuota)}
-          </DetailsItem>
-          <DetailsItem label="Quota Status">
-            {renderQuotaStatus(resourceQuota)}
-          </DetailsItem>
+          <PanelGrid
+            title="Current Usage"
+            items={getQuotaStatusItems()}
+            columns={2}
+          />
+
+          <MetadataDetails metadata={resourceQuota.metadata} />
         </div>
       )}
       {activeTab === ResourceTabs.YAML && (
@@ -87,25 +114,4 @@ export const ResourceQuotasDetailsView = (): JSX.Element => {
       )}
     </>
   );
-};
-
-const renderQuotaSpec = (resourceQuota: V1ResourceQuota) => {
-  if (!resourceQuota || !resourceQuota.spec || !resourceQuota.spec.hard) return "No quota specified";
-  return Object.entries(resourceQuota.spec.hard).map(([key, value]) => (
-    <div key={key} className="mb-2">
-      <span className="font-semibold">{key}:</span> {value}
-    </div>
-  ));
-};
-
-const renderQuotaStatus = (resourceQuota: V1ResourceQuota) => {
-  if (!resourceQuota || !resourceQuota.status || !resourceQuota.status.hard) return "No status available";
-  return Object.entries(resourceQuota.status.hard).map(([key, hardValue]) => {
-    const usedValue = resourceQuota.status.used?.[key] || "0";
-    return (
-      <div key={key} className="mb-2">
-        <span className="font-semibold">{key}:</span> {usedValue} / {hardValue}
-      </div>
-    );
-  });
 };

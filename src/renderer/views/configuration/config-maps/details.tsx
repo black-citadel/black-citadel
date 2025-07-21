@@ -7,10 +7,10 @@ import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { ConfigMapBadge } from '@components/configuration/config-map/badge';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
-import { DescriptionDetails, DescriptionList, DescriptionTerm } from '@components/base/description-list';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { PanelGrid } from '@components/layout/panel';
 
 export const ConfigMapsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -22,12 +22,11 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
     try {
       const data = await window.electronAPI.readNamespacedConfigMap(viewContext.name, viewContext.namespace);
       setConfigMap(data);
-      console.log(data);
       setError(null);
 
     } catch (e) {
-      console.error("Failed to fetch services:", e);
-      setError("Failed to fetch services.");
+      console.error("Failed to fetch config map:", e);
+      setError("Failed to fetch config map.");
     }
   };
 
@@ -48,14 +47,12 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.ConfigMaps, action: ResourceAction.List });
   };
 
-  const renderConfigMapData = () => {
-    if (!configMap || !configMap.data) return "No data";
-    return Object.entries(configMap.data).map(([key, value]) => (
-      <div key={key}>
-        <DescriptionTerm>{key}</DescriptionTerm>
-        <DescriptionDetails><pre className="whitespace-pre-wrap text-xs">{value}</pre></DescriptionDetails>
-      </div>
-    ));
+  const getConfigMapDataItems = () => {
+    if (!configMap || !configMap.data) return [];
+    return Object.entries(configMap.data).map(([key, value]) => ({
+      label: key,
+      value: <pre className="whitespace-pre-wrap text-xs break-all overflow-hidden">{value}</pre>
+    }));
   };
 
   return (
@@ -86,12 +83,13 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && configMap && (
         <div className='m-2'>
-          <MetadataDetails metadata={configMap.metadata} />
+          <PanelGrid
+            title="Configuration Data"
+            items={getConfigMapDataItems()}
+            columns={1}
+          />
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <DescriptionList>
-            {renderConfigMapData()}
-          </DescriptionList>
+          <MetadataDetails metadata={configMap.metadata} />
         </div>
       )}
       {activeTab === ResourceTabs.YAML && (

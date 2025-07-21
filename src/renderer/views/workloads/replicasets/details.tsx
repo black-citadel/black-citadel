@@ -18,6 +18,7 @@ import { MetadataDetails } from '@components/metadata';
 import { PodList } from '@components/workloads/pod/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -99,8 +100,9 @@ export const ReplicaSetsDetailsView = (): JSX.Element => {
           <Subheading className='mt-8'>Pod Template</Subheading>
           <PodTemplate template={replicaSet.spec.template} />
 
-          <Subheading className='mt-8'>Pods</Subheading>
-          {pods && <PodList pods={pods} />}
+          <Container title='Pods'>
+            {pods && <PodList pods={pods} />}
+          </Container>
 
           <ReplicaSetStatus status={replicaSet.status} />
         </div>

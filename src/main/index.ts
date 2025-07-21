@@ -1276,7 +1276,12 @@ ipcMain.handle('apply', async (event, yamlContent: string) => {
 ipcMain.handle('helm-list', async () => {
   try {
     return await new Promise((resolve, reject) => {
-      const helm = spawn('helm', ['list', '--all-namespaces', '-o', 'json']);
+      const currentContext = kc ? kc.getCurrentContext() : null;
+      const args = ['list', '--all-namespaces', '-o', 'json'];
+      if (currentContext) {
+        args.push('--kube-context', currentContext);
+      }
+      const helm = spawn('helm', args);
       let stdout = '';
       let stderr = '';
 
@@ -1313,7 +1318,12 @@ ipcMain.handle('helm-list', async () => {
 ipcMain.handle('helm-repo-list', async () => {
   try {
     return await new Promise((resolve, reject) => {
-      const helm = spawn('helm', ['repo', 'list', '-o', 'json']);
+      const currentContext = kc ? kc.getCurrentContext() : null;
+      const args = ['repo', 'list', '-o', 'json'];
+      if (currentContext) {
+        args.push('--kube-context', currentContext);
+      }
+      const helm = spawn('helm', args);
       let stdout = '';
       let stderr = '';
 
@@ -1350,11 +1360,15 @@ ipcMain.handle('helm-repo-list', async () => {
 ipcMain.handle('helm-search-repo', async (event, keyword) => {
   try {
     return await new Promise((resolve, reject) => {
+      const currentContext = kc ? kc.getCurrentContext() : null;
       const args = ['search', 'repo'];
       if (keyword) {
         args.push(keyword);
       }
       args.push('-o', 'json');
+      if (currentContext) {
+        args.push('--kube-context', currentContext);
+      }
       
       const helm = spawn('helm', args);
       let stdout = '';
@@ -1393,10 +1407,15 @@ ipcMain.handle('helm-search-repo', async (event, keyword) => {
 ipcMain.handle('helm-install', async (event, releaseName, chart, namespace, values) => {
   try {
     return await new Promise((resolve, reject) => {
+      const currentContext = kc ? kc.getCurrentContext() : null;
       const args = ['install', releaseName, chart];
       
       if (namespace) {
         args.push('--namespace', namespace, '--create-namespace');
+      }
+      
+      if (currentContext) {
+        args.push('--kube-context', currentContext);
       }
       
       if (values) {
@@ -1473,10 +1492,15 @@ ipcMain.handle('helm-install', async (event, releaseName, chart, namespace, valu
 ipcMain.handle('helm-uninstall', async (event, releaseName, namespace) => {
   try {
     return await new Promise((resolve, reject) => {
+      const currentContext = kc ? kc.getCurrentContext() : null;
       const args = ['uninstall', releaseName];
       
       if (namespace) {
         args.push('--namespace', namespace);
+      }
+      
+      if (currentContext) {
+        args.push('--kube-context', currentContext);
       }
       
       const helm = spawn('helm', args);
@@ -1511,10 +1535,15 @@ ipcMain.handle('helm-uninstall', async (event, releaseName, namespace) => {
 ipcMain.handle('helm-get-values', async (event, releaseName, namespace) => {
   try {
     return await new Promise((resolve, reject) => {
+      const currentContext = kc ? kc.getCurrentContext() : null;
       const args = ['get', 'values', releaseName];
       
       if (namespace) {
         args.push('--namespace', namespace);
+      }
+      
+      if (currentContext) {
+        args.push('--kube-context', currentContext);
       }
       
       const helm = spawn('helm', args);

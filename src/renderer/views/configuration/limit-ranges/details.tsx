@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   V1LimitRange,
   V1LimitRangeItem
@@ -6,14 +6,14 @@ import {
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar';
 import { useView } from '@context/viewProvider';
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
-import { DetailsItem } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { LimitRangeBadge } from '@components/configuration/limit-range/badge';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { PanelGrid } from '@components/layout/panel';
 
 export const LimitRangesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView();
@@ -47,6 +47,57 @@ export const LimitRangesDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.LimitRanges, action: ResourceAction.List });
   };
 
+  const getLimitRangeItems = (item: V1LimitRangeItem) => {
+    const items = [];
+    
+    if (item._default) {
+      Object.entries(item._default).forEach(([key, value]) => {
+        items.push({
+          label: `Default ${key}`,
+          value: <span className="text-sm">{value}</span>
+        });
+      });
+    }
+    
+    if (item.defaultRequest) {
+      Object.entries(item.defaultRequest).forEach(([key, value]) => {
+        items.push({
+          label: `Default Request ${key}`,
+          value: <span className="text-sm">{value}</span>
+        });
+      });
+    }
+    
+    if (item.max) {
+      Object.entries(item.max).forEach(([key, value]) => {
+        items.push({
+          label: `Max ${key}`,
+          value: <span className="text-sm">{value}</span>
+        });
+      });
+    }
+    
+    if (item.min) {
+      Object.entries(item.min).forEach(([key, value]) => {
+        items.push({
+          label: `Min ${key}`,
+          value: <span className="text-sm">{value}</span>
+        });
+      });
+    }
+    
+    if (item.maxLimitRequestRatio) {
+      Object.entries(item.maxLimitRequestRatio).forEach(([key, value]) => {
+        items.push({
+          label: `Max Limit/Request Ratio ${key}`,
+          value: <span className="text-sm">{value}</span>
+        });
+      });
+    }
+    
+    return items;
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -74,12 +125,16 @@ export const LimitRangesDetailsView = (): JSX.Element => {
       </DetailsHeader>
       {activeTab === ResourceTabs.Details && limitRange && (
         <div className='m-2'>
-        <MetadataDetails metadata={limitRange.metadata} />
+          {limitRange.spec?.limits?.map((item, index) => (
+            <PanelGrid
+              key={index}
+              title={`Limits for ${item.type}`}
+              items={getLimitRangeItems(item)}
+              columns={2}
+            />
+          ))}
 
-        <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-            <DetailsItem label="Limit Range Spec">
-              {renderLimitRangeSpec(limitRange)}
-            </DetailsItem>
+          <MetadataDetails metadata={limitRange.metadata} />
         </div>
       )}
       {activeTab === ResourceTabs.YAML && (
@@ -87,71 +142,4 @@ export const LimitRangesDetailsView = (): JSX.Element => {
       )}
     </>
   );
-};
-
-const renderLimitRangeItem = (item: V1LimitRangeItem) => {
-  return (
-    <div className="mb-4 p-2">
-      <div className="font-semibold mb-2">Type: {item.type}</div>
-      {item._default && (
-        <div className="mb-2">
-          <div className="font-medium">Default:</div>
-          {Object.entries(item._default).map(([key, value]) => (
-            <div key={key} className="ml-2">
-              {key}: {value}
-            </div>
-          ))}
-        </div>
-      )}
-      {item.defaultRequest && (
-        <div className="mb-2">
-          <div className="font-medium">Default Request:</div>
-          {Object.entries(item.defaultRequest).map(([key, value]) => (
-            <div key={key} className="ml-2">
-              {key}: {value}
-            </div>
-          ))}
-        </div>
-      )}
-      {item.max && (
-        <div className="mb-2">
-          <div className="font-medium">Max:</div>
-          {Object.entries(item.max).map(([key, value]) => (
-            <div key={key} className="ml-2">
-              {key}: {value}
-            </div>
-          ))}
-        </div>
-      )}
-      {item.min && (
-        <div className="mb-2">
-          <div className="font-medium">Min:</div>
-          {Object.entries(item.min).map(([key, value]) => (
-            <div key={key} className="ml-2">
-              {key}: {value}
-            </div>
-          ))}
-        </div>
-      )}
-      {item.maxLimitRequestRatio && (
-        <div className="mb-2">
-          <div className="font-medium">Max Limit/Request Ratio:</div>
-          {Object.entries(item.maxLimitRequestRatio).map(([key, value]) => (
-            <div key={key} className="ml-2">
-              {key}: {value}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-const renderLimitRangeSpec = (limitRange: V1LimitRange) => {
-  if (!limitRange || !limitRange.spec || !limitRange.spec.limits) return "No limits specified";
-  return limitRange.spec.limits.map((item, index) => (
-    <React.Fragment key={index}>
-      {renderLimitRangeItem(item)}
-    </React.Fragment>
-  ));
 };

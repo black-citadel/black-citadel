@@ -18,6 +18,7 @@ import { Heading, Subheading } from '@components/base/heading';
 import { PodList } from '@components/workloads/pod/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -120,8 +121,9 @@ export const JobsDetailsView = (): JSX.Element => {
           <Subheading className='mt-8'>Pod Template</Subheading>
           <PodTemplate template={job.spec.template} />
 
-          <Subheading className='mt-8'>Pods</Subheading>
-          {pods && <PodList pods={pods} />}
+          <Container title='Pods'>
+            {pods && <PodList pods={pods} />}
+          </Container>
 
           <JobStatus status={job.status} />
         </div>

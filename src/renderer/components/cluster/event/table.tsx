@@ -29,7 +29,7 @@ export const EventList = ({ events }: Props): JSX.Element => {
     column: 'Age',
     direction: 'desc'
   });
-  const headers = ['Type', 'Age', 'Object', 'Namespace', 'Event Details'];
+  const headers = ['Type', 'Age', 'Event Details', 'Namespace'];
 
   // Create data rows with raw values for sorting
   const dataRows: DataRow[] = events.items.map(event => ({
@@ -60,10 +60,16 @@ export const EventList = ({ events }: Props): JSX.Element => {
       'Event Details': (
         <div className="space-y-1">
           <div className="flex items-baseline gap-2">
+            <span className="text-sm font-medium text-zinc-400">Object:</span>
+            <span className="text-sm font-medium">
+              {event.involvedObject ? `${event.involvedObject.kind}/${event.involvedObject.name}` : 'N/A'}
+            </span>
+          </div>
+          <div className="flex items-baseline gap-2">
             <span className="text-sm font-medium text-zinc-400">Reason:</span>
             <span className="text-sm font-medium">{event.reason || 'N/A'}</span>
           </div>
-          <div className="text-sm text-zinc-300 break-words">
+          <div className="text-sm text-zinc-300 break-words whitespace-pre-wrap max-w-2xl">
             {event.message || 'No message'}
           </div>
           {event.count && event.count > 1 && (
@@ -83,9 +89,8 @@ export const EventList = ({ events }: Props): JSX.Element => {
   const processedRows = sortedRows.map(row => ({
     Type: row._display.Type,
     Age: row._display.Age,
-    Object: row._display.Object,
-    Namespace: row._display.Namespace,
-    'Event Details': row._display['Event Details']
+    'Event Details': row._display['Event Details'],
+    Namespace: row._display.Namespace
   }));
 
   return (

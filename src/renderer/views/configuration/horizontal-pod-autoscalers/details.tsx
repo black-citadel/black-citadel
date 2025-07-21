@@ -1,5 +1,5 @@
 import { V2HorizontalPodAutoscaler } from '@utils/k8s-types';
-import { Heading, Subheading } from "@components/base/heading";
+import { Heading } from "@components/base/heading";
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
-import { DetailsItem } from '@components/details-item';
 import { MetadataDetails } from '@components/metadata';
 import { HorizontalPodAutoscalerBadge } from '@components/configuration/horizontal-pod-autoscaler/badge';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { PanelGrid } from '@components/layout/panel';
 
 export const HorizontalPodAutoscalersDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -46,6 +46,57 @@ export const HorizontalPodAutoscalersDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.HorizontalPodAutoscalers, action: ResourceAction.List });
   };
 
+  const getConfigurationItems = () => {
+    if (!hpa) return [];
+    return [
+      {
+        label: 'Target Reference',
+        value: <span className="text-sm">{hpa.spec.scaleTargetRef.kind}/{hpa.spec.scaleTargetRef.name}</span>
+      },
+      {
+        label: 'Min Replicas',
+        value: <span className="text-sm">{hpa.spec.minReplicas || 1}</span>
+      },
+      {
+        label: 'Max Replicas',
+        value: <span className="text-sm">{hpa.spec.maxReplicas}</span>
+      }
+    ];
+  };
+
+  const getStatusItems = () => {
+    if (!hpa || !hpa.status) return [];
+    return [
+      {
+        label: 'Current Replicas',
+        value: <span className="text-sm">{hpa.status.currentReplicas || 0}</span>
+      },
+      {
+        label: 'Desired Replicas',
+        value: <span className="text-sm">{hpa.status.desiredReplicas || 0}</span>
+      }
+    ];
+  };
+
+  const getMetricsItems = () => {
+    if (!hpa || !hpa.spec.metrics) return [];
+    return hpa.spec.metrics.map((metric, index) => {
+      let value = '';
+      if (metric.type === 'Resource' && metric.resource) {
+        value = `${metric.resource.name} - Target: ${metric.resource.target.type} ${metric.resource.target.averageUtilization || metric.resource.target.averageValue || metric.resource.target.value}`;
+      } else if (metric.type === 'Pods' && metric.pods) {
+        value = `${metric.pods.metric.name} - Target: ${metric.pods.target.type} ${metric.pods.target.averageValue || metric.pods.target.value}`;
+      } else if (metric.type === 'Object' && metric.object) {
+        value = `${metric.object.metric.name} - Target: ${metric.object.target.type} ${metric.object.target.value}`;
+      }
+      
+      return {
+        label: `${metric.type} Metric`,
+        value: <span className="text-sm">{value}</span>
+      };
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -74,32 +125,27 @@ export const HorizontalPodAutoscalersDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && hpa && (
         <div className='m-2'>
-          <MetadataDetails metadata={hpa.metadata} />
+          <PanelGrid
+            title="Configuration"
+            items={getConfigurationItems()}
+            columns={3}
+          />
 
-          <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-          <DetailsItem label="Reference">
-            {hpa.spec.scaleTargetRef.kind}/{hpa.spec.scaleTargetRef.name}
-          </DetailsItem>
-          <DetailsItem label="Min Replicas">
-            {hpa.spec.minReplicas}
-          </DetailsItem>
-          <DetailsItem label="Max Replicas">
-            {hpa.spec.maxReplicas}
-          </DetailsItem>
-          <DetailsItem label="Current Replicas">
-            {hpa.status.currentReplicas}
-          </DetailsItem>
-          <DetailsItem label="Desired Replicas">
-            {hpa.status.desiredReplicas}
-          </DetailsItem>
-          <DetailsItem label="Metrics">
-            {hpa.spec.metrics.map((metric, index) => (
-              <div key={index}>
-                {metric.type}: {metric.resource?.name} -
-                Target: {metric.resource?.target.type} {metric.resource?.target.averageUtilization}%
-              </div>
-            ))}
-          </DetailsItem>
+          <PanelGrid
+            title="Status"
+            items={getStatusItems()}
+            columns={2}
+          />
+
+          {hpa.spec.metrics && hpa.spec.metrics.length > 0 && (
+            <PanelGrid
+              title="Metrics"
+              items={getMetricsItems()}
+              columns={1}
+            />
+          )}
+
+          <MetadataDetails metadata={hpa.metadata} />
         </div>
       )}
 

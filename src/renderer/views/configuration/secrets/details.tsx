@@ -6,11 +6,11 @@ import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
-import { DetailsItem } from '@components/details-item';
 import { SecretBadge } from '@components/configuration/secret/badge';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { PanelGrid } from '@components/layout/panel';
 
 export const SecretsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView();
@@ -52,24 +52,25 @@ export const SecretsDetailsView = (): JSX.Element => {
     }));
   };
 
-  const renderSecretData = () => {
-    if (!secret || !secret.data) return "No data";
+  const getSecretDataItems = () => {
+    if (!secret || !secret.data) return [];
     return Object.entries(secret.data).map(([key, value]) => {
       const isRevealed = revealedSecrets[key];
       const decodedValue = isRevealed ? atob(value) : '••••••••';
-      return (
-        <DetailsItem key={key} label={key}>
+      return {
+        label: key,
+        value: (
           <div className="flex items-center">
-            <span className="text-xs mr-2 font-mono">{decodedValue}</span>
+            <span className="text-xs mr-2">{decodedValue}</span>
             <button 
-              className="text-blue-600 text-xs"
+              className="text-blue-600 text-xs hover:text-blue-700"
               onClick={() => toggleRevealSecret(key)}
             >
               {isRevealed ? 'Hide' : 'Reveal'}
             </button>
           </div>
-        </DetailsItem>
-      );
+        )
+      };
     });
   };
 
@@ -101,17 +102,21 @@ export const SecretsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && secret && (
         <div className='m-2'>
-        <MetadataDetails metadata={secret.metadata} />
+          <PanelGrid
+            title="Configuration"
+            items={[
+              { label: 'Type', value: secret.type }
+            ]}
+            columns={1}
+          />
 
-        <Subheading className='mt-8 mb-4'>Configuration</Subheading>
-            <DetailsItem label="Type">
-              {secret.type}
-            </DetailsItem>
+          <PanelGrid
+            title="Secret Data"
+            items={getSecretDataItems()}
+            columns={1}
+          />
 
-            <DetailsItem label="Data">
-              {renderSecretData()}
-            </DetailsItem>
-
+          <MetadataDetails metadata={secret.metadata} />
         </div>
       )}
       {activeTab === ResourceTabs.YAML && (

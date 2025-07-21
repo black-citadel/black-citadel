@@ -22,6 +22,7 @@ import { Heading, Subheading } from '@components/base/heading';
 import { JobList } from '@components/workloads/job/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { Container } from '@components/base/container';
 
 export const CronJobsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -137,8 +138,9 @@ export const CronJobsDetailsView = (): JSX.Element => {
           <Subheading className='mt-8'>Job Template</Subheading>
           <JobTemplate template={cronJob.spec.jobTemplate} />
 
-          <Subheading className='mt-8'>Jobs</Subheading>
-          {jobs && <JobList jobs={jobs} />}
+          <Container title='Jobs'>
+            {jobs && <JobList jobs={jobs} />}
+          </Container>
 
           <CronJobStatus status={cronJob.status} />
         </div>
