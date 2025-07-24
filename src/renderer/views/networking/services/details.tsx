@@ -19,6 +19,8 @@ import { PortForwardDialog } from '@components/tools/port-forward/dialog';
 import { PortOption, PortForwardRequest } from '@utils/types';
 import { ResourceActions } from '@components/resources/ResourceActions';
 import { Container } from '@components/base/container';
+import { Map } from '@components/map';
+import { generateServiceMap } from '@utils/map-generators';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -131,7 +133,6 @@ export const ServicesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && service &&
         <div className='m-2'>
-
           <Container title="Configuration">
 
             <div className="grid grid-cols-3 gap-4">

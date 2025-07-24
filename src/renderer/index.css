@@ -1,6 +1,11 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import "@xyflow/react/dist/style.css";
+
+.react-flow__handle {
+	opacity: 0;
+  }
 
 @font-face {
 	font-family: 'NotoSans';
