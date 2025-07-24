@@ -14,7 +14,7 @@ interface EditorProps {
 
 export const Editor = ({ 
   content, 
-  height = '80vh',
+  height = '90vh',
   language = 'yaml',
   readOnly = true
 }: EditorProps): JSX.Element => {
@@ -26,8 +26,15 @@ export const Editor = ({
   }, []);
 
   const handleEditorWillMount = (monaco: Monaco) => {
-    // Monaco editor configuration
-    // YAML language support is provided through the standard languages
+    // Define custom theme with #0a0a0a background
+    monaco.editor.defineTheme('custom-dark', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [],
+      colors: {
+        'editor.background': '#0a0a0a'
+      }
+    });
   };
 
   return (
@@ -36,7 +43,7 @@ export const Editor = ({
         height={height}
         defaultLanguage={language}
         value={content}
-        theme="vs-dark"
+        theme="custom-dark"
         beforeMount={handleEditorWillMount}
         options={{
           readOnly: readOnly,
