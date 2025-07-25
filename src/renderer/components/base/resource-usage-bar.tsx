@@ -69,20 +69,7 @@ export const ResourceUsageBar: React.FC<ResourceUsageBarProps> = ({
             const actualTextX = Math.min(actualWidth + 5, rect.width - actualTextWidth - 5);
             ctx.fillText(actualText, actualTextX, lineExtension + height / 2 + 4);
 
-            // Requested label (if different from actual and greater than 0)
-            if (requestedPercent > 0 && Math.abs(requestedPercent - actualPercent) > 1) {
-                ctx.fillStyle = '#ffffff'; // white
-                const requestedText = `${requestedPercent.toFixed(1)}%`;
-                const requestedTextWidth = ctx.measureText(requestedText).width;
-                let requestedTextX = requestedX + 5;
-                
-                // Adjust position to avoid overlap
-                if (requestedTextX + requestedTextWidth > rect.width - 5) {
-                    requestedTextX = requestedX - requestedTextWidth - 5;
-                }
-                
-                ctx.fillText(requestedText, requestedTextX, lineExtension + height / 2 + 4);
-            }
+            // Removed requested label to keep the visualization cleaner
         }
 
     }, [actual, requested, capacity, height, showPercentages, lineExtension, totalHeight]);

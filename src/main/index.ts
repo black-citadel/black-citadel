@@ -28,7 +28,7 @@ let k8sNodeV1Api: k8s.NodeV1Api;
 let k8sAdmissionregistrationV1Api: k8s.AdmissionregistrationV1Api;
 let k8sApiextensionsV1Api: k8s.ApiextensionsV1Api;
 let k8sCustomObjectsApi: k8s.CustomObjectsApi;
-let _k8sMetricsClient: k8s.Metrics;
+let k8sMetricsClient: k8s.Metrics;
 
 // Configure axios defaults for the kubernetes client to handle certificates better
 const https = require('https');
@@ -67,7 +67,7 @@ function initializeK8sClients() {
     k8sAdmissionregistrationV1Api = kc.makeApiClient(k8s.AdmissionregistrationV1Api);
     k8sApiextensionsV1Api = kc.makeApiClient(k8s.ApiextensionsV1Api);
     k8sCustomObjectsApi = kc.makeApiClient(k8s.CustomObjectsApi);
-    _k8sMetricsClient = new k8s.Metrics(kc);
+    k8sMetricsClient = new k8s.Metrics(kc);
     
     isK8sInitialized = true;
     console.log('Kubernetes clients initialized successfully with context:', kc.getCurrentContext());
@@ -314,7 +314,7 @@ ipcMain.handle('mergeKubeconfig', async (event, kubeconfigYaml) => {
     k8sNodeV1Api = kc.makeApiClient(k8s.NodeV1Api);
     k8sAdmissionregistrationV1Api = kc.makeApiClient(k8s.AdmissionregistrationV1Api);
     k8sApiextensionsV1Api = kc.makeApiClient(k8s.ApiextensionsV1Api);
-    _k8sMetricsClient = new k8s.Metrics(kc);
+    k8sMetricsClient = new k8s.Metrics(kc);
     
     return { success: true };
   } catch (error) {
@@ -347,7 +347,53 @@ ipcMain.handle('topNodes', async () => {
     // Return empty array instead of throwing error
     return [];
   }
-  return await k8s.topNodes(k8sCoreV1Api);
+  
+  try {
+    // Get the base node status with capacity and requests
+    const nodeStatuses = await k8s.topNodes(k8sCoreV1Api);
+    
+    // Try to get actual node metrics
+    try {
+      const nodeMetrics = await k8sMetricsClient.getNodeMetrics();
+      
+      // Create a map for quick lookup
+      const metricsMap = new Map();
+      nodeMetrics.items.forEach(metric => {
+        metricsMap.set(metric.metadata.name, metric);
+      });
+      
+      // Enhance node statuses with actual usage
+      return nodeStatuses.map(nodeStatus => {
+        const nodeName = nodeStatus.Node.metadata?.name;
+        const metric = nodeName ? metricsMap.get(nodeName) : null;
+        
+        if (metric && metric.usage) {
+          // Add current usage to the existing data structure
+          const enhancedNodeStatus = {
+            ...nodeStatus,
+            CPU: {
+              ...nodeStatus.CPU,
+              CurrentUsage: metric.usage.cpu
+            },
+            Memory: {
+              ...nodeStatus.Memory,
+              CurrentUsage: metric.usage.memory
+            }
+          };
+          return enhancedNodeStatus;
+        }
+        
+        return nodeStatus;
+      });
+    } catch (metricsError) {
+      console.warn('Metrics API not available:', metricsError.message);
+      // Return original node statuses without actual usage
+      return nodeStatuses;
+    }
+  } catch (error) {
+    console.error('Error fetching node information:', error);
+    return [];
+  }
 });
 ipcMain.handle('cordonNode', async (event, name) => {
   try {

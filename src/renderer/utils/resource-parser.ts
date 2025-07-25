@@ -5,17 +5,55 @@
 
 export function parseCPU(value: string | number | undefined): number {
     if (!value) return 0;
-    if (typeof value === 'number') return value;
     
-    const str = value.toString();
+    // Convert to string for consistent handling
+    const str = value.toString().trim();
     
-    // Handle millicores (e.g., "100m", "2000m")
+    // Handle different CPU formats with explicit suffixes
+    if (str.endsWith('n')) {
+        // Nanocores (e.g., "1000000000n")
+        return parseFloat(str.slice(0, -1)) / 1_000_000_000;
+    }
+    
+    if (str.endsWith('u')) {
+        // Microcores (e.g., "1000000u")
+        return parseFloat(str.slice(0, -1)) / 1_000_000;
+    }
+    
     if (str.endsWith('m')) {
+        // Millicores (e.g., "100m", "2000m")
         return parseFloat(str.slice(0, -1)) / 1000;
     }
     
-    // Handle regular cores (e.g., "2", "0.5")
-    return parseFloat(str);
+    // Parse the numeric value
+    const num = parseFloat(str);
+    
+    // If parsing failed, return 0
+    if (isNaN(num)) return 0;
+    
+    // Auto-detect based on magnitude when no suffix is present
+    // This is a heuristic approach based on typical Kubernetes values
+    if (num >= 1_000_000_000) {
+        // Values >= 1 billion are likely nanocores
+        return num / 1_000_000_000;
+    } else if (num >= 1_000_000) {
+        // Values >= 1 million but < 1 billion might be microcores
+        // But this is ambiguous - could also be millicores
+        // For safety, we'll treat very large values as nanocores
+        return num / 1_000_000_000;
+    } else if (num >= 100) {
+        // Values >= 100 but < 1 million are likely millicores
+        // (100 millicores = 0.1 cores is a common minimum)
+        // But values like 100-999 could be cores on large systems
+        // We'll use a threshold: > 100 cores is unlikely in practice
+        if (num > 100) {
+            return num / 1000; // Treat as millicores
+        }
+    }
+    
+    // For small values (< 100), treat as cores
+    // This handles cases like "2", "0.5", "8", "16" etc.
+    return num;
 }
 
 export function parseBytes(value: string | number | undefined): number {
