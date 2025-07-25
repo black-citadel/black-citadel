@@ -28,7 +28,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
   },
   [Resources.Namespaces]: {
     supportsDelete: true,
-    supportsEdit: false,
+    supportsEdit: true,
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: false,

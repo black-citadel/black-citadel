@@ -35,7 +35,7 @@ import { PriorityClassesDetailsView, PriorityClassesListView, PriorityClassesCre
 import { RuntimeClassesDetailsView, RuntimeClassesListView, RuntimeClassesCreateView } from '@views/administration/runtime-classes';
 import { MutatingWebhookConfigurationsDetailsView, MutatingWebhookConfigurationsListView } from '@views/administration/mutating-webhook-configuration';
 import { ValidatingWebhookConfigurationsDetailsView, ValidatingWebhookConfigurationsListView } from '@views/administration/validating-webhook-configuration';
-import { NamespacesListView, NamespacesDetailsView, NamespacesCreateView } from '@views/cluster/namespaces';
+import { NamespacesListView, NamespacesDetailsView, NamespacesCreateView, NamespacesEditView } from '@views/cluster/namespaces';
 import { useView } from './context/viewProvider'
 import { Resources, ResourceAction } from '@utils/enums';
 import { Sidebar, SidebarBody, SidebarItem, SidebarLabel, SidebarSection, SidebarHeading, SidebarHeader } from '@components/base/sidebar'
@@ -339,6 +339,7 @@ export const Layout = () => {
         {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.List && <NamespacesListView />}
         {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.Details && <NamespacesDetailsView />}
         {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.Create && <NamespacesCreateView />}
+        {viewContext.resource === Resources.Namespaces && viewContext.action === ResourceAction.Edit && <NamespacesEditView />}
 
         {/* Workloads */}
         {viewContext.resource == Resources.Deployments && viewContext.action === ResourceAction.List && <DeploymentsListView />}

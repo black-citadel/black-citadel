@@ -9,6 +9,7 @@ export interface ResourceActionsProps {
   isLoading?: boolean;
   
   onDelete?: () => Promise<void>;
+  onEdit?: () => void;
   onActionComplete?: (action: string, success: boolean) => void;
   _onNavigate?: (path: string) => void;
   

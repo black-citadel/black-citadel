@@ -30,7 +30,11 @@ export function FieldLabels({ labels, setLabels }: FieldLabelsProps) {
   };
 
   const handleRemoveLabel = (index: number) => {
-    setLabels(prevLabels => prevLabels.filter((_, i) => i !== index));
+    setLabels(prevLabels => {
+      const newLabels = prevLabels.filter((_, i) => i !== index);
+      // Always keep at least one empty entry
+      return newLabels.length === 0 ? [{ key: '', value: '' }] : newLabels;
+    });
   };
 
   return (
@@ -62,13 +66,14 @@ export function FieldLabels({ labels, setLabels }: FieldLabelsProps) {
               />
             </div>
             <div>
-              <Button 
+              <button 
+                type="button"
                 onClick={() => handleRemoveLabel(index)} 
-                className="p-2 invisible"
-                disabled={index === 0}
+                className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                disabled={labels.length === 1 && label.key === '' && label.value === ''}
               >
-                <TrashIcon className={`w-4 h-4 ${index > 0 ? 'visible' : 'invisible'}`} />
-              </Button>
+                <TrashIcon className="w-4 h-4" />
+              </button>
             </div>
           </div>
         ))}

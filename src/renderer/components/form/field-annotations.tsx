@@ -30,7 +30,11 @@ export function FieldAnnotations({ annotations, setAnnotations }: Props) {
   };
 
   const handleRemoveAnnotation = (index: number) => {
-    setAnnotations(prevAnnotations => prevAnnotations.filter((_, i) => i !== index));
+    setAnnotations(prevAnnotations => {
+      const newAnnotations = prevAnnotations.filter((_, i) => i !== index);
+      // Always keep at least one empty entry
+      return newAnnotations.length === 0 ? [{ key: '', value: '' }] : newAnnotations;
+    });
   };
 
   return (
@@ -64,13 +68,14 @@ export function FieldAnnotations({ annotations, setAnnotations }: Props) {
               />
             </div>
             <div>
-              <Button 
+              <button 
+                type="button"
                 onClick={() => handleRemoveAnnotation(index)} 
-                className="p-2 invisible"
-                disabled={index === 0}
+                className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                disabled={annotations.length === 1 && annotation.key === '' && annotation.value === ''}
               >
-                <TrashIcon className={`w-4 h-4 ${index > 0 ? 'visible' : 'invisible'}`} />
-              </Button>
+                <TrashIcon className="w-4 h-4" />
+              </button>
             </div>
           </div>
         ))}

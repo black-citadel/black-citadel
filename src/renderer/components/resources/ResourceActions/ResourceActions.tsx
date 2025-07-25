@@ -12,6 +12,7 @@ export const ResourceActions: React.FC<ResourceActionsProps> = ({
   resource,
   isLoading = false,
   onDelete,
+  onEdit,
   onActionComplete,
   variant = 'header',
   showLabels = true,
@@ -82,6 +83,19 @@ export const ResourceActions: React.FC<ResourceActionsProps> = ({
           </Button>
         );
       })}
+
+      {/* Edit Action */}
+      {config.supportsEdit && onEdit && (
+        <Button
+          variant="secondary"
+          onClick={onEdit}
+          disabled={isLoading}
+          className={getButtonVariantClass('secondary')}
+          aria-label="Edit"
+        >
+          {showLabels ? 'Edit' : 'E'}
+        </Button>
+      )}
 
       {/* Delete Action */}
       {config.supportsDelete && !disableDelete && onDelete && (

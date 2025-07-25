@@ -54,6 +54,14 @@ export const NamespacesDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.Namespaces, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({ 
+      resource: Resources.Namespaces, 
+      action: ResourceAction.Edit, 
+      name: viewContext.name 
+    });
+  };
+
   return (
     <>
       <DetailsHeader
@@ -64,6 +72,7 @@ export const NamespacesDetailsView = (): JSX.Element => {
             resourceName={viewContext.name}
             resource={namespace}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

@@ -69,7 +69,8 @@ export enum Resources {
 export enum ResourceAction {
     List,
     Details,
-    Create
+    Create,
+    Edit
 }
 
 export enum ResourceTabs {
