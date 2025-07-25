@@ -448,6 +448,110 @@ ipcMain.handle('uncordonNode', async (event, name) => {
   }
 });
 
+ipcMain.handle('drainNode', async (event, name, options = {}) => {
+  const {
+    ignoreDaemonsets = true,
+    deleteEmptyDirData = false,
+    force = false,
+    gracePeriodSeconds = 30,
+    timeout = 300 // 5 minutes default
+  } = options;
+
+  try {
+    // Step 1: Cordon the node first
+    const cordonPatch = {
+      spec: {
+        unschedulable: true
+      }
+    };
+    await k8sCoreV1Api.patchNode(
+      name, 
+      cordonPatch, 
+      undefined, 
+      undefined, 
+      undefined, 
+      undefined, 
+      undefined,
+      { headers: { 'Content-Type': k8s.PatchUtils.PATCH_FORMAT_STRATEGIC_MERGE_PATCH } }
+    );
+
+    // Step 2: Get all pods on the node
+    const allPods = await k8sCoreV1Api.listPodForAllNamespaces();
+    const podsOnNode = allPods.body.items.filter(pod => pod.spec?.nodeName === name);
+
+    const errors = [];
+    const evictedPods = [];
+
+    // Step 3: Evict each pod
+    for (const pod of podsOnNode) {
+      try {
+        // Skip if it's a DaemonSet pod and ignoreDaemonsets is true
+        if (ignoreDaemonsets && pod.metadata?.ownerReferences?.some(ref => ref.kind === 'DaemonSet')) {
+          continue;
+        }
+
+        // Skip if pod has local storage and deleteEmptyDirData is false
+        if (!deleteEmptyDirData && pod.spec?.volumes?.some(vol => vol.emptyDir)) {
+          if (!force) {
+            errors.push(`Pod ${pod.metadata?.namespace}/${pod.metadata?.name} has local storage (emptyDir)`);
+            continue;
+          }
+        }
+
+        // Skip if pod is not managed by a controller and force is false
+        if (!force && !pod.metadata?.ownerReferences?.length) {
+          errors.push(`Pod ${pod.metadata?.namespace}/${pod.metadata?.name} is not managed by a controller`);
+          continue;
+        }
+
+        // Create eviction
+        const eviction = {
+          apiVersion: 'policy/v1',
+          kind: 'Eviction',
+          metadata: {
+            name: pod.metadata?.name,
+            namespace: pod.metadata?.namespace
+          },
+          deleteOptions: {
+            gracePeriodSeconds: gracePeriodSeconds
+          }
+        };
+
+        await k8sCoreV1Api.createNamespacedPodEviction(
+          pod.metadata?.name || '',
+          pod.metadata?.namespace || '',
+          eviction
+        );
+
+        evictedPods.push(`${pod.metadata?.namespace}/${pod.metadata?.name}`);
+      } catch (error) {
+        // Check if it's a PodDisruptionBudget violation
+        if (error.response?.statusCode === 429) {
+          errors.push(`Cannot evict pod ${pod.metadata?.namespace}/${pod.metadata?.name} due to PodDisruptionBudget`);
+        } else if (error.response?.statusCode === 404) {
+          // Pod might have already been deleted
+          continue;
+        } else {
+          errors.push(`Failed to evict pod ${pod.metadata?.namespace}/${pod.metadata?.name}: ${error.message}`);
+        }
+      }
+    }
+
+    return { 
+      success: errors.length === 0, 
+      evictedPods,
+      errors,
+      message: errors.length > 0 ? 'Node drained with errors' : 'Node drained successfully'
+    };
+  } catch (error) {
+    let errorMessage = 'An error occurred while draining the node';
+    if (error.response && error.response.body && error.response.body.message) {
+      errorMessage = error.response.body.message;
+    }
+    return { success: false, error: errorMessage };
+  }
+});
+
 
 // Namespaces
 ipcMain.handle('listNamespace', async () => {

@@ -20,6 +20,19 @@ export interface ElectronAPI {
   topNodes: () => Promise<k8s.NodeStatus[]>;
   cordonNode: (name: string) => Promise<{ success: boolean, data?: k8s.V1Node, error?: string }>;
   uncordonNode: (name: string) => Promise<{ success: boolean, data?: k8s.V1Node, error?: string }>;
+  drainNode: (name: string, options?: {
+    ignoreDaemonsets?: boolean;
+    deleteEmptyDirData?: boolean;
+    force?: boolean;
+    gracePeriodSeconds?: number;
+    timeout?: number;
+  }) => Promise<{ 
+    success: boolean;
+    evictedPods?: string[];
+    errors?: string[];
+    message?: string;
+    error?: string;
+  }>;
   // Namespaces
   readNamespace: (name: string) => Promise<k8s.V1Namespace>;
   deleteNamespace: (name: string) => Promise<void>;
@@ -184,6 +197,13 @@ try {
     topNodes: () => ipcRenderer.invoke('topNodes'),
     cordonNode: (name: string) => ipcRenderer.invoke('cordonNode', name),
     uncordonNode: (name: string) => ipcRenderer.invoke('uncordonNode', name),
+    drainNode: (name: string, options?: {
+      ignoreDaemonsets?: boolean;
+      deleteEmptyDirData?: boolean;
+      force?: boolean;
+      gracePeriodSeconds?: number;
+      timeout?: number;
+    }) => ipcRenderer.invoke('drainNode', name, options),
     listDeploymentForAllNamespaces: () => ipcRenderer.invoke('listDeploymentForAllNamespaces'),
     listReplicaSetForAllNamespaces: () => ipcRenderer.invoke('listReplicaSetForAllNamespaces'),
     listStatefulSetForAllNamespaces: () => ipcRenderer.invoke('listStatefulSetForAllNamespaces'),
