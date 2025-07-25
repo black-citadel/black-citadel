@@ -8,8 +8,9 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { Heading, Subheading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
-import { Badge } from '@protoku/design-system';
+import { Badge, Status } from '@protoku/design-system';
 import { Container } from '@components/base/container';
+import { calculateAge } from '@utils/helpers';
 
 export const CustomResourceDetailsView = (): JSX.Element => {
     const { viewContext } = useView()
@@ -75,38 +76,84 @@ export const CustomResourceDetailsView = (): JSX.Element => {
             
             
             {customResource.spec && (
-              <div>
-                <Subheading>Specification</Subheading>
-                <div className='mt-4 space-y-2'>
-                  {Object.entries(customResource.spec).map(([key, value]) => (
-                    <DetailsItem key={key} label={key}>
-                      {typeof value === 'object' ? (
-                        <pre className="text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-auto">
-                          {JSON.stringify(value, null, 2)}
-                        </pre>
-                      ) : (
-                        String(value)
-                      )}
-                    </DetailsItem>
-                  ))}
-                </div>
-              </div>
+              <Container title="Specification">
+                {Object.entries(customResource.spec).map(([key, value]) => (
+                  <DetailsItem key={key} label={key}>
+                    {typeof value === 'object' ? (
+                      <pre className="text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-auto">
+                        {JSON.stringify(value, null, 2)}
+                      </pre>
+                    ) : (
+                      String(value)
+                    )}
+                  </DetailsItem>
+                ))}
+              </Container>
             )}
 
             {customResource.status && (
-              <Container title='Status'>
-                  {Object.entries(customResource.status).map(([key, value]) => (
-                    <DetailsItem key={key} label={key}>
-                      {typeof value === 'object' ? (
-                        <pre className="text-xs p-2 rounded overflow-auto">
-                          {JSON.stringify(value, null, 2)}
-                        </pre>
-                      ) : (
-                        String(value)
-                      )}
-                    </DetailsItem>
-                  ))}
-              </Container>
+              <>
+                {customResource.status.conditions && Array.isArray(customResource.status.conditions) && (
+                  <Container title="Conditions">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-neutral-800">
+                            <th className="text-left font-medium text-zinc-400 py-2 pr-4">Condition</th>
+                            <th className="text-left font-medium text-zinc-400 py-2 pr-4">Status</th>
+                            <th className="text-left font-medium text-zinc-400 py-2 pr-4">Last Transition</th>
+                            <th className="text-left font-medium text-zinc-400 py-2 pr-4">Last Update</th>
+                            <th className="text-left font-medium text-zinc-400 py-2">Reason</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {customResource.status.conditions.map((condition: any, index: number) => (
+                            <tr key={index} className="border-b border-neutral-800 last:border-0">
+                              <td className="py-2 pr-4">{condition.type}</td>
+                              <td className="py-2 pr-4">
+                                <Status variant={condition.status === 'True' ? 'success' : 'default'}>
+                                  {condition.status}
+                                </Status>
+                              </td>
+                              <td className="py-2 pr-4 text-zinc-500">
+                                {condition.lastTransitionTime ? calculateAge(new Date(condition.lastTransitionTime)) : '-'}
+                              </td>
+                              <td className="py-2 pr-4 text-zinc-500">
+                                {condition.lastUpdateTime ? calculateAge(new Date(condition.lastUpdateTime)) : '-'}
+                              </td>
+                              <td className="py-2 text-zinc-500">
+                                {condition.reason || '-'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </Container>
+                )}
+                
+                {/* Other status fields */}
+                {Object.entries(customResource.status).length > 0 && (
+                  <Container title='Status'>
+                    {Object.entries(customResource.status).map(([key, value]) => {
+                      // Skip conditions as they are displayed separately
+                      if (key === 'conditions') return null;
+                      
+                      return (
+                        <DetailsItem key={key} label={key}>
+                          {typeof value === 'object' ? (
+                            <pre className="text-xs p-2 rounded overflow-auto">
+                              {JSON.stringify(value, null, 2)}
+                            </pre>
+                          ) : (
+                            String(value)
+                          )}
+                        </DetailsItem>
+                      );
+                    })}
+                  </Container>
+                )}
+              </>
             )}
 
 
