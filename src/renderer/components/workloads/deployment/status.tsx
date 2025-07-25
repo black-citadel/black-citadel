@@ -3,6 +3,7 @@ import { Subheading } from '@components/base/heading';
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from '@protoku/design-system';
 import { DetailsItem } from '@components/details-item';
 import { Container } from '@components/base/container';
+import { ConditionsTable } from '@components/base/conditions-table';
 
 interface Props {
   status: k8s.V1DeploymentStatus;
@@ -37,55 +38,7 @@ export const DeploymentStatus = ({ status }: Props): JSX.Element => {
 
       </Container>
 
-      <Container title='Conditions'>
-      <Table className='m-2'>
-        <TableHead>
-          <TableRow>
-            <TableHeader>
-              <span title="Last time the condition transitioned from one status to another." className='cursor-help'>
-                Last Transition Time
-              </span>
-            </TableHeader>
-            <TableHeader>
-              <span title="The last time this condition was updated." className='cursor-help'>
-                Last Update Time
-              </span>
-            </TableHeader>
-            <TableHeader>
-              <span title="A human readable message indicating details about the transition." className='cursor-help'>
-                Message
-              </span>
-            </TableHeader>
-            <TableHeader>
-              <span title="The reason for the condition's last transition." className='cursor-help'>
-                Reason
-              </span></TableHeader>
-            <TableHeader>
-              <span title="Status of the condition, one of True, False, Unknown." className='cursor-help'>
-                Status
-              </span>
-            </TableHeader>
-            <TableHeader>
-              <span title="Type of deployment condition." className='cursor-help'>
-                Type
-              </span>
-            </TableHeader>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {status.conditions.map((condition, index) => (
-            <TableRow key={index}>
-              <TableCell>{condition.lastTransitionTime.toLocaleString()}</TableCell>
-              <TableCell>{condition.lastUpdateTime.toLocaleString()}</TableCell>
-              <TableCell>{condition.message}</TableCell>
-              <TableCell>{condition.reason}</TableCell>
-              <TableCell>{condition.status}</TableCell>
-              <TableCell>{condition.type}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      </Container>
+      {status.conditions && <ConditionsTable conditions={status.conditions} />}
     </>
   );
 };

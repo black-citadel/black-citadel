@@ -327,7 +327,7 @@ export const WorkloadLogs = ({
           <Button
             variant="secondary"
             onClick={() => setIsFollowing(!isFollowing)}
-            className={isFollowing ? 'bg-green-600 hover:bg-green-700' : ''}
+            className={isFollowing ? 'bg-green-600/30 hover:bg-green-700/30' : ''}
           >
             {isFollowing ? 'Following' : 'Follow'}
           </Button>
