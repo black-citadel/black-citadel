@@ -63,6 +63,15 @@ export const ReplicaSetsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.ReplicaSets, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.ReplicaSets,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -74,6 +83,7 @@ export const ReplicaSetsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={replicaSet}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

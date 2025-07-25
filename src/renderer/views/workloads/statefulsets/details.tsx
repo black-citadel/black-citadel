@@ -70,6 +70,15 @@ export const StatefulSetsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.StatefulSets, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.StatefulSets,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -81,6 +90,7 @@ export const StatefulSetsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={statefulSet}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

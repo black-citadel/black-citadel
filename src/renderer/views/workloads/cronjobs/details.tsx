@@ -81,6 +81,15 @@ export const CronJobsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.CronJobs, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.CronJobs,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -92,6 +101,7 @@ export const CronJobsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={cronJob}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

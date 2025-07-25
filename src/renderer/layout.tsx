@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { SidebarLayout } from '@components/base/sidebar-layout'
 import { WelcomeView } from '@views/settings/welcome/welcome';
-import { DeploymentsListView, DeploymentsDetailsView, DeploymentsCreateView } from '@views/workloads/deployments'
-import { PodsListView, PodsDetailsView, PodsCreateView } from '@views/workloads/pods'
-import { ReplicaSetsListView, ReplicaSetsDetailsView, ReplicaSetsCreateView } from '@views/workloads/replicasets';
-import { StatefulSetsListView, StatefulSetsDetailsView, StatefulSetsCreateView } from '@views/workloads/statefulsets';
-import { DaemonSetsDetailsView, DaemonSetsListView, DaemonSetsCreateView } from '@views/workloads/daemonsets';
-import { JobsDetailsView, JobsListView, JobsCreateView } from '@views/workloads/jobs';
-import { CronJobsListView, CronJobsDetailsView, CronJobsCreateView } from '@views/workloads/cronjobs';
+import { DeploymentsListView, DeploymentsDetailsView, DeploymentsCreateView, DeploymentsEditView } from '@views/workloads/deployments'
+import { PodsListView, PodsDetailsView, PodsCreateView, PodsEditView } from '@views/workloads/pods'
+import { ReplicaSetsListView, ReplicaSetsDetailsView, ReplicaSetsCreateView, ReplicaSetsEditView } from '@views/workloads/replicasets';
+import { StatefulSetsListView, StatefulSetsDetailsView, StatefulSetsCreateView, StatefulSetsEditView } from '@views/workloads/statefulsets';
+import { DaemonSetsDetailsView, DaemonSetsListView, DaemonSetsCreateView, DaemonSetsEditView } from '@views/workloads/daemonsets';
+import { JobsDetailsView, JobsListView, JobsCreateView, JobsEditView } from '@views/workloads/jobs';
+import { CronJobsListView, CronJobsDetailsView, CronJobsCreateView, CronJobsEditView } from '@views/workloads/cronjobs';
 import { ServicesListView, ServicesDetailsView, ServicesCreateView } from '@views/networking/services';
 import { IngressesDetailsView, IngressesListView, IngressesCreateView } from '@views/networking/ingresses';
 import { IngressClassesDetailsView, IngressClassesListView, IngressClassesCreateView } from '@views/networking/ingress-classes';
@@ -345,30 +345,37 @@ export const Layout = () => {
         {viewContext.resource == Resources.Deployments && viewContext.action === ResourceAction.List && <DeploymentsListView />}
         {viewContext.resource == Resources.Deployments && viewContext.action === ResourceAction.Details && <DeploymentsDetailsView />}
         {viewContext.resource == Resources.Deployments && viewContext.action === ResourceAction.Create && <DeploymentsCreateView />}
+        {viewContext.resource == Resources.Deployments && viewContext.action === ResourceAction.Edit && <DeploymentsEditView />}
 
         {viewContext.resource == Resources.Pods && viewContext.action === ResourceAction.List && <PodsListView />}
         {viewContext.resource == Resources.Pods && viewContext.action === ResourceAction.Details && <PodsDetailsView />}
         {viewContext.resource == Resources.Pods && viewContext.action === ResourceAction.Create && <PodsCreateView />}
+        {viewContext.resource == Resources.Pods && viewContext.action === ResourceAction.Edit && <PodsEditView />}
 
         {viewContext.resource == Resources.ReplicaSets && viewContext.action === ResourceAction.List && <ReplicaSetsListView />}
         {viewContext.resource == Resources.ReplicaSets && viewContext.action === ResourceAction.Details && <ReplicaSetsDetailsView />}
         {viewContext.resource == Resources.ReplicaSets && viewContext.action === ResourceAction.Create && <ReplicaSetsCreateView />}
+        {viewContext.resource == Resources.ReplicaSets && viewContext.action === ResourceAction.Edit && <ReplicaSetsEditView />}
 
         {viewContext.resource == Resources.StatefulSets && viewContext.action === ResourceAction.List && <StatefulSetsListView />}
         {viewContext.resource == Resources.StatefulSets && viewContext.action === ResourceAction.Details && <StatefulSetsDetailsView />}
         {viewContext.resource == Resources.StatefulSets && viewContext.action === ResourceAction.Create && <StatefulSetsCreateView />}
+        {viewContext.resource == Resources.StatefulSets && viewContext.action === ResourceAction.Edit && <StatefulSetsEditView />}
 
         {viewContext.resource == Resources.DaemonSets && viewContext.action === ResourceAction.List && <DaemonSetsListView />}
         {viewContext.resource == Resources.DaemonSets && viewContext.action === ResourceAction.Details && <DaemonSetsDetailsView />}
         {viewContext.resource == Resources.DaemonSets && viewContext.action === ResourceAction.Create && <DaemonSetsCreateView />}
+        {viewContext.resource == Resources.DaemonSets && viewContext.action === ResourceAction.Edit && <DaemonSetsEditView />}
 
         {viewContext.resource == Resources.Jobs && viewContext.action === ResourceAction.List && <JobsListView />}
         {viewContext.resource == Resources.Jobs && viewContext.action === ResourceAction.Details && <JobsDetailsView />}
         {viewContext.resource == Resources.Jobs && viewContext.action === ResourceAction.Create && <JobsCreateView />}
+        {viewContext.resource == Resources.Jobs && viewContext.action === ResourceAction.Edit && <JobsEditView />}
 
         {viewContext.resource == Resources.CronJobs && viewContext.action === ResourceAction.List && <CronJobsListView />}
         {viewContext.resource == Resources.CronJobs && viewContext.action === ResourceAction.Details && <CronJobsDetailsView />}
         {viewContext.resource == Resources.CronJobs && viewContext.action === ResourceAction.Create && <CronJobsCreateView />}
+        {viewContext.resource == Resources.CronJobs && viewContext.action === ResourceAction.Edit && <CronJobsEditView />}
 
 
         {/* Networking */}

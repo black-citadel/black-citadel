@@ -61,6 +61,15 @@ export const DeploymentsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.Deployments, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({ 
+      resource: Resources.Deployments, 
+      action: ResourceAction.Edit, 
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   const handleScale = async (replicas: number) => {
     const scalePatch = {
       spec: {
@@ -91,6 +100,7 @@ export const DeploymentsDetailsView = (): JSX.Element => {
               namespace={viewContext.namespace}
               resource={deployment}
               onDelete={handleDelete}
+              onEdit={handleEdit}
             />
           </div>
         }

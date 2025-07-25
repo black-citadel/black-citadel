@@ -69,6 +69,15 @@ export const DaemonSetsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.DaemonSets, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.DaemonSets,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -80,6 +89,7 @@ export const DaemonSetsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={daemonSet}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

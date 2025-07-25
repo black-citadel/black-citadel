@@ -24,7 +24,7 @@ import { NodeResourceLink } from '@components/cluster/node/resource-link';
 import { Container } from '@components/base/container';
 import { PanelGrid } from '@components/layout/panel';
 import { formatPodStatus } from '@utils/helpers';
-import { PodConditionList } from '@components/workloads/pod/pod-condition-list';
+import { ConditionsTable } from '@components/base/conditions-table';
 
 export const PodsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -61,6 +61,15 @@ export const PodsDetailsView = (): JSX.Element => {
   const handleDelete = async () => {
     await window.electronAPI.deleteNamespacedPod(viewContext.name, viewContext.namespace);
     setViewContext({ resource: Resources.Pods, action: ResourceAction.List });
+  };
+
+  const handleEdit = () => {
+    setViewContext({ 
+      resource: Resources.Pods, 
+      action: ResourceAction.Edit, 
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
   };
 
   const getAvailablePorts = (): PortOption[] => {
@@ -108,6 +117,7 @@ export const PodsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={pod}
             onDelete={handleDelete}
+            onEdit={handleEdit}
             customActions={
               pod?.status?.phase === 'Running' && getAvailablePorts().length > 0 ? [{
                 id: 'port-forward',
@@ -141,37 +151,28 @@ export const PodsDetailsView = (): JSX.Element => {
 
         <div className='m-2'>
 
-          <PanelGrid
-            title="Status"
-            items={[
-              { label: 'Phase', value: formatPodStatus(pod.status) },
-              { label: 'Conditions', value:<PodConditionList conditions={pod.status.conditions || []} /> },
-            ]}
-            columns={2}
-          />
+          <Container title="Status">
+            <div className="grid grid-cols-5 gap-4">
+              <DetailsItem label="Phase">
+                {formatPodStatus(pod.status)}
+              </DetailsItem>
+              <DetailsItem label="Pod IP">
+                {pod.status.podIP}
+              </DetailsItem>
+              <DetailsItem label="Host IP">
+                {pod.status.hostIP}
+              </DetailsItem>
+              <DetailsItem label="Start Time">
+                {pod.status.startTime?.toLocaleString()}
+              </DetailsItem>
+              <DetailsItem label="QoS Class">
+                {pod.status.qosClass}
+              </DetailsItem>
+            </div>
+          </Container>
 
-          
+          {pod.status.conditions && <ConditionsTable conditions={pod.status.conditions} />}
 
-          <PanelGrid
-            title="Resource Usage"
-            items={[
-              { label: 'Phase', value: formatPodStatus(pod.status) },
-              { label: 'Pod IP', value: pod.status.podIP },
-              { label: 'Host IP', value: pod.status.hostIP },
-              { label: 'Start Time', value: pod.status.startTime?.toLocaleString() },
-            ]}
-            columns={4}
-          />
-
-          <PanelGrid
-            title="Networking"
-            items={[
-              { label: 'Pod IP', value: pod.status.podIP },
-              { label: 'Host IP', value: pod.status.hostIP },
-              { label: 'Start Time', value: pod.status.startTime?.toLocaleString() },
-            ]}
-            columns={3}
-          />
 
           <Container title='Configuration'>
           <div className="grid grid-cols-5 gap-4">

@@ -64,6 +64,15 @@ export const JobsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.Jobs, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.Jobs,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -75,6 +84,7 @@ export const JobsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={job}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

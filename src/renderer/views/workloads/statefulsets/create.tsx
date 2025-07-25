@@ -1,13 +1,11 @@
 import { useState } from 'react';
-import { useView } from '@context/viewProvider';
+import { useView } from '@context/viewProvider'
 import { StatefulSetBadge } from '@components/workloads/statefulset/badge';
 import { CreateHeader } from '@components/create-header';
 import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
-import { Description, Field, Label } from '@components/base/fieldset';
-import { Input } from '@components/base/input';
-import { Dropdown } from '@components/base/dropdown';
-import { Subheading } from '@components/base/heading';
+import { StatefulSetForm } from './_form';
+import { dump } from 'js-yaml';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
 import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/form/field-annotations';

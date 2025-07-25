@@ -4,7 +4,7 @@ import { ResourceActionConfig, ResourceActionConfigs } from '../ResourceActions.
 export const resourceActionConfigs: ResourceActionConfigs = {
   [Resources.Pods]: {
     supportsDelete: true,
-    supportsEdit: false,
+    supportsEdit: true,
     supportsPortForward: true,
     supportsScale: false,
     supportsLogs: true,
@@ -84,7 +84,7 @@ export const resourceActionConfigs: ResourceActionConfigs = {
   },
   [Resources.Jobs]: {
     supportsDelete: true,
-    supportsEdit: false,
+    supportsEdit: true,
     supportsPortForward: false,
     supportsScale: false,
     supportsLogs: true,
