@@ -47,6 +47,14 @@ export const IngressClassesDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.IngressClasses, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.IngressClasses,
+      action: ResourceAction.Edit,
+      name: viewContext.name
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -57,6 +65,7 @@ export const IngressClassesDetailsView = (): JSX.Element => {
             resourceName={viewContext.name}
             resource={ingressClass}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

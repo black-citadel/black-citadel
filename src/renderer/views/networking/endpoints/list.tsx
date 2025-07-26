@@ -31,6 +31,7 @@ export const EndpointsListView = (): JSX.Element => {
         resource={Resources.Endpoints} 
         error={error}
         showNamespaceDropdown={true}
+        showCreateButton={true}
       />
       {endpoints && <EndpointsList endpoints={endpoints} />}
     </>

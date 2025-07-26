@@ -44,6 +44,15 @@ export const ResourceQuotasDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.ResourceQuotas, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.ResourceQuotas,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   const getQuotaSpecItems = () => {
     if (!resourceQuota || !resourceQuota.spec || !resourceQuota.spec.hard) return [];
     return Object.entries(resourceQuota.spec.hard).map(([key, value]) => ({
@@ -78,6 +87,7 @@ export const ResourceQuotasDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={resourceQuota}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

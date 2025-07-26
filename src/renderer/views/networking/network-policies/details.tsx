@@ -49,6 +49,15 @@ export const NetworkPoliciesDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.NetworkPolicies, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.NetworkPolicies,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -60,6 +69,7 @@ export const NetworkPoliciesDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={networkPolicy}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

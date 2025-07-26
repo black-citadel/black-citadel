@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useView } from '@context/viewProvider';
-import { NetworkPolicyBadge } from '@components/networking/network-policy/badge';
+import { EndpointBadge } from '@components/networking/endpoint/badge';
 import { CreateHeader } from '@components/create-header';
 import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { dump } from 'js-yaml';
-import { NetworkPolicyForm } from './_form';
+import { EndpointsForm } from './_form';
 
-export const NetworkPoliciesCreateView = (): JSX.Element => {
+export const EndpointsCreateView = (): JSX.Element => {
   const { setViewContext } = useView();
   const [error, setError] = useState<string | null>(null);
   const [payload, setPayload] = useState<any>(null);
@@ -15,17 +15,12 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
   const handleCreate = async () => {
     if (!payload) return;
     try {
-      if (!payload.spec?.policyTypes || payload.spec.policyTypes.length === 0) {
-        setError("At least one policy type (Ingress or Egress) must be selected.");
-        return;
-      }
-
       const yamlString = dump(payload);
       const result = await window.electronAPI.apply(yamlString);
 
       if (result.success) {
         setViewContext({
-          resource: Resources.NetworkPolicies,
+          resource: Resources.Endpoints,
           action: ResourceAction.Details,
           name: payload.metadata?.name,
           namespace: payload.metadata?.namespace
@@ -35,13 +30,13 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
       }
     } catch (e) {
       console.log(e);
-      setError("Failed to create network policy.");
+      setError("Failed to create endpoints.");
     }
   };
 
   const handleCancel = () => {
     setViewContext({
-      resource: Resources.NetworkPolicies,
+      resource: Resources.Endpoints,
       action: ResourceAction.List
     });
   };
@@ -57,10 +52,10 @@ export const NetworkPoliciesCreateView = (): JSX.Element => {
           </>
         }
       >
-        <NetworkPolicyBadge />Create a New Network Policy
+        <EndpointBadge />Create New Endpoints
       </CreateHeader>
 
-      <NetworkPolicyForm 
+      <EndpointsForm 
         onChange={setPayload}
         isEdit={false}
       />

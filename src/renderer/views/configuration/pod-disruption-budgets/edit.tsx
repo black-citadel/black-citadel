@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useView } from '@context/viewProvider';
 import { PodDisruptionBudgetBadge } from '@components/configuration/pod-disruption-budget/badge';
 import { CreateHeader } from '@components/create-header';
 import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { CodePanel } from '@components/code';
-import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
-import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/form/field-annotations';
 import { podDisruptionBudgetTemplate } from '@templates/poddisruptionbudget.yaml';
 import { dump } from 'js-yaml';
 import { PodDisruptionBudgetForm } from './_form';
+import { V1PodDisruptionBudget } from '@utils/k8s-types';
+import { FieldLabel } from '@components/form/field-labels';
+import { Annotation as FieldAnnotation } from '@components/form/field-annotations';
 
 interface MatchExpression {
   key: string;
@@ -17,11 +18,14 @@ interface MatchExpression {
   values: string;
 }
 
-export const PodDisruptionBudgetsCreateView = (): JSX.Element => {
-  const { setViewContext, activeNamespace } = useView();
+export const PodDisruptionBudgetsEditView = (): JSX.Element => {
+  const { viewContext, setViewContext } = useView();
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [original, setOriginal] = useState<V1PodDisruptionBudget | null>(null);
+  
   const [name, setName] = useState<string>('');
-  const [namespace, setNamespace] = useState<string>(activeNamespace === 'all' ? 'default' : activeNamespace);
+  const [namespace, setNamespace] = useState<string>('');
   const [labels, setLabels] = useState<FieldLabel[]>([{ key: '', value: '' }]);
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
   const [selectorType, setSelectorType] = useState<'matchLabels' | 'matchExpressions'>('matchLabels');
@@ -30,6 +34,56 @@ export const PodDisruptionBudgetsCreateView = (): JSX.Element => {
   const [disruptionType, setDisruptionType] = useState<'minAvailable' | 'maxUnavailable'>('minAvailable');
   const [minAvailable, setMinAvailable] = useState<string>('1');
   const [maxUnavailable, setMaxUnavailable] = useState<string>('1');
+
+  useEffect(() => {
+    const fetchPDB = async () => {
+      try {
+        const pdb = await window.electronAPI.readNamespacedPodDisruptionBudget(viewContext.name, viewContext.namespace);
+        setOriginal(pdb);
+        
+        setName(pdb.metadata.name || '');
+        setNamespace(pdb.metadata.namespace || '');
+        
+        const labelEntries = Object.entries(pdb.metadata.labels || {});
+        setLabels(labelEntries.length > 0 ? labelEntries.map(([key, value]) => ({ key, value })) : [{ key: '', value: '' }]);
+        
+        const annotationEntries = Object.entries(pdb.metadata.annotations || {});
+        setAnnotations(annotationEntries.length > 0 ? annotationEntries.map(([key, value]) => ({ key, value })) : [{ key: '', value: '' }]);
+        
+        if (pdb.spec?.selector) {
+          if (pdb.spec.selector.matchLabels) {
+            setSelectorType('matchLabels');
+            const matchLabelEntries = Object.entries(pdb.spec.selector.matchLabels);
+            setMatchLabels(matchLabelEntries.length > 0 ? matchLabelEntries.map(([key, value]) => ({ key, value })) : [{ key: '', value: '' }]);
+          } else if (pdb.spec.selector.matchExpressions) {
+            setSelectorType('matchExpressions');
+            const expressions = pdb.spec.selector.matchExpressions.map((expr: any) => ({
+              key: expr.key || '',
+              operator: expr.operator || 'In',
+              values: expr.values ? expr.values.join(', ') : ''
+            }));
+            setMatchExpressions(expressions.length > 0 ? expressions : [{ key: '', operator: 'In', values: '' }]);
+          }
+        }
+        
+        if (pdb.spec?.minAvailable !== undefined) {
+          setDisruptionType('minAvailable');
+          setMinAvailable(pdb.spec.minAvailable.toString());
+        } else if (pdb.spec?.maxUnavailable !== undefined) {
+          setDisruptionType('maxUnavailable');
+          setMaxUnavailable(pdb.spec.maxUnavailable.toString());
+        }
+        
+        setLoading(false);
+      } catch (e) {
+        console.error("Failed to fetch PDB:", e);
+        setError("Failed to fetch pod disruption budget for editing.");
+        setLoading(false);
+      }
+    };
+
+    fetchPDB();
+  }, [viewContext.name, viewContext.namespace]);
 
   const parseSelector = () => {
     if (selectorType === 'matchLabels') {
@@ -68,7 +122,7 @@ export const PodDisruptionBudgetsCreateView = (): JSX.Element => {
     maxUnavailable: disruptionType === 'maxUnavailable' ? maxUnavailable : undefined
   });
 
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
     try {
       const selector = parseSelector();
       if (!selector.matchLabels && !selector.matchExpressions) {
@@ -101,16 +155,22 @@ export const PodDisruptionBudgetsCreateView = (): JSX.Element => {
       }
     } catch (e) {
       console.log(e);
-      setError("Failed to create pod disruption budget.");
+      setError("Failed to update pod disruption budget.");
     }
   };
 
   const handleCancel = () => {
     setViewContext({
       resource: Resources.PodDisruptionBudgets,
-      action: ResourceAction.List
+      action: ResourceAction.Details,
+      name: viewContext.name,
+      namespace: viewContext.namespace
     });
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -119,11 +179,11 @@ export const PodDisruptionBudgetsCreateView = (): JSX.Element => {
         actions={
           <div className="flex gap-2">
             <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
-            <Button variant="primary" onClick={() => handleCreate()}>Apply</Button>
+            <Button variant="primary" onClick={() => handleUpdate()}>Update</Button>
           </div>
         }
       >
-        <PodDisruptionBudgetBadge />Create a New Pod Disruption Budget
+        <PodDisruptionBudgetBadge />Edit Pod Disruption Budget: {name}
       </CreateHeader>
 
       <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 my-8">
@@ -148,6 +208,7 @@ export const PodDisruptionBudgetsCreateView = (): JSX.Element => {
           setMinAvailable={setMinAvailable}
           maxUnavailable={maxUnavailable}
           setMaxUnavailable={setMaxUnavailable}
+          isEdit={true}
         />
 
         <div className='px-4'>

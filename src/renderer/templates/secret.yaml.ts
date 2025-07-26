@@ -38,7 +38,7 @@ export const secretTemplate = (params: SecretTemplateParams): k8s.V1Secret => {
     .filter(item => item.key && item.value)
     .reduce((acc, item) => ({ 
       ...acc, 
-      [item.key]: Buffer.from(item.value).toString('base64') 
+      [item.key]: btoa(item.value) 
     }), {});
 
   // StringData doesn't need base64 encoding

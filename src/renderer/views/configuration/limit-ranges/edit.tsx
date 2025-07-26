@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useView } from '@context/viewProvider';
 import { LimitRangeBadge } from '@components/configuration/limit-range/badge';
 import { CreateHeader } from '@components/create-header';
 import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { CodePanel } from '@components/code';
-import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
-import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/form/field-annotations';
 import { limitRangeTemplate } from '@templates/limitrange.yaml';
 import { dump } from 'js-yaml';
 import { LimitRangeForm } from './_form';
+import { V1LimitRange } from '@utils/k8s-types';
+import { FieldLabel } from '@components/form/field-labels';
+import { Annotation as FieldAnnotation } from '@components/form/field-annotations';
 
 interface LimitItem {
   type: 'Pod' | 'Container' | 'PersistentVolumeClaim';
@@ -20,21 +21,62 @@ interface LimitItem {
   maxLimitRequestRatio: { [key: string]: string };
 }
 
-export const LimitRangesCreateView = (): JSX.Element => {
-  const { setViewContext, activeNamespace } = useView();
+export const LimitRangesEditView = (): JSX.Element => {
+  const { viewContext, setViewContext } = useView();
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [original, setOriginal] = useState<V1LimitRange | null>(null);
+  
   const [name, setName] = useState<string>('');
-  const [namespace, setNamespace] = useState<string>(activeNamespace === 'all' ? 'default' : activeNamespace);
+  const [namespace, setNamespace] = useState<string>('');
   const [labels, setLabels] = useState<FieldLabel[]>([{ key: '', value: '' }]);
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
   const [limits, setLimits] = useState<LimitItem[]>([{
     type: 'Container',
-    max: { cpu: '1', memory: '1Gi' },
-    min: { cpu: '100m', memory: '128Mi' },
-    default: { cpu: '500m', memory: '512Mi' },
-    defaultRequest: { cpu: '200m', memory: '256Mi' },
+    max: {},
+    min: {},
+    default: {},
+    defaultRequest: {},
     maxLimitRequestRatio: {}
   }]);
+
+  useEffect(() => {
+    const fetchLimitRange = async () => {
+      try {
+        const limitRange = await window.electronAPI.readNamespacedLimitRange(viewContext.name, viewContext.namespace);
+        setOriginal(limitRange);
+        
+        setName(limitRange.metadata.name || '');
+        setNamespace(limitRange.metadata.namespace || '');
+        
+        const labelEntries = Object.entries(limitRange.metadata.labels || {});
+        setLabels(labelEntries.length > 0 ? labelEntries.map(([key, value]) => ({ key, value })) : [{ key: '', value: '' }]);
+        
+        const annotationEntries = Object.entries(limitRange.metadata.annotations || {});
+        setAnnotations(annotationEntries.length > 0 ? annotationEntries.map(([key, value]) => ({ key, value })) : [{ key: '', value: '' }]);
+        
+        if (limitRange.spec?.limits) {
+          const parsedLimits = limitRange.spec.limits.map((limit: any) => ({
+            type: limit.type as 'Pod' | 'Container' | 'PersistentVolumeClaim',
+            max: limit.max || {},
+            min: limit.min || {},
+            default: limit.default || {},
+            defaultRequest: limit.defaultRequest || {},
+            maxLimitRequestRatio: limit.maxLimitRequestRatio || {}
+          }));
+          setLimits(parsedLimits);
+        }
+        
+        setLoading(false);
+      } catch (e) {
+        console.error("Failed to fetch limit range:", e);
+        setError("Failed to fetch limit range for editing.");
+        setLoading(false);
+      }
+    };
+
+    fetchLimitRange();
+  }, [viewContext.name, viewContext.namespace]);
 
   const cleanLimits = () => {
     return limits.map(limit => ({
@@ -55,7 +97,7 @@ export const LimitRangesCreateView = (): JSX.Element => {
     limits: cleanLimits()
   });
 
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
     try {
       if (limits.length === 0) {
         setError("At least one limit must be specified.");
@@ -77,16 +119,22 @@ export const LimitRangesCreateView = (): JSX.Element => {
       }
     } catch (e) {
       console.log(e);
-      setError("Failed to create limit range.");
+      setError("Failed to update limit range.");
     }
   };
 
   const handleCancel = () => {
     setViewContext({
       resource: Resources.LimitRanges,
-      action: ResourceAction.List
+      action: ResourceAction.Details,
+      name: viewContext.name,
+      namespace: viewContext.namespace
     });
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -95,11 +143,11 @@ export const LimitRangesCreateView = (): JSX.Element => {
         actions={
           <div className="flex gap-2">
             <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
-            <Button variant="primary" onClick={() => handleCreate()}>Apply</Button>
+            <Button variant="primary" onClick={() => handleUpdate()}>Update</Button>
           </div>
         }
       >
-        <LimitRangeBadge />Create a New Limit Range
+        <LimitRangeBadge />Edit Limit Range: {name}
       </CreateHeader>
 
       <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 my-8">
@@ -114,6 +162,7 @@ export const LimitRangesCreateView = (): JSX.Element => {
           setAnnotations={setAnnotations}
           limits={limits}
           setLimits={setLimits}
+          isEdit={true}
         />
 
         <div className='px-4'>

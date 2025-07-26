@@ -8,18 +8,18 @@ import { StatefulSetsListView, StatefulSetsDetailsView, StatefulSetsCreateView, 
 import { DaemonSetsDetailsView, DaemonSetsListView, DaemonSetsCreateView, DaemonSetsEditView } from '@views/workloads/daemonsets';
 import { JobsDetailsView, JobsListView, JobsCreateView, JobsEditView } from '@views/workloads/jobs';
 import { CronJobsListView, CronJobsDetailsView, CronJobsCreateView, CronJobsEditView } from '@views/workloads/cronjobs';
-import { ServicesListView, ServicesDetailsView, ServicesCreateView } from '@views/networking/services';
-import { IngressesDetailsView, IngressesListView, IngressesCreateView } from '@views/networking/ingresses';
-import { IngressClassesDetailsView, IngressClassesListView, IngressClassesCreateView } from '@views/networking/ingress-classes';
-import { EndpointsDetailsView, EndpointsListView } from '@views/networking/endpoints';
-import { EndpointSlicesDetailsView, EndpointSlicesListView } from '@views/networking/endpoint-slices';
-import { NetworkPoliciesDetailsView, NetworkPoliciesListView, NetworkPoliciesCreateView } from '@views/networking/network-policies';
-import { ConfigMapsCreateView, ConfigMapsDetailsView, ConfigMapsListView } from '@views/configuration/config-maps';
-import { SecretsDetailsView, SecretsListView, SecretsCreateView } from '@views/configuration/secrets';
-import { ResourceQuotasDetailsView, ResourceQuotasListView, ResourceQuotasCreateView } from '@views/configuration/resource-quotas';
-import { LimitRangesDetailsView, LimitRangesListView, LimitRangesCreateView } from '@views/configuration/limit-ranges';
-import { HorizontalPodAutoscalersDetailsView, HorizontalPodAutoscalersListView, HorizontalPodAutoscalersCreateView } from '@views/configuration/horizontal-pod-autoscalers';
-import { PodDisruptionBudgetsDetailsView, PodDisruptionBudgetsListView, PodDisruptionBudgetsCreateView } from '@views/configuration/pod-disruption-budgets';
+import { ServicesListView, ServicesDetailsView, ServicesCreateView, ServicesEditView } from '@views/networking/services';
+import { IngressesDetailsView, IngressesListView, IngressesCreateView, IngressesEditView } from '@views/networking/ingresses';
+import { IngressClassesDetailsView, IngressClassesListView, IngressClassesCreateView, IngressClassesEditView } from '@views/networking/ingress-classes';
+import { EndpointsDetailsView, EndpointsListView, EndpointsCreateView, EndpointsEditView } from '@views/networking/endpoints';
+import { EndpointSlicesDetailsView, EndpointSlicesListView, EndpointSlicesCreateView, EndpointSlicesEditView } from '@views/networking/endpoint-slices';
+import { NetworkPoliciesDetailsView, NetworkPoliciesListView, NetworkPoliciesCreateView, NetworkPoliciesEditView } from '@views/networking/network-policies';
+import { ConfigMapsCreateView, ConfigMapsDetailsView, ConfigMapsListView, ConfigMapsEditView } from '@views/configuration/config-maps';
+import { SecretsDetailsView, SecretsListView, SecretsCreateView, SecretsEditView } from '@views/configuration/secrets';
+import { ResourceQuotasDetailsView, ResourceQuotasListView, ResourceQuotasCreateView, ResourceQuotasEditView } from '@views/configuration/resource-quotas';
+import { LimitRangesDetailsView, LimitRangesListView, LimitRangesCreateView, LimitRangesEditView } from '@views/configuration/limit-ranges';
+import { HorizontalPodAutoscalersDetailsView, HorizontalPodAutoscalersListView, HorizontalPodAutoscalersCreateView, HorizontalPodAutoscalersEditView } from '@views/configuration/horizontal-pod-autoscalers';
+import { PodDisruptionBudgetsDetailsView, PodDisruptionBudgetsListView, PodDisruptionBudgetsCreateView, PodDisruptionBudgetsEditView } from '@views/configuration/pod-disruption-budgets';
 import { PersistentVolumeClaimsDetailsView, PersistentVolumeClaimsListView, PersistentVolumeClaimsCreateView } from '@views/storage/persistent-volume-claims';
 import { PersistentVolumesDetailsView, PersistentVolumesListView, PersistentVolumesCreateView } from '@views/storage/persistent-volumes';
 import { VolumeAttachmentsDetailsView, VolumeAttachmentsListView } from '@views/storage/volume-attachments';
@@ -382,49 +382,63 @@ export const Layout = () => {
         {viewContext.resource === Resources.Services && viewContext.action === ResourceAction.List && <ServicesListView />}
         {viewContext.resource === Resources.Services && viewContext.action === ResourceAction.Details && <ServicesDetailsView />}
         {viewContext.resource === Resources.Services && viewContext.action === ResourceAction.Create && <ServicesCreateView />}
+        {viewContext.resource === Resources.Services && viewContext.action === ResourceAction.Edit && <ServicesEditView />}
 
         {viewContext.resource === Resources.Ingresses && viewContext.action === ResourceAction.List && <IngressesListView />}
         {viewContext.resource === Resources.Ingresses && viewContext.action === ResourceAction.Details && <IngressesDetailsView />}
         {viewContext.resource === Resources.Ingresses && viewContext.action === ResourceAction.Create && <IngressesCreateView />}
+        {viewContext.resource === Resources.Ingresses && viewContext.action === ResourceAction.Edit && <IngressesEditView />}
 
         {viewContext.resource === Resources.IngressClasses && viewContext.action === ResourceAction.List && <IngressClassesListView />}
         {viewContext.resource === Resources.IngressClasses && viewContext.action === ResourceAction.Details && <IngressClassesDetailsView />}
         {viewContext.resource === Resources.IngressClasses && viewContext.action === ResourceAction.Create && <IngressClassesCreateView />}
+        {viewContext.resource === Resources.IngressClasses && viewContext.action === ResourceAction.Edit && <IngressClassesEditView />}
 
         {viewContext.resource === Resources.Endpoints && viewContext.action === ResourceAction.List && <EndpointsListView />}
         {viewContext.resource === Resources.Endpoints && viewContext.action === ResourceAction.Details && <EndpointsDetailsView />}
+        {viewContext.resource === Resources.Endpoints && viewContext.action === ResourceAction.Create && <EndpointsCreateView />}
+        {viewContext.resource === Resources.Endpoints && viewContext.action === ResourceAction.Edit && <EndpointsEditView />}
 
         {viewContext.resource === Resources.EndpointSlices && viewContext.action === ResourceAction.List && <EndpointSlicesListView />}
         {viewContext.resource === Resources.EndpointSlices && viewContext.action === ResourceAction.Details && <EndpointSlicesDetailsView />}
+        {viewContext.resource === Resources.EndpointSlices && viewContext.action === ResourceAction.Create && <EndpointSlicesCreateView />}
+        {viewContext.resource === Resources.EndpointSlices && viewContext.action === ResourceAction.Edit && <EndpointSlicesEditView />}
 
         {viewContext.resource === Resources.NetworkPolicies && viewContext.action === ResourceAction.List && <NetworkPoliciesListView />}
         {viewContext.resource === Resources.NetworkPolicies && viewContext.action === ResourceAction.Details && <NetworkPoliciesDetailsView />}
         {viewContext.resource === Resources.NetworkPolicies && viewContext.action === ResourceAction.Create && <NetworkPoliciesCreateView />}
+        {viewContext.resource === Resources.NetworkPolicies && viewContext.action === ResourceAction.Edit && <NetworkPoliciesEditView />}
 
         {/* Configuration */}
         {viewContext.resource === Resources.ConfigMaps && viewContext.action === ResourceAction.List && <ConfigMapsListView />}
         {viewContext.resource === Resources.ConfigMaps && viewContext.action === ResourceAction.Details && <ConfigMapsDetailsView />}
         {viewContext.resource === Resources.ConfigMaps && viewContext.action === ResourceAction.Create && <ConfigMapsCreateView />}
+        {viewContext.resource === Resources.ConfigMaps && viewContext.action === ResourceAction.Edit && <ConfigMapsEditView />}
 
         {viewContext.resource === Resources.Secrets && viewContext.action === ResourceAction.List && <SecretsListView />}
         {viewContext.resource === Resources.Secrets && viewContext.action === ResourceAction.Details && <SecretsDetailsView />}
         {viewContext.resource === Resources.Secrets && viewContext.action === ResourceAction.Create && <SecretsCreateView />}
+        {viewContext.resource === Resources.Secrets && viewContext.action === ResourceAction.Edit && <SecretsEditView />}
 
         {viewContext.resource === Resources.ResourceQuotas && viewContext.action === ResourceAction.List && <ResourceQuotasListView />}
         {viewContext.resource === Resources.ResourceQuotas && viewContext.action === ResourceAction.Details && <ResourceQuotasDetailsView />}
         {viewContext.resource === Resources.ResourceQuotas && viewContext.action === ResourceAction.Create && <ResourceQuotasCreateView />}
+        {viewContext.resource === Resources.ResourceQuotas && viewContext.action === ResourceAction.Edit && <ResourceQuotasEditView />}
 
         {viewContext.resource === Resources.LimitRanges && viewContext.action === ResourceAction.List && <LimitRangesListView />}
         {viewContext.resource === Resources.LimitRanges && viewContext.action === ResourceAction.Details && <LimitRangesDetailsView />}
         {viewContext.resource === Resources.LimitRanges && viewContext.action === ResourceAction.Create && <LimitRangesCreateView />}
+        {viewContext.resource === Resources.LimitRanges && viewContext.action === ResourceAction.Edit && <LimitRangesEditView />}
 
         {viewContext.resource === Resources.HorizontalPodAutoscalers && viewContext.action === ResourceAction.List && <HorizontalPodAutoscalersListView />}
         {viewContext.resource === Resources.HorizontalPodAutoscalers && viewContext.action === ResourceAction.Details && <HorizontalPodAutoscalersDetailsView />}
         {viewContext.resource === Resources.HorizontalPodAutoscalers && viewContext.action === ResourceAction.Create && <HorizontalPodAutoscalersCreateView />}
+        {viewContext.resource === Resources.HorizontalPodAutoscalers && viewContext.action === ResourceAction.Edit && <HorizontalPodAutoscalersEditView />}
 
         {viewContext.resource === Resources.PodDisruptionBudgets && viewContext.action === ResourceAction.List && <PodDisruptionBudgetsListView />}
         {viewContext.resource === Resources.PodDisruptionBudgets && viewContext.action === ResourceAction.Details && <PodDisruptionBudgetsDetailsView />}
         {viewContext.resource === Resources.PodDisruptionBudgets && viewContext.action === ResourceAction.Create && <PodDisruptionBudgetsCreateView />}
+        {viewContext.resource === Resources.PodDisruptionBudgets && viewContext.action === ResourceAction.Edit && <PodDisruptionBudgetsEditView />}
 
         {/* Storage */}
         {viewContext.resource === Resources.PersistentVolumeClaims && viewContext.action === ResourceAction.List && <PersistentVolumeClaimsListView />}

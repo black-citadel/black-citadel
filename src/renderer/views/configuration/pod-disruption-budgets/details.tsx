@@ -46,6 +46,15 @@ export const PodDisruptionBudgetsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.PodDisruptionBudgets, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.PodDisruptionBudgets,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   const getConfigurationItems = () => {
     if (!pdb) return [];
     const items = [];
@@ -117,6 +126,7 @@ export const PodDisruptionBudgetsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={pdb}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

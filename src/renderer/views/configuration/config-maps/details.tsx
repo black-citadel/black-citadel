@@ -47,6 +47,15 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.ConfigMaps, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.ConfigMaps,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   const getConfigMapDataItems = () => {
     if (!configMap || !configMap.data) return [];
     return Object.entries(configMap.data).map(([key, value]) => ({
@@ -66,6 +75,7 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={configMap}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

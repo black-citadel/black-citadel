@@ -46,6 +46,15 @@ export const HorizontalPodAutoscalersDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.HorizontalPodAutoscalers, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.HorizontalPodAutoscalers,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   const getConfigurationItems = () => {
     if (!hpa) return [];
     return [
@@ -108,6 +117,7 @@ export const HorizontalPodAutoscalersDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={hpa}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

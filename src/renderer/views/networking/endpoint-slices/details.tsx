@@ -50,6 +50,15 @@ export const EndpointSlicesDetailsView = (): JSX.Element => {
     // setViewContext({ resource: Resources.EndpointSlices, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.EndpointSlices,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -61,6 +70,7 @@ export const EndpointSlicesDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={endpointSlice}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

@@ -47,6 +47,15 @@ export const LimitRangesDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.LimitRanges, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.LimitRanges,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   const getLimitRangeItems = (item: V1LimitRangeItem) => {
     const items = [];
     
@@ -109,6 +118,7 @@ export const LimitRangesDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={limitRange}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

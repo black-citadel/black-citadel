@@ -48,6 +48,15 @@ export const EndpointsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.Endpoints, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.Endpoints,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   const countEndpoints = () => {
     if (!endpoints?.subsets) return 0;
     return endpoints.subsets.reduce((total, subset) => {
@@ -68,6 +77,7 @@ export const EndpointsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={endpoints}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

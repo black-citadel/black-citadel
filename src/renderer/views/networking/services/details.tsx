@@ -69,6 +69,15 @@ export const ServicesDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.Services, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.Services,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   const getAvailablePorts = (): PortOption[] => {
     if (!service?.spec?.ports) return [];
 
@@ -108,6 +117,7 @@ export const ServicesDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={service}
             onDelete={handleDelete}
+            onEdit={handleEdit}
             customActions={
               service && getAvailablePorts().length > 0 ? [{
                 id: 'port-forward',

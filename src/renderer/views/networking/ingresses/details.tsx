@@ -48,6 +48,15 @@ export const IngressesDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.Ingresses, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.Ingresses,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -59,6 +68,7 @@ export const IngressesDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={ingress}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

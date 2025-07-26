@@ -74,6 +74,15 @@ export const SecretsDetailsView = (): JSX.Element => {
     });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.Secrets,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -85,6 +94,7 @@ export const SecretsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={secret}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >
