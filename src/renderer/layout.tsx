@@ -20,11 +20,11 @@ import { ResourceQuotasDetailsView, ResourceQuotasListView, ResourceQuotasCreate
 import { LimitRangesDetailsView, LimitRangesListView, LimitRangesCreateView, LimitRangesEditView } from '@views/configuration/limit-ranges';
 import { HorizontalPodAutoscalersDetailsView, HorizontalPodAutoscalersListView, HorizontalPodAutoscalersCreateView, HorizontalPodAutoscalersEditView } from '@views/configuration/horizontal-pod-autoscalers';
 import { PodDisruptionBudgetsDetailsView, PodDisruptionBudgetsListView, PodDisruptionBudgetsCreateView, PodDisruptionBudgetsEditView } from '@views/configuration/pod-disruption-budgets';
-import { PersistentVolumeClaimsDetailsView, PersistentVolumeClaimsListView, PersistentVolumeClaimsCreateView } from '@views/storage/persistent-volume-claims';
-import { PersistentVolumesDetailsView, PersistentVolumesListView, PersistentVolumesCreateView } from '@views/storage/persistent-volumes';
-import { VolumeAttachmentsDetailsView, VolumeAttachmentsListView } from '@views/storage/volume-attachments';
-import { StorageClassesDetailsView, StorageClassesListView, StorageClassesCreateView } from '@views/storage/storage-classes';
-import { CSIDriversDetailsView, CSIDriversListView } from '@views/storage/csi-drivers';
+import { PersistentVolumeClaimsDetailsView, PersistentVolumeClaimsListView, PersistentVolumeClaimsCreateView, PersistentVolumeClaimsEditView } from '@views/storage/persistent-volume-claims';
+import { PersistentVolumesDetailsView, PersistentVolumesListView, PersistentVolumesCreateView, PersistentVolumesEditView } from '@views/storage/persistent-volumes';
+import { VolumeAttachmentsDetailsView, VolumeAttachmentsListView, VolumeAttachmentsCreateView, VolumeAttachmentsEditView } from '@views/storage/volume-attachments';
+import { StorageClassesDetailsView, StorageClassesListView, StorageClassesCreateView, StorageClassesEditView } from '@views/storage/storage-classes';
+import { CSIDriversDetailsView, CSIDriversListView, CSIDriversCreateView, CSIDriversEditView } from '@views/storage/csi-drivers';
 import { CSINodesDetailsView, CSINodesListView } from '@views/storage/csi-nodes';
 import { ServiceAccountsDetailsView, ServiceAccountsListView, ServiceAccountsCreateView } from '@views/access-control/service-accounts';
 import { RolesDetailsView, RolesListView, RolesCreateView } from '@views/access-control/roles';
@@ -444,20 +444,27 @@ export const Layout = () => {
         {viewContext.resource === Resources.PersistentVolumeClaims && viewContext.action === ResourceAction.List && <PersistentVolumeClaimsListView />}
         {viewContext.resource === Resources.PersistentVolumeClaims && viewContext.action === ResourceAction.Details && <PersistentVolumeClaimsDetailsView />}
         {viewContext.resource === Resources.PersistentVolumeClaims && viewContext.action === ResourceAction.Create && <PersistentVolumeClaimsCreateView />}
+        {viewContext.resource === Resources.PersistentVolumeClaims && viewContext.action === ResourceAction.Edit && <PersistentVolumeClaimsEditView />}
 
         {viewContext.resource === Resources.PersistentVolumes && viewContext.action === ResourceAction.List && <PersistentVolumesListView />}
         {viewContext.resource === Resources.PersistentVolumes && viewContext.action === ResourceAction.Details && <PersistentVolumesDetailsView />}
         {viewContext.resource === Resources.PersistentVolumes && viewContext.action === ResourceAction.Create && <PersistentVolumesCreateView />}
+        {viewContext.resource === Resources.PersistentVolumes && viewContext.action === ResourceAction.Edit && <PersistentVolumesEditView />}
 
         {viewContext.resource === Resources.VolumeAttachments && viewContext.action === ResourceAction.List && <VolumeAttachmentsListView />}
         {viewContext.resource === Resources.VolumeAttachments && viewContext.action === ResourceAction.Details && <VolumeAttachmentsDetailsView />}
+        {viewContext.resource === Resources.VolumeAttachments && viewContext.action === ResourceAction.Create && <VolumeAttachmentsCreateView />}
+        {viewContext.resource === Resources.VolumeAttachments && viewContext.action === ResourceAction.Edit && <VolumeAttachmentsEditView />}
 
         {viewContext.resource === Resources.StorageClasses && viewContext.action === ResourceAction.List && <StorageClassesListView />}
         {viewContext.resource === Resources.StorageClasses && viewContext.action === ResourceAction.Details && <StorageClassesDetailsView />}
         {viewContext.resource === Resources.StorageClasses && viewContext.action === ResourceAction.Create && <StorageClassesCreateView />}
+        {viewContext.resource === Resources.StorageClasses && viewContext.action === ResourceAction.Edit && <StorageClassesEditView />}
 
         {viewContext.resource === Resources.CSIDrivers && viewContext.action === ResourceAction.List && <CSIDriversListView />}
         {viewContext.resource === Resources.CSIDrivers && viewContext.action === ResourceAction.Details && <CSIDriversDetailsView />}
+        {viewContext.resource === Resources.CSIDrivers && viewContext.action === ResourceAction.Create && <CSIDriversCreateView />}
+        {viewContext.resource === Resources.CSIDrivers && viewContext.action === ResourceAction.Edit && <CSIDriversEditView />}
 
         {viewContext.resource === Resources.CSINodes && viewContext.action === ResourceAction.List && <CSINodesListView />}
         {viewContext.resource === Resources.CSINodes && viewContext.action === ResourceAction.Details && <CSINodesDetailsView />}

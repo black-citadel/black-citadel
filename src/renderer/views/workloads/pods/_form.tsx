@@ -2,11 +2,9 @@ import { useState, useEffect } from 'react';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
 import { Subheading } from '@components/base/heading';
-import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
 import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/form/field-annotations';
 import { podTemplate } from '@templates/pod.yaml';
-import { dump } from 'js-yaml';
 import { HelpButton } from '@components/help-button';
 import helpObjects from '@help/index';
 import { V1Pod } from '@utils/k8s-types';
@@ -14,6 +12,8 @@ import { NamespaceSelect } from '@components/form/field-namespace-select';
 import { Button } from '@protoku/design-system';
 import { useView } from '@context/viewProvider';
 import { TrashIcon } from '@heroicons/react/24/outline';
+import { FormContainer } from '@components/form/form-container';
+import { Container } from '@components/base/container';
 
 interface EnvVar {
   name: string;
@@ -24,6 +24,27 @@ interface PodFormProps {
   pod?: V1Pod | null;
   onChange?: (payload: any) => void;
   isEdit?: boolean;
+}
+
+export interface PodFormPayload {
+  metadata: {
+    name: string;
+    namespace: string;
+    labels?: Record<string, string>;
+    annotations?: Record<string, string>;
+  };
+  spec: {
+    containers: Array<{
+      name: string;
+      image: string;
+      ports?: Array<{ containerPort: number }>;
+      env?: Array<{ name: string; value: string }>;
+      resources?: {
+        requests?: Record<string, string>;
+        limits?: Record<string, string>;
+      };
+    }>;
+  };
 }
 
 export const PodForm = ({ 
@@ -125,7 +146,7 @@ export const PodForm = ({
     if (onChange) {
       onChange(payload);
     }
-  }, [name, namespace, labels, annotations, image, containerName, containerPort, envVars, cpuRequest, memoryRequest, cpuLimit, memoryLimit, onChange]);
+  }, [name, namespace, labels, annotations, image, containerName, containerPort, envVars, cpuRequest, memoryRequest, cpuLimit, memoryLimit]);
 
   const handleAddEnvVar = () => {
     setEnvVars([...envVars, { name: '', value: '' }]);
@@ -142,204 +163,198 @@ export const PodForm = ({
   };
 
   return (
-    <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 my-8">
-      <div className='px-4 space-y-6'>
-        {isEdit && (
-          <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md">
-            <p className="text-sm text-amber-800 dark:text-amber-200">
-              <strong>Note:</strong> Most pod specifications are immutable after creation. 
-              You can only update labels and annotations.
-            </p>
-          </div>
-        )}
+    <div className='space-y-6'>
+      {isEdit && (
+        <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-md">
+          <p className="text-sm text-amber-800 dark:text-amber-200">
+            <strong>Note:</strong> Most pod specifications are immutable after creation. 
+            You can only update labels and annotations.
+          </p>
+        </div>
+      )}
+      
+      <div>
+        <Subheading className='mb-4'>Metadata</Subheading>
         
-        <div>
-          <Subheading className='mb-4'>Metadata</Subheading>
-          
+        <Field>
+          <Label>Name <HelpButton title="Name" content={helpObjects.metadata.name.help} /></Label>
+          <Description>
+            {isEdit 
+              ? 'The pod name cannot be changed.' 
+              : 'Enter a unique name for your pod.'}
+          </Description>
+          <Input 
+            name="name" 
+            value={name} 
+            onChange={(event) => setName(event.target.value)} 
+            placeholder={isEdit ? undefined : "e.g., my-pod"}
+            disabled={isEdit}
+            className={isEdit ? "bg-neutral-100 dark:bg-neutral-800 cursor-not-allowed opacity-60" : undefined}
+          />
+        </Field>
+
+        <Field>
+          <Label>Namespace</Label>
+          <Description>
+            {isEdit 
+              ? 'The namespace cannot be changed.' 
+              : 'Select the namespace for this pod.'}
+          </Description>
+          <NamespaceSelect 
+            value={namespace} 
+            onChange={setNamespace}
+            disabled={isEdit}
+          />
+        </Field>
+
+        <FieldLabels labels={labels} setLabels={setLabels} />
+        <FieldAnnotations annotations={annotations} setAnnotations={setAnnotations} />
+      </div>
+
+      {!isEdit && (
+        <Container title="Container">
+          <FormContainer />
+
           <Field>
-            <Label>Name <HelpButton title="Name" content={helpObjects.metadata.name.help} /></Label>
+            <Label>Container Name</Label>
             <Description>
-              {isEdit 
-                ? 'The pod name cannot be changed.' 
-                : 'Enter a unique name for your pod.'}
+              Name for the container (optional, defaults to pod name).
             </Description>
             <Input 
-              name="name" 
-              value={name} 
-              onChange={(event) => setName(event.target.value)} 
-              placeholder={isEdit ? undefined : "e.g., my-pod"}
-              disabled={isEdit}
-              className={isEdit ? "bg-neutral-100 dark:bg-neutral-800 cursor-not-allowed opacity-60" : undefined}
+              name="containerName" 
+              value={containerName} 
+              onChange={(event) => setContainerName(event.target.value)} 
+              placeholder="e.g., nginx" 
             />
           </Field>
 
           <Field>
-            <Label>Namespace</Label>
+            <Label>Image <HelpButton title="Image" content={helpObjects.pod.image.help} /></Label>
             <Description>
-              {isEdit 
-                ? 'The namespace cannot be changed.' 
-                : 'Select the namespace for this pod.'}
+              Docker image to use for the container.
             </Description>
-            <NamespaceSelect 
-              value={namespace} 
-              onChange={setNamespace}
-              disabled={isEdit}
+            <Input 
+              name="image" 
+              value={image} 
+              onChange={(event) => setImage(event.target.value)} 
+              placeholder="e.g., nginx:latest" 
             />
           </Field>
 
-          <FieldLabels labels={labels} setLabels={setLabels} />
-          <FieldAnnotations annotations={annotations} setAnnotations={setAnnotations} />
-        </div>
+          <Field>
+            <Label>Container Port</Label>
+            <Description>
+              Port that the container exposes (optional).
+            </Description>
+            <Input 
+              type="number"
+              name="containerPort" 
+              value={containerPort} 
+              onChange={(event) => setContainerPort(event.target.value)} 
+              placeholder="e.g., 80" 
+            />
+          </Field>
+        </Container>
+      )}
 
-        {!isEdit && (
+      {!isEdit && (
+        <>
           <div>
-            <Subheading className='mb-4'>Container</Subheading>
-            
-            <Field>
-              <Label>Container Name</Label>
+            <Field className="my-8">
+              <Label>
+                Environment Variables (optional)
+                <HelpButton title="Environment Variables" content="Key-value pairs that will be injected as environment variables in the container." />
+              </Label>
               <Description>
-                Name for the container (optional, defaults to pod name).
+                Add environment variables that will be available to your container.
               </Description>
-              <Input 
-                name="containerName" 
-                value={containerName} 
-                onChange={(event) => setContainerName(event.target.value)} 
-                placeholder="e.g., nginx" 
-              />
-            </Field>
-
-            <Field>
-              <Label>Image <HelpButton title="Image" content={helpObjects.pod.image.help} /></Label>
-              <Description>
-                Docker image to use for the container.
-              </Description>
-              <Input 
-                name="image" 
-                value={image} 
-                onChange={(event) => setImage(event.target.value)} 
-                placeholder="e.g., nginx:latest" 
-              />
-            </Field>
-
-            <Field>
-              <Label>Container Port</Label>
-              <Description>
-                Port that the container exposes (optional).
-              </Description>
-              <Input 
-                type="number"
-                name="containerPort" 
-                value={containerPort} 
-                onChange={(event) => setContainerPort(event.target.value)} 
-                placeholder="e.g., 80" 
-              />
-            </Field>
-          </div>
-        )}
-
-        {!isEdit && (
-          <>
-            <div>
-              <Field className="my-8">
-                <Label>
-                  Environment Variables (optional)
-                  <HelpButton title="Environment Variables" content="Key-value pairs that will be injected as environment variables in the container." />
-                </Label>
-                <Description>
-                  Add environment variables that will be available to your container.
-                </Description>
-                {envVars.map((envVar, index) => (
-                  <div key={index} className="grid gap-x-4 gap-y-6 grid-cols-[1fr,1fr,auto] my-4 items-center">
-                    <div>
-                      <Input
-                        name={`env-name-${index}`}
-                        value={envVar.name}
-                        onChange={(e) => handleEnvVarChange(index, 'name', e.target.value)}
-                        placeholder="e.g., PORT"
-                      />
-                    </div>
-                    <div>
-                      <Input
-                        name={`env-value-${index}`}
-                        value={envVar.value}
-                        onChange={(e) => handleEnvVarChange(index, 'value', e.target.value)}
-                        placeholder="e.g., 8080"
-                      />
-                    </div>
-                    <div>
-                      <button 
-                        type="button"
-                        onClick={() => handleRemoveEnvVar(index)} 
-                        className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-                        disabled={envVars.length === 1 && envVar.name === '' && envVar.value === ''}
-                      >
-                        <TrashIcon className="w-4 h-4" />
-                      </button>
-                    </div>
+              {envVars.map((envVar, index) => (
+                <div key={index} className="grid gap-x-4 gap-y-6 grid-cols-[1fr,1fr,auto] my-4 items-center">
+                  <div>
+                    <Input
+                      name={`env-name-${index}`}
+                      value={envVar.name}
+                      onChange={(e) => handleEnvVarChange(index, 'name', e.target.value)}
+                      placeholder="e.g., PORT"
+                    />
                   </div>
-                ))}
-              </Field>
-              <Button onClick={handleAddEnvVar} variant="secondary">
-                Add another environment variable
-              </Button>
-            </div>
+                  <div>
+                    <Input
+                      name={`env-value-${index}`}
+                      value={envVar.value}
+                      onChange={(e) => handleEnvVarChange(index, 'value', e.target.value)}
+                      placeholder="e.g., 8080"
+                    />
+                  </div>
+                  <div>
+                    <button 
+                      type="button"
+                      onClick={() => handleRemoveEnvVar(index)} 
+                      className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                      disabled={envVars.length === 1 && envVar.name === '' && envVar.value === ''}
+                    >
+                      <TrashIcon className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </Field>
+            <Button onClick={handleAddEnvVar} variant="secondary">
+              Add another environment variable
+            </Button>
+          </div>
 
-            <div>
-              <Subheading className='mb-4'>Resources</Subheading>
+          <div>
+            <Subheading className='mb-4'>Resources</Subheading>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm font-medium mb-2">Requests</p>
+                <Field>
+                  <Label className="sr-only">CPU Request</Label>
+                  <Input 
+                    name="cpuRequest" 
+                    value={cpuRequest} 
+                    onChange={(event) => setCpuRequest(event.target.value)} 
+                    placeholder="CPU (e.g., 100m)" 
+                  />
+                </Field>
+                <Field>
+                  <Label className="sr-only">Memory Request</Label>
+                  <Input 
+                    name="memoryRequest" 
+                    value={memoryRequest} 
+                    onChange={(event) => setMemoryRequest(event.target.value)} 
+                    placeholder="Memory (e.g., 128Mi)" 
+                  />
+                </Field>
+              </div>
               
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm font-medium mb-2">Requests</p>
-                  <Field>
-                    <Label className="sr-only">CPU Request</Label>
-                    <Input 
-                      name="cpuRequest" 
-                      value={cpuRequest} 
-                      onChange={(event) => setCpuRequest(event.target.value)} 
-                      placeholder="CPU (e.g., 100m)" 
-                    />
-                  </Field>
-                  <Field>
-                    <Label className="sr-only">Memory Request</Label>
-                    <Input 
-                      name="memoryRequest" 
-                      value={memoryRequest} 
-                      onChange={(event) => setMemoryRequest(event.target.value)} 
-                      placeholder="Memory (e.g., 128Mi)" 
-                    />
-                  </Field>
-                </div>
-                
-                <div>
-                  <p className="text-sm font-medium mb-2">Limits</p>
-                  <Field>
-                    <Label className="sr-only">CPU Limit</Label>
-                    <Input 
-                      name="cpuLimit" 
-                      value={cpuLimit} 
-                      onChange={(event) => setCpuLimit(event.target.value)} 
-                      placeholder="CPU (e.g., 500m)" 
-                    />
-                  </Field>
-                  <Field>
-                    <Label className="sr-only">Memory Limit</Label>
-                    <Input 
-                      name="memoryLimit" 
-                      value={memoryLimit} 
-                      onChange={(event) => setMemoryLimit(event.target.value)} 
-                      placeholder="Memory (e.g., 512Mi)" 
-                    />
-                  </Field>
-                </div>
+              <div>
+                <p className="text-sm font-medium mb-2">Limits</p>
+                <Field>
+                  <Label className="sr-only">CPU Limit</Label>
+                  <Input 
+                    name="cpuLimit" 
+                    value={cpuLimit} 
+                    onChange={(event) => setCpuLimit(event.target.value)} 
+                    placeholder="CPU (e.g., 500m)" 
+                  />
+                </Field>
+                <Field>
+                  <Label className="sr-only">Memory Limit</Label>
+                  <Input 
+                    name="memoryLimit" 
+                    value={memoryLimit} 
+                    onChange={(event) => setMemoryLimit(event.target.value)} 
+                    placeholder="Memory (e.g., 512Mi)" 
+                  />
+                </Field>
               </div>
             </div>
-          </>
-        )}
-      </div>
-
-      <div className='px-4'>
-        <CodePanel code={dump(payload)}><code>{dump(payload)}</code></CodePanel>
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

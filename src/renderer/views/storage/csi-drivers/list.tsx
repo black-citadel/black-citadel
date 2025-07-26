@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react';
 import { V1CSIDriverList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { CSIDriverList } from '@components/storage/csi-driver/table';
-import { Resources } from '@utils/enums';
+import { Resources, ResourceAction } from '@utils/enums';
+import { Button } from '@protoku/design-system';
+import { useView } from '@context/viewProvider';
 
 export const CSIDriversListView = (): JSX.Element => {
+  const { setViewContext } = useView();
   const [csiDrivers, setCSIDrivers] = useState<V1CSIDriverList>();
   const [error, setError] = useState<string | null>(null);
 
@@ -25,12 +28,24 @@ export const CSIDriversListView = (): JSX.Element => {
     return () => clearInterval(intervalId);
   }, []);
 
+  const handleCreate = () => {
+    setViewContext({
+      resource: Resources.CSIDrivers,
+      action: ResourceAction.Create
+    });
+  };
+
   return (
     <>
       <ListHeader 
         resource={Resources.CSIDrivers} 
         error={error}
         showNamespaceDropdown={false}
+        actions={
+          <Button variant="primary" onClick={handleCreate}>
+            Create CSI Driver
+          </Button>
+        }
       />
       {csiDrivers && <CSIDriverList csiDrivers={csiDrivers} />}
     </>

@@ -53,6 +53,14 @@ export const PersistentVolumesDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.PersistentVolumes, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.PersistentVolumes,
+      action: ResourceAction.Edit,
+      name: viewContext.name
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -63,6 +71,7 @@ export const PersistentVolumesDetailsView = (): JSX.Element => {
             resourceName={viewContext.name}
             resource={pv}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

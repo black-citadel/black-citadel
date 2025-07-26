@@ -1,7 +1,7 @@
 import { V1VolumeAttachment } from '@utils/k8s-types';
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
-import { ResourceTabs } from "@utils/enums";
+import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
@@ -14,10 +14,11 @@ import { AttachmentStatus } from '@components/storage/volume-attachment/attachme
 import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
 import { Container } from '@components/base/container';
+import { ResourceActions } from '@components/resources/ResourceActions';
 
 
 export const VolumeAttachmentsDetailsView = (): JSX.Element => {
-  const { viewContext } = useView()
+  const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
   const [volumeAttachment, setVolumeAttachment] = useState<V1VolumeAttachment>();
   const [error, setError] = useState(null);
@@ -45,9 +46,33 @@ export const VolumeAttachmentsDetailsView = (): JSX.Element => {
 
   const yamlContent = dump(volumeAttachment);
 
+  const handleDelete = async () => {
+    await window.electronAPI.deleteVolumeAttachment(viewContext.name);
+    setViewContext({ resource: Resources.VolumeAttachments, action: ResourceAction.List });
+  };
+
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.VolumeAttachments,
+      action: ResourceAction.Edit,
+      name: viewContext.name
+    });
+  };
+
   return (
     <>
-      <DetailsHeader error={error}>
+      <DetailsHeader 
+        error={error}
+        actions={
+          <ResourceActions
+            resourceType={Resources.VolumeAttachments}
+            resourceName={viewContext.name}
+            resource={volumeAttachment}
+            onDelete={handleDelete}
+            onEdit={handleEdit}
+          />
+        }
+      >
         <Heading>
           <VolumeAttachmentBadge />{viewContext.name}
         </Heading>

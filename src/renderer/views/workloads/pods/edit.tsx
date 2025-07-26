@@ -7,6 +7,7 @@ import { ResourceAction, Resources } from '@utils/enums';
 import { V1Pod } from '@utils/k8s-types';
 import { dump } from 'js-yaml';
 import { PodForm } from './_form';
+import { CodePanel } from '@components/code';
 
 export const PodsEditView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView();
@@ -89,11 +90,21 @@ export const PodsEditView = (): JSX.Element => {
       </CreateHeader>
 
       {pod && (
-        <PodForm 
-          pod={pod}
-          onChange={setPayload}
-          isEdit={true}
-        />
+        <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 my-8">
+          <div className='px-4'>
+            <PodForm 
+              pod={pod}
+              onChange={setPayload}
+              isEdit={true}
+            />
+          </div>
+          
+          <div className='px-4'>
+            <CodePanel code={dump(payload || pod)}>
+              <code>{dump(payload || pod)}</code>
+            </CodePanel>
+          </div>
+        </div>
       )}
     </>
   );

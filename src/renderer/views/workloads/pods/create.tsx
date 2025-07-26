@@ -5,6 +5,8 @@ import { CreateHeader } from '@components/create-header';
 import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { PodForm } from './_form';
+import { CodePanel } from '@components/code';
+import { dump } from 'js-yaml';
 
 export const PodsCreateView = (): JSX.Element => {
   const { setViewContext } = useView();
@@ -53,10 +55,22 @@ export const PodsCreateView = (): JSX.Element => {
         <PodBadge />Create a New Pod
       </CreateHeader>
 
-      <PodForm 
-        onChange={setPayload}
-        isEdit={false}
-      />
+      <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 my-8">
+        <div className='px-4'>
+          <PodForm 
+            onChange={setPayload}
+            isEdit={false}
+          />
+        </div>
+        
+        <div className='px-4'>
+          {payload && (
+            <CodePanel code={dump(payload)}>
+              <code>{dump(payload)}</code>
+            </CodePanel>
+          )}
+        </div>
+      </div>
     </>
   );
 };

@@ -51,6 +51,15 @@ export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.PersistentVolumeClaims, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.PersistentVolumeClaims,
+      action: ResourceAction.Edit,
+      name: viewContext.name,
+      namespace: viewContext.namespace
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -62,6 +71,7 @@ export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
             namespace={viewContext.namespace}
             resource={pvc}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

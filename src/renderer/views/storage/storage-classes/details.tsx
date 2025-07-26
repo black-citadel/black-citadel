@@ -49,6 +49,14 @@ export const StorageClassesDetailsView = (): JSX.Element => {
     setViewContext({ resource: Resources.StorageClasses, action: ResourceAction.List });
   };
 
+  const handleEdit = () => {
+    setViewContext({
+      resource: Resources.StorageClasses,
+      action: ResourceAction.Edit,
+      name: viewContext.name
+    });
+  };
+
   return (
     <>
       <DetailsHeader 
@@ -59,6 +67,7 @@ export const StorageClassesDetailsView = (): JSX.Element => {
             resourceName={viewContext.name}
             resource={storageClass}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         }
       >

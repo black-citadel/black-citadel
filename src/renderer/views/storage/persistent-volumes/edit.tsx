@@ -1,19 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useView } from '@context/viewProvider';
 import { PersistentVolumeBadge } from '@components/storage/persistent-volume/badge';
 import { CreateHeader } from '@components/create-header';
 import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { CodePanel } from '@components/code';
-import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
-import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/form/field-annotations';
 import { persistentVolumeTemplate } from '@templates/persistentvolume.yaml';
 import { dump } from 'js-yaml';
 import { PersistentVolumeForm } from './_form';
+import { V1PersistentVolume } from '@utils/k8s-types';
+import { FieldLabel } from '@components/form/field-labels';
+import { Annotation as FieldAnnotation } from '@components/form/field-annotations';
 
-export const PersistentVolumesCreateView = (): JSX.Element => {
-  const { setViewContext } = useView();
+export const PersistentVolumesEditView = (): JSX.Element => {
+  const { viewContext, setViewContext } = useView();
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [original, setOriginal] = useState<V1PersistentVolume | null>(null);
+  
   const [name, setName] = useState<string>('');
   const [labels, setLabels] = useState<FieldLabel[]>([{ key: '', value: '' }]);
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
@@ -50,6 +54,94 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
   const [nodeAffinityKey, setNodeAffinityKey] = useState<string>('kubernetes.io/hostname');
   const [nodeAffinityOperator, setNodeAffinityOperator] = useState<'In' | 'NotIn' | 'Exists' | 'DoesNotExist'>('In');
   const [nodeAffinityValues, setNodeAffinityValues] = useState<string>('');
+
+  useEffect(() => {
+    const fetchPV = async () => {
+      try {
+        const pv = await window.electronAPI.readPersistentVolume(viewContext.name);
+        setOriginal(pv);
+        
+        setName(pv.metadata.name || '');
+        
+        const labelEntries = Object.entries(pv.metadata.labels || {});
+        setLabels(labelEntries.length > 0 ? labelEntries.map(([key, value]) => ({ key, value })) : [{ key: '', value: '' }]);
+        
+        const annotationEntries = Object.entries(pv.metadata.annotations || {});
+        setAnnotations(annotationEntries.length > 0 ? annotationEntries.map(([key, value]) => ({ key, value })) : [{ key: '', value: '' }]);
+        
+        if (pv.spec?.capacity?.storage) {
+          setCapacity(pv.spec.capacity.storage);
+        }
+        
+        if (pv.spec?.accessModes) {
+          setAccessModes(pv.spec.accessModes);
+        }
+        
+        if (pv.spec?.storageClassName) {
+          setStorageClassName(pv.spec.storageClassName);
+        }
+        
+        if (pv.spec?.volumeMode) {
+          setVolumeMode(pv.spec.volumeMode as 'Filesystem' | 'Block');
+        }
+        
+        if (pv.spec?.persistentVolumeReclaimPolicy) {
+          setReclaimPolicy(pv.spec.persistentVolumeReclaimPolicy as any);
+        }
+        
+        // Parse volume source
+        if (pv.spec?.hostPath) {
+          setVolumeType('hostPath');
+          setHostPath(pv.spec.hostPath.path || '');
+          setHostPathType(pv.spec.hostPath.type || '');
+        } else if (pv.spec?.nfs) {
+          setVolumeType('nfs');
+          setNfsServer(pv.spec.nfs.server || '');
+          setNfsPath(pv.spec.nfs.path || '');
+          setNfsReadOnly(pv.spec.nfs.readOnly || false);
+        } else if (pv.spec?.local) {
+          setVolumeType('local');
+          setLocalPath(pv.spec.local.path || '');
+        } else if (pv.spec?.awsElasticBlockStore) {
+          setVolumeType('awsElasticBlockStore');
+          setAwsVolumeID(pv.spec.awsElasticBlockStore.volumeID || '');
+          setAwsFsType(pv.spec.awsElasticBlockStore.fsType || 'ext4');
+          setAwsPartition(pv.spec.awsElasticBlockStore.partition?.toString() || '');
+          setAwsReadOnly(pv.spec.awsElasticBlockStore.readOnly || false);
+        } else if (pv.spec?.gcePersistentDisk) {
+          setVolumeType('gcePersistentDisk');
+          setGcePdName(pv.spec.gcePersistentDisk.pdName || '');
+          setGceFsType(pv.spec.gcePersistentDisk.fsType || 'ext4');
+          setGcePartition(pv.spec.gcePersistentDisk.partition?.toString() || '');
+          setGceReadOnly(pv.spec.gcePersistentDisk.readOnly || false);
+        } else if (pv.spec?.azureDisk) {
+          setVolumeType('azureDisk');
+          setAzureDiskName(pv.spec.azureDisk.diskName || '');
+          setAzureDiskURI(pv.spec.azureDisk.diskURI || '');
+          setAzureCachingMode(pv.spec.azureDisk.cachingMode as any || 'None');
+          setAzureFsType(pv.spec.azureDisk.fsType || 'ext4');
+          setAzureReadOnly(pv.spec.azureDisk.readOnly || false);
+        }
+        
+        // Parse node affinity
+        if (pv.spec?.nodeAffinity?.required?.nodeSelectorTerms?.[0]?.matchExpressions?.[0]) {
+          const expr = pv.spec.nodeAffinity.required.nodeSelectorTerms[0].matchExpressions[0];
+          setNodeAffinityEnabled(true);
+          setNodeAffinityKey(expr.key || 'kubernetes.io/hostname');
+          setNodeAffinityOperator(expr.operator as any || 'In');
+          setNodeAffinityValues(expr.values?.join(', ') || '');
+        }
+        
+        setLoading(false);
+      } catch (e) {
+        console.error("Failed to fetch PV:", e);
+        setError("Failed to fetch persistent volume for editing.");
+        setLoading(false);
+      }
+    };
+
+    fetchPV();
+  }, [viewContext.name]);
 
   const getVolumeSource = () => {
     const source: any = { type: volumeType };
@@ -135,7 +227,7 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
     nodeAffinity: getNodeAffinity()
   });
 
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
     try {
       if (accessModes.length === 0) {
         setError("At least one access mode must be selected.");
@@ -200,16 +292,21 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
       }
     } catch (e) {
       console.log(e);
-      setError("Failed to create persistent volume.");
+      setError("Failed to update persistent volume.");
     }
   };
 
   const handleCancel = () => {
     setViewContext({
       resource: Resources.PersistentVolumes,
-      action: ResourceAction.List
+      action: ResourceAction.Details,
+      name: viewContext.name
     });
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -218,11 +315,11 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
         actions={
           <div className="flex gap-2">
             <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
-            <Button variant="primary" onClick={() => handleCreate()}>Apply</Button>
+            <Button variant="primary" onClick={() => handleUpdate()}>Update</Button>
           </div>
         }
       >
-        <PersistentVolumeBadge />Create a New Persistent Volume
+        <PersistentVolumeBadge />Edit Persistent Volume: {name}
       </CreateHeader>
 
       <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 my-8">
@@ -291,6 +388,7 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
           setNodeAffinityOperator={setNodeAffinityOperator}
           nodeAffinityValues={nodeAffinityValues}
           setNodeAffinityValues={setNodeAffinityValues}
+          isEdit={true}
         />
 
         <div className='px-4'>
