@@ -8,20 +8,19 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { ConfigMapBadge } from '@components/configuration/config-map/badge';
 import { Heading } from '@components/base/heading';
-import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
-import { PanelGrid } from '@components/layout/panel';
+import { ConfigMapDetails } from '@components/configuration/config-map/details';
 
 export const ConfigMapsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
   const [activeTab, setActiveTab] = useState<ResourceTabs>(ResourceTabs.Details)
-  const [configMap, setConfigMap] = useState<V1ConfigMap>();
+  const [resourceData, setResourceData] = useState<V1ConfigMap>();
   const [error, setError] = useState(null);
 
   const fetchData = async () => {
     try {
       const data = await window.electronAPI.readNamespacedConfigMap(viewContext.name, viewContext.namespace);
-      setConfigMap(data);
+      setResourceData(data);
       setError(null);
 
     } catch (e) {
@@ -40,7 +39,7 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const yamlContent = dump(configMap);
+  const yamlContent = dump(resourceData);
 
   const handleDelete = async () => {
     await window.electronAPI.deleteNamespacedConfigMap(viewContext.name, viewContext.namespace);
@@ -56,14 +55,6 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
     });
   };
 
-  const getConfigMapDataItems = () => {
-    if (!configMap || !configMap.data) return [];
-    return Object.entries(configMap.data).map(([key, value]) => ({
-      label: key,
-      value: <pre className="whitespace-pre-wrap text-xs break-all overflow-hidden">{value}</pre>
-    }));
-  };
-
   return (
     <>
       <DetailsHeader 
@@ -73,7 +64,7 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
             resourceType={Resources.ConfigMaps}
             resourceName={viewContext.name}
             namespace={viewContext.namespace}
-            resource={configMap}
+            resource={resourceData}
             onDelete={handleDelete}
             onEdit={handleEdit}
           />
@@ -85,26 +76,14 @@ export const ConfigMapsDetailsView = (): JSX.Element => {
 
         <Navbar>
           <NavbarSection>
-            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab == ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
-            <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab == ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.Details)} current={activeTab === ResourceTabs.Details}>{ResourceTabs.Details}</NavbarItem>
+            <NavbarItem onClick={() => setActiveTab(ResourceTabs.YAML)} current={activeTab === ResourceTabs.YAML}>{ResourceTabs.YAML}</NavbarItem>
           </NavbarSection>
         </Navbar>
       </DetailsHeader>
 
-      {activeTab === ResourceTabs.Details && configMap && (
-        <div className='m-2'>
-          <PanelGrid
-            title="Configuration Data"
-            items={getConfigMapDataItems()}
-            columns={1}
-          />
-
-          <MetadataDetails metadata={configMap.metadata} />
-        </div>
-      )}
-      {activeTab === ResourceTabs.YAML && (
-        <Editor content={yamlContent} />
-      )}
+      {activeTab === ResourceTabs.Details && resourceData && <ConfigMapDetails resourceData={resourceData} />}
+      {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );
 };

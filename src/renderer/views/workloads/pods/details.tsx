@@ -25,6 +25,7 @@ import { Container } from '@components/base/container';
 import { PanelGrid } from '@components/layout/panel';
 import { formatPodStatus } from '@utils/helpers';
 import { ConditionsTable } from '@components/base/conditions-table';
+import { PodDetails } from '@components/gen/V1Pod/details';
 
 export const PodsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -149,8 +150,10 @@ export const PodsDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && pod && (
 
-        <div className='m-2'>
+        
 
+        <div className='m-2'>
+<PodDetails resourceData={pod} />
           <Container title="Status">
             <div className="grid grid-cols-5 gap-4">
               <DetailsItem label="Phase">

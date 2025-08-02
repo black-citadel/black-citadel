@@ -8,9 +8,8 @@ import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { PodDisruptionBudgetBadge } from '@components/configuration/pod-disruption-budget/badge';
-import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
-import { PanelGrid } from '@components/layout/panel';
+import { PodDisruptionBudgetDetails } from '@components/gen/V1PodDisruptionBudget/details';
 
 export const PodDisruptionBudgetsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -55,66 +54,6 @@ export const PodDisruptionBudgetsDetailsView = (): JSX.Element => {
     });
   };
 
-  const getConfigurationItems = () => {
-    if (!pdb) return [];
-    const items = [];
-    
-    // Add selector
-    if (pdb.spec.selector?.matchLabels) {
-      const selectorString = Object.entries(pdb.spec.selector.matchLabels)
-        .map(([key, value]) => `${key}=${value}`)
-        .join(', ');
-      items.push({
-        label: 'Selector',
-        value: <span className="text-sm">{selectorString}</span>
-      });
-    }
-    
-    // Add min available
-    if (pdb.spec.minAvailable !== undefined) {
-      items.push({
-        label: 'Min Available',
-        value: <span className="text-sm">{pdb.spec.minAvailable}</span>
-      });
-    }
-    
-    // Add max unavailable
-    if (pdb.spec.maxUnavailable !== undefined) {
-      items.push({
-        label: 'Max Unavailable',
-        value: <span className="text-sm">{pdb.spec.maxUnavailable}</span>
-      });
-    }
-    
-    return items;
-  };
-
-  const getStatusItems = () => {
-    if (!pdb || !pdb.status) return [];
-    return [
-      {
-        label: 'Current Healthy',
-        value: <span className="text-sm">{pdb.status.currentHealthy || 0}</span>
-      },
-      {
-        label: 'Desired Healthy',
-        value: <span className="text-sm">{pdb.status.desiredHealthy || 0}</span>
-      },
-      {
-        label: 'Expected Pods',
-        value: <span className="text-sm">{pdb.status.expectedPods || 0}</span>
-      },
-      {
-        label: 'Disruptions Allowed',
-        value: <span className="text-sm">{pdb.status.disruptionsAllowed || 0}</span>
-      },
-      {
-        label: 'Observed Generation',
-        value: <span className="text-sm">{pdb.status.observedGeneration || 0}</span>
-      }
-    ].filter(item => item.value !== undefined);
-  };
-
   return (
     <>
       <DetailsHeader 
@@ -142,29 +81,8 @@ export const PodDisruptionBudgetsDetailsView = (): JSX.Element => {
         </Navbar>
       </DetailsHeader>
 
-      {activeTab === ResourceTabs.Details && pdb && (
-        <div className='m-2'>
-          <PanelGrid
-            title="Configuration"
-            items={getConfigurationItems()}
-            columns={2}
-          />
-
-          {pdb.status && (
-            <PanelGrid
-              title="Status"
-              items={getStatusItems()}
-              columns={3}
-            />
-          )}
-
-          <MetadataDetails metadata={pdb.metadata} />
-        </div>
-      )}
-
-      {activeTab === ResourceTabs.YAML && (
-        <Editor content={yamlContent} />
-      )}
+      {activeTab === ResourceTabs.Details && pdb && <PodDisruptionBudgetDetails resourceData={pdb} />}
+      {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );
 };

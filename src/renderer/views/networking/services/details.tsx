@@ -2,25 +2,21 @@ import {
   V1PodList,
   V1Service
 } from '@utils/k8s-types';
-import { Heading, Subheading } from "@components/base/heading";
+import { Heading } from "@components/base/heading";
 import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceAction, Resources, ResourceTabs } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { ServicePorts } from '@components/networking/service/service-ports';
 import { ServiceBadge } from '@components/networking/service/badge';
-import { DetailsItem, DetailsSelector } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { PodList } from '@components/workloads/pod/table';
 import { DetailsHeader } from '@components/details-header';
-import { MetadataDetails } from '@components/metadata';
 import { PortForwardDialog } from '@components/tools/port-forward/dialog';
 import { PortOption, PortForwardRequest } from '@utils/types';
 import { ResourceActions } from '@components/resources/ResourceActions';
 import { Container } from '@components/base/container';
-import { Map } from '@components/map';
-import { generateServiceMap } from '@utils/map-generators';
+import { ServiceDetails } from '@components/gen/V1Service/details';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -143,32 +139,11 @@ export const ServicesDetailsView = (): JSX.Element => {
 
       {activeTab === ResourceTabs.Details && service &&
         <div className='m-2'>
-          <Container title="Configuration">
-
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsSelector labels={service.spec.selector} />
-
-              <DetailsItem label="Type">
-                {service.spec.type}
-              </DetailsItem>
-
-              <DetailsItem label="Cluster IP">
-                {service.spec.clusterIP}
-              </DetailsItem>
-            </div>
-          </Container>
-
-          <Container title="Ports">
-            <ServicePorts ports={service.spec.ports} />
-          </Container>
-
+          <ServiceDetails resourceData={service} />
 
           <Container title="Pods">
             {pods && <PodList pods={pods} />}
           </Container>
-
-
-          <MetadataDetails metadata={service.metadata} />
         </div>
       }
 
