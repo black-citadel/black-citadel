@@ -138,7 +138,7 @@ export const ServicesDetailsView = (): JSX.Element => {
       </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && service &&
-        <div className='m-2'>
+        <div className=''>
           <ServiceDetails resourceData={service} />
 
           <Container title="Pods">

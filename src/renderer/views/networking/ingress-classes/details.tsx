@@ -3,15 +3,13 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceAction, Resources, ResourceTabs } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsItem } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { IngressClassBadge } from '@components/networking/ingress-class/badge';
 import { Heading } from '@components/base/heading';
-import { MetadataDetails } from '@components/metadata';
-import { Container } from '@components/base/container';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { IngressClassDetails } from '@components/gen/V1IngressClass/details';
 
 export const IngressClassesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -81,33 +79,7 @@ export const IngressClassesDetailsView = (): JSX.Element => {
         </Navbar>
       </DetailsHeader>
 
-      {activeTab === ResourceTabs.Details && ingressClass &&
-        <div className='m-2'>
-          <Container title="Configuration">
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsItem label="Controller">
-                {ingressClass.spec.controller}
-              </DetailsItem>
-              {ingressClass.spec.parameters && (
-                <>
-                  <DetailsItem label="Parameter API Group">
-                    {ingressClass.spec.parameters.apiGroup || 'None'}
-                  </DetailsItem>
-                  <DetailsItem label="Parameter Kind">
-                    {ingressClass.spec.parameters.kind}
-                  </DetailsItem>
-                  <DetailsItem label="Parameter Name">
-                    {ingressClass.spec.parameters.name}
-                  </DetailsItem>
-                </>
-              )}
-            </div>
-          </Container>
-
-          <MetadataDetails metadata={ingressClass.metadata} />
-        </div>
-      }
-
+      {activeTab === ResourceTabs.Details && ingressClass && <IngressClassDetails resourceData={ingressClass} />}
       {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );

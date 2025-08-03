@@ -3,16 +3,13 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceAction, Resources, ResourceTabs } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsItem } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { EndpointSliceBadge } from '@components/networking/endpoint-slice/badge';
-import { EndpointSliceEndpoints } from '@components/networking/endpoint-slice/endpoint-slice-endpoints';
 import { Heading } from '@components/base/heading';
-import { MetadataDetails } from '@components/metadata';
-import { Container } from '@components/base/container';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { EndpointSliceDetails } from '@components/gen/V1EndpointSlice/details';
 
 export const EndpointSlicesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -86,44 +83,7 @@ export const EndpointSlicesDetailsView = (): JSX.Element => {
         </Navbar>
       </DetailsHeader>
 
-      {activeTab === ResourceTabs.Details && endpointSlice &&
-        <div className='m-2'>
-          <Container title="Configuration">
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsItem label="Address Type">
-                {endpointSlice.addressType}
-              </DetailsItem>
-              <DetailsItem label="Total Endpoints">
-                {endpointSlice.endpoints?.length || 0}
-              </DetailsItem>
-              <DetailsItem label="Total Ports">
-                {endpointSlice.ports?.length || 0}
-              </DetailsItem>
-            </div>
-          </Container>
-
-          {endpointSlice.ports && endpointSlice.ports.length > 0 && (
-            <Container title="Ports">
-              <div className="grid grid-cols-3 gap-4">
-                {endpointSlice.ports.map((port, index) => (
-                  <DetailsItem key={index} label={port.name || `Port ${index + 1}`}>
-                    {port.port} ({port.protocol || 'TCP'})
-                  </DetailsItem>
-                ))}
-              </div>
-            </Container>
-          )}
-
-          {endpointSlice.endpoints && endpointSlice.endpoints.length > 0 && (
-            <Container title="Endpoints">
-              <EndpointSliceEndpoints endpoints={endpointSlice.endpoints} />
-            </Container>
-          )}
-
-          <MetadataDetails metadata={endpointSlice.metadata} />
-        </div>
-      }
-
+      {activeTab === ResourceTabs.Details && endpointSlice && <EndpointSliceDetails resourceData={endpointSlice} />}
       {activeTab === ResourceTabs.YAML && <Editor content={yamlContent} />}
     </>
   );

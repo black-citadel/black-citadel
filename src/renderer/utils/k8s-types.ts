@@ -3,6 +3,9 @@
 // and won't try to bundle the actual runtime code
 
 export type {
+  V1NetworkPolicyPort,
+  V1NetworkPolicyPeer,
+  V1NetworkPolicyEgressRule,
   V1LoadBalancerStatus,
   V1Condition,
   V1Deployment,
