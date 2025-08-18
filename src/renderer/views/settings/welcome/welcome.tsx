@@ -161,6 +161,11 @@ export const WelcomeView = () => {
         </div>
       </div>
 
+      {/* Version */}
+      <div className="fixed bottom-4 right-4">
+        <Text className="text-gray-500 text-sm">v1.0.3</Text>
+      </div>
+
       {/* Import Dialog */}
       <Dialog
         open={isImportDialogOpen}

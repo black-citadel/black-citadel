@@ -131,7 +131,7 @@ const createWindow = (): BrowserWindow => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Handle mouse navigation buttons on Windows
   mainWindow.on('app-command', (event, cmd) => {
