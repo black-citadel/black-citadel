@@ -18,7 +18,18 @@ const config: ForgeConfig = {
       name: '@electron-forge/maker-deb',
       config: {
         options: {
-          icon: './icons/linux/icon.png'
+          icon: './icons/linux/icon.png',
+          maintainer: 'Jeroen Herczeg',
+          homepage: 'https://github.com/black-citadel/black-citadel'
+        }
+      }
+    },
+    {
+      name: '@electron-forge/maker-rpm',
+      config: {
+        options: {
+          icon: './icons/linux/icon.png',
+          homepage: 'https://github.com/black-citadel/black-citadel'
         }
       }
     }

@@ -35,7 +35,7 @@ jobs:
       - name: List build artifacts
         run: |
           echo "=== Contents of out/make ==="
-          find out/make -type f -name "*.deb" -o -name "*.rpm" -o -name "*.AppImage" | head -20
+          find out/make -type f -name "*.deb" -o -name "*.rpm" | head -20
           
       - name: Upload DEB artifact
         uses: actions/upload-artifact@v4
@@ -50,13 +50,6 @@ jobs:
           name: black-citadel-rpm
           path: out/make/rpm/x64/*.rpm
           if-no-files-found: error
-          
-      - name: Upload AppImage artifact (if exists)
-        uses: actions/upload-artifact@v4
-        with:
-          name: black-citadel-appimage
-          path: out/make/*.AppImage
-          if-no-files-found: ignore
 
   create-release:
     needs: build-linux
@@ -103,7 +96,6 @@ jobs:
             This release includes the following Linux packages:
             - **DEB Package** - For Debian/Ubuntu based distributions
             - **RPM Package** - For Red Hat/Fedora based distributions
-            - **AppImage** - Universal Linux package (if available)
             
             ### Installation
             
@@ -121,11 +113,6 @@ jobs:
             sudo dnf install black-citadel-*.rpm
             ```
             
-            #### AppImage
-            ```bash
-            chmod +x Black-Citadel-*.AppImage
-            ./Black-Citadel-*.AppImage
-            ```
             
             ### Requirements
             - Linux x64 system
@@ -139,6 +126,5 @@ jobs:
           files: |
             artifacts/black-citadel-deb/*.deb
             artifacts/black-citadel-rpm/*.rpm
-            artifacts/black-citadel-appimage/*.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
