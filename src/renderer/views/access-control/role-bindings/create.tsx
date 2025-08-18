@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useView } from '@context/viewProvider';
 import { RoleBindingBadge } from '@components/access-control/role-binding/badge';
 import { CreateHeader } from '@components/create-header';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { Description, Field, Label } from '@components/base/fieldset';
 import { Input } from '@components/base/input';

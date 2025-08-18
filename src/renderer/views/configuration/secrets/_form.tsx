@@ -3,7 +3,7 @@ import { Input } from '@components/base/input';
 import { Textarea } from '@components/base/textarea';
 import { Dropdown } from '@components/base/dropdown';
 import { Subheading } from '@components/base/heading';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { HelpButton } from '@components/help-button';
 import { NamespaceSelect } from '@components/form/field-namespace-select';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';

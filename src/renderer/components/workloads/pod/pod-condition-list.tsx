@@ -1,5 +1,5 @@
 import { V1PodCondition } from '@utils/k8s-types';
-import { Status } from '@protoku/design-system';
+import { Status } from '@protoku-bv/design-system';
 
 interface PodConditionListProps {
 	conditions: V1PodCondition[];

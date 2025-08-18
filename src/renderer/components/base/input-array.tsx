@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input } from './input';
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 
 interface InputArrayProps {
   values: string[];

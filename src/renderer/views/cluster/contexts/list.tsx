@@ -3,7 +3,7 @@ import { Context } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { Resources, ResourceAction } from '@utils/enums';
 import { ContextList } from '@components/cluster/context/table';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { useView } from '@context/viewProvider';
 
 export const ContextsListView = (): JSX.Element => {

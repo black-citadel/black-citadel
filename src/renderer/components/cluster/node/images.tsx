@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import k8s from '@kubernetes/client-node';
-import { ListTable, type SortConfig, Badge } from '@protoku/design-system';
+import { ListTable, type SortConfig, Badge } from '@protoku-bv/design-system';
 import { Text } from '@components/base/text';
 import { formatBytes } from '@utils/resource-parser';
 import { sortRows } from '@utils/sorting';

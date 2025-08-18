@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Text } from '@components/base/text';
-import { Toggle } from '@protoku/design-system';
+import { Toggle } from '@protoku-bv/design-system';
 import { ListHeader } from '@components/list-header';
 import { Resources } from '@utils/enums';
 import { Container } from '@components/base/container';

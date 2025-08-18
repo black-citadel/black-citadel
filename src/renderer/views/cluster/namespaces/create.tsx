@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useView } from '@context/viewProvider'
 import { NamespaceBadge } from '@components/cluster/namespace/badge';
 import { CreateHeader } from '@components/create-header';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { NamespaceForm } from './_form';
 

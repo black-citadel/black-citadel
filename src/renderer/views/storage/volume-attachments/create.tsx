@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useView } from '@context/viewProvider';
 import { VolumeAttachmentBadge } from '@components/storage/volume-attachment/badge';
 import { CreateHeader } from '@components/create-header';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { CodePanel } from '@components/code';
 import { Label as FieldLabel } from '@components/form/field-labels';

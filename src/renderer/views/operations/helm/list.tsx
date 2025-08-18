@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ListHeader } from '@components/list-header';
 import { Resources, ResourceAction } from '@utils/enums';
 import { EmptyState } from '@components/base/empty-state';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { useView } from '@context/viewProvider';
 import { HelmReleaseTable } from '@components/operations/helm/table';
 

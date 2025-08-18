@@ -7,7 +7,7 @@ import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/for
 import { HelpButton } from '@components/help-button';
 import helpObjects from '@help/index';
 import { Checkbox } from '@components/base/checkbox';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 
 interface Parameter {
   key: string;

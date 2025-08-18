@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useView } from '@context/viewProvider'
 import { JobBadge } from '@components/workloads/job/badge';
 import { CreateHeader } from '@components/create-header';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { V1Job } from '@utils/k8s-types';
 import { JobForm } from './_form';

@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@protoku/design-system';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@protoku-bv/design-system';
 import k8s from '@kubernetes/client-node';
 
 // Import badges and resource links for each resource type

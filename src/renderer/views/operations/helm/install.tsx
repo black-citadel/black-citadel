@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CreateHeader } from '@components/create-header';
 import { Resources, ResourceAction } from '@utils/enums';
-import { Button, Select, SelectOption } from '@protoku/design-system';
+import { Button, Select, SelectOption } from '@protoku-bv/design-system';
 import { Input } from '@components/base/input';
 import { useView } from '@context/viewProvider';
 

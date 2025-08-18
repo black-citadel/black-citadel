@@ -41,7 +41,7 @@ import { Resources, ResourceAction } from '@utils/enums';
 import { Sidebar, SidebarBody, SidebarItem, SidebarLabel, SidebarSection, SidebarHeading, SidebarHeader } from '@components/base/sidebar'
 import { ContextsListView, ContextsDetailsView, ContextsCreateView } from '@views/cluster/contexts';
 import { ContextDropdown } from '@components/context-dropdown';
-import { Badge } from '@protoku/design-system';
+import { Badge } from '@protoku-bv/design-system';
 import { Drawer } from '@components/base/drawer';
 import { NodeDetailsView, NodesListView } from '@views/cluster/nodes';
 import { CustomResourceDefinitionsListView, CustomResourceDefinitionsDetailsView } from '@views/cluster/custom-resource-definitions';

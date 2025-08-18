@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { ListTable, type SortConfig } from '@protoku/design-system';
+import { ListTable, type SortConfig } from '@protoku-bv/design-system';
 import { MCPConnection } from '@utils/types';
 import { MCPConnectionResourceLink } from './resource-link';
 import { formatDistanceToNow } from 'date-fns';
-import { Status } from '@protoku/design-system';
+import { Status } from '@protoku-bv/design-system';
 import { sortRows } from '@utils/sorting';
 
 interface Props {

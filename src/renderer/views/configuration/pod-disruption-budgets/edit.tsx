@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useView } from '@context/viewProvider';
 import { PodDisruptionBudgetBadge } from '@components/configuration/pod-disruption-budget/badge';
 import { CreateHeader } from '@components/create-header';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { CodePanel } from '@components/code';
 import { podDisruptionBudgetTemplate } from '@templates/poddisruptionbudget.yaml';

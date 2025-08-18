@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Logo } from '@components/base/logo';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { Heading } from '@components/base/heading';
 import { Text } from '@components/base/text';
 import { Dialog, DialogTitle, DialogBody, DialogActions } from '@components/base/dialog';

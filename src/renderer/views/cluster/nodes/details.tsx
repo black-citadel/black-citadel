@@ -17,7 +17,7 @@ import { EventList } from '@components/cluster/event/table';
 import { NodeSpec } from '@components/cluster/node/spec';
 import { NodeStatus2 } from '@components/cluster/node/status';
 import { NodeImages } from '@components/cluster/node/images';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { Alert, AlertTitle, AlertDescription, AlertActions, AlertBody } from '@components/base/alert';
 import { Checkbox } from '@components/base/checkbox';
 import { Text } from '@components/base/text';

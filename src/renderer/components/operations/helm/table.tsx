@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { ListTable, type SortConfig, Status } from '@protoku/design-system';
+import { ListTable, type SortConfig, Status } from '@protoku-bv/design-system';
 import { sortRows } from '@utils/sorting';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { calculateAge } from '@utils/helpers';

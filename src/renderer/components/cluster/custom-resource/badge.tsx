@@ -1,4 +1,4 @@
-import { Badge } from '@protoku/design-system';
+import { Badge } from '@protoku-bv/design-system';
 
 interface Props {
   plural?: string;

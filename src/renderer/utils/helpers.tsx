@@ -1,6 +1,6 @@
 import React from "react";
 import k8s = require('@kubernetes/client-node');
-import { Status } from "@protoku/design-system";
+import { Status } from "@protoku-bv/design-system";
 
 
 export function calculateAge(timestamp: Date | string): string {

@@ -12,7 +12,7 @@ import { HelpButton } from '@components/help-button';
 import { NamespaceSelect } from '@components/form/field-namespace-select';
 import helpObjects from '@help/index';
 import { CodePanel } from '@components/code';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
 interface ServicePort {

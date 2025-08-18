@@ -3,7 +3,7 @@ import { V1CSIDriverList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { CSIDriverList } from '@components/storage/csi-driver/table';
 import { Resources, ResourceAction } from '@utils/enums';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { useView } from '@context/viewProvider';
 
 export const CSIDriversListView = (): JSX.Element => {

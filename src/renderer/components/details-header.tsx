@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Button } from '@protoku/design-system'
+import { Button } from '@protoku-bv/design-system'
 import { Alert, AlertTitle, AlertActions } from './base/alert'
 
 interface Props {

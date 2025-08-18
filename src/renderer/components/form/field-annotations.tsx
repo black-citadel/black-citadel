@@ -1,7 +1,7 @@
 import React from 'react';
 import { Description, Field, Label } from "@components/base/fieldset";
 import { Input } from "@components/base/input";
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { HelpButton } from '@components/help-button';
 import helpObjects from '@help/index';

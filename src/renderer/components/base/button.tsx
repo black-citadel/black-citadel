@@ -1,1 +1,1 @@
-export { Button, TouchTarget } from '@protoku/design-system'
+export { Button, TouchTarget } from '@protoku-bv/design-system'

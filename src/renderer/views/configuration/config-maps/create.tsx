@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useView } from '@context/viewProvider';
 import { CreateHeader } from '@components/create-header';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { dump } from 'js-yaml';
 import { ConfigMapBadge } from '@components/configuration/config-map/badge';

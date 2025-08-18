@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { DeleteAction } from './actions/DeleteAction';
 import { getResourceActionConfig } from './utils/actionConfig';
 import { getResourceTypeName } from './utils/resourceTypeNames';

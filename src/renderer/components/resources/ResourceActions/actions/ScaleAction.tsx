@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { ScaleDeploymentDialog } from '@components/dialogs/ScaleDeploymentDialog';
 
 interface ScaleActionProps {

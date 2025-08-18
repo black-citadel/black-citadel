@@ -3,7 +3,7 @@ import { V1EndpointsList } from '@utils/k8s-types';
 import { Resources, ResourceAction } from '@utils/enums';
 import { ListHeader } from '@components/list-header';
 import { EndpointsList } from '@components/networking/endpoint/table';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { useView } from '@context/viewProvider';
 
 export const EndpointsListView = (): JSX.Element => {

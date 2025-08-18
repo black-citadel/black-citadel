@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { ListTable, type SortConfig, Badge, Button, Status } from '@protoku/design-system';
+import { ListTable, type SortConfig, Badge, Button, Status } from '@protoku-bv/design-system';
 import { PortForwardInfo } from '@utils/types';
 import { calculateAge } from '@utils/helpers';
 import { ResourceLink } from '@components/base/resource-link';

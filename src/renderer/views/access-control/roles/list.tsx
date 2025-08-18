@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { V1RoleList } from '@utils/k8s-types';
 import { ListHeader } from '@components/list-header';
 import { RoleList } from '@components/access-control/role/table';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { Resources, ResourceAction } from '@utils/enums';
 import { useView } from '@context/viewProvider';
 

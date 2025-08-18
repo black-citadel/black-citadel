@@ -1,6 +1,6 @@
 import k8s from '@kubernetes/client-node';
 import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@components/base/description-list';
-import { Badge } from '@protoku/design-system';
+import { Badge } from '@protoku-bv/design-system';
 
 interface Props {
     node?: k8s.V1Node;

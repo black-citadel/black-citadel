@@ -1,5 +1,5 @@
 import { DetailsItem } from '@components/details-item';
-import { ListTable } from '@protoku/design-system';
+import { ListTable } from '@protoku-bv/design-system';
 import k8s = require('@kubernetes/client-node');
 
 interface RuleListProps {

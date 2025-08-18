@@ -1,1 +1,1 @@
-export { Link } from '@protoku/design-system'
+export { Link } from '@protoku-bv/design-system'

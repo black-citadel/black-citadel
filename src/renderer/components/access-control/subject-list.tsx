@@ -1,5 +1,5 @@
 import k8s = require('@kubernetes/client-node');
-import { ListTable, Badge } from '@protoku/design-system';
+import { ListTable, Badge } from '@protoku-bv/design-system';
 import { ServiceAccountResourceLink } from './service-account/resource-link';
 import { useView } from '@context/viewProvider';
 

@@ -1,5 +1,5 @@
 import k8s = require('@kubernetes/client-node');
-import { ListTable, type SortConfig } from '@protoku/design-system';
+import { ListTable, type SortConfig } from '@protoku-bv/design-system';
 import { useState } from 'react';
 import { sortRows } from '@utils/sorting';
 

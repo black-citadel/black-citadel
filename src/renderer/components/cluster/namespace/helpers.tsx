@@ -1,4 +1,4 @@
-import { Status } from "@protoku/design-system";
+import { Status } from "@protoku-bv/design-system";
 
 export const formatStatus = (statusText: string | undefined): JSX.Element => {
     if (!statusText) return <span>-</span>;

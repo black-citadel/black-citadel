@@ -3,7 +3,7 @@ import { Heading, Subheading } from '@components/base/heading';
 import { DetailsHeader } from '@components/details-header';
 import { DetailsItem } from '@components/details-item';
 import { MCPBadge } from '@components/operations/mcp-server/badge';
-import { Badge } from '@protoku/design-system';
+import { Badge } from '@protoku-bv/design-system';
 import { Text } from '@components/base/text';
 import { MCPConnection, MCPToolCallHistory } from '@utils/types';
 import { useView } from '@context/viewProvider';

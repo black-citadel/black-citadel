@@ -8,7 +8,7 @@ import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
-import { Badge } from '@protoku/design-system';
+import { Badge } from '@protoku-bv/design-system';
 import { Container } from '@components/base/container';
 import { ConditionsTable } from '@components/base/conditions-table';
 

@@ -1,5 +1,5 @@
 import k8s = require('@kubernetes/client-node');
-import { ListTable, type SortConfig } from '@protoku/design-system';
+import { ListTable, type SortConfig } from '@protoku-bv/design-system';
 import { calculateAge } from '@utils/helpers';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';
 import { RoleBindingResourceLink } from './resource-link';

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import k8s from '@kubernetes/client-node';
-import { ListTable, type SortConfig } from '@protoku/design-system';
+import { ListTable, type SortConfig } from '@protoku-bv/design-system';
 import { calculateAge } from '@utils/helpers';
 import { sortRows } from '@utils/sorting';
 import { NamespaceResourceLink } from './resource-link';
-import { Status } from '@protoku/design-system';
+import { Status } from '@protoku-bv/design-system';
 
 interface Props {
   namespaces: k8s.V1NamespaceList;

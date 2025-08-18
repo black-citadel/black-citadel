@@ -1,7 +1,7 @@
 import React from 'react';
 import { Description, Field, Label } from "@components/base/fieldset";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { V1HTTPHeader } from '@kubernetes/client-node';
 import { V1HTTPHeaderForm } from './V1HTTPHeaderForm';
 

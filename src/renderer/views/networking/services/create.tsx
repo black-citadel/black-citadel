@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useView } from '@context/viewProvider'
 import { ServiceBadge } from '@components/networking/service/badge';
 import { CreateHeader } from '@components/create-header';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { dump } from 'js-yaml';
 import { ServiceForm } from './_form';

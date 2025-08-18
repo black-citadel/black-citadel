@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import k8s from '@kubernetes/client-node';
-import { ListTable, type SortConfig } from '@protoku/design-system';
+import { ListTable, type SortConfig } from '@protoku-bv/design-system';
 import { sortRows } from '@utils/sorting';
 import { ContextResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
 import { CheckIcon } from '@heroicons/react/16/solid';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 
 interface Props {
   contexts: k8s.Context[];

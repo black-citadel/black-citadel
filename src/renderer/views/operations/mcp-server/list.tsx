@@ -5,7 +5,7 @@ import { MCPConnection, MCPToolCallHistory } from '@utils/types';
 import { MCPConnectionList } from '@components/operations/mcp-server/table';
 import { Resources } from '@utils/enums';
 import { EmptyState } from '@components/base/empty-state';
-import { Status } from '@protoku/design-system';
+import { Status } from '@protoku-bv/design-system';
 
 export const MCPServerListView = (): JSX.Element => {
   const [connections, setConnections] = useState<MCPConnection[]>([]);

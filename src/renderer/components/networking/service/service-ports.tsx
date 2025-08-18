@@ -1,5 +1,5 @@
 import k8s = require('@kubernetes/client-node');
-import { ListTable, type SortConfig } from '@protoku/design-system';
+import { ListTable, type SortConfig } from '@protoku-bv/design-system';
 import { ServiceBadge } from './badge';
 import { PodBadge } from '@components/workloads/pod/badge';
 import { useState } from 'react';

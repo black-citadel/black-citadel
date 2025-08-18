@@ -1,4 +1,4 @@
-import { Status } from '@protoku/design-system';
+import { Status } from '@protoku-bv/design-system';
 import { calculateAge } from '@utils/helpers';
 import { Container } from '@components/base/container';
 

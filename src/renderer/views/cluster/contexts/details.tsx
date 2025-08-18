@@ -10,7 +10,7 @@ import { DetailsHeader } from '@components/details-header';
 import { Heading } from '@components/base/heading';
 import { ContextBadge } from '@components/cluster/context/badge';
 import { Container } from '@components/base/container';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 
 export const ContextsDetailsView = (): JSX.Element => {
   const { viewContext } = useView()

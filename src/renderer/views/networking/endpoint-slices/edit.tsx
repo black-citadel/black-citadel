@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useView } from '@context/viewProvider';
 import { EndpointSliceBadge } from '@components/networking/endpoint-slice/badge';
 import { CreateHeader } from '@components/create-header';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { V1EndpointSlice } from '@utils/k8s-types';
 import { dump } from 'js-yaml';

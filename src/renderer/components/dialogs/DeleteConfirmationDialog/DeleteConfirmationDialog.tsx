@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogDescription, DialogActions } from '@components/base/dialog';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 
 interface DeleteConfirmationDialogProps {
   isOpen: boolean;

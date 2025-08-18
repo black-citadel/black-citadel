@@ -1,4 +1,4 @@
-import type { SortConfig } from '@protoku/design-system';
+import type { SortConfig } from '@protoku-bv/design-system';
 
 export const compareValues = (a: any, b: any, direction: 'asc' | 'desc'): number => {
   // Handle null/undefined values

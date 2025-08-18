@@ -4,7 +4,7 @@ import { Select } from '@components/base/select';
 import { Checkbox } from '@components/base/checkbox';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
 import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/form/field-annotations';
-import { Button } from '@protoku/design-system';
+import { Button } from '@protoku-bv/design-system';
 import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline';
 
 interface TokenRequest {

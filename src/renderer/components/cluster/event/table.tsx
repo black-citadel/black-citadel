@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import k8s from '@kubernetes/client-node';
-import { ListTable, type SortConfig } from '@protoku/design-system';
+import { ListTable, type SortConfig } from '@protoku-bv/design-system';
 import { calculateAge } from '@utils/helpers';
 import { sortRows } from '@utils/sorting';
 import { NamespaceResourceLink } from '@components/cluster/namespace/resource-link';

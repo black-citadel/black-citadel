@@ -1,6 +1,6 @@
 import k8s from '@kubernetes/client-node';
 import { useState, useEffect } from 'react';
-import { Select, SelectOption } from '@protoku/design-system';
+import { Select, SelectOption } from '@protoku-bv/design-system';
 import { useView } from '@context/viewProvider';
 
 export const NamespaceSwitch = (): JSX.Element => {

@@ -1,5 +1,5 @@
 import k8s from '@kubernetes/client-node';
-import { Badge } from '@protoku/design-system';
+import { Badge } from '@protoku-bv/design-system';
 import { calculateAge } from '@utils/helpers';
 
 interface Props {
