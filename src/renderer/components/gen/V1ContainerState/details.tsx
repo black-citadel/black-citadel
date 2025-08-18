@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ContainerState, V1ContainerStateRunning, V1ContainerStateTerminated, V1ContainerStateWaiting } from "@utils/k8s-types";
+import { V1ContainerState } from "@utils/k8s-types";
 import { ContainerStateRunningDetails } from "../V1ContainerStateRunning/details";
 import { ContainerStateTerminatedDetails } from "../V1ContainerStateTerminated/details";
 import { ContainerStateWaitingDetails } from "../V1ContainerStateWaiting/details";

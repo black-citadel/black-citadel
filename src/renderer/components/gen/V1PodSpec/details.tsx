@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1PodSpec, V1Affinity, V1Container, V1PodDNSConfig, V1EphemeralContainer, V1HostAlias, V1LocalObjectReference, V1PodOS, V1PodReadinessGate, V1PodResourceClaim, V1ResourceRequirements, V1PodSchedulingGate, V1PodSecurityContext, V1Toleration, V1TopologySpreadConstraint, V1Volume } from "@utils/k8s-types";
+import { V1PodSpec } from "@utils/k8s-types";
 import { AffinityDetails } from "../V1Affinity/details";
 import { ContainerDetails } from "../V1Container/details";
 import { PodDNSConfigDetails } from "../V1PodDNSConfig/details";
@@ -44,7 +43,7 @@ export const PodSpecDetails = ({ resourceData }: { resourceData: V1PodSpec }): J
         // Boolean properties always have content
         checks.push(true);
         // Check k8s type properties
-        checks.push([resourceData.affinity, resourceData.containers, resourceData.dnsConfig, resourceData.ephemeralContainers, resourceData.hostAliases, resourceData.imagePullSecrets, resourceData.initContainers, resourceData.os, resourceData.readinessGates, resourceData.resourceClaims, resourceData.resources, resourceData.schedulingGates, resourceData.securityContext, resourceData.tolerations, resourceData.topologySpreadConstraints, resourceData.volumes].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.affinity, resourceData.containers, resourceData.dnsConfig, resourceData.ephemeralContainers, resourceData.hostAliases, resourceData.imagePullSecrets, resourceData.initContainers, resourceData.os, resourceData.readinessGates, resourceData.resourceClaims, resourceData.schedulingGates, resourceData.securityContext, resourceData.tolerations, resourceData.topologySpreadConstraints, resourceData.volumes].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
     })();
 
@@ -173,12 +172,6 @@ export const PodSpecDetails = ({ resourceData }: { resourceData: V1PodSpec }): J
                     {resourceData.resourceClaims.map((item, index) => (
                         <PodResourceClaimDetails key={index} resourceData={item} />
                     ))}
-                </Container>
-            )}
-
-            {resourceData.resources && (
-                <Container title="Resources">
-                    <ResourceRequirementsDetails resourceData={ resourceData.resources } />
                 </Container>
             )}
 

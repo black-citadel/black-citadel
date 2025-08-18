@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1PersistentVolumeClaimSpec, V1TypedLocalObjectReference, V1TypedObjectReference, V1VolumeResourceRequirements, V1LabelSelector } from "@utils/k8s-types";
+import { V1PersistentVolumeClaimSpec } from "@utils/k8s-types";
 import { TypedLocalObjectReferenceDetails } from "../V1TypedLocalObjectReference/details";
 import { TypedObjectReferenceDetails } from "../V1TypedObjectReference/details";
 import { VolumeResourceRequirementsDetails } from "../V1VolumeResourceRequirements/details";

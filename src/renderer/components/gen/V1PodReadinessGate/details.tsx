@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1PodReadinessGate } from "@utils/k8s-types";
 
 export const PodReadinessGateDetails = ({ resourceData }: { resourceData: V1PodReadinessGate }): JSX.Element => {

@@ -6,18 +6,10 @@ import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
-import { DetailsItem } from '@components/details-item';
 import { PersistentVolumeBadge } from '@components/storage/persistent-volume/badge';
-import { PersistentVolumeSource } from '@components/storage/persistent-volume/source';
-import { ClaimRef } from '@components/storage/persistent-volume/claim-ref';
-import { PVStatus } from '@components/storage/persistent-volume/status';
-import { VolumeMode } from '@components/storage/persistent-volume/volume-mode';
-import { AccessModes } from '@components/storage/persistent-volume/access-modes';
-import { StorageDetails } from '@components/storage/persistent-volume/storage-details';
 import { Heading } from '@components/base/heading';
-import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
-import { Container } from '@components/base/container';
+import { PersistentVolumeDetails } from '@components/gen/V1PersistentVolume/details';
 
 export const PersistentVolumesDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -87,40 +79,7 @@ export const PersistentVolumesDetailsView = (): JSX.Element => {
         </Navbar>
       </DetailsHeader>
 
-      {activeTab === ResourceTabs.Details && pv && (
-        <div className='m-2'>
-          <Container title="Configuration">
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsItem label="Storage Class">
-                {pv.spec.storageClassName || 'None'}
-              </DetailsItem>
-              
-              <DetailsItem label="Reclaim Policy">
-                {pv.spec.persistentVolumeReclaimPolicy}
-              </DetailsItem>
-              
-              <VolumeMode volumeMode={pv.spec.volumeMode} />
-              
-              <AccessModes accessModes={pv.spec.accessModes} />
-              
-              <StorageDetails capacity={pv.spec.capacity} />
-            </div>
-          </Container>
-
-          <Container title="Volume Source">
-            <PersistentVolumeSource source={pv.spec} />
-          </Container>
-
-          <Container title="Status">
-            <div className="grid grid-cols-3 gap-4">
-              <ClaimRef claimRef={pv.spec.claimRef} />
-              <PVStatus status={pv.status} />
-            </div>
-          </Container>
-
-          <MetadataDetails metadata={pv.metadata} />
-        </div>
-      )}
+      {activeTab === ResourceTabs.Details && pv && <PersistentVolumeDetails resourceData={pv} />}
 
       {activeTab === ResourceTabs.YAML && (
         <Editor content={yamlContent} />

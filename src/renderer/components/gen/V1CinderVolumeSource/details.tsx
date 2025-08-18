@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1CinderVolumeSource, V1LocalObjectReference } from "@utils/k8s-types";
+import { V1CinderVolumeSource } from "@utils/k8s-types";
 import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
 
 export const CinderVolumeSourceDetails = ({ resourceData }: { resourceData: V1CinderVolumeSource }): JSX.Element => {

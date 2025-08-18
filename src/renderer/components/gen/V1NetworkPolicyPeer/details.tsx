@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1NetworkPolicyPeer, V1IPBlock, V1LabelSelector } from "@utils/k8s-types";
+import { V1NetworkPolicyPeer } from "@utils/k8s-types";
 import { IPBlockDetails } from "../V1IPBlock/details";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 

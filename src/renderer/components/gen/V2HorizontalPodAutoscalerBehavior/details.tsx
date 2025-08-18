@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V2HorizontalPodAutoscalerBehavior, V2HPAScalingRules } from "@utils/k8s-types";
+import { V2HorizontalPodAutoscalerBehavior } from "@utils/k8s-types";
 import { HPAScalingRulesDetails } from "../V2HPAScalingRules/details";
 
 export const HorizontalPodAutoscalerBehaviorDetails = ({ resourceData }: { resourceData: V2HorizontalPodAutoscalerBehavior }): JSX.Element => {

@@ -5,7 +5,6 @@ import { CreateHeader } from '@components/create-header';
 import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { V1Job } from '@utils/k8s-types';
-import { dump } from 'js-yaml';
 import { JobForm } from './_form';
 
 export const JobsEditView = (): JSX.Element => {
@@ -43,22 +42,19 @@ export const JobsEditView = (): JSX.Element => {
       };
       
       // Use patch to update only the metadata
-      const result = await window.electronAPI.patchNamespacedJob(
+      await window.electronAPI.patchNamespacedJob(
         viewContext.name, 
         viewContext.namespace, 
         patchPayload
       );
 
-      if (result.success) {
-        setViewContext({
-          resource: Resources.Jobs,
-          action: ResourceAction.Details,
-          name: viewContext.name,
-          namespace: viewContext.namespace
-        })
-      } else {
-        setError(result.error || "Failed to update job. Note: Most job specifications are immutable after creation.");
-      }
+      // If we reach here, the update was successful
+      setViewContext({
+        resource: Resources.Jobs,
+        action: ResourceAction.Details,
+        name: viewContext.name,
+        namespace: viewContext.namespace
+      })
     } catch (e) {
       console.log(e);
       setError("Failed to update job. Note: Most job specifications are immutable after creation.");

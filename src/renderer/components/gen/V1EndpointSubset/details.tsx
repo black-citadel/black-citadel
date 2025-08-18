@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1EndpointSubset, V1EndpointAddress } from "@utils/k8s-types";
+import { V1EndpointSubset } from "@utils/k8s-types";
 import { EndpointAddressDetails } from "../V1EndpointAddress/details";
 import { EndpointPorts } from "@components/networking/endpoints/endpoint-ports";
 

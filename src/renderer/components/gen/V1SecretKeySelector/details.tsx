@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1SecretKeySelector } from "@utils/k8s-types";
 
 export const SecretKeySelectorDetails = ({ resourceData }: { resourceData: V1SecretKeySelector }): JSX.Element => {

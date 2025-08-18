@@ -6,19 +6,16 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { MetadataDetails } from '@components/metadata';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { DaemonSetBadge } from '@components/workloads/daemonset/badge';
-import { UpdateStrategy } from '@components/workloads/daemonset/update-strategy';
-import { PodTemplate } from '@components/workloads/pod/template';
 import { PodList } from '@components/workloads/pod/table';
 import { Heading } from '@components/base/heading';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
 import { Container } from '@components/base/container';
-import { DetailsItem, DetailsSelector } from '@components/details-item';
+import { DaemonSetDetails } from '@components/gen/V1DaemonSet/details';
 
 export const DaemonSetsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -108,73 +105,13 @@ export const DaemonSetsDetailsView = (): JSX.Element => {
 
 
       {activeTab === ResourceTabs.Details && daemonSet && (
-        <div className='m-2'>
-          <Container title="Configuration">
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsItem label="Min Ready Seconds">
-                {daemonSet.spec.minReadySeconds || 0}
-              </DetailsItem>
-              <DetailsItem label="Revision History Limit">
-                {daemonSet.spec.revisionHistoryLimit || 10}
-              </DetailsItem>
-              <DetailsSelector labels={daemonSet.spec.selector?.matchLabels} />
-            </div>
-          </Container>
-
-          <Container title="Status">
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsItem label="Current Number Scheduled">
-                {daemonSet.status?.currentNumberScheduled || 0}
-              </DetailsItem>
-              <DetailsItem label="Desired Number Scheduled">
-                {daemonSet.status?.desiredNumberScheduled || 0}
-              </DetailsItem>
-              <DetailsItem label="Number Ready">
-                {daemonSet.status?.numberReady || 0}
-              </DetailsItem>
-              <DetailsItem label="Updated Number Scheduled">
-                {daemonSet.status?.updatedNumberScheduled || 0}
-              </DetailsItem>
-              <DetailsItem label="Number Available">
-                {daemonSet.status?.numberAvailable || 0}
-              </DetailsItem>
-              <DetailsItem label="Number Misscheduled">
-                {daemonSet.status?.numberMisscheduled || 0}
-              </DetailsItem>
-            </div>
-            {daemonSet.status?.conditions && daemonSet.status.conditions.length > 0 && (
-              <div className="mt-4">
-                <h4 className="font-semibold mb-2">Conditions</h4>
-                <div className="space-y-2">
-                  {daemonSet.status.conditions.map((condition, index) => (
-                    <div key={index} className="p-3 border rounded">
-                      <div className="grid grid-cols-2 gap-2">
-                        <div><span className="font-medium">Type:</span> {condition.type}</div>
-                        <div><span className="font-medium">Status:</span> {condition.status}</div>
-                        {condition.reason && <div><span className="font-medium">Reason:</span> {condition.reason}</div>}
-                        {condition.message && <div className="col-span-2"><span className="font-medium">Message:</span> {condition.message}</div>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </Container>
-
-          <Container title="Update Strategy">
-            <UpdateStrategy strategy={daemonSet.spec.updateStrategy} />
-          </Container>
-
-          <Container title="Pod Template">
-            <PodTemplate template={daemonSet.spec.template} />
-          </Container>
+        <>
+          <DaemonSetDetails resourceData={daemonSet} />
 
           <Container title='Pods'>
             {pods && <PodList pods={pods} />}
           </Container>
-
-          <MetadataDetails metadata={daemonSet.metadata} />
-        </div>
+        </>
       )}
 
       {activeTab === ResourceTabs.Logs && daemonSet && pods && (

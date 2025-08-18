@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1ObjectReference } from "@utils/k8s-types";
 
 export const ObjectReferenceDetails = ({ resourceData }: { resourceData: V1ObjectReference }): JSX.Element => {

@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1PodDisruptionBudgetSpec, V1LabelSelector } from "@utils/k8s-types";
+import { V1PodDisruptionBudgetSpec } from "@utils/k8s-types";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const PodDisruptionBudgetSpecDetails = ({ resourceData }: { resourceData: V1PodDisruptionBudgetSpec }): JSX.Element => {

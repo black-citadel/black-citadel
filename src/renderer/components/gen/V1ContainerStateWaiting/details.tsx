@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1ContainerStateWaiting } from "@utils/k8s-types";
 
 export const ContainerStateWaitingDetails = ({ resourceData }: { resourceData: V1ContainerStateWaiting }): JSX.Element => {

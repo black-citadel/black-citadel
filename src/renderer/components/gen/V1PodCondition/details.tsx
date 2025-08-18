@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1PodCondition } from "@utils/k8s-types";
 
 export const PodConditionDetails = ({ resourceData }: { resourceData: V1PodCondition }): JSX.Element => {
@@ -9,7 +7,7 @@ export const PodConditionDetails = ({ resourceData }: { resourceData: V1PodCondi
     const hasContent = (() => {
         const checks = [];
         // Check simple properties
-        checks.push([resourceData.message, resourceData.observedGeneration, resourceData.reason, resourceData.status, resourceData.type].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.message, resourceData.reason, resourceData.status, resourceData.type].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
     })();
 
@@ -23,7 +21,6 @@ export const PodConditionDetails = ({ resourceData }: { resourceData: V1PodCondi
                 title="Properties"
                 items={[
                     { label: "Message", value: resourceData.message || '-' },
-                    { label: "Observed Generation", value: resourceData.observedGeneration || '-' },
                     { label: "Reason", value: resourceData.reason || '-' },
                     { label: "Status", value: resourceData.status },
                     { label: "Type", value: resourceData.type }

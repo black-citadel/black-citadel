@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1PodDNSConfig, V1PodDNSConfigOption } from "@utils/k8s-types";
+import { V1PodDNSConfig } from "@utils/k8s-types";
 import { PodDNSConfigOptionDetails } from "../V1PodDNSConfigOption/details";
 
 export const PodDNSConfigDetails = ({ resourceData }: { resourceData: V1PodDNSConfig }): JSX.Element => {

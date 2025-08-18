@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Select, SelectOption } from '@protoku/design-system';
+import { Button, Select } from '@protoku/design-system';
 import k8s = require('@kubernetes/client-node');
 
 interface WorkloadLogsProps {

@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1IngressClassParametersReference } from "@utils/k8s-types";
 
 export const IngressClassParametersReferenceDetails = ({ resourceData }: { resourceData: V1IngressClassParametersReference }): JSX.Element => {

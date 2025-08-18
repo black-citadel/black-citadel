@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ClusterTrustBundleProjection, V1LabelSelector } from "@utils/k8s-types";
+import { V1ClusterTrustBundleProjection } from "@utils/k8s-types";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const ClusterTrustBundleProjectionDetails = ({ resourceData }: { resourceData: V1ClusterTrustBundleProjection }): JSX.Element => {

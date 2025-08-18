@@ -274,7 +274,7 @@ function useTabGroupProps(availableLanguages: Array<string>) {
     as: 'div' as const,
     ref: positionRef,
     selectedIndex,
-    onChange: (newSelectedIndex: number) => {
+    onChange: (_newSelectedIndex: number) => {
       preventLayoutShift(() => {
         // Removed addPreferredLanguage
       })

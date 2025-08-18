@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1EnvVarSource, V1ConfigMapKeySelector, V1ObjectFieldSelector, V1ResourceFieldSelector, V1SecretKeySelector } from "@utils/k8s-types";
+import { V1EnvVarSource } from "@utils/k8s-types";
 import { ConfigMapKeySelectorDetails } from "../V1ConfigMapKeySelector/details";
 import { ObjectFieldSelectorDetails } from "../V1ObjectFieldSelector/details";
 import { ResourceFieldSelectorDetails } from "../V1ResourceFieldSelector/details";

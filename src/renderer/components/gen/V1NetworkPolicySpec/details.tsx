@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1NetworkPolicySpec, V1NetworkPolicyEgressRule, V1NetworkPolicyIngressRule, V1LabelSelector } from "@utils/k8s-types";
+import { V1NetworkPolicySpec } from "@utils/k8s-types";
 import { NetworkPolicyEgressRuleDetails } from "../V1NetworkPolicyEgressRule/details";
 import { NetworkPolicyIngressRuleDetails } from "../V1NetworkPolicyIngressRule/details";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";

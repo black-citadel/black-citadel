@@ -63,8 +63,8 @@ export const Map = ({ nodes: initialNodes, edges: initialEdges, height = '400px'
         fitView
         fitViewOptions={{ padding: fitViewPadding }}
       >
-		 <Background color="#414141" bgColor='#0a0a0a' variant={BackgroundVariant.Dots} />
-		 <Controls />
+		<Background color="#414141" bgColor='#0a0a0a' variant={BackgroundVariant.Dots} />
+		<Controls />
 </ReactFlow>
 
     </div>

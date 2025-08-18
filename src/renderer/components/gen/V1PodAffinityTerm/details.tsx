@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1PodAffinityTerm, V1LabelSelector } from "@utils/k8s-types";
+import { V1PodAffinityTerm } from "@utils/k8s-types";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const PodAffinityTermDetails = ({ resourceData }: { resourceData: V1PodAffinityTerm }): JSX.Element => {

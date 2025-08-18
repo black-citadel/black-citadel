@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ProjectedVolumeSource, V1VolumeProjection } from "@utils/k8s-types";
+import { V1ProjectedVolumeSource } from "@utils/k8s-types";
 import { VolumeProjectionDetails } from "../V1VolumeProjection/details";
 
 export const ProjectedVolumeSourceDetails = ({ resourceData }: { resourceData: V1ProjectedVolumeSource }): JSX.Element => {

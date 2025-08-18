@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1PreferredSchedulingTerm, V1NodeSelectorTerm } from "@utils/k8s-types";
+import { V1PreferredSchedulingTerm } from "@utils/k8s-types";
 import { NodeSelectorTermDetails } from "../V1NodeSelectorTerm/details";
 
 export const PreferredSchedulingTermDetails = ({ resourceData }: { resourceData: V1PreferredSchedulingTerm }): JSX.Element => {

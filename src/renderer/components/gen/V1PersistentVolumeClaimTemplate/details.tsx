@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1PersistentVolumeClaimTemplate, V1PersistentVolumeClaimSpec } from "@utils/k8s-types";
+import { V1PersistentVolumeClaimTemplate } from "@utils/k8s-types";
 import { PersistentVolumeClaimSpecDetails } from "../V1PersistentVolumeClaimSpec/details";
 
 export const PersistentVolumeClaimTemplateDetails = ({ resourceData }: { resourceData: V1PersistentVolumeClaimTemplate }): JSX.Element => {

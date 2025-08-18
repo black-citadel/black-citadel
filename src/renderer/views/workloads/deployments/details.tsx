@@ -6,16 +6,14 @@ import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { DeploymentBadge } from '@components/workloads/deployment/badge';
-import { DeploymentStatus } from '@components/workloads/deployment/status';
-import { Heading, Subheading } from '@components/base/heading';
-import { MetadataDetails } from '@components/metadata';
-import { DeploymentSpec } from '@components/workloads/deployment/spec';
+import { Heading } from '@components/base/heading';
 import { PodList } from '@components/workloads/pod/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
 import { ScaleAction } from '@components/resources/ResourceActions/actions/ScaleAction';
 import type { V1Deployment, V1PodList } from '@utils/k8s-types';
 import { Container } from '@components/base/container';
+import { DeploymentDetails } from '@components/gen/V1Deployment/details';
 
 function getLabelSelectorString(selector: { [key: string]: string }): string {
   return Object.keys(selector)
@@ -119,17 +117,13 @@ export const DeploymentsDetailsView = (): JSX.Element => {
       </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && deployment && (
-        <div className='m-2'>
-          <DeploymentSpec spec={deployment.spec} />
-
-          <DeploymentStatus status={deployment.status} />
+        <>
+          <DeploymentDetails resourceData={deployment} />
 
           <Container title='Pods'>
             {pods && <PodList pods={pods} />}
           </Container>
-
-          <MetadataDetails metadata={deployment.metadata} />
-        </div>
+        </>
 
       )}
 

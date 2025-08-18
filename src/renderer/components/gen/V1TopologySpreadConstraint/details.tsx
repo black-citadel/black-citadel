@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1TopologySpreadConstraint, V1LabelSelector } from "@utils/k8s-types";
+import { V1TopologySpreadConstraint } from "@utils/k8s-types";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const TopologySpreadConstraintDetails = ({ resourceData }: { resourceData: V1TopologySpreadConstraint }): JSX.Element => {

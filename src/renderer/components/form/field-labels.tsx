@@ -11,6 +11,9 @@ export interface Label {
   value: string;
 }
 
+// Alias for backward compatibility
+export type FieldLabel = Label;
+
 interface FieldLabelsProps {
   labels: Label[];
   setLabels: React.Dispatch<React.SetStateAction<Label[]>>;

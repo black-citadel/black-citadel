@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1NodeAffinity, V1PreferredSchedulingTerm, V1NodeSelector } from "@utils/k8s-types";
+import { V1NodeAffinity } from "@utils/k8s-types";
 import { PreferredSchedulingTermDetails } from "../V1PreferredSchedulingTerm/details";
 import { NodeSelectorDetails } from "../V1NodeSelector/details";
 

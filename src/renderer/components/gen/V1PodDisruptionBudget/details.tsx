@@ -1,7 +1,6 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1PodDisruptionBudget, V1PodDisruptionBudgetSpec, V1PodDisruptionBudgetStatus } from "@utils/k8s-types";
+import { V1PodDisruptionBudget } from "@utils/k8s-types";
 import { PodDisruptionBudgetSpecDetails } from "../V1PodDisruptionBudgetSpec/details";
 import { PodDisruptionBudgetStatusDetails } from "../V1PodDisruptionBudgetStatus/details";
 

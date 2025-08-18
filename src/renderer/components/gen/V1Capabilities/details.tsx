@@ -1,13 +1,10 @@
-import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1Capabilities } from "@utils/k8s-types";
 
-export const CapabilitiesDetails = ({ resourceData }: { resourceData: V1Capabilities }): JSX.Element => {
+export const CapabilitiesDetails = ({ resourceData: _resourceData }: { resourceData: V1Capabilities }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         return checks.length > 0 ? checks.some(v => v) : false;
     })();
 

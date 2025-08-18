@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { V1Endpoints, V1EndpointSubset, V1EndpointAddress, V1EndpointPort } from '@utils/k8s-types';
+import { V1Endpoints } from '@utils/k8s-types';
 import { Field, Label, Description } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
 import { Dropdown } from '@components/base/dropdown';

@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1PodSecurityContext, V1AppArmorProfile, V1SELinuxOptions, V1SeccompProfile, V1Sysctl, V1WindowsSecurityContextOptions } from "@utils/k8s-types";
+import { V1PodSecurityContext } from "@utils/k8s-types";
 import { AppArmorProfileDetails } from "../V1AppArmorProfile/details";
 import { SELinuxOptionsDetails } from "../V1SELinuxOptions/details";
 import { SeccompProfileDetails } from "../V1SeccompProfile/details";
@@ -14,7 +13,7 @@ export const PodSecurityContextDetails = ({ resourceData }: { resourceData: V1Po
     const hasContent = (() => {
         const checks = [];
         // Check simple properties
-        checks.push([resourceData.fsGroup, resourceData.fsGroupChangePolicy, resourceData.runAsGroup, resourceData.runAsUser, resourceData.seLinuxChangePolicy, resourceData.supplementalGroupsPolicy].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.fsGroup, resourceData.fsGroupChangePolicy, resourceData.runAsGroup, resourceData.runAsUser, resourceData.supplementalGroups].some(v => v !== undefined && v !== null));
         // Boolean properties always have content
         checks.push(true);
         // Check k8s type properties
@@ -34,9 +33,7 @@ export const PodSecurityContextDetails = ({ resourceData }: { resourceData: V1Po
                     { label: "Fs Group", value: resourceData.fsGroup || '-' },
                     { label: "Fs Group Change Policy", value: resourceData.fsGroupChangePolicy || '-' },
                     { label: "Run As Group", value: resourceData.runAsGroup || '-' },
-                    { label: "Run As User", value: resourceData.runAsUser || '-' },
-                    { label: "Se Linux Change Policy", value: resourceData.seLinuxChangePolicy || '-' },
-                    { label: "Supplemental Groups Policy", value: resourceData.supplementalGroupsPolicy || '-' }
+                    { label: "Run As User", value: resourceData.runAsUser || '-' }
                 ]}
                 columns={1}
             />

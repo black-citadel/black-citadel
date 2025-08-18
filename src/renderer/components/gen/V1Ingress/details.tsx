@@ -1,7 +1,6 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1Ingress, V1IngressSpec, V1IngressStatus } from "@utils/k8s-types";
+import { V1Ingress } from "@utils/k8s-types";
 import { IngressSpecDetails } from "../V1IngressSpec/details";
 import { IngressStatusDetails } from "../V1IngressStatus/details";
 

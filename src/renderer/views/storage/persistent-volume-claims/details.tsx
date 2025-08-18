@@ -6,16 +6,10 @@ import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
-import { DetailsItem } from '@components/details-item';
 import { PersistentVolumeClaimBadge } from '@components/storage/persistent-volume-claim/badge';
-import { VolumeMode } from '@components/storage/persistent-volume-claim/volume-mode';
-import { AccessModes } from '@components/storage/persistent-volume-claim/access-modes';
-import { StorageDetails } from '@components/storage/persistent-volume-claim/storage-details';
-import { PVCStatus } from '@components/storage/persistent-volume-claim/status';
 import { Heading } from '@components/base/heading';
-import { MetadataDetails } from '@components/metadata';
 import { ResourceActions } from '@components/resources/ResourceActions';
-import { Container } from '@components/base/container';
+import { PersistentVolumeClaimDetails } from '@components/gen/V1PersistentVolumeClaim/details';
 
 export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -87,36 +81,7 @@ export const PersistentVolumeClaimsDetailsView = (): JSX.Element => {
         </Navbar>
       </DetailsHeader>
 
-      {activeTab === ResourceTabs.Details && pvc && (
-        <div className='m-2'>
-          <Container title="Configuration">
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsItem label="Storage Class">
-                {pvc.spec.storageClassName || 'Default'}
-              </DetailsItem>
-              
-              <VolumeMode volumeMode={pvc.spec.volumeMode} />
-              
-              <DetailsItem label="Volume Name">
-                {pvc.spec.volumeName || 'Not bound'}
-              </DetailsItem>
-              
-              <AccessModes accessModes={pvc.spec.accessModes} />
-              
-              <StorageDetails
-                requests={pvc.spec.resources?.requests}
-                limits={pvc.spec.resources?.limits}
-              />
-            </div>
-          </Container>
-
-          <Container title="Status">
-            <PVCStatus status={pvc.status} />
-          </Container>
-
-          <MetadataDetails metadata={pvc.metadata} />
-        </div>
-      )}
+      {activeTab === ResourceTabs.Details && pvc && <PersistentVolumeClaimDetails resourceData={pvc} />}
 
       {activeTab === ResourceTabs.YAML && (
         <Editor content={yamlContent} />

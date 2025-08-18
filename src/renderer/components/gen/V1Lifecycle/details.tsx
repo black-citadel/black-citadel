@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1Lifecycle, V1LifecycleHandler } from "@utils/k8s-types";
+import { V1Lifecycle } from "@utils/k8s-types";
 import { LifecycleHandlerDetails } from "../V1LifecycleHandler/details";
 
 export const LifecycleDetails = ({ resourceData }: { resourceData: V1Lifecycle }): JSX.Element => {
@@ -10,7 +9,7 @@ export const LifecycleDetails = ({ resourceData }: { resourceData: V1Lifecycle }
     const hasContent = (() => {
         const checks = [];
         // Check simple properties
-        checks.push([resourceData.stopSignal].some(v => v !== undefined && v !== null));
+        // No simple properties for V1Lifecycle
         // Check k8s type properties
         checks.push([resourceData.postStart, resourceData.preStop].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
@@ -22,13 +21,6 @@ export const LifecycleDetails = ({ resourceData }: { resourceData: V1Lifecycle }
 
     return (
         <>
-            <PanelGrid
-                title="Properties"
-                items={[
-                    { label: "Stop Signal", value: resourceData.stopSignal || '-' }
-                ]}
-                columns={1}
-            />
 
             {resourceData.postStart && (
                 <Container title="Post Start">

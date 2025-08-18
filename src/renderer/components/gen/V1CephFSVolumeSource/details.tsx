@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1CephFSVolumeSource, V1LocalObjectReference } from "@utils/k8s-types";
+import { V1CephFSVolumeSource } from "@utils/k8s-types";
 import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
 
 export const CephFSVolumeSourceDetails = ({ resourceData }: { resourceData: V1CephFSVolumeSource }): JSX.Element => {

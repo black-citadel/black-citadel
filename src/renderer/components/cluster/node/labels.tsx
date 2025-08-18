@@ -31,7 +31,7 @@ export const NodeLabels = ({ labels }: Props): JSX.Element => {
                 <div>
                     <h4 className="text-sm font-medium mb-2 text-zinc-300">Roles</h4>
                     <div className="flex flex-wrap gap-2">
-                        {roleLabels.map(([key, value]) => (
+                        {roleLabels.map(([key, _value]) => (
                             <Badge key={key} variant="blue" className="text-sm">
                                 {key.replace('node-role.kubernetes.io/', '')}
                             </Badge>

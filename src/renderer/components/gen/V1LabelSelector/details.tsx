@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1LabelSelector, V1LabelSelectorRequirement } from "@utils/k8s-types";
+import { V1LabelSelector } from "@utils/k8s-types";
 import { LabelSelectorRequirementDetails } from "../V1LabelSelectorRequirement/details";
 
 export const LabelSelectorDetails = ({ resourceData }: { resourceData: V1LabelSelector }): JSX.Element => {

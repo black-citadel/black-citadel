@@ -4,8 +4,6 @@ import { StatefulSetBadge } from '@components/workloads/statefulset/badge';
 import { CreateHeader } from '@components/create-header';
 import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
-import { StatefulSetForm } from './_form';
-import { dump } from 'js-yaml';
 import { CodePanel } from '@components/code';
 import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
 import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/form/field-annotations';
@@ -14,6 +12,10 @@ import { dump } from 'js-yaml';
 import { HelpButton } from '@components/help-button';
 import { NamespaceSelect } from '@components/form/field-namespace-select';
 import helpObjects from '@help/index';
+import { Subheading } from '@components/base/heading';
+import { Description, Field, Label } from '@components/base/fieldset';
+import { Input } from '@components/base/input';
+import { Dropdown } from '@components/base/dropdown';
 
 interface EnvVar {
   name: string;

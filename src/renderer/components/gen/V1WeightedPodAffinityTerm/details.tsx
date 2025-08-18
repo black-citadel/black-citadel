@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1WeightedPodAffinityTerm, V1PodAffinityTerm } from "@utils/k8s-types";
+import { V1WeightedPodAffinityTerm } from "@utils/k8s-types";
 import { PodAffinityTermDetails } from "../V1PodAffinityTerm/details";
 
 export const WeightedPodAffinityTermDetails = ({ resourceData }: { resourceData: V1WeightedPodAffinityTerm }): JSX.Element => {

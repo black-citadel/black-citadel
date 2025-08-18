@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1LifecycleHandler, V1ExecAction, V1HTTPGetAction, V1SleepAction, V1TCPSocketAction } from "@utils/k8s-types";
+import { V1LifecycleHandler } from "@utils/k8s-types";
 import { ExecActionDetails } from "../V1ExecAction/details";
 import { HTTPGetActionDetails } from "../V1HTTPGetAction/details";
 import { SleepActionDetails } from "../V1SleepAction/details";

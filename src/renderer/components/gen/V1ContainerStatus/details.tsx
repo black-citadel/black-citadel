@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ContainerStatus, V1ResourceStatus, V1ContainerState, V1ResourceRequirements, V1ContainerUser, V1VolumeMountStatus } from "@utils/k8s-types";
+import { V1ContainerStatus } from "@utils/k8s-types";
 import { ResourceStatusDetails } from "../V1ResourceStatus/details";
 import { ContainerStateDetails } from "../V1ContainerState/details";
 import { ResourceRequirementsDetails } from "../V1ResourceRequirements/details";
@@ -23,11 +22,11 @@ export const ContainerStatusDetails = ({ resourceData }: { resourceData: V1Conta
         // Check object properties
         checks.push(allocatedResourcesItems.length > 0);
         // Check simple properties
-        checks.push([resourceData.containerID, resourceData.image, resourceData.imageID, resourceData.name, resourceData.restartCount, resourceData.stopSignal].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.containerID, resourceData.image, resourceData.imageID, resourceData.name, resourceData.restartCount].some(v => v !== undefined && v !== null));
         // Boolean properties always have content
         checks.push(true);
         // Check k8s type properties
-        checks.push([resourceData.allocatedResourcesStatus, resourceData.lastState, resourceData.resources, resourceData.state, resourceData.user, resourceData.volumeMounts].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.lastState, resourceData.resources, resourceData.state, resourceData.volumeMounts].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
     })();
 
@@ -50,8 +49,7 @@ export const ContainerStatusDetails = ({ resourceData }: { resourceData: V1Conta
                     { label: "Image", value: resourceData.image },
                     { label: "Image ID", value: resourceData.imageID },
                     { label: "Name", value: resourceData.name },
-                    { label: "Restart Count", value: resourceData.restartCount },
-                    { label: "Stop Signal", value: resourceData.stopSignal || '-' }
+                    { label: "Restart Count", value: resourceData.restartCount }
                 ]}
                 columns={1}
             />
@@ -64,14 +62,6 @@ export const ContainerStatusDetails = ({ resourceData }: { resourceData: V1Conta
                 ]}
                 columns={1}
             />
-
-            {resourceData.allocatedResourcesStatus && (
-                <Container title="Allocated Resources Status">
-                    {resourceData.allocatedResourcesStatus.map((item, index) => (
-                        <ResourceStatusDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
 
             {resourceData.lastState && (
                 <Container title="Last State">
@@ -88,12 +78,6 @@ export const ContainerStatusDetails = ({ resourceData }: { resourceData: V1Conta
             {resourceData.state && (
                 <Container title="State">
                     <ContainerStateDetails resourceData={ resourceData.state } />
-                </Container>
-            )}
-
-            {resourceData.user && (
-                <Container title="User">
-                    <ContainerUserDetails resourceData={ resourceData.user } />
                 </Container>
             )}
 

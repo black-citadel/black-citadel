@@ -6,14 +6,10 @@ import { useEffect, useState } from "react";
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
-import { DetailsItem } from '@components/details-item';
 import { CSIDriverBadge } from '@components/storage/csi-driver/badge';
-import { VolumeLifecycleModes } from '@components/storage/csi-driver/volume-lifecycle-modes';
-import { TokenRequests } from '@components/storage/csi-driver/token-requests';
 import { Heading } from '@components/base/heading';
-import { MetadataDetails } from '@components/metadata';
-import { Container } from '@components/base/container';
 import { ResourceActions } from '@components/resources/ResourceActions';
+import { CSIDriverDetails } from '@components/gen/V1CSIDriver/details';
 
 export const CSIDriversDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -83,43 +79,7 @@ export const CSIDriversDetailsView = (): JSX.Element => {
         </Navbar>
       </DetailsHeader>
 
-      {activeTab === ResourceTabs.Details && csiDriver && (
-        <div className='m-2'>
-          <Container title="Configuration">
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsItem label="Attach Required">
-                {csiDriver.spec.attachRequired?.toString() || 'Not specified'}
-              </DetailsItem>
-              
-              <DetailsItem label="Pod Info on Mount">
-                {csiDriver.spec.podInfoOnMount?.toString() || 'Not specified'}
-              </DetailsItem>
-              
-              <DetailsItem label="Storage Capacity">
-                {csiDriver.spec.storageCapacity?.toString() || 'Not specified'}
-              </DetailsItem>
-              
-              <DetailsItem label="FS Group Policy">
-                {csiDriver.spec.fsGroupPolicy || 'Not specified'}
-              </DetailsItem>
-              
-              <DetailsItem label="Requires Volume Attributes">
-                {csiDriver.spec.requiresRepublish?.toString() || 'Not specified'}
-              </DetailsItem>
-              
-              <VolumeLifecycleModes modes={csiDriver.spec.volumeLifecycleModes} />
-            </div>
-          </Container>
-
-          {csiDriver.spec.tokenRequests && csiDriver.spec.tokenRequests.length > 0 && (
-            <Container title="Token Requests">
-              <TokenRequests requests={csiDriver.spec.tokenRequests} />
-            </Container>
-          )}
-
-          <MetadataDetails metadata={csiDriver.metadata} />
-        </div>
-      )}
+      {activeTab === ResourceTabs.Details && csiDriver && <CSIDriverDetails resourceData={csiDriver} />}
 
       {activeTab === ResourceTabs.YAML && (
         <Editor content={yamlContent} />

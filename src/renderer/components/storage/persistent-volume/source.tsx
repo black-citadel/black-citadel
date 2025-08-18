@@ -5,9 +5,9 @@ interface PersistentVolumeSourceProps {
     source: k8s.V1PersistentVolumeSpec;
   }
   
-  export const PersistentVolumeSource = ({ source }: PersistentVolumeSourceProps): JSX.Element => {
+  export const PersistentVolumeSource = ({ source: _source }: PersistentVolumeSourceProps): JSX.Element => {
     const getSourceType = () => {
-      const sourceTypes = [
+      const _sourceTypes = [
         'awsElasticBlockStore', 'azureDisk', 'azureFile', 'cephfs', 'cinder',
         'csi', 'fc', 'flexVolume', 'flocker', 'gcePersistentDisk', 'glusterfs',
         'hostPath', 'iscsi', 'local', 'nfs', 'photonPersistentDisk', 'portworxVolume',

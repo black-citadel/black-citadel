@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1HTTPIngressPath, V1IngressBackend } from "@utils/k8s-types";
+import { V1HTTPIngressPath } from "@utils/k8s-types";
 import { IngressBackendDetails } from "../V1IngressBackend/details";
 
 export const HTTPIngressPathDetails = ({ resourceData }: { resourceData: V1HTTPIngressPath }): JSX.Element => {

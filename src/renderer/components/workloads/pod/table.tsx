@@ -5,7 +5,6 @@ import { NamespaceResourceLink } from '@components/cluster/namespace/resource-li
 import { PodResourceLink } from './resource-link';
 import { useView } from '@context/viewProvider';
 import { useState } from 'react';
-import { Status } from '@protoku/design-system';
 import { sortRows } from '@utils/sorting';
 import { formatPodStatus } from '@utils/helpers';
 

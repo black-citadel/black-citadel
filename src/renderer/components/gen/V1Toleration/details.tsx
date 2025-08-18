@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1Toleration } from "@utils/k8s-types";
 
 export const TolerationDetails = ({ resourceData }: { resourceData: V1Toleration }): JSX.Element => {

@@ -1,7 +1,6 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1HorizontalPodAutoscaler, V1HorizontalPodAutoscalerSpec, V1HorizontalPodAutoscalerStatus } from "@utils/k8s-types";
+import { V1HorizontalPodAutoscaler } from "@utils/k8s-types";
 import { HorizontalPodAutoscalerSpecDetails } from "../V1HorizontalPodAutoscalerSpec/details";
 import { HorizontalPodAutoscalerStatusDetails } from "../V1HorizontalPodAutoscalerStatus/details";
 

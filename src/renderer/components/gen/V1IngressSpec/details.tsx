@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1IngressSpec, V1IngressBackend, V1IngressTLS } from "@utils/k8s-types";
+import { V1IngressSpec } from "@utils/k8s-types";
 import { IngressBackendDetails } from "../V1IngressBackend/details";
 import { IngressRules } from "@components/networking/ingress/ingress-rules";
 import { IngressTLSDetails } from "../V1IngressTLS/details";

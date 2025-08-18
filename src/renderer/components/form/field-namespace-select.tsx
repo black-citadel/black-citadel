@@ -6,6 +6,7 @@ import { NamespaceBadge } from '../cluster/namespace/badge';
 interface NamespaceSelectProps {
   value: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
 export const NamespaceSelect = ({ value, onChange }: NamespaceSelectProps): JSX.Element => {

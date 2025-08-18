@@ -5,11 +5,11 @@ import { CreateHeader } from '@components/create-header';
 import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { CodePanel } from '@components/code';
-import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
-import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/form/field-annotations';
 import { podDisruptionBudgetTemplate } from '@templates/poddisruptionbudget.yaml';
 import { dump } from 'js-yaml';
 import { PodDisruptionBudgetForm } from './_form';
+import { FieldLabel } from '@components/form/field-labels';
+import { FieldAnnotation } from '@components/form/field-annotations';
 
 interface MatchExpression {
   key: string;

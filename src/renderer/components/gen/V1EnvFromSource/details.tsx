@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1EnvFromSource, V1ConfigMapEnvSource, V1SecretEnvSource } from "@utils/k8s-types";
+import { V1EnvFromSource } from "@utils/k8s-types";
 import { ConfigMapEnvSourceDetails } from "../V1ConfigMapEnvSource/details";
 import { SecretEnvSourceDetails } from "../V1SecretEnvSource/details";
 

@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1PodDisruptionBudgetStatus } from "@utils/k8s-types";
 import { ConditionsTable } from "@components/base/conditions-table";
 
@@ -9,7 +7,7 @@ export const PodDisruptionBudgetStatusDetails = ({ resourceData }: { resourceDat
     const disruptedPodsItems = resourceData.disruptedPods
         ? Object.entries(resourceData.disruptedPods).map(([key, value]) => ({
             label: key,
-            value: value
+            value: value instanceof Date ? value.toISOString() : String(value)
         }))
         : [];
 

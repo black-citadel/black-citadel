@@ -51,7 +51,7 @@ export const PortForwardTable = ({
 
     // Map sorted data to React components
     return sortedRows.map(row => {
-      const { pf, statusVariant, isHttp, isHttps, url } = row._raw;
+      const { pf, statusVariant, isHttp, isHttps, url: _url } = row._raw;
       
       return {
         Resource: (

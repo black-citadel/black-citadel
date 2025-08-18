@@ -8,7 +8,7 @@ import { dump } from 'js-yaml';
 import { ServiceForm } from './_form';
 
 export const ServicesCreateView = (): JSX.Element => {
-  const { setViewContext, activeNamespace } = useView();
+  const { setViewContext } = useView();
   const [error, setError] = useState<string | null>(null);
   const [payload, setPayload] = useState<any>(null);
 

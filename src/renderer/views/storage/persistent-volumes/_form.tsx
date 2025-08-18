@@ -26,7 +26,7 @@ interface PersistentVolumeFormProps {
   reclaimPolicy: 'Retain' | 'Recycle' | 'Delete';
   setReclaimPolicy: (value: 'Retain' | 'Recycle' | 'Delete') => void;
   volumeType: string;
-  setVolumeType: (value: string) => void;
+  setVolumeType: (value: 'hostPath' | 'nfs' | 'local' | 'awsElasticBlockStore' | 'gcePersistentDisk' | 'azureDisk' | string) => void;
   // Volume source fields
   hostPath: string;
   setHostPath: (value: string) => void;

@@ -44,22 +44,19 @@ export const PodsEditView = (): JSX.Element => {
       };
       
       // Use patch to update only the metadata
-      const result = await window.electronAPI.patchNamespacedPod(
+      await window.electronAPI.patchNamespacedPod(
         viewContext.name, 
         viewContext.namespace, 
         patchPayload
       );
 
-      if (result.success) {
-        setViewContext({
-          resource: Resources.Pods,
-          action: ResourceAction.Details,
-          name: viewContext.name,
-          namespace: viewContext.namespace
-        })
-      } else {
-        setError(result.error || "Failed to update pod. Note: Most pod specifications are immutable after creation.");
-      }
+      // If we reach here, the update was successful
+      setViewContext({
+        resource: Resources.Pods,
+        action: ResourceAction.Details,
+        name: viewContext.name,
+        namespace: viewContext.namespace
+      })
     } catch (e) {
       console.log(e);
       setError("Failed to update pod. Note: Most pod specifications are immutable after creation.");

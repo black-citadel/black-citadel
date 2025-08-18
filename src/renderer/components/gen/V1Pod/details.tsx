@@ -1,7 +1,6 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1Pod, V1PodSpec, V1PodStatus } from "@utils/k8s-types";
+import { V1Pod } from "@utils/k8s-types";
 import { PodSpecDetails } from "../V1PodSpec/details";
 import { PodStatusDetails } from "../V1PodStatus/details";
 

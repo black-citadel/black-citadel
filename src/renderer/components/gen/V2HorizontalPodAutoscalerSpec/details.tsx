@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V2HorizontalPodAutoscalerSpec, V2HorizontalPodAutoscalerBehavior, V2MetricSpec, V2CrossVersionObjectReference } from "@utils/k8s-types";
+import { V2HorizontalPodAutoscalerSpec } from "@utils/k8s-types";
 import { HorizontalPodAutoscalerBehaviorDetails } from "../V2HorizontalPodAutoscalerBehavior/details";
 import { MetricSpecDetails } from "../V2MetricSpec/details";
 import { CrossVersionObjectReferenceDetails } from "../V2CrossVersionObjectReference/details";

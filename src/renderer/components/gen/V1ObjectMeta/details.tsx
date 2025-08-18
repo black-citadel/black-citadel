@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ObjectMeta, V1ManagedFieldsEntry, V1OwnerReference } from "@utils/k8s-types";
+import { V1ObjectMeta } from "@utils/k8s-types";
 import { ManagedFieldsEntryDetails } from "../V1ManagedFieldsEntry/details";
 import { OwnerReferenceDetails } from "../V1OwnerReference/details";
 

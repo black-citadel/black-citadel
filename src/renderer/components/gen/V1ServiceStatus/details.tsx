@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ServiceStatus, V1LoadBalancerStatus } from "@utils/k8s-types";
+import { V1ServiceStatus } from "@utils/k8s-types";
 import { ConditionsTable } from "@components/base/conditions-table";
 import { LoadBalancerStatusDetails } from "../V1LoadBalancerStatus/details";
 

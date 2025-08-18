@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1ImageVolumeSource } from "@utils/k8s-types";
 
 export const ImageVolumeSourceDetails = ({ resourceData }: { resourceData: V1ImageVolumeSource }): JSX.Element => {

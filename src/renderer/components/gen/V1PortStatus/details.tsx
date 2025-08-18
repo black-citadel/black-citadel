@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1PortStatus } from "@utils/k8s-types";
 
 export const PortStatusDetails = ({ resourceData }: { resourceData: V1PortStatus }): JSX.Element => {

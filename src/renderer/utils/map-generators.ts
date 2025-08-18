@@ -47,8 +47,8 @@ export function generateServiceMap(service?: V1Service, pods?: V1Pod[]): { nodes
           type: 'pod',
           status: pod.status?.phase
         },
-        sourcePosition: 'right',
-        targetPosition: 'left',
+        sourcePosition: Position.Right,
+        targetPosition: Position.Left,
         style: {
           backgroundColor: pod.status?.phase === 'Running' ? '#16a34a' : '#dc2626',
           color: '#ffffff',
@@ -91,8 +91,8 @@ export function generateServiceMap(service?: V1Service, pods?: V1Pod[]): { nodes
         label: 'No pod selector defined',
         type: 'message'
       },
-      sourcePosition: 'right',
-      targetPosition: 'left',
+      sourcePosition: Position.Right,
+      targetPosition: Position.Left,
       style: {
         backgroundColor: '#475569',
         color: '#e2e8f0',

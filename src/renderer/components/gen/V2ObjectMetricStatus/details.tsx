@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V2ObjectMetricStatus, V2MetricValueStatus, V2CrossVersionObjectReference, V2MetricIdentifier } from "@utils/k8s-types";
+import { V2ObjectMetricStatus } from "@utils/k8s-types";
 import { MetricValueStatusDetails } from "../V2MetricValueStatus/details";
 import { CrossVersionObjectReferenceDetails } from "../V2CrossVersionObjectReference/details";
 import { MetricIdentifierDetails } from "../V2MetricIdentifier/details";

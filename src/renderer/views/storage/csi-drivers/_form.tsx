@@ -182,7 +182,7 @@ export const CSIDriverForm = ({
         <div className='pb-4'>
           <div className='flex items-center justify-between mb-2'>
             <h3 className='text-sm font-medium'>Token Requests</h3>
-            <Button variant="secondary" size="sm" onClick={addTokenRequest}>
+            <Button variant="secondary" onClick={addTokenRequest}>
               <PlusIcon className="h-4 w-4 mr-1" />
               Add Token Request
             </Button>

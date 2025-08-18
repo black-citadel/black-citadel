@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1AzureFileVolumeSource } from "@utils/k8s-types";
 
 export const AzureFileVolumeSourceDetails = ({ resourceData }: { resourceData: V1AzureFileVolumeSource }): JSX.Element => {

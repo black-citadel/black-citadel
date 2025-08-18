@@ -6,11 +6,10 @@ import { DetailsItem } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
-import { Heading, Subheading } from '@components/base/heading';
+import { Heading } from '@components/base/heading';
 import { MetadataDetails } from '@components/metadata';
-import { Badge, Status } from '@protoku/design-system';
+import { Badge } from '@protoku/design-system';
 import { Container } from '@components/base/container';
-import { calculateAge } from '@utils/helpers';
 import { ConditionsTable } from '@components/base/conditions-table';
 
 export const CustomResourceDetailsView = (): JSX.Element => {

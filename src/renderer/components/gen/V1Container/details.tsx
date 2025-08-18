@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1Container, V1EnvVar, V1EnvFromSource, V1Lifecycle, V1Probe, V1ContainerPort, V1ContainerResizePolicy, V1ResourceRequirements, V1SecurityContext, V1VolumeDevice, V1VolumeMount } from "@utils/k8s-types";
+import { V1Container } from "@utils/k8s-types";
 import { EnvVarDetails } from "../V1EnvVar/details";
 import { EnvFromSourceDetails } from "../V1EnvFromSource/details";
 import { LifecycleDetails } from "../V1Lifecycle/details";

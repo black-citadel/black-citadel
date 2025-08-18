@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1EnvVar, V1EnvVarSource } from "@utils/k8s-types";
+import { V1EnvVar } from "@utils/k8s-types";
 import { EnvVarSourceDetails } from "../V1EnvVarSource/details";
 
 export const EnvVarDetails = ({ resourceData }: { resourceData: V1EnvVar }): JSX.Element => {

@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ResourceStatus, V1ResourceHealth } from "@utils/k8s-types";
+import { V1ResourceStatus } from "@utils/k8s-types";
 import { ResourceHealthDetails } from "../V1ResourceHealth/details";
 
 export const ResourceStatusDetails = ({ resourceData }: { resourceData: V1ResourceStatus }): JSX.Element => {
@@ -32,7 +31,7 @@ export const ResourceStatusDetails = ({ resourceData }: { resourceData: V1Resour
 
             {resourceData.resources && (
                 <Container title="Resources">
-                    {resourceData.resources.map((item, index) => (
+                    {resourceData.resources.map((item: any, index: number) => (
                         <ResourceHealthDetails key={index} resourceData={item} />
                     ))}
                 </Container>

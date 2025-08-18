@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V2HPAScalingRules, V2HPAScalingPolicy } from "@utils/k8s-types";
+import { V2HPAScalingRules } from "@utils/k8s-types";
 import { HPAScalingPolicyDetails } from "../V2HPAScalingPolicy/details";
 
 export const HPAScalingRulesDetails = ({ resourceData }: { resourceData: V2HPAScalingRules }): JSX.Element => {
@@ -10,7 +9,7 @@ export const HPAScalingRulesDetails = ({ resourceData }: { resourceData: V2HPASc
     const hasContent = (() => {
         const checks = [];
         // Check simple properties
-        checks.push([resourceData.selectPolicy, resourceData.stabilizationWindowSeconds, resourceData.tolerance].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.selectPolicy, resourceData.stabilizationWindowSeconds].some(v => v !== undefined && v !== null));
         // Check k8s type properties
         checks.push([resourceData.policies].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
@@ -26,8 +25,7 @@ export const HPAScalingRulesDetails = ({ resourceData }: { resourceData: V2HPASc
                 title="Properties"
                 items={[
                     { label: "Select Policy", value: resourceData.selectPolicy || '-' },
-                    { label: "Stabilization Window Seconds", value: resourceData.stabilizationWindowSeconds || '-' },
-                    { label: "Tolerance", value: resourceData.tolerance || '-' }
+                    { label: "Stabilization Window Seconds", value: resourceData.stabilizationWindowSeconds || '-' }
                 ]}
                 columns={1}
             />

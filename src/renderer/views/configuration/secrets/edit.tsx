@@ -9,7 +9,7 @@ import { secretTemplate } from '@templates/secret.yaml';
 import { dump } from 'js-yaml';
 import { SecretForm } from './_form';
 import { V1Secret } from '@utils/k8s-types';
-import { FieldLabel } from '@components/form/field-labels';
+import { Label } from '@components/form/field-labels';
 import { Annotation as FieldAnnotation } from '@components/form/field-annotations';
 
 interface SecretData {
@@ -21,11 +21,11 @@ export const SecretsEditView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [original, setOriginal] = useState<V1Secret | null>(null);
+  const [_original, setOriginal] = useState<V1Secret | null>(null);
   
   const [name, setName] = useState<string>('');
   const [namespace, setNamespace] = useState<string>('');
-  const [labels, setLabels] = useState<FieldLabel[]>([{ key: '', value: '' }]);
+  const [labels, setLabels] = useState<Label[]>([{ key: '', value: '' }]);
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
   const [type, setType] = useState<string>('Opaque');
   const [data, setData] = useState<SecretData[]>([{ key: '', value: '' }]);

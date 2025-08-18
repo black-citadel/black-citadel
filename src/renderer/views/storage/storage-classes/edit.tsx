@@ -9,7 +9,7 @@ import { storageClassTemplate } from '@templates/storageclass.yaml';
 import { dump } from 'js-yaml';
 import { StorageClassForm } from './_form';
 import { V1StorageClass } from '@utils/k8s-types';
-import { FieldLabel } from '@components/form/field-labels';
+import { Label } from '@components/form/field-labels';
 import { Annotation as FieldAnnotation } from '@components/form/field-annotations';
 
 interface Parameter {
@@ -29,7 +29,7 @@ export const StorageClassesEditView = (): JSX.Element => {
   const [original, setOriginal] = useState<V1StorageClass | null>(null);
   
   const [name, setName] = useState<string>('');
-  const [labels, setLabels] = useState<FieldLabel[]>([{ key: '', value: '' }]);
+  const [labels, setLabels] = useState<Label[]>([{ key: '', value: '' }]);
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
   const [provisioner, setProvisioner] = useState<string>('');
   const [provisionerType, setProvisionerType] = useState<string>('custom');

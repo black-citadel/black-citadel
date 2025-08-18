@@ -7,10 +7,8 @@ import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { CSINodeBadge } from '@components/storage/csi-node/badge';
-import { CSIDriversList } from '@components/storage/csi-node/csi-drivers-list';
 import { Heading } from '@components/base/heading';
-import { MetadataDetails } from '@components/metadata';
-import { Container } from '@components/base/container';
+import { CSINodeDetails } from '@components/gen/V1CSINode/details';
 
 export const CSINodesDetailsView = (): JSX.Element => {
   const { viewContext } = useView()
@@ -56,15 +54,7 @@ export const CSINodesDetailsView = (): JSX.Element => {
         </Navbar>
       </DetailsHeader>
 
-      {activeTab === ResourceTabs.Details && csiNode && (
-        <div className='m-2'>
-          <Container title="CSI Drivers">
-            <CSIDriversList drivers={csiNode.spec.drivers} />
-          </Container>
-
-          <MetadataDetails metadata={csiNode.metadata} />
-        </div>
-      )}
+      {activeTab === ResourceTabs.Details && csiNode && <CSINodeDetails resourceData={csiNode} />}
 
       {activeTab === ResourceTabs.YAML && (
         <Editor content={yamlContent} />

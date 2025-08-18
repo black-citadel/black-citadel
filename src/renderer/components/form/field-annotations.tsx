@@ -11,6 +11,9 @@ export interface Annotation {
   value: string;
 }
 
+// Alias for backward compatibility
+export type FieldAnnotation = Annotation;
+
 interface Props {
   annotations: Annotation[];
   setAnnotations: React.Dispatch<React.SetStateAction<Annotation[]>>;

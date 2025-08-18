@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1ResourceClaim } from "@utils/k8s-types";
 
 export const ResourceClaimDetails = ({ resourceData }: { resourceData: V1ResourceClaim }): JSX.Element => {
@@ -9,7 +7,7 @@ export const ResourceClaimDetails = ({ resourceData }: { resourceData: V1Resourc
     const hasContent = (() => {
         const checks = [];
         // Check simple properties
-        checks.push([resourceData.name, resourceData.request].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.name].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
     })();
 
@@ -22,8 +20,7 @@ export const ResourceClaimDetails = ({ resourceData }: { resourceData: V1Resourc
             <PanelGrid
                 title="Properties"
                 items={[
-                    { label: "Name", value: resourceData.name },
-                    { label: "Request", value: resourceData.request || '-' }
+                    { label: "Name", value: resourceData.name }
                 ]}
                 columns={1}
             />

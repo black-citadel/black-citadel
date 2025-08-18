@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1SELinuxOptions } from "@utils/k8s-types";
 
 export const SELinuxOptionsDetails = ({ resourceData }: { resourceData: V1SELinuxOptions }): JSX.Element => {

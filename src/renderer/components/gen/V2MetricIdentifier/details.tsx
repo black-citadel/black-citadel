@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V2MetricIdentifier, V1LabelSelector } from "@utils/k8s-types";
+import { V2MetricIdentifier } from "@utils/k8s-types";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const MetricIdentifierDetails = ({ resourceData }: { resourceData: V2MetricIdentifier }): JSX.Element => {

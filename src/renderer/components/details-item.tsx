@@ -1,16 +1,15 @@
 import { useState } from "react"
 import { NamespaceResourceLink } from "./cluster/namespace/resource-link"
 import helpObjects from "@help/index"
-import { HelpObject } from "@help/types"
-import { HelpButton } from "./help-button"
 
 interface DetailsItemProps {
   label: string
-  help?: HelpObject
   children: React.ReactNode
+  help?: any
+  className?: string
 }
 
-export const DetailsItem = ({ label, help, children }: DetailsItemProps): JSX.Element => {
+export const DetailsItem = ({ label, children }: DetailsItemProps): JSX.Element => {
   return (
     <div className="">
       <dt className="text-xs leading-6 text-neutral-400 uppercase tracking-wider font-semibold">{label}</dt>

@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1LimitRangeSpec, V1LimitRangeItem } from "@utils/k8s-types";
+import { V1LimitRangeSpec } from "@utils/k8s-types";
 import { LimitRangeItemDetails } from "../V1LimitRangeItem/details";
 
 export const LimitRangeSpecDetails = ({ resourceData }: { resourceData: V1LimitRangeSpec }): JSX.Element => {

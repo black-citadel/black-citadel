@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V2ContainerResourceMetricSource, V2MetricTarget } from "@utils/k8s-types";
+import { V2ContainerResourceMetricSource } from "@utils/k8s-types";
 import { MetricTargetDetails } from "../V2MetricTarget/details";
 
 export const ContainerResourceMetricSourceDetails = ({ resourceData }: { resourceData: V2ContainerResourceMetricSource }): JSX.Element => {

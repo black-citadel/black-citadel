@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V1ScopedResourceSelectorRequirement } from "@utils/k8s-types";
 
 export const ScopedResourceSelectorRequirementDetails = ({ resourceData }: { resourceData: V1ScopedResourceSelectorRequirement }): JSX.Element => {

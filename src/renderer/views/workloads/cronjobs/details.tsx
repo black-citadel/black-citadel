@@ -10,18 +10,16 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceTabs, Resources, ResourceAction } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsItem } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { CronJobBadge } from '@components/workloads/cronjob/badge';
-import { JobTemplate } from '@components/workloads/cronjob/job-template';
-import { MetadataDetails } from '@components/metadata';
 import { Heading } from '@components/base/heading';
 import { JobList } from '@components/workloads/job/table';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
 import { ResourceActions } from '@components/resources/ResourceActions';
 import { Container } from '@components/base/container';
+import { CronJobDetails } from '@components/gen/V1CronJob/details';
 
 export const CronJobsDetailsView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView()
@@ -119,59 +117,8 @@ export const CronJobsDetailsView = (): JSX.Element => {
       </DetailsHeader>
 
       {activeTab === ResourceTabs.Details && cronJob && (
-        <div className='m-2'>
-          <Container title="Configuration">
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsItem label="Schedule">
-                {cronJob.spec.schedule}
-              </DetailsItem>
-              <DetailsItem label="Suspend">
-                {cronJob.spec.suspend ? 'Yes' : 'No'}
-              </DetailsItem>
-              <DetailsItem label="Concurrency Policy">
-                {cronJob.spec.concurrencyPolicy || 'Allow'}
-              </DetailsItem>
-              <DetailsItem label="Starting Deadline Seconds">
-                {cronJob.spec.startingDeadlineSeconds || 'Not set'}
-              </DetailsItem>
-              <DetailsItem label="Successful Jobs History Limit">
-                {cronJob.spec.successfulJobsHistoryLimit || 3}
-              </DetailsItem>
-              <DetailsItem label="Failed Jobs History Limit">
-                {cronJob.spec.failedJobsHistoryLimit || 1}
-              </DetailsItem>
-            </div>
-          </Container>
-
-          <Container title="Status">
-            <div className="grid grid-cols-3 gap-4">
-              <DetailsItem label="Active Jobs">
-                {cronJob.status?.active?.length || 0}
-              </DetailsItem>
-              <DetailsItem label="Last Schedule Time">
-                {cronJob.status?.lastScheduleTime ? new Date(cronJob.status.lastScheduleTime).toLocaleString() : 'Never'}
-              </DetailsItem>
-              <DetailsItem label="Last Successful Time">
-                {cronJob.status?.lastSuccessfulTime ? new Date(cronJob.status.lastSuccessfulTime).toLocaleString() : 'Never'}
-              </DetailsItem>
-            </div>
-            {cronJob.status?.active && cronJob.status.active.length > 0 && (
-              <div className="mt-4">
-                <h4 className="font-semibold mb-2">Active Jobs</h4>
-                <div className="space-y-1">
-                  {cronJob.status.active.map((jobRef, index) => (
-                    <div key={index} className="text-sm">
-                      {jobRef.name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </Container>
-
-          <Container title="Job Template">
-            <JobTemplate template={cronJob.spec.jobTemplate} />
-          </Container>
+        <>
+          <CronJobDetails resourceData={cronJob} />
 
           <Container title='Job History'>
             {jobs && jobs.items.length > 0 ? (
@@ -182,9 +129,7 @@ export const CronJobsDetailsView = (): JSX.Element => {
               </div>
             )}
           </Container>
-
-          <MetadataDetails metadata={cronJob.metadata} />
-        </div>
+        </>
       )}
 
       {activeTab === ResourceTabs.Logs && cronJob && pods && (

@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1Volume, V1AWSElasticBlockStoreVolumeSource, V1AzureDiskVolumeSource, V1AzureFileVolumeSource, V1CephFSVolumeSource, V1CinderVolumeSource, V1ConfigMapVolumeSource, V1CSIVolumeSource, V1DownwardAPIVolumeSource, V1EmptyDirVolumeSource, V1EphemeralVolumeSource, V1FCVolumeSource, V1FlexVolumeSource, V1FlockerVolumeSource, V1GCEPersistentDiskVolumeSource, V1GitRepoVolumeSource, V1GlusterfsVolumeSource, V1HostPathVolumeSource, V1ImageVolumeSource, V1ISCSIVolumeSource, V1NFSVolumeSource, V1PersistentVolumeClaimVolumeSource, V1PhotonPersistentDiskVolumeSource, V1PortworxVolumeSource, V1ProjectedVolumeSource, V1QuobyteVolumeSource, V1RBDVolumeSource, V1ScaleIOVolumeSource, V1SecretVolumeSource, V1StorageOSVolumeSource, V1VsphereVirtualDiskVolumeSource } from "@utils/k8s-types";
+import { V1Volume } from "@utils/k8s-types";
 import { AWSElasticBlockStoreVolumeSourceDetails } from "../V1AWSElasticBlockStoreVolumeSource/details";
 import { AzureDiskVolumeSourceDetails } from "../V1AzureDiskVolumeSource/details";
 import { AzureFileVolumeSourceDetails } from "../V1AzureFileVolumeSource/details";
@@ -41,7 +40,7 @@ export const VolumeDetails = ({ resourceData }: { resourceData: V1Volume }): JSX
         // Check simple properties
         checks.push([resourceData.name].some(v => v !== undefined && v !== null));
         // Check k8s type properties
-        checks.push([resourceData.awsElasticBlockStore, resourceData.azureDisk, resourceData.azureFile, resourceData.cephfs, resourceData.cinder, resourceData.configMap, resourceData.csi, resourceData.downwardAPI, resourceData.emptyDir, resourceData.ephemeral, resourceData.fc, resourceData.flexVolume, resourceData.flocker, resourceData.gcePersistentDisk, resourceData.gitRepo, resourceData.glusterfs, resourceData.hostPath, resourceData.image, resourceData.iscsi, resourceData.nfs, resourceData.persistentVolumeClaim, resourceData.photonPersistentDisk, resourceData.portworxVolume, resourceData.projected, resourceData.quobyte, resourceData.rbd, resourceData.scaleIO, resourceData.secret, resourceData.storageos, resourceData.vsphereVolume].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.awsElasticBlockStore, resourceData.azureDisk, resourceData.azureFile, resourceData.cephfs, resourceData.cinder, resourceData.configMap, resourceData.csi, resourceData.downwardAPI, resourceData.emptyDir, resourceData.ephemeral, resourceData.fc, resourceData.flexVolume, resourceData.flocker, resourceData.gcePersistentDisk, resourceData.gitRepo, resourceData.glusterfs, resourceData.hostPath, resourceData.iscsi, resourceData.nfs, resourceData.persistentVolumeClaim, resourceData.photonPersistentDisk, resourceData.portworxVolume, resourceData.projected, resourceData.quobyte, resourceData.rbd, resourceData.scaleIO, resourceData.secret, resourceData.storageos, resourceData.vsphereVolume].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
     })();
 
@@ -158,12 +157,6 @@ export const VolumeDetails = ({ resourceData }: { resourceData: V1Volume }): JSX
             {resourceData.hostPath && (
                 <Container title="Host Path">
                     <HostPathVolumeSourceDetails resourceData={ resourceData.hostPath } />
-                </Container>
-            )}
-
-            {resourceData.image && (
-                <Container title="Image">
-                    <ImageVolumeSourceDetails resourceData={ resourceData.image } />
                 </Container>
             )}
 

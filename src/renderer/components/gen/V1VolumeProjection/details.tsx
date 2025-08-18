@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1VolumeProjection, V1ClusterTrustBundleProjection, V1ConfigMapProjection, V1DownwardAPIProjection, V1SecretProjection, V1ServiceAccountTokenProjection } from "@utils/k8s-types";
+import { V1VolumeProjection } from "@utils/k8s-types";
 import { ClusterTrustBundleProjectionDetails } from "../V1ClusterTrustBundleProjection/details";
 import { ConfigMapProjectionDetails } from "../V1ConfigMapProjection/details";
 import { DownwardAPIProjectionDetails } from "../V1DownwardAPIProjection/details";

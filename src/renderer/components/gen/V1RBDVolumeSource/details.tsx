@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1RBDVolumeSource, V1LocalObjectReference } from "@utils/k8s-types";
+import { V1RBDVolumeSource } from "@utils/k8s-types";
 import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
 
 export const RBDVolumeSourceDetails = ({ resourceData }: { resourceData: V1RBDVolumeSource }): JSX.Element => {

@@ -83,7 +83,7 @@ export interface ElectronAPI {
   readNamespacedPodDisruptionBudget: (name: string, namespace: string) => Promise<k8s.V1PodDisruptionBudget>;
   readNamespacedIngress: (name: string, namespace: string) => Promise<k8s.V1Ingress>;
   readIngressClass: (name: string) => Promise<k8s.V1IngressClass>;
-  readNamespacedEndpoints: (name: string, namespace: string) => Promise<k8s.V1Endpoint>;
+  readNamespacedEndpoints: (name: string, namespace: string) => Promise<k8s.V1Endpoints>;
   readNamespacedEndpointSlice: (name: string, namespace: string) => Promise<k8s.V1EndpointSlice>;
   readNamespacedNetworkPolicy: (name: string, namespace: string) => Promise<k8s.V1NetworkPolicy>;
   readNamespacedCronJob: (name: string, namespace: string) => Promise<k8s.V1CronJob>;
@@ -91,7 +91,9 @@ export interface ElectronAPI {
   readNamespacedDeployment: (name: string, namespace: string) => Promise<k8s.V1Deployment>;
   patchNamespacedDeployment: (name: string, namespace: string, body: any) => Promise<k8s.V1Deployment>;
   readNamespacedJob: (name: string, namespace: string) => Promise<k8s.V1Job>;
+  patchNamespacedJob: (name: string, namespace: string, body: any) => Promise<k8s.V1Job>;
   readNamespacedPod: (name: string, namespace: string) => Promise<k8s.V1Pod>;
+  patchNamespacedPod: (name: string, namespace: string, body: any) => Promise<k8s.V1Pod>;
   readNamespacedReplicaSet: (name: string, namespace: string) => Promise<k8s.V1ReplicaSet>;
   readNamespacedStatefulSet: (name: string, namespace: string) => Promise<k8s.V1StatefulSet>;
   readMutatingWebhookConfiguration: (name: string) => Promise<k8s.V1MutatingWebhookConfiguration>;
@@ -142,6 +144,8 @@ export interface ElectronAPI {
   deletePriorityClass: (name: string) => Promise<void>;
   deleteRuntimeClass: (name: string) => Promise<void>;
   deleteIngressClass: (name: string) => Promise<void>;
+  deleteCSIDriver: (name: string) => Promise<void>;
+  deleteVolumeAttachment: (name: string) => Promise<void>;
   // Custom Resource Definitions
   listCustomResourceDefinition: () => Promise<k8s.V1CustomResourceDefinitionList>;
   readCustomResourceDefinition: (name: string) => Promise<k8s.V1CustomResourceDefinition>;
@@ -259,7 +263,9 @@ try {
     readNamespacedDeployment: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedDeployment', name, namespace),
     patchNamespacedDeployment: (name: string, namespace: string, body: any) => ipcRenderer.invoke('patchNamespacedDeployment', name, namespace, body),
     readNamespacedJob: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedJob', name, namespace),
+    patchNamespacedJob: (name: string, namespace: string, body: any) => ipcRenderer.invoke('patchNamespacedJob', name, namespace, body),
     readNamespacedPod: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedPod', name, namespace),
+    patchNamespacedPod: (name: string, namespace: string, body: any) => ipcRenderer.invoke('patchNamespacedPod', name, namespace, body),
     readNamespacedReplicaSet: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedReplicaSet', name, namespace),
     readNamespacedStatefulSet: (name: string, namespace: string) => ipcRenderer.invoke('readNamespacedStatefulSet', name, namespace),
     readMutatingWebhookConfiguration: (name: string) => ipcRenderer.invoke('readMutatingWebhookConfiguration', name),
@@ -311,6 +317,8 @@ try {
     deletePriorityClass: (name: string) => ipcRenderer.invoke('deletePriorityClass', name),
     deleteRuntimeClass: (name: string) => ipcRenderer.invoke('deleteRuntimeClass', name),
     deleteIngressClass: (name: string) => ipcRenderer.invoke('deleteIngressClass', name),
+    deleteCSIDriver: (name: string) => ipcRenderer.invoke('deleteCSIDriver', name),
+    deleteVolumeAttachment: (name: string) => ipcRenderer.invoke('deleteVolumeAttachment', name),
     // Custom Resource Definitions
     listCustomResourceDefinition: () => ipcRenderer.invoke('listCustomResourceDefinition'),
     readCustomResourceDefinition: (name: string) => ipcRenderer.invoke('readCustomResourceDefinition', name),

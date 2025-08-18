@@ -3,28 +3,16 @@ import { Navbar, NavbarItem, NavbarSection } from '@components/base/navbar'
 import { useView } from '@context/viewProvider'
 import { ResourceAction, Resources, ResourceTabs } from "@utils/enums";
 import { useEffect, useState } from "react";
-import { DetailsItem, } from '@components/details-item';
 import { Editor } from '@components/editor';
 import { dump } from 'js-yaml';
 import { DetailsHeader } from '@components/details-header';
 import { PodBadge } from '@components/workloads/pod/badge';
-import { MetadataDetails } from '@components/metadata';
-import { Heading, Subheading } from '@components/base/heading';
-import { Description, Field, Label } from '@components/base/fieldset';
-import { HelpButton } from '@components/help-button';
-import helpObjects from '@help/index';
+import { Heading } from '@components/base/heading';
 import { WorkloadLogs } from '@components/workloads/workload-logs';
-import { ContainerResources } from '@components/base/container-resources';
-import { Badge } from '@protoku/design-system';
 import { PortForwardDialog } from '@components/tools/port-forward/dialog';
 import { TerminalTab } from '@components/tools/terminal/terminal-tab';
 import { PortOption, PortForwardRequest } from '@utils/types';
 import { ResourceActions } from '@components/resources/ResourceActions';
-import { NodeResourceLink } from '@components/cluster/node/resource-link';
-import { Container } from '@components/base/container';
-import { PanelGrid } from '@components/layout/panel';
-import { formatPodStatus } from '@utils/helpers';
-import { ConditionsTable } from '@components/base/conditions-table';
 import { PodDetails } from '@components/gen/V1Pod/details';
 
 export const PodsDetailsView = (): JSX.Element => {
@@ -148,174 +136,7 @@ export const PodsDetailsView = (): JSX.Element => {
 
 
 
-      {activeTab === ResourceTabs.Details && pod && (
-
-        
-
-        <div className='m-2'>
-<PodDetails resourceData={pod} />
-          <Container title="Status">
-            <div className="grid grid-cols-5 gap-4">
-              <DetailsItem label="Phase">
-                {formatPodStatus(pod.status)}
-              </DetailsItem>
-              <DetailsItem label="Pod IP">
-                {pod.status.podIP}
-              </DetailsItem>
-              <DetailsItem label="Host IP">
-                {pod.status.hostIP}
-              </DetailsItem>
-              <DetailsItem label="Start Time">
-                {pod.status.startTime?.toLocaleString()}
-              </DetailsItem>
-              <DetailsItem label="QoS Class">
-                {pod.status.qosClass}
-              </DetailsItem>
-            </div>
-          </Container>
-
-          {pod.status.conditions && <ConditionsTable conditions={pod.status.conditions} />}
-
-
-          <Container title='Configuration'>
-          <div className="grid grid-cols-5 gap-4">
-            <DetailsItem label="Node">
-              {pod.spec.nodeName && <NodeResourceLink name={pod.spec.nodeName} />}
-            </DetailsItem>
-            <DetailsItem label="Service Account">
-              {pod.spec.serviceAccountName}
-            </DetailsItem>
-            <DetailsItem label="Restart Policy">
-              {pod.spec.restartPolicy}
-            </DetailsItem>
-            <DetailsItem label="Node Selector">
-              {Object.entries(pod.spec.nodeSelector || {}).map(([key, value]) => (
-                <div key={key}>{key}: {value}</div>
-              ))}
-            </DetailsItem>
-            <DetailsItem label="Tolerations">
-              {pod.spec.tolerations?.map((toleration, index) => (
-                <div key={index}>
-                  {toleration.key}: {toleration.operator} {toleration.value}
-                </div>
-              ))}
-            </DetailsItem>
-          </div>
-          </Container>
-
-
-
-          <Container title="Containers">
-          <div className="space-y-4">
-            {pod.spec.containers.map((container, index) => {
-              const containerStatus = pod.status?.containerStatuses?.find(
-                status => status.name === container.name
-              );
-
-              return (
-                <div key={index} className="border border-neutral-800 rounded-md p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-sm font-medium">{container.name}</h4>
-                    {containerStatus && (
-                      <Badge variant={containerStatus.ready ? 'green' : 'red'}>
-                        {containerStatus.ready ? 'Ready' : 'Not Ready'}
-                      </Badge>
-                    )}
-                  </div>
-
-                  <div className="space-y-2 mb-4">
-                    <DetailsItem label="Image">
-                      <span className="text-sm">{container.image}</span>
-                    </DetailsItem>
-
-                    {container.ports && container.ports.length > 0 && (
-                      <DetailsItem label="Ports">
-                        <span className="text-sm">
-                          {container.ports.map(port => `${port.containerPort}/${port.protocol || 'TCP'}`).join(', ')}
-                        </span>
-                      </DetailsItem>
-                    )}
-
-                    {containerStatus && (
-                      <>
-                        <DetailsItem label="Container ID">
-                          <span className="text-sm text-zinc-500">{containerStatus.containerID || 'N/A'}</span>
-                        </DetailsItem>
-                        <DetailsItem label="Restart Count">
-                          <span className="text-sm">{containerStatus.restartCount}</span>
-                        </DetailsItem>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Resource Usage */}
-                  <div className="mt-4">
-                    <h5 className="text-sm font-medium mb-2">Resources</h5>
-                    <ContainerResources
-                      container={container}
-                      containerStatus={containerStatus}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          </Container>
-
-          {/* Init Containers Section (if any) */}
-          {pod.spec.initContainers && pod.spec.initContainers.length > 0 && (
-            <>
-              <Container title="Init Containers">
-              <div className="space-y-4">
-                {pod.spec.initContainers.map((container, index) => {
-                  const containerStatus = pod.status?.initContainerStatuses?.find(
-                    status => status.name === container.name
-                  );
-
-                  return (
-                    <div key={index} className="border border-neutral-800 rounded-md p-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-sm font-medium">{container.name}</h4>
-                        {containerStatus && (
-                          <Badge variant={containerStatus.ready ? 'green' : 'gray'}>
-                            {containerStatus.ready ? 'Complete' : 'Pending'}
-                          </Badge>
-                        )}
-                      </div>
-
-                      <div className="space-y-2 mb-4">
-                        <DetailsItem label="Image">
-                          <span className="text-sm">{container.image}</span>
-                        </DetailsItem>
-
-                        {containerStatus && (
-                          <DetailsItem label="Restart Count">
-                            <span className="text-sm">{containerStatus.restartCount}</span>
-                          </DetailsItem>
-                        )}
-                      </div>
-
-                      {/* Resource Usage */}
-                      <div className="mt-4">
-                        <h5 className="text-sm font-medium mb-2">Resources</h5>
-                        <ContainerResources
-                          container={container}
-                          containerStatus={containerStatus}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              </Container>
-            </>
-          )}
-
-          <MetadataDetails metadata={pod.metadata} />
-
-        </div>
-      )}
-
+      {activeTab === ResourceTabs.Details && pod && <PodDetails resourceData={pod} />}
 
       {activeTab === ResourceTabs.Logs && pod && (
         <div className='m-2'>

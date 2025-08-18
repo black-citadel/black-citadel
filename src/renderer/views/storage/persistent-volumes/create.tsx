@@ -5,8 +5,8 @@ import { CreateHeader } from '@components/create-header';
 import { Button } from '@protoku/design-system';
 import { ResourceAction, Resources } from '@utils/enums';
 import { CodePanel } from '@components/code';
-import { FieldLabels, Label as FieldLabel } from '@components/form/field-labels';
-import { FieldAnnotations, Annotation as FieldAnnotation } from '@components/form/field-annotations';
+import { Label as FieldLabel } from '@components/form/field-labels';
+import { Annotation as FieldAnnotation } from '@components/form/field-annotations';
 import { persistentVolumeTemplate } from '@templates/persistentvolume.yaml';
 import { dump } from 'js-yaml';
 import { PersistentVolumeForm } from './_form';
@@ -244,7 +244,7 @@ export const PersistentVolumesCreateView = (): JSX.Element => {
           reclaimPolicy={reclaimPolicy}
           setReclaimPolicy={setReclaimPolicy}
           volumeType={volumeType}
-          setVolumeType={setVolumeType}
+          setVolumeType={(value: string) => setVolumeType(value as 'hostPath' | 'nfs' | 'local' | 'awsElasticBlockStore' | 'gcePersistentDisk' | 'azureDisk')}
           hostPath={hostPath}
           setHostPath={setHostPath}
           hostPathType={hostPathType}

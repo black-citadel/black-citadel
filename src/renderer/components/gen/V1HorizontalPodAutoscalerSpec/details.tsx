@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1HorizontalPodAutoscalerSpec, V1CrossVersionObjectReference } from "@utils/k8s-types";
+import { V1HorizontalPodAutoscalerSpec } from "@utils/k8s-types";
 import { CrossVersionObjectReferenceDetails } from "../V1CrossVersionObjectReference/details";
 
 export const HorizontalPodAutoscalerSpecDetails = ({ resourceData }: { resourceData: V1HorizontalPodAutoscalerSpec }): JSX.Element => {

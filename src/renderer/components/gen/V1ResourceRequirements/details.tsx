@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ResourceRequirements, V1ResourceClaim } from "@utils/k8s-types";
+import { V1ResourceRequirements } from "@utils/k8s-types";
 import { ResourceClaimDetails } from "../V1ResourceClaim/details";
 
 export const ResourceRequirementsDetails = ({ resourceData }: { resourceData: V1ResourceRequirements }): JSX.Element => {

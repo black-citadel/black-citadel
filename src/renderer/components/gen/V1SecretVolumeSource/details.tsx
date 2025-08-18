@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1SecretVolumeSource, V1KeyToPath } from "@utils/k8s-types";
+import { V1SecretVolumeSource } from "@utils/k8s-types";
 import { KeyToPathDetails } from "../V1KeyToPath/details";
 
 export const SecretVolumeSourceDetails = ({ resourceData }: { resourceData: V1SecretVolumeSource }): JSX.Element => {

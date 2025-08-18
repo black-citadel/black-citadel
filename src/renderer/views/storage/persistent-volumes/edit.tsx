@@ -9,7 +9,7 @@ import { persistentVolumeTemplate } from '@templates/persistentvolume.yaml';
 import { dump } from 'js-yaml';
 import { PersistentVolumeForm } from './_form';
 import { V1PersistentVolume } from '@utils/k8s-types';
-import { FieldLabel } from '@components/form/field-labels';
+import { Label } from '@components/form/field-labels';
 import { Annotation as FieldAnnotation } from '@components/form/field-annotations';
 
 export const PersistentVolumesEditView = (): JSX.Element => {
@@ -19,7 +19,7 @@ export const PersistentVolumesEditView = (): JSX.Element => {
   const [original, setOriginal] = useState<V1PersistentVolume | null>(null);
   
   const [name, setName] = useState<string>('');
-  const [labels, setLabels] = useState<FieldLabel[]>([{ key: '', value: '' }]);
+  const [labels, setLabels] = useState<Label[]>([{ key: '', value: '' }]);
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
   const [capacity, setCapacity] = useState<string>('10Gi');
   const [accessModes, setAccessModes] = useState<string[]>(['ReadWriteOnce']);
@@ -341,7 +341,7 @@ export const PersistentVolumesEditView = (): JSX.Element => {
           reclaimPolicy={reclaimPolicy}
           setReclaimPolicy={setReclaimPolicy}
           volumeType={volumeType}
-          setVolumeType={setVolumeType}
+          setVolumeType={(value: string) => setVolumeType(value as 'hostPath' | 'nfs' | 'local' | 'awsElasticBlockStore' | 'gcePersistentDisk' | 'azureDisk')}
           hostPath={hostPath}
           setHostPath={setHostPath}
           hostPathType={hostPathType}

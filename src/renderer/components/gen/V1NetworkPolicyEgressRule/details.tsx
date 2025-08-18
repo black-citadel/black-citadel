@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1NetworkPolicyEgressRule, V1NetworkPolicyPort, V1NetworkPolicyPeer } from "@utils/k8s-types";
+import { V1NetworkPolicyEgressRule } from "@utils/k8s-types";
 import { NetworkPolicyPortDetails } from "../V1NetworkPolicyPort/details";
 import { NetworkPolicyPeerDetails } from "../V1NetworkPolicyPeer/details";
 

@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1PodStatus, V1ContainerStatus, V1HostIP, V1PodIP, V1PodResourceClaimStatus } from "@utils/k8s-types";
+import { V1PodStatus } from "@utils/k8s-types";
 import { ConditionsTable } from "@components/base/conditions-table";
 import { ContainerStatusDetails } from "../V1ContainerStatus/details";
 import { HostIPDetails } from "../V1HostIP/details";
@@ -14,7 +13,7 @@ export const PodStatusDetails = ({ resourceData }: { resourceData: V1PodStatus }
     const hasContent = (() => {
         const checks = [];
         // Check simple properties
-        checks.push([resourceData.hostIP, resourceData.message, resourceData.nominatedNodeName, resourceData.observedGeneration, resourceData.phase, resourceData.podIP, resourceData.qosClass, resourceData.reason, resourceData.resize].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.hostIP, resourceData.message, resourceData.nominatedNodeName, resourceData.phase, resourceData.podIP, resourceData.qosClass, resourceData.reason, resourceData.resize].some(v => v !== undefined && v !== null));
         // Check k8s type properties
         checks.push([resourceData.conditions, resourceData.containerStatuses, resourceData.ephemeralContainerStatuses, resourceData.hostIPs, resourceData.initContainerStatuses, resourceData.podIPs, resourceData.resourceClaimStatuses].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
@@ -32,7 +31,6 @@ export const PodStatusDetails = ({ resourceData }: { resourceData: V1PodStatus }
                     { label: "Host IP", value: resourceData.hostIP || '-' },
                     { label: "Message", value: resourceData.message || '-' },
                     { label: "Nominated Node Name", value: resourceData.nominatedNodeName || '-' },
-                    { label: "Observed Generation", value: resourceData.observedGeneration || '-' },
                     { label: "Phase", value: resourceData.phase || '-' },
                     { label: "Pod IP", value: resourceData.podIP || '-' },
                     { label: "Qos Class", value: resourceData.qosClass || '-' },

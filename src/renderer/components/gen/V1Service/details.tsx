@@ -1,7 +1,6 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1Service, V1ServiceSpec, V1ServiceStatus } from "@utils/k8s-types";
+import { V1Service } from "@utils/k8s-types";
 import { ServiceSpecDetails } from "../V1ServiceSpec/details";
 import { ServiceStatusDetails } from "../V1ServiceStatus/details";
 

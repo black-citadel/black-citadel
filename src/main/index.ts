@@ -453,8 +453,7 @@ ipcMain.handle('drainNode', async (event, name, options = {}) => {
     ignoreDaemonsets = true,
     deleteEmptyDirData = false,
     force = false,
-    gracePeriodSeconds = 30,
-    timeout = 300 // 5 minutes default
+    gracePeriodSeconds = 30
   } = options;
 
   try {
@@ -587,6 +586,11 @@ ipcMain.handle('readNamespacedDeployment', async (event, name, namespace) => (aw
 ipcMain.handle('deleteNamespacedDeployment', async (event, name, namespace) => (await k8sAppsV1Api.deleteNamespacedDeployment(name, namespace)).body);
 ipcMain.handle('patchNamespacedDeployment', async (event, name, namespace, body) => (await k8sAppsV1Api.patchNamespacedDeployment(name, namespace, body, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/strategic-merge-patch+json' } })).body);
 
+// Jobs patch handler
+ipcMain.handle('patchNamespacedJob', async (event, name, namespace, body) => (await k8sBatchV1Api.patchNamespacedJob(name, namespace, body, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/strategic-merge-patch+json' } })).body);
+
+// Pods patch handler
+ipcMain.handle('patchNamespacedPod', async (event, name, namespace, body) => (await k8sCoreV1Api.patchNamespacedPod(name, namespace, body, undefined, undefined, undefined, undefined, undefined, { headers: { 'Content-Type': 'application/strategic-merge-patch+json' } })).body);
 
 // ReplicaSets
 ipcMain.handle('listReplicaSetForAllNamespaces', async () => {
@@ -787,6 +791,8 @@ ipcMain.handle('readCSIDriver', async (event, name) => (await k8sStorageV1Api.re
 ipcMain.handle('readCSINode', async (event, name) => (await k8sStorageV1Api.readCSINode(name)).body);
 ipcMain.handle('readStorageClass', async (event, name) => (await k8sStorageV1Api.readStorageClass(name)).body);
 ipcMain.handle('deleteStorageClass', async (event, name) => (await k8sStorageV1Api.deleteStorageClass(name)).body);
+ipcMain.handle('deleteCSIDriver', async (event, name) => (await k8sStorageV1Api.deleteCSIDriver(name)).body);
+ipcMain.handle('deleteVolumeAttachment', async (event, name) => (await k8sStorageV1Api.deleteVolumeAttachment(name)).body);
 ipcMain.handle('readVolumeAttachment', async (event, name) => (await k8sStorageV1Api.readVolumeAttachment(name)).body);
 
 

@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1FlexVolumeSource, V1LocalObjectReference } from "@utils/k8s-types";
+import { V1FlexVolumeSource } from "@utils/k8s-types";
 import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
 
 export const FlexVolumeSourceDetails = ({ resourceData }: { resourceData: V1FlexVolumeSource }): JSX.Element => {

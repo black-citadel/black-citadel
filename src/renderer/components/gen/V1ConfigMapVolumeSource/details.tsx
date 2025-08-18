@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ConfigMapVolumeSource, V1KeyToPath } from "@utils/k8s-types";
+import { V1ConfigMapVolumeSource } from "@utils/k8s-types";
 import { KeyToPathDetails } from "../V1KeyToPath/details";
 
 export const ConfigMapVolumeSourceDetails = ({ resourceData }: { resourceData: V1ConfigMapVolumeSource }): JSX.Element => {

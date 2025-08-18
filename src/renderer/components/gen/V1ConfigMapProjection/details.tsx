@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ConfigMapProjection, V1KeyToPath } from "@utils/k8s-types";
+import { V1ConfigMapProjection } from "@utils/k8s-types";
 import { KeyToPathDetails } from "../V1KeyToPath/details";
 
 export const ConfigMapProjectionDetails = ({ resourceData }: { resourceData: V1ConfigMapProjection }): JSX.Element => {

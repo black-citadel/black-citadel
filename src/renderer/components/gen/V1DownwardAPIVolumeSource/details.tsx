@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1DownwardAPIVolumeSource, V1DownwardAPIVolumeFile } from "@utils/k8s-types";
+import { V1DownwardAPIVolumeSource } from "@utils/k8s-types";
 import { DownwardAPIVolumeFileDetails } from "../V1DownwardAPIVolumeFile/details";
 
 export const DownwardAPIVolumeSourceDetails = ({ resourceData }: { resourceData: V1DownwardAPIVolumeSource }): JSX.Element => {

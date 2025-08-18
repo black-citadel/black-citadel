@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1DownwardAPIVolumeFile, V1ObjectFieldSelector, V1ResourceFieldSelector } from "@utils/k8s-types";
+import { V1DownwardAPIVolumeFile } from "@utils/k8s-types";
 import { ObjectFieldSelectorDetails } from "../V1ObjectFieldSelector/details";
 import { ResourceFieldSelectorDetails } from "../V1ResourceFieldSelector/details";
 

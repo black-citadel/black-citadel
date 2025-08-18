@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1Probe, V1ExecAction, V1GRPCAction, V1HTTPGetAction, V1TCPSocketAction } from "@utils/k8s-types";
+import { V1Probe } from "@utils/k8s-types";
 import { ExecActionDetails } from "../V1ExecAction/details";
 import { GRPCActionDetails } from "../V1GRPCAction/details";
 import { HTTPGetActionDetails } from "../V1HTTPGetAction/details";

@@ -1,7 +1,6 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1ResourceQuota, V1ResourceQuotaSpec, V1ResourceQuotaStatus } from "@utils/k8s-types";
+import { V1ResourceQuota } from "@utils/k8s-types";
 import { ResourceQuotaSpecDetails } from "../V1ResourceQuotaSpec/details";
 import { ResourceQuotaStatusDetails } from "../V1ResourceQuotaStatus/details";
 

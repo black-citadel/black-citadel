@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1IngressBackend, V1TypedLocalObjectReference, V1IngressServiceBackend } from "@utils/k8s-types";
+import { V1IngressBackend } from "@utils/k8s-types";
 import { TypedLocalObjectReferenceDetails } from "../V1TypedLocalObjectReference/details";
 import { IngressServiceBackendDetails } from "../V1IngressServiceBackend/details";
 

@@ -21,7 +21,6 @@ import { Button } from '@protoku/design-system';
 import { Alert, AlertTitle, AlertDescription, AlertActions, AlertBody } from '@components/base/alert';
 import { Checkbox } from '@components/base/checkbox';
 import { Text } from '@components/base/text';
-import { NodeLabels } from '@components/cluster/node/labels';
 import { NodeTaints } from '@components/cluster/node/taints';
 import { ResourceActions } from '@components/resources/ResourceActions';
 import { Container } from '@components/base/container';

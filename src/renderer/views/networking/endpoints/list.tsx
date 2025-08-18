@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { V1EndpointsList } from '@utils/k8s-types';
-import { Resources } from '@utils/enums';
+import { Resources, ResourceAction } from '@utils/enums';
 import { ListHeader } from '@components/list-header';
 import { EndpointsList } from '@components/networking/endpoint/table';
+import { Button } from '@protoku/design-system';
+import { useView } from '@context/viewProvider';
 
 export const EndpointsListView = (): JSX.Element => {
   const [endpoints, setEndpoints] = useState<V1EndpointsList>();
   const [error, setError] = useState<string | null>(null);
+  const { setViewContext } = useView();
 
   const fetchData = async () => {
     try {
@@ -31,7 +34,11 @@ export const EndpointsListView = (): JSX.Element => {
         resource={Resources.Endpoints} 
         error={error}
         showNamespaceDropdown={true}
-        showCreateButton={true}
+        actions={
+          <Button variant="primary" onClick={() => setViewContext({resource: Resources.Endpoints, action: ResourceAction.Create})}>
+            Create Endpoints
+          </Button>
+        }
       />
       {endpoints && <EndpointsList endpoints={endpoints} />}
     </>

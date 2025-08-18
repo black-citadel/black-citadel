@@ -13,7 +13,6 @@ import helpObjects from '@help/index';
 import { Checkbox } from '@components/base/checkbox';
 import { NamespaceSelect } from '@components/form/field-namespace-select';
 import { CodePanel } from '@components/code';
-import { Button } from '@protoku/design-system';
 
 interface IngressClassFormProps {
   ingressClass?: V1IngressClass | null;
@@ -35,7 +34,7 @@ export const IngressClassForm = ({ ingressClass, onChange, isEdit = false }: Ing
   const [paramNamespace, setParamNamespace] = useState<string>('');
   const [paramScope, setParamScope] = useState<'Cluster' | 'Namespace'>('Cluster');
 
-  const commonControllers = {
+  const commonControllers: Record<string, string> = {
     'k8s.io/ingress-nginx': 'NGINX Ingress Controller',
     'traefik.io/ingress-controller': 'Traefik',
     'projectcontour.io/ingress-controller': 'Contour',

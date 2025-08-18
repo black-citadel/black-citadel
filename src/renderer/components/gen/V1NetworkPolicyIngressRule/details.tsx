@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1NetworkPolicyIngressRule, V1NetworkPolicyPeer, V1NetworkPolicyPort } from "@utils/k8s-types";
+import { V1NetworkPolicyIngressRule } from "@utils/k8s-types";
 import { NetworkPolicyPeerDetails } from "../V1NetworkPolicyPeer/details";
 import { NetworkPolicyPortDetails } from "../V1NetworkPolicyPort/details";
 
@@ -11,7 +9,7 @@ export const NetworkPolicyIngressRuleDetails = ({ resourceData }: { resourceData
     const hasContent = (() => {
         const checks = [];
         // Check k8s type properties
-        checks.push([resourceData._from, resourceData.ports].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.from, resourceData.ports].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
     })();
 
@@ -21,9 +19,9 @@ export const NetworkPolicyIngressRuleDetails = ({ resourceData }: { resourceData
 
     return (
         <>
-            {resourceData._from && (
-                <Container title="_from">
-                    {resourceData._from.map((item, index) => (
+            {resourceData.from && (
+                <Container title="From">
+                    {resourceData.from.map((item: any, index: number) => (
                         <NetworkPolicyPeerDetails key={index} resourceData={item} />
                     ))}
                 </Container>

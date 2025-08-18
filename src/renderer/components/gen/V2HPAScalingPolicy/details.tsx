@@ -1,6 +1,4 @@
 import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
 import { V2HPAScalingPolicy } from "@utils/k8s-types";
 
 export const HPAScalingPolicyDetails = ({ resourceData }: { resourceData: V2HPAScalingPolicy }): JSX.Element => {

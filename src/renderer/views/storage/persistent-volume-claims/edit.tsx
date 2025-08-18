@@ -9,7 +9,7 @@ import { persistentVolumeClaimTemplate } from '@templates/persistentvolumeclaim.
 import { dump } from 'js-yaml';
 import { PersistentVolumeClaimForm } from './_form';
 import { V1PersistentVolumeClaim } from '@utils/k8s-types';
-import { FieldLabel } from '@components/form/field-labels';
+import { Label } from '@components/form/field-labels';
 import { Annotation as FieldAnnotation } from '@components/form/field-annotations';
 
 export const PersistentVolumeClaimsEditView = (): JSX.Element => {
@@ -20,7 +20,7 @@ export const PersistentVolumeClaimsEditView = (): JSX.Element => {
   
   const [name, setName] = useState<string>('');
   const [namespace, setNamespace] = useState<string>('');
-  const [labels, setLabels] = useState<FieldLabel[]>([{ key: '', value: '' }]);
+  const [labels, setLabels] = useState<Label[]>([{ key: '', value: '' }]);
   const [annotations, setAnnotations] = useState<FieldAnnotation[]>([{ key: '', value: '' }]);
   const [accessModes, setAccessModes] = useState<string[]>(['ReadWriteOnce']);
   const [storageClassName, setStorageClassName] = useState<string>('');
@@ -31,7 +31,7 @@ export const PersistentVolumeClaimsEditView = (): JSX.Element => {
   const [dataSourceName, setDataSourceName] = useState<string>('');
   const [dataSourceApiGroup, setDataSourceApiGroup] = useState<string>('');
   const [enableSelector, setEnableSelector] = useState<boolean>(false);
-  const [selectorMatchLabels, setSelectorMatchLabels] = useState<FieldLabel[]>([{ key: '', value: '' }]);
+  const [selectorMatchLabels, setSelectorMatchLabels] = useState<Label[]>([{ key: '', value: '' }]);
 
   useEffect(() => {
     const fetchPVC = async () => {

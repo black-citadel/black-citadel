@@ -14,7 +14,7 @@ import { CustomResourceLink } from '@components/cluster/custom-resource/resource
 import { calculateAge } from '@utils/helpers';
 import { Container } from '@components/base/container';
 import { ResourceActions } from '@components/resources/ResourceActions';
-import { Resources, ResourceAction } from '@utils/enums';
+import { Resources } from '@utils/enums';
 
 enum CustomResourceTabs {
   Details = 'Details',
@@ -23,7 +23,7 @@ enum CustomResourceTabs {
 }
 
 export const CustomResourceDefinitionsDetailsView = (): JSX.Element => {
-    const { viewContext, setViewContext } = useView()
+    const { viewContext, setViewContext: _setViewContext } = useView()
     const [activeTab, setActiveTab] = useState<CustomResourceTabs>(CustomResourceTabs.Details)
     const [crd, setCrd] = useState<V1CustomResourceDefinition>();
     const [customResources, setCustomResources] = useState<any[]>([]);

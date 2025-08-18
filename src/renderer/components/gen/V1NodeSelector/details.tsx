@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1NodeSelector, V1NodeSelectorTerm } from "@utils/k8s-types";
+import { V1NodeSelector } from "@utils/k8s-types";
 import { NodeSelectorTermDetails } from "../V1NodeSelectorTerm/details";
 
 export const NodeSelectorDetails = ({ resourceData }: { resourceData: V1NodeSelector }): JSX.Element => {

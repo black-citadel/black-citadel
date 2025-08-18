@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1LoadBalancerIngress, V1PortStatus } from "@utils/k8s-types";
+import { V1LoadBalancerIngress } from "@utils/k8s-types";
 import { PortStatusDetails } from "../V1PortStatus/details";
 
 export const LoadBalancerIngressDetails = ({ resourceData }: { resourceData: V1LoadBalancerIngress }): JSX.Element => {

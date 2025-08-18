@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1EndpointAddress, V1ObjectReference } from "@utils/k8s-types";
+import { V1EndpointAddress } from "@utils/k8s-types";
 import { ObjectReferenceDetails } from "../V1ObjectReference/details";
 
 export const EndpointAddressDetails = ({ resourceData }: { resourceData: V1EndpointAddress }): JSX.Element => {

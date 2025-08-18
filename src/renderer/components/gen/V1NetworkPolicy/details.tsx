@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1NetworkPolicy, V1NetworkPolicySpec } from "@utils/k8s-types";
+import { V1NetworkPolicy } from "@utils/k8s-types";
 import { NetworkPolicySpecDetails } from "../V1NetworkPolicySpec/details";
 
 export const NetworkPolicyDetails = ({ resourceData }: { resourceData: V1NetworkPolicy }): JSX.Element => {

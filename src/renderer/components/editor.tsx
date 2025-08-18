@@ -20,7 +20,7 @@ export const Editor = ({
 }: EditorProps): JSX.Element => {
   useEffect(() => {
     // Ensure loader is initialized
-    loader.init().then((monaco) => {
+    loader.init().then((_monaco) => {
       console.log('Monaco Editor initialized locally');
     });
   }, []);

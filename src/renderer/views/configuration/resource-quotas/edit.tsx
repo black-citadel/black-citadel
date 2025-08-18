@@ -21,7 +21,7 @@ export const ResourceQuotasEditView = (): JSX.Element => {
   const { viewContext, setViewContext } = useView();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [original, setOriginal] = useState<V1ResourceQuota | null>(null);
+  const [_original, setOriginal] = useState<V1ResourceQuota | null>(null);
   
   const [name, setName] = useState<string>('');
   const [namespace, setNamespace] = useState<string>('');

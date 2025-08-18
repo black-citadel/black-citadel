@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { V1EndpointSlice, V1Endpoint, DiscoveryV1EndpointPort } from '@utils/k8s-types';
+import { V1EndpointSlice } from '@utils/k8s-types';
 import { Field, Label, Description } from '@components/base/fieldset';
 import { Input } from '@components/base/input';
 import { Dropdown } from '@components/base/dropdown';
@@ -15,15 +15,6 @@ import { Button } from '@protoku/design-system';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { Checkbox } from '@components/base/checkbox';
 
-interface EndpointAddress {
-  address: string;
-  hostname?: string;
-  nodeName?: string;
-  zone?: string;
-  targetRefName?: string;
-  targetRefKind?: string;
-  targetRefUID?: string;
-}
 
 interface EndpointPort {
   name?: string;
@@ -238,7 +229,7 @@ export const EndpointSlicesForm = ({ endpointSlice, onChange, isEdit = false }: 
             </Description>
             <Dropdown
               value={addressType}
-              onChange={(value) => setAddressType(value)}
+              onChange={(value) => setAddressType(value as 'IPv4' | 'IPv6' | 'FQDN')}
               disabled={isEdit}
               options={[
                 { value: 'IPv4', label: 'IPv4' },

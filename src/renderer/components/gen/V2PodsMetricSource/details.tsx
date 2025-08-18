@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V2PodsMetricSource, V2MetricIdentifier, V2MetricTarget } from "@utils/k8s-types";
+import { V2PodsMetricSource } from "@utils/k8s-types";
 import { MetricIdentifierDetails } from "../V2MetricIdentifier/details";
 import { MetricTargetDetails } from "../V2MetricTarget/details";
 

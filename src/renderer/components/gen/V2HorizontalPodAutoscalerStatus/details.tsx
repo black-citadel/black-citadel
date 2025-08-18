@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V2HorizontalPodAutoscalerStatus, V2MetricStatus } from "@utils/k8s-types";
+import { V2HorizontalPodAutoscalerStatus } from "@utils/k8s-types";
 import { ConditionsTable } from "@components/base/conditions-table";
 import { MetricStatusDetails } from "../V2MetricStatus/details";
 

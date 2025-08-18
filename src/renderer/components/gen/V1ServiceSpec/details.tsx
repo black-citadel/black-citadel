@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ServiceSpec, V1SessionAffinityConfig } from "@utils/k8s-types";
+import { V1ServiceSpec } from "@utils/k8s-types";
 import { ServicePorts } from "@components/networking/service/service-ports";
 import { SessionAffinityConfigDetails } from "../V1SessionAffinityConfig/details";
 

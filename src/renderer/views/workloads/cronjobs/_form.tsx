@@ -47,7 +47,7 @@ export const CronJobForm = ({
   const [memoryLimit, setMemoryLimit] = useState<string>('');
   const [successfulJobsHistoryLimit, setSuccessfulJobsHistoryLimit] = useState<string>('3');
   const [failedJobsHistoryLimit, setFailedJobsHistoryLimit] = useState<string>('1');
-  const [concurrencyPolicy, setConcurrencyPolicy] = useState<string>('Allow');
+  const [concurrencyPolicy, setConcurrencyPolicy] = useState<'Allow' | 'Forbid' | 'Replace'>('Allow');
 
   useEffect(() => {
     if (cronJob) {
@@ -73,7 +73,7 @@ export const CronJobForm = ({
         setSchedule(cronJob.spec.schedule || '*/5 * * * *');
         setSuccessfulJobsHistoryLimit(cronJob.spec.successfulJobsHistoryLimit?.toString() || '3');
         setFailedJobsHistoryLimit(cronJob.spec.failedJobsHistoryLimit?.toString() || '1');
-        setConcurrencyPolicy(cronJob.spec.concurrencyPolicy || 'Allow');
+        setConcurrencyPolicy(cronJob.spec.concurrencyPolicy as 'Allow' | 'Forbid' | 'Replace' || 'Allow');
         
         // Get container details from the first container
         const container = cronJob.spec.jobTemplate?.spec?.template?.spec?.containers?.[0];
@@ -222,7 +222,7 @@ export const CronJobForm = ({
             <select 
               name="concurrencyPolicy" 
               value={concurrencyPolicy} 
-              onChange={(event) => setConcurrencyPolicy(event.target.value)}
+              onChange={(event) => setConcurrencyPolicy(event.target.value as 'Allow' | 'Forbid' | 'Replace')}
               className="mt-1 block w-full rounded-md border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-800 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             >
               <option value="Allow">Allow</option>

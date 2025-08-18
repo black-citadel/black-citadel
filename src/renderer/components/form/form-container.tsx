@@ -45,7 +45,7 @@ export function FormContainer() {
 							{ value: 'Never', label: 'Never' },
 
 						] as DropdownOption<'IfNotPresent' | 'Always' | 'Never'>[]} value={'IfNotPresent'}
-						onChange={function (value: 'None' | 'ClientIP'): void {
+						onChange={function (_value: 'None' | 'ClientIP'): void {
 							throw new Error('Function not implemented.');
 						}} />
 				</Field>
@@ -57,7 +57,7 @@ export function FormContainer() {
 					<Description>
 						Command to run in the container (optional).
 					</Description>
-					<InputArray values={['sh', '-c', 'while true; do echo sidecar; sleep 30; done']} onChange={function (values: string[]): void {
+					<InputArray values={['sh', '-c', 'while true; do echo sidecar; sleep 30; done']} onChange={function (_values: string[]): void {
 						throw new Error('Function not implemented.');
 					} } />
 				</Field>
@@ -67,7 +67,7 @@ export function FormContainer() {
 					<Description>
 						Arguments to pass to the command (optional).
 					</Description>
-					<InputArray values={[]} onChange={function (values: string[]): void {
+					<InputArray values={[]} onChange={function (_values: string[]): void {
 						throw new Error('Function not implemented.');
 					} } />
 				</Field>

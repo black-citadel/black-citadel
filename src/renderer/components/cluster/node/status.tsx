@@ -1,8 +1,6 @@
 import React from 'react';
 import k8s from '@kubernetes/client-node';
 import { DescriptionList, DescriptionTerm, DescriptionDetails } from '@components/base/description-list';
-import { Badge, Status } from '@protoku/design-system';
-import { calculateAge } from '@utils/helpers';
 import { ResourceUsageBar } from '@components/base/resource-usage-bar';
 import { parseCPU, parseBytes, formatCPU, formatBytes } from '@utils/resource-parser';
 import { Container } from '@components/base/container';

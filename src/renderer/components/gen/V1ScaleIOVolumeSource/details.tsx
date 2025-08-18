@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1ScaleIOVolumeSource, V1LocalObjectReference } from "@utils/k8s-types";
+import { V1ScaleIOVolumeSource } from "@utils/k8s-types";
 import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
 
 export const ScaleIOVolumeSourceDetails = ({ resourceData }: { resourceData: V1ScaleIOVolumeSource }): JSX.Element => {

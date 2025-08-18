@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1SecurityContext, V1AppArmorProfile, V1Capabilities, V1SELinuxOptions, V1SeccompProfile, V1WindowsSecurityContextOptions } from "@utils/k8s-types";
+import { V1SecurityContext } from "@utils/k8s-types";
 import { AppArmorProfileDetails } from "../V1AppArmorProfile/details";
 import { CapabilitiesDetails } from "../V1Capabilities/details";
 import { SELinuxOptionsDetails } from "../V1SELinuxOptions/details";

@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1HTTPGetAction, V1HTTPHeader } from "@utils/k8s-types";
+import { V1HTTPGetAction } from "@utils/k8s-types";
 import { HTTPHeaderDetails } from "../V1HTTPHeader/details";
 
 export const HTTPGetActionDetails = ({ resourceData }: { resourceData: V1HTTPGetAction }): JSX.Element => {

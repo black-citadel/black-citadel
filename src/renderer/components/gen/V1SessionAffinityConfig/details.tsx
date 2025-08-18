@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1SessionAffinityConfig, V1ClientIPConfig } from "@utils/k8s-types";
+import { V1SessionAffinityConfig } from "@utils/k8s-types";
 import { ClientIPConfigDetails } from "../V1ClientIPConfig/details";
 
 export const SessionAffinityConfigDetails = ({ resourceData }: { resourceData: V1SessionAffinityConfig }): JSX.Element => {

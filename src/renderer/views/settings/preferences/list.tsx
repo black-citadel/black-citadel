@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Heading } from '@components/base/heading';
 import { Text } from '@components/base/text';
 import { Toggle } from '@protoku/design-system';
 import { ListHeader } from '@components/list-header';

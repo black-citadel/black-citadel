@@ -1,7 +1,5 @@
-import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1PodAffinity, V1WeightedPodAffinityTerm, V1PodAffinityTerm } from "@utils/k8s-types";
+import { V1PodAffinity } from "@utils/k8s-types";
 import { WeightedPodAffinityTermDetails } from "../V1WeightedPodAffinityTerm/details";
 import { PodAffinityTermDetails } from "../V1PodAffinityTerm/details";
 

@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1IngressServiceBackend, V1ServiceBackendPort } from "@utils/k8s-types";
+import { V1IngressServiceBackend } from "@utils/k8s-types";
 import { ServiceBackendPortDetails } from "../V1ServiceBackendPort/details";
 
 export const IngressServiceBackendDetails = ({ resourceData }: { resourceData: V1IngressServiceBackend }): JSX.Element => {

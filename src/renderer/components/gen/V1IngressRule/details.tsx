@@ -1,7 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { MetadataDetails } from "@components/metadata";
-import { V1IngressRule, V1HTTPIngressRuleValue } from "@utils/k8s-types";
+import { V1IngressRule } from "@utils/k8s-types";
 import { HTTPIngressRuleValueDetails } from "../V1HTTPIngressRuleValue/details";
 
 export const IngressRuleDetails = ({ resourceData }: { resourceData: V1IngressRule }): JSX.Element => {

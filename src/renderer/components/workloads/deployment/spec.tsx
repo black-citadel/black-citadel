@@ -1,5 +1,4 @@
 import k8s = require('@kubernetes/client-node');
-import { Subheading } from '@components/base/heading';
 import { DetailsItem } from '@components/details-item';
 import { Container } from '@components/base/container';
 
