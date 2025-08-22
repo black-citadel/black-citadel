@@ -12,18 +12,45 @@ Black Citadel is a cross-platform Kubernetes GUI desktop application built with 
 # Install dependencies
 npm install
 
-# Run development server
+# Run development server with hot reload
+npm run dev
+
+# Run development build and launch app
 npm start
+
+# Production build only
+npm run build
 
 # Build and package the application
 npm run package
 
 # Create platform-specific distributables
-npm run make
+npm run dist
 
 # Run linting
 npm run lint
+
+# Run type checking
+npm run typecheck
+
+# Run both type checking and linting
+npm run check
 ```
+
+## Build System
+
+The project uses **Electron Builder** for packaging and distribution, with **Webpack** for bundling:
+
+- **Webpack Configurations**: 
+  - `webpack.dev.config.ts` - Development build with source maps and hot reload
+  - `webpack.prod.config.ts` - Production build with optimizations
+- **Build Output**: Built files are output to `dist/` directory
+- **Distribution**: Platform-specific packages are created in `out/` directory
+
+### Supported Platforms
+- **Linux**: .deb, .rpm, .snap packages
+- **Windows**: NSIS installer
+- **macOS**: DMG file (configured, icons needed)
 
 ## Architecture
 
@@ -105,11 +132,12 @@ await window.electronAPI.apply(yamlContent)
 ## Important Conventions
 
 1. **TypeScript Strict Mode**: All code must be type-safe
-2. **Path Aliases**: Use @components, @views, @utils, etc. instead of relative imports
+2. **Path Aliases**: Use @components, @views, @utils, @store, @providers, @types, @templates, @help, @context, @assets instead of relative imports
 3. **Tailwind CSS**: Use utility classes for styling, avoid inline styles
 4. **Component Naming**: Use PascalCase for components, kebab-case for files
 5. **YAML Templates**: Store in `src/renderer/templates/` as TypeScript template strings
 6. **Help Content**: Implement in `src/renderer/help/` following existing pattern
+7. **Assets**: SVG files are handled as React components via @svgr/webpack, images as static resources
 
 ## Testing & Validation
 

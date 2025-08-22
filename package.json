@@ -1,13 +1,18 @@
 {
   "name": "black-citadel",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Kubernetes GUI",
-  "main": ".webpack/main",
+  "main": "dist/main/index.js",
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
+    "start": "npm run build:dev && electron .",
+    "dev": "npm run build:main:dev && concurrently \"npm run dev:renderer\" \"wait-on http://localhost:3000 && WEBPACK_DEV_SERVER=true NODE_ENV=development electron .\"",
+    "dev:renderer": "NODE_ENV=development webpack serve --config webpack.dev.config.ts",
+    "build": "webpack --config webpack.prod.config.ts",
+    "build:dev": "npm run build:main:dev && npm run build:renderer:dev",
+    "build:main:dev": "webpack --config webpack.main.dev.config.ts",
+    "build:renderer:dev": "webpack --config webpack.renderer.dev.config.ts",
+    "package": "npm run build && electron-builder",
+    "dist": "npm run build && electron-builder --publish=never",
     "lint": "eslint --ext .ts,.tsx .",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm run lint"
@@ -19,33 +24,68 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^6.2.1",
-    "@electron-forge/maker-deb": "^6.2.1",
-    "@electron-forge/maker-dmg": "^7.5.0",
-    "@electron-forge/maker-rpm": "^6.2.1",
-    "@electron-forge/maker-squirrel": "^6.2.1",
-    "@electron-forge/maker-zip": "^6.2.1",
-    "@electron-forge/plugin-webpack": "^6.2.1",
-    "@electron-forge/publisher-s3": "^7.5.0",
     "@headlessui/react": "^2.1.9",
     "@nicholmikey/chrome-tools": "^1.3.0",
+    "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "axios": "^1.7.7",
+    "concurrently": "^9.2.0",
     "css-loader": "^6.8.1",
     "electron": "^25.9.8",
+    "electron-builder": "^26.0.12",
     "eslint": "^8.45.0",
     "eslint-plugin-import": "^2.27.5",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
+    "html-webpack-plugin": "^5.6.4",
     "node-loader": "^2.0.0",
     "postcss-loader": "^7.3.3",
+    "postcss-nesting": "^13.0.2",
     "style-loader": "^3.3.3",
     "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
-    "typescript": "~5.1.6"
+    "typescript": "~5.1.6",
+    "wait-on": "^8.0.4",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "build": {
+    "appId": "com.blackcitadel.app",
+    "productName": "Black Citadel",
+    "directories": {
+      "output": "out"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "icon": "icons/mac/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icons/win/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "snap"
+      ],
+      "category": "Development",
+      "icon": "icons/linux",
+      "maintainer": "Jeroen Herczeg <jeroen@herczeg.be>"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.3.1",

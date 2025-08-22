@@ -1,12 +1,13 @@
+import React from 'react'
 import clsx from 'clsx'
-import logoMark from '@assets/logo-mark.svg'
+import LogoMark from '@assets/logo-mark.svg'
 
-export function Logo({ className }: React.ComponentPropsWithoutRef<'img'>) {
+export function Logo({ className, ...props }: React.SVGProps<SVGSVGElement>) {
     return (
-      <img
-        src={logoMark}
-        alt="Black Citadel"
-        className={clsx(className, 'w-16 h-16')}
+      <LogoMark
+        className={clsx('w-16 h-16', className)}
+        aria-label="Black Citadel"
+        {...props}
       />
     )
   }

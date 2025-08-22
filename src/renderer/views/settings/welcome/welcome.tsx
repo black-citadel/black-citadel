@@ -22,10 +22,12 @@ export const WelcomeView = () => {
   const [kubeconfigYaml, setKubeconfigYaml] = useState('');
   const [importError, setImportError] = useState<string | null>(null);
   const [importSuccess, setImportSuccess] = useState(false);
+  const [version, setVersion] = useState<string>('');
   const { setViewContext, setActiveContext } = useView();
 
   useEffect(() => {
     fetchContexts();
+    fetchVersion();
   }, []);
 
   const fetchContexts = async () => {
@@ -38,6 +40,15 @@ export const WelcomeView = () => {
       setCurrentContext(current);
     } catch (error) {
       console.error('Failed to fetch contexts:', error);
+    }
+  };
+
+  const fetchVersion = async () => {
+    try {
+      const appVersion = await window.electronAPI.getVersion();
+      setVersion(appVersion);
+    } catch (error) {
+      console.error('Failed to fetch version:', error);
     }
   };
 
@@ -163,7 +174,7 @@ export const WelcomeView = () => {
 
       {/* Version */}
       <div className="fixed bottom-4 right-4">
-        <Text className="text-gray-500 text-sm">v1.0.3</Text>
+        <Text className="text-gray-500 text-sm">{version && `v${version}`}</Text>
       </div>
 
       {/* Import Dialog */}
