@@ -41,5 +41,5 @@
     }],
     "@typescript-eslint/no-var-requires": "off"
   },
-  "ignorePatterns": ["forge.config.ts", "webpack.*.ts", "webpack.*.js", "*.js", "dist", "out", ".webpack"]
+  "ignorePatterns": ["forge.config.ts", "webpack.*.ts", "webpack.*.js", "*.js", "dist", "out", ".webpack", "tools/"]
 }

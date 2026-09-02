@@ -1,0 +1,27 @@
+resourceName: V2HorizontalPodAutoscalerStatus
+properties:
+  conditions:
+    type: V2HorizontalPodAutoscalerCondition[]
+    optional: true
+    description: conditions is the set of conditions required for this autoscaler to scale its target, and indicates whether or not those conditions are met.
+  currentMetrics:
+    type: V2MetricStatus[]
+    optional: true
+    description: currentMetrics is the last read state of the metrics used by this autoscaler.
+  currentReplicas:
+    type: number
+    optional: true
+    description: currentReplicas is current number of replicas of pods managed by this autoscaler, as last seen by the autoscaler.
+  desiredReplicas:
+    type: number
+    optional: false
+    description: desiredReplicas is the desired number of replicas of pods managed by this autoscaler, as last calculated by the autoscaler.
+  lastScaleTime:
+    type: Date
+    optional: true
+    description: lastScaleTime is the last time the HorizontalPodAutoscaler scaled the number of pods, used by the autoscaler to control how often the number of pods is changed.
+  observedGeneration:
+    type: number
+    optional: true
+    description: observedGeneration is the most recent generation observed by this autoscaler.
+description: HorizontalPodAutoscalerStatus describes the current status of a horizontal pod autoscaler.

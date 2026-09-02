@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1DaemonSetStatus } from "@utils/k8s-types";
+import type { V1DaemonSetStatus } from "@kubernetes/client-node";
 import { DaemonSetConditionDetails } from "../V1DaemonSetCondition/details";
 
 export const DaemonSetStatusDetails = ({ resourceData }: { resourceData: V1DaemonSetStatus }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.collisionCount, resourceData.currentNumberScheduled, resourceData.desiredNumberScheduled, resourceData.numberAvailable, resourceData.numberMisscheduled, resourceData.numberReady, resourceData.numberUnavailable, resourceData.observedGeneration, resourceData.updatedNumberScheduled].some(v => v !== undefined && v !== null));
         // Check k8s type properties

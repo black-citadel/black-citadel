@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1HostPathVolumeSource } from "@utils/k8s-types";
+import type { V1HostPathVolumeSource } from "@kubernetes/client-node";
 
 export const HostPathVolumeSourceDetails = ({ resourceData }: { resourceData: V1HostPathVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.path, resourceData.type].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

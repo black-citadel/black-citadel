@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1VolumeMountStatus } from "@utils/k8s-types";
+import type { V1VolumeMountStatus } from "@kubernetes/client-node";
 
 export const VolumeMountStatusDetails = ({ resourceData }: { resourceData: V1VolumeMountStatus }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.mountPath, resourceData.name, resourceData.recursiveReadOnly].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

@@ -1,0 +1,7 @@
+resourceName: V1LimitRangeSpec
+properties:
+  limits:
+    type: V1LimitRangeItem[]
+    optional: false
+    description: Limits is the list of LimitRangeItem objects that are enforced.
+description: LimitRangeSpec defines a min/max usage limit for resources that match on kind.

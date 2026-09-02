@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1IngressClassSpec } from "@utils/k8s-types";
+import type { V1IngressClassSpec } from "@kubernetes/client-node";
 import { IngressClassParametersReferenceDetails } from "../V1IngressClassParametersReference/details";
 
 export const IngressClassSpecDetails = ({ resourceData }: { resourceData: V1IngressClassSpec }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.controller].some(v => v !== undefined && v !== null));
         // Check k8s type properties

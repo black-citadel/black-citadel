@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1VsphereVirtualDiskVolumeSource } from "@utils/k8s-types";
+import type { V1VsphereVirtualDiskVolumeSource } from "@kubernetes/client-node";
 
 export const VsphereVirtualDiskVolumeSourceDetails = ({ resourceData }: { resourceData: V1VsphereVirtualDiskVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.fsType, resourceData.storagePolicyID, resourceData.storagePolicyName, resourceData.volumePath].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

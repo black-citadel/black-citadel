@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V2MetricStatus } from "@utils/k8s-types";
+import type { V2MetricStatus } from "@kubernetes/client-node";
 import { ContainerResourceMetricStatusDetails } from "../V2ContainerResourceMetricStatus/details";
 import { ExternalMetricStatusDetails } from "../V2ExternalMetricStatus/details";
 import { ObjectMetricStatusDetails } from "../V2ObjectMetricStatus/details";
@@ -11,7 +11,7 @@ export const MetricStatusDetails = ({ resourceData }: { resourceData: V2MetricSt
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.type].some(v => v !== undefined && v !== null));
         // Check k8s type properties

@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1ServiceStatus } from "@utils/k8s-types";
+import type { V1ServiceStatus } from "@kubernetes/client-node";
 import { ConditionsTable } from "@components/base/conditions-table";
 import { LoadBalancerStatusDetails } from "../V1LoadBalancerStatus/details";
 
@@ -7,7 +7,7 @@ export const ServiceStatusDetails = ({ resourceData }: { resourceData: V1Service
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.conditions, resourceData.loadBalancer].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

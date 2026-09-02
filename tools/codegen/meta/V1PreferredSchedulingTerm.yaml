@@ -1,0 +1,10 @@
+resourceName: V1PreferredSchedulingTerm
+properties:
+  preference:
+    type: V1NodeSelectorTerm
+    optional: false
+  weight:
+    type: number
+    optional: false
+    description: Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
+description: An empty preferred scheduling term matches all objects with implicit weight 0 (i.e. it\'s a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).

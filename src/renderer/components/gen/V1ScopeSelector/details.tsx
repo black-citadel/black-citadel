@@ -1,12 +1,12 @@
 import { Container } from "@components/base/container";
-import { V1ScopeSelector } from "@utils/k8s-types";
+import type { V1ScopeSelector } from "@kubernetes/client-node";
 import { ScopedResourceSelectorRequirementDetails } from "../V1ScopedResourceSelectorRequirement/details";
 
 export const ScopeSelectorDetails = ({ resourceData }: { resourceData: V1ScopeSelector }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.matchExpressions].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

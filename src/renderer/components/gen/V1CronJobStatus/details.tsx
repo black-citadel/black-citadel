@@ -1,12 +1,12 @@
 import { Container } from "@components/base/container";
-import { V1CronJobStatus } from "@utils/k8s-types";
+import type { V1CronJobStatus } from "@kubernetes/client-node";
 import { ObjectReferenceDetails } from "../V1ObjectReference/details";
 
 export const CronJobStatusDetails = ({ resourceData }: { resourceData: V1CronJobStatus }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.active].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

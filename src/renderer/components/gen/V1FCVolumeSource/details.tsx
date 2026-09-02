@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1FCVolumeSource } from "@utils/k8s-types";
+import type { V1FCVolumeSource } from "@kubernetes/client-node";
 
 export const FCVolumeSourceDetails = ({ resourceData }: { resourceData: V1FCVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.fsType, resourceData.lun].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

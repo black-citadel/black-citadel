@@ -1,6 +1,6 @@
-import { V1UncountedTerminatedPods } from "@utils/k8s-types";
+import type { V1UncountedTerminatedPods } from "@kubernetes/client-node";
 
-export const UncountedTerminatedPodsDetails = ({ resourceData: _resourceData }: { resourceData: V1UncountedTerminatedPods }): JSX.Element => {
+export const UncountedTerminatedPodsDetails = ({ resourceData }: { resourceData: V1UncountedTerminatedPods }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {

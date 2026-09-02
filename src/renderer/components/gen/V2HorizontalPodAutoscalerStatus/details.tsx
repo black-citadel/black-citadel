@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V2HorizontalPodAutoscalerStatus } from "@utils/k8s-types";
+import type { V2HorizontalPodAutoscalerStatus } from "@kubernetes/client-node";
 import { ConditionsTable } from "@components/base/conditions-table";
 import { MetricStatusDetails } from "../V2MetricStatus/details";
 
@@ -8,7 +8,7 @@ export const HorizontalPodAutoscalerStatusDetails = ({ resourceData }: { resourc
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.currentReplicas, resourceData.desiredReplicas, resourceData.observedGeneration].some(v => v !== undefined && v !== null));
         // Check k8s type properties

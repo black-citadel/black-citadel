@@ -1,0 +1,9 @@
+resourceName: V2ExternalMetricSource
+properties:
+  metric:
+    type: V2MetricIdentifier
+    optional: false
+  target:
+    type: V2MetricTarget
+    optional: false
+description: ExternalMetricSource indicates how to scale on a metric not associated with any Kubernetes object (for example length of queue in cloud messaging service, or QPS from loadbalancer running outside of cluster).

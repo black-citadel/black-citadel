@@ -1,0 +1,9 @@
+resourceName: V2HorizontalPodAutoscalerBehavior
+properties:
+  scaleDown:
+    type: V2HPAScalingRules
+    optional: true
+  scaleUp:
+    type: V2HPAScalingRules
+    optional: true
+description: HorizontalPodAutoscalerBehavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively).

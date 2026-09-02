@@ -1,0 +1,12 @@
+resourceName: V2ObjectMetricSource
+properties:
+  describedObject:
+    type: V2CrossVersionObjectReference
+    optional: false
+  metric:
+    type: V2MetricIdentifier
+    optional: false
+  target:
+    type: V2MetricTarget
+    optional: false
+description: ObjectMetricSource indicates how to scale on a metric describing a kubernetes object (for example, hits-per-second on an Ingress object).

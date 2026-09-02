@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1QuobyteVolumeSource } from "@utils/k8s-types";
+import type { V1QuobyteVolumeSource } from "@kubernetes/client-node";
 
 export const QuobyteVolumeSourceDetails = ({ resourceData }: { resourceData: V1QuobyteVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.group, resourceData.registry, resourceData.tenant, resourceData.user, resourceData.volume].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

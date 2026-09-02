@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V2HorizontalPodAutoscalerSpec } from "@utils/k8s-types";
+import type { V2HorizontalPodAutoscalerSpec } from "@kubernetes/client-node";
 import { HorizontalPodAutoscalerBehaviorDetails } from "../V2HorizontalPodAutoscalerBehavior/details";
 import { MetricSpecDetails } from "../V2MetricSpec/details";
 import { CrossVersionObjectReferenceDetails } from "../V2CrossVersionObjectReference/details";
@@ -9,7 +9,7 @@ export const HorizontalPodAutoscalerSpecDetails = ({ resourceData }: { resourceD
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.maxReplicas, resourceData.minReplicas].some(v => v !== undefined && v !== null));
         // Check k8s type properties

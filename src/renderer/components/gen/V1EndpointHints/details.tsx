@@ -1,13 +1,12 @@
 import { Container } from "@components/base/container";
-import { V1EndpointHints } from "@utils/k8s-types";
-import { ForNodeDetails } from "../V1ForNode/details";
+import type { V1EndpointHints } from "@kubernetes/client-node";
 import { ForZoneDetails } from "../V1ForZone/details";
 
 export const EndpointHintsDetails = ({ resourceData }: { resourceData: V1EndpointHints }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.forZones].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

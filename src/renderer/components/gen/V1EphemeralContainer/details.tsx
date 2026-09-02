@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1EphemeralContainer } from "@utils/k8s-types";
+import type { V1EphemeralContainer } from "@kubernetes/client-node";
 import { EnvVarDetails } from "../V1EnvVar/details";
 import { EnvFromSourceDetails } from "../V1EnvFromSource/details";
 import { LifecycleDetails } from "../V1Lifecycle/details";
@@ -16,7 +16,7 @@ export const EphemeralContainerDetails = ({ resourceData }: { resourceData: V1Ep
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.image, resourceData.imagePullPolicy, resourceData.name, resourceData.restartPolicy, resourceData.targetContainerName, resourceData.terminationMessagePath, resourceData.terminationMessagePolicy, resourceData.workingDir].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

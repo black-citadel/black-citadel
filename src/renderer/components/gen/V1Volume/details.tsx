@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1Volume } from "@utils/k8s-types";
+import type { V1Volume } from "@kubernetes/client-node";
 import { AWSElasticBlockStoreVolumeSourceDetails } from "../V1AWSElasticBlockStoreVolumeSource/details";
 import { AzureDiskVolumeSourceDetails } from "../V1AzureDiskVolumeSource/details";
 import { AzureFileVolumeSourceDetails } from "../V1AzureFileVolumeSource/details";
@@ -18,7 +18,6 @@ import { GCEPersistentDiskVolumeSourceDetails } from "../V1GCEPersistentDiskVolu
 import { GitRepoVolumeSourceDetails } from "../V1GitRepoVolumeSource/details";
 import { GlusterfsVolumeSourceDetails } from "../V1GlusterfsVolumeSource/details";
 import { HostPathVolumeSourceDetails } from "../V1HostPathVolumeSource/details";
-import { ImageVolumeSourceDetails } from "../V1ImageVolumeSource/details";
 import { ISCSIVolumeSourceDetails } from "../V1ISCSIVolumeSource/details";
 import { NFSVolumeSourceDetails } from "../V1NFSVolumeSource/details";
 import { PersistentVolumeClaimVolumeSourceDetails } from "../V1PersistentVolumeClaimVolumeSource/details";
@@ -36,7 +35,7 @@ export const VolumeDetails = ({ resourceData }: { resourceData: V1Volume }): JSX
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.name].some(v => v !== undefined && v !== null));
         // Check k8s type properties

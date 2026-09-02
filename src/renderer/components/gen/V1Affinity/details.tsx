@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1Affinity } from "@utils/k8s-types";
+import type { V1Affinity } from "@kubernetes/client-node";
 import { NodeAffinityDetails } from "../V1NodeAffinity/details";
 import { PodAffinityDetails } from "../V1PodAffinity/details";
 import { PodAntiAffinityDetails } from "../V1PodAntiAffinity/details";
@@ -8,7 +8,7 @@ export const AffinityDetails = ({ resourceData }: { resourceData: V1Affinity }):
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.nodeAffinity, resourceData.podAffinity, resourceData.podAntiAffinity].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

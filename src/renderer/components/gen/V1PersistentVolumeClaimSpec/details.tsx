@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1PersistentVolumeClaimSpec } from "@utils/k8s-types";
+import type { V1PersistentVolumeClaimSpec } from "@kubernetes/client-node";
 import { TypedLocalObjectReferenceDetails } from "../V1TypedLocalObjectReference/details";
 import { TypedObjectReferenceDetails } from "../V1TypedObjectReference/details";
 import { VolumeResourceRequirementsDetails } from "../V1VolumeResourceRequirements/details";
@@ -10,7 +10,7 @@ export const PersistentVolumeClaimSpecDetails = ({ resourceData }: { resourceDat
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.storageClassName, resourceData.volumeAttributesClassName, resourceData.volumeMode, resourceData.volumeName].some(v => v !== undefined && v !== null));
         // Check k8s type properties

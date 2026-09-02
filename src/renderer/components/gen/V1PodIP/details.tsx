@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1PodIP } from "@utils/k8s-types";
+import type { V1PodIP } from "@kubernetes/client-node";
 
 export const PodIPDetails = ({ resourceData }: { resourceData: V1PodIP }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.ip].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
@@ -20,7 +20,7 @@ export const PodIPDetails = ({ resourceData }: { resourceData: V1PodIP }): JSX.E
             <PanelGrid
                 title="Properties"
                 items={[
-                    { label: "Ip", value: resourceData.ip }
+                    { label: "Ip", value: resourceData.ip || '-' }
                 ]}
                 columns={1}
             />

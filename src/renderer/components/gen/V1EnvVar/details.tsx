@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1EnvVar } from "@utils/k8s-types";
+import type { V1EnvVar } from "@kubernetes/client-node";
 import { EnvVarSourceDetails } from "../V1EnvVarSource/details";
 
 export const EnvVarDetails = ({ resourceData }: { resourceData: V1EnvVar }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.name, resourceData.value].some(v => v !== undefined && v !== null));
         // Check k8s type properties

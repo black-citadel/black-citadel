@@ -1,0 +1,12 @@
+resourceName: V1Affinity
+properties:
+  nodeAffinity:
+    type: V1NodeAffinity
+    optional: true
+  podAffinity:
+    type: V1PodAffinity
+    optional: true
+  podAntiAffinity:
+    type: V1PodAntiAffinity
+    optional: true
+description: Affinity is a group of affinity scheduling rules.

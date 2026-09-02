@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1IngressTLS } from "@utils/k8s-types";
+import type { V1IngressTLS } from "@kubernetes/client-node";
 
 export const IngressTLSDetails = ({ resourceData }: { resourceData: V1IngressTLS }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.secretName].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

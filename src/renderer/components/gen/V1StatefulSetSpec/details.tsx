@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1StatefulSetSpec } from "@utils/k8s-types";
+import type { V1StatefulSetSpec } from "@kubernetes/client-node";
 import { StatefulSetOrdinalsDetails } from "../V1StatefulSetOrdinals/details";
 import { StatefulSetPersistentVolumeClaimRetentionPolicyDetails } from "../V1StatefulSetPersistentVolumeClaimRetentionPolicy/details";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
@@ -12,7 +12,7 @@ export const StatefulSetSpecDetails = ({ resourceData }: { resourceData: V1State
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.minReadySeconds, resourceData.podManagementPolicy, resourceData.replicas, resourceData.revisionHistoryLimit, resourceData.serviceName].some(v => v !== undefined && v !== null));
         // Check k8s type properties
@@ -33,7 +33,7 @@ export const StatefulSetSpecDetails = ({ resourceData }: { resourceData: V1State
                     { label: "Pod Management Policy", value: resourceData.podManagementPolicy || '-' },
                     { label: "Replicas", value: resourceData.replicas || '-' },
                     { label: "Revision History Limit", value: resourceData.revisionHistoryLimit || '-' },
-                    { label: "Service Name", value: resourceData.serviceName || '-' }
+                    { label: "Service Name", value: resourceData.serviceName }
                 ]}
                 columns={1}
             />

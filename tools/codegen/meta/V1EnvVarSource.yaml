@@ -1,0 +1,15 @@
+resourceName: V1EnvVarSource
+properties:
+  configMapKeyRef:
+    type: V1ConfigMapKeySelector
+    optional: true
+  fieldRef:
+    type: V1ObjectFieldSelector
+    optional: true
+  resourceFieldRef:
+    type: V1ResourceFieldSelector
+    optional: true
+  secretKeyRef:
+    type: V1SecretKeySelector
+    optional: true
+description: EnvVarSource represents a source for the value of an EnvVar.

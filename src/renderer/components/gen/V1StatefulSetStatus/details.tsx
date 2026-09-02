@@ -1,12 +1,12 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1StatefulSetStatus } from "@utils/k8s-types";
+import type { V1StatefulSetStatus } from "@kubernetes/client-node";
 import { ConditionsTable } from "@components/base/conditions-table";
 
 export const StatefulSetStatusDetails = ({ resourceData }: { resourceData: V1StatefulSetStatus }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.availableReplicas, resourceData.collisionCount, resourceData.currentReplicas, resourceData.currentRevision, resourceData.observedGeneration, resourceData.readyReplicas, resourceData.replicas, resourceData.updateRevision, resourceData.updatedReplicas].some(v => v !== undefined && v !== null));
         // Check k8s type properties

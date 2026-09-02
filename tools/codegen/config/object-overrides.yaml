@@ -1,0 +1,10 @@
+# Object property rendering overrides configuration
+# This file defines custom rendering for specific object/map properties
+
+overrides:
+  # V1Secret data should use SecretData component
+  V1Secret:
+    data:
+      componentName: SecretData
+      propName: data
+      importPath: "@components/configuration/secret/secret-data"

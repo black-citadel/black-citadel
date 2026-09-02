@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1ServiceSpec } from "@utils/k8s-types";
+import type { V1ServiceSpec } from "@kubernetes/client-node";
 import { ServicePorts } from "@components/networking/service/service-ports";
 import { SessionAffinityConfigDetails } from "../V1SessionAffinityConfig/details";
 
@@ -15,7 +15,7 @@ export const ServiceSpecDetails = ({ resourceData }: { resourceData: V1ServiceSp
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(selectorItems.length > 0);
         // Check simple properties

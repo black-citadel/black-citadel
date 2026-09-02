@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1VolumeProjection } from "@utils/k8s-types";
+import type { V1VolumeProjection } from "@kubernetes/client-node";
 import { ClusterTrustBundleProjectionDetails } from "../V1ClusterTrustBundleProjection/details";
 import { ConfigMapProjectionDetails } from "../V1ConfigMapProjection/details";
 import { DownwardAPIProjectionDetails } from "../V1DownwardAPIProjection/details";
@@ -10,7 +10,7 @@ export const VolumeProjectionDetails = ({ resourceData }: { resourceData: V1Volu
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.clusterTrustBundle, resourceData.configMap, resourceData.downwardAPI, resourceData.secret, resourceData.serviceAccountToken].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

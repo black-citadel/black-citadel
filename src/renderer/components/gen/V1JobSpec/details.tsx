@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1JobSpec } from "@utils/k8s-types";
+import type { V1JobSpec } from "@kubernetes/client-node";
 import { PodFailurePolicyDetails } from "../V1PodFailurePolicy/details";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 import { SuccessPolicyDetails } from "../V1SuccessPolicy/details";
@@ -10,7 +10,7 @@ export const JobSpecDetails = ({ resourceData }: { resourceData: V1JobSpec }): J
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.activeDeadlineSeconds, resourceData.backoffLimit, resourceData.backoffLimitPerIndex, resourceData.completionMode, resourceData.completions, resourceData.managedBy, resourceData.maxFailedIndexes, resourceData.parallelism, resourceData.podReplacementPolicy, resourceData.ttlSecondsAfterFinished].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

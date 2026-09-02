@@ -1,6 +1,6 @@
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1Ingress } from "@utils/k8s-types";
+import type { V1Ingress } from "@kubernetes/client-node";
 import { IngressSpecDetails } from "../V1IngressSpec/details";
 import { IngressStatusDetails } from "../V1IngressStatus/details";
 
@@ -8,7 +8,7 @@ export const IngressDetails = ({ resourceData }: { resourceData: V1Ingress }): J
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.spec, resourceData.status].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

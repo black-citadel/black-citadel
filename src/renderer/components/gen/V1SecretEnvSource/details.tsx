@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1SecretEnvSource } from "@utils/k8s-types";
+import type { V1SecretEnvSource } from "@kubernetes/client-node";
 
 export const SecretEnvSourceDetails = ({ resourceData }: { resourceData: V1SecretEnvSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.name].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

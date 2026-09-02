@@ -1,0 +1,7 @@
+resourceName: V1EndpointHints
+properties:
+  forZones:
+    type: V1ForZone[]
+    optional: true
+    description: forZones indicates the zone(s) this endpoint should be consumed by to enable topology aware routing.
+description: EndpointHints provides hints describing how an endpoint should be consumed.

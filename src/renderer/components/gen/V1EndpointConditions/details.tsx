@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1EndpointConditions } from "@utils/k8s-types";
+import type { V1EndpointConditions } from "@kubernetes/client-node";
 
 export const EndpointConditionsDetails = ({ resourceData }: { resourceData: V1EndpointConditions }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Boolean properties always have content
         checks.push(true);
         return checks.length > 0 ? checks.some(v => v) : false;

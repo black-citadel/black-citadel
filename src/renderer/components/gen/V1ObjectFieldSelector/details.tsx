@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1ObjectFieldSelector } from "@utils/k8s-types";
+import type { V1ObjectFieldSelector } from "@kubernetes/client-node";
 
 export const ObjectFieldSelectorDetails = ({ resourceData }: { resourceData: V1ObjectFieldSelector }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.fieldPath].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

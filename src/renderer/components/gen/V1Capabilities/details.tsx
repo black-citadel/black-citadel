@@ -1,6 +1,6 @@
-import { V1Capabilities } from "@utils/k8s-types";
+import type { V1Capabilities } from "@kubernetes/client-node";
 
-export const CapabilitiesDetails = ({ resourceData: _resourceData }: { resourceData: V1Capabilities }): JSX.Element => {
+export const CapabilitiesDetails = ({ resourceData }: { resourceData: V1Capabilities }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {

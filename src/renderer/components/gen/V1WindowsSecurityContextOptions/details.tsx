@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1WindowsSecurityContextOptions } from "@utils/k8s-types";
+import type { V1WindowsSecurityContextOptions } from "@kubernetes/client-node";
 
 export const WindowsSecurityContextOptionsDetails = ({ resourceData }: { resourceData: V1WindowsSecurityContextOptions }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.gmsaCredentialSpec, resourceData.gmsaCredentialSpecName, resourceData.runAsUserName].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

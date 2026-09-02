@@ -1,0 +1,7 @@
+resourceName: V1DownwardAPIProjection
+properties:
+  items:
+    type: V1DownwardAPIVolumeFile[]
+    optional: true
+    description: Items is a list of DownwardAPIVolume file
+description: Represents downward API info for projecting into a projected volume. Note that this is identical to a downwardAPI volume source without the default mode.

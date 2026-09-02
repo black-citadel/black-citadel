@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1PodSecurityContext } from "@utils/k8s-types";
+import type { V1PodSecurityContext } from "@kubernetes/client-node";
 import { AppArmorProfileDetails } from "../V1AppArmorProfile/details";
 import { SELinuxOptionsDetails } from "../V1SELinuxOptions/details";
 import { SeccompProfileDetails } from "../V1SeccompProfile/details";
@@ -11,9 +11,9 @@ export const PodSecurityContextDetails = ({ resourceData }: { resourceData: V1Po
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
-        checks.push([resourceData.fsGroup, resourceData.fsGroupChangePolicy, resourceData.runAsGroup, resourceData.runAsUser, resourceData.supplementalGroups].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.fsGroup, resourceData.fsGroupChangePolicy, resourceData.runAsGroup, resourceData.runAsUser].some(v => v !== undefined && v !== null));
         // Boolean properties always have content
         checks.push(true);
         // Check k8s type properties

@@ -1,0 +1,7 @@
+resourceName: V1LoadBalancerStatus
+properties:
+  ingress:
+    type: V1LoadBalancerIngress[]
+    optional: true
+    description: Ingress is a list containing ingress points for the load-balancer. Traffic intended for the service should be sent to these ingress points.
+description: LoadBalancerStatus represents the status of a load-balancer.

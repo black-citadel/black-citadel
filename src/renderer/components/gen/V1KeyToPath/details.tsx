@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1KeyToPath } from "@utils/k8s-types";
+import type { V1KeyToPath } from "@kubernetes/client-node";
 
 export const KeyToPathDetails = ({ resourceData }: { resourceData: V1KeyToPath }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.key, resourceData.mode, resourceData.path].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

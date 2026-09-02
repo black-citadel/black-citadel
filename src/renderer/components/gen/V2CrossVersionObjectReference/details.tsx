@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V2CrossVersionObjectReference } from "@utils/k8s-types";
+import type { V2CrossVersionObjectReference } from "@kubernetes/client-node";
 
 export const CrossVersionObjectReferenceDetails = ({ resourceData }: { resourceData: V2CrossVersionObjectReference }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
-        checks.push([resourceData.name, resourceData.apiVersion, resourceData.kind].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.apiVersion, resourceData.kind, resourceData.name].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
     })();
 
@@ -20,9 +20,9 @@ export const CrossVersionObjectReferenceDetails = ({ resourceData }: { resourceD
             <PanelGrid
                 title="Properties"
                 items={[
-                    { label: "Name", value: resourceData.name },
                     { label: "Api Version", value: resourceData.apiVersion || '-' },
-                    { label: "Kind", value: resourceData.kind }
+                    { label: "Kind", value: resourceData.kind },
+                    { label: "Name", value: resourceData.name }
                 ]}
                 columns={1}
             />

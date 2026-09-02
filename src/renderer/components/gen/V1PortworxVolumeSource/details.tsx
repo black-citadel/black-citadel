@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1PortworxVolumeSource } from "@utils/k8s-types";
+import type { V1PortworxVolumeSource } from "@kubernetes/client-node";
 
 export const PortworxVolumeSourceDetails = ({ resourceData }: { resourceData: V1PortworxVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.fsType, resourceData.volumeID].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

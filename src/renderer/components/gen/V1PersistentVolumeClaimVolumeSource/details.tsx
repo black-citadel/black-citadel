@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1PersistentVolumeClaimVolumeSource } from "@utils/k8s-types";
+import type { V1PersistentVolumeClaimVolumeSource } from "@kubernetes/client-node";
 
 export const PersistentVolumeClaimVolumeSourceDetails = ({ resourceData }: { resourceData: V1PersistentVolumeClaimVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.claimName].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

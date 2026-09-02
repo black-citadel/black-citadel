@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1HorizontalPodAutoscalerStatus } from "@utils/k8s-types";
+import type { V1HorizontalPodAutoscalerStatus } from "@kubernetes/client-node";
 
 export const HorizontalPodAutoscalerStatusDetails = ({ resourceData }: { resourceData: V1HorizontalPodAutoscalerStatus }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.currentCPUUtilizationPercentage, resourceData.currentReplicas, resourceData.desiredReplicas, resourceData.observedGeneration].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

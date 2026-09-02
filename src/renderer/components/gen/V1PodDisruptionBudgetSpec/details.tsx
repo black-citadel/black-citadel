@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1PodDisruptionBudgetSpec } from "@utils/k8s-types";
+import type { V1PodDisruptionBudgetSpec } from "@kubernetes/client-node";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const PodDisruptionBudgetSpecDetails = ({ resourceData }: { resourceData: V1PodDisruptionBudgetSpec }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.maxUnavailable, resourceData.minAvailable, resourceData.unhealthyPodEvictionPolicy].some(v => v !== undefined && v !== null));
         // Check k8s type properties

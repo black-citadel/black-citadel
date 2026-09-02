@@ -1,12 +1,12 @@
 import { Container } from "@components/base/container";
-import { V1IngressLoadBalancerStatus } from "@utils/k8s-types";
+import type { V1IngressLoadBalancerStatus } from "@kubernetes/client-node";
 import { IngressLoadBalancerIngressDetails } from "../V1IngressLoadBalancerIngress/details";
 
 export const IngressLoadBalancerStatusDetails = ({ resourceData }: { resourceData: V1IngressLoadBalancerStatus }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.ingress].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

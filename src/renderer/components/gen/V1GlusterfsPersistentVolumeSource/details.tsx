@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1GlusterfsPersistentVolumeSource } from "@utils/k8s-types";
+import type { V1GlusterfsPersistentVolumeSource } from "@kubernetes/client-node";
 
 export const GlusterfsPersistentVolumeSourceDetails = ({ resourceData }: { resourceData: V1GlusterfsPersistentVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.endpoints, resourceData.endpointsNamespace, resourceData.path].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

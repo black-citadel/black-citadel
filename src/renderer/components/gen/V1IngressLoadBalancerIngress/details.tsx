@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1IngressLoadBalancerIngress } from "@utils/k8s-types";
+import type { V1IngressLoadBalancerIngress } from "@kubernetes/client-node";
 import { IngressPortStatusDetails } from "../V1IngressPortStatus/details";
 
 export const IngressLoadBalancerIngressDetails = ({ resourceData }: { resourceData: V1IngressLoadBalancerIngress }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.hostname, resourceData.ip].some(v => v !== undefined && v !== null));
         // Check k8s type properties

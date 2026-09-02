@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1EnvVarSource } from "@utils/k8s-types";
+import type { V1EnvVarSource } from "@kubernetes/client-node";
 import { ConfigMapKeySelectorDetails } from "../V1ConfigMapKeySelector/details";
 import { ObjectFieldSelectorDetails } from "../V1ObjectFieldSelector/details";
 import { ResourceFieldSelectorDetails } from "../V1ResourceFieldSelector/details";
@@ -9,7 +9,7 @@ export const EnvVarSourceDetails = ({ resourceData }: { resourceData: V1EnvVarSo
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.configMapKeyRef, resourceData.fieldRef, resourceData.resourceFieldRef, resourceData.secretKeyRef].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

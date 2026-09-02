@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V2PodsMetricSource } from "@utils/k8s-types";
+import type { V2PodsMetricSource } from "@kubernetes/client-node";
 import { MetricIdentifierDetails } from "../V2MetricIdentifier/details";
 import { MetricTargetDetails } from "../V2MetricTarget/details";
 
@@ -7,7 +7,7 @@ export const PodsMetricSourceDetails = ({ resourceData }: { resourceData: V2Pods
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.metric, resourceData.target].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1ISCSIVolumeSource } from "@utils/k8s-types";
+import type { V1ISCSIVolumeSource } from "@kubernetes/client-node";
 import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
 
 export const ISCSIVolumeSourceDetails = ({ resourceData }: { resourceData: V1ISCSIVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.fsType, resourceData.initiatorName, resourceData.iqn, resourceData.iscsiInterface, resourceData.lun, resourceData.targetPortal].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

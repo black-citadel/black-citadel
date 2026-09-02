@@ -1,0 +1,43 @@
+resourceName: V1StatefulSetStatus
+properties:
+  availableReplicas:
+    type: number
+    optional: true
+    description: Total number of available pods (ready for at least minReadySeconds) targeted by this statefulset.
+  collisionCount:
+    type: number
+    optional: true
+    description: collisionCount is the count of hash collisions for the StatefulSet. The StatefulSet controller uses this field as a collision avoidance mechanism when it needs to create the name for the newest ControllerRevision.
+  conditions:
+    type: V1StatefulSetCondition[]
+    optional: true
+    description: Represents the latest available observations of a statefulset\'s current state.
+  currentReplicas:
+    type: number
+    optional: true
+    description: currentReplicas is the number of Pods created by the StatefulSet controller from the StatefulSet version indicated by currentRevision.
+  currentRevision:
+    type: string
+    optional: true
+    description: currentRevision, if not empty, indicates the version of the StatefulSet used to generate Pods in the sequence [0,currentReplicas).
+  observedGeneration:
+    type: number
+    optional: true
+    description: observedGeneration is the most recent generation observed for this StatefulSet. It corresponds to the StatefulSet\'s generation, which is updated on mutation by the API Server.
+  readyReplicas:
+    type: number
+    optional: true
+    description: readyReplicas is the number of pods created for this StatefulSet with a Ready Condition.
+  replicas:
+    type: number
+    optional: false
+    description: replicas is the number of Pods created by the StatefulSet controller.
+  updateRevision:
+    type: string
+    optional: true
+    description: updateRevision, if not empty, indicates the version of the StatefulSet used to generate Pods in the sequence [replicas-updatedReplicas,replicas)
+  updatedReplicas:
+    type: number
+    optional: true
+    description: updatedReplicas is the number of Pods created by the StatefulSet controller from the StatefulSet version indicated by updateRevision.
+description: StatefulSetStatus represents the current state of a StatefulSet.

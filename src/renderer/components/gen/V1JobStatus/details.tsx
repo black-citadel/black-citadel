@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1JobStatus } from "@utils/k8s-types";
+import type { V1JobStatus } from "@kubernetes/client-node";
 import { ConditionsTable } from "@components/base/conditions-table";
 import { UncountedTerminatedPodsDetails } from "../V1UncountedTerminatedPods/details";
 
@@ -8,7 +8,7 @@ export const JobStatusDetails = ({ resourceData }: { resourceData: V1JobStatus }
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.active, resourceData.completedIndexes, resourceData.failed, resourceData.failedIndexes, resourceData.ready, resourceData.succeeded, resourceData.terminating].some(v => v !== undefined && v !== null));
         // Check k8s type properties

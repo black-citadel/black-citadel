@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1CephFSPersistentVolumeSource } from "@utils/k8s-types";
+import type { V1CephFSPersistentVolumeSource } from "@kubernetes/client-node";
 import { SecretReferenceDetails } from "../V1SecretReference/details";
 
 export const CephFSPersistentVolumeSourceDetails = ({ resourceData }: { resourceData: V1CephFSPersistentVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.path, resourceData.secretFile, resourceData.user].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

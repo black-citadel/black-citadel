@@ -1,12 +1,12 @@
 import { MetadataDetails } from "@components/metadata";
-import { V1IngressClass } from "@utils/k8s-types";
+import type { V1IngressClass } from "@kubernetes/client-node";
 import { IngressClassSpecDetails } from "../V1IngressClassSpec/details";
 
 export const IngressClassDetails = ({ resourceData }: { resourceData: V1IngressClass }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.spec].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

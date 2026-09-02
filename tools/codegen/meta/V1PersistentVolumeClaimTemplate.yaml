@@ -1,0 +1,9 @@
+resourceName: V1PersistentVolumeClaimTemplate
+properties:
+  metadata:
+    type: V1ObjectMeta
+    optional: true
+  spec:
+    type: V1PersistentVolumeClaimSpec
+    optional: false
+description: PersistentVolumeClaimTemplate is used to produce PersistentVolumeClaim objects as part of an EphemeralVolumeSource.

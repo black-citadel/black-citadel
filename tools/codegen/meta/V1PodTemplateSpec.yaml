@@ -1,0 +1,9 @@
+resourceName: V1PodTemplateSpec
+properties:
+  metadata:
+    type: V1ObjectMeta
+    optional: true
+  spec:
+    type: V1PodSpec
+    optional: true
+description: PodTemplateSpec describes the data a pod should have when created from a template

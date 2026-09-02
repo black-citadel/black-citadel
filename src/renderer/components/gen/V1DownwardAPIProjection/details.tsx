@@ -1,12 +1,12 @@
 import { Container } from "@components/base/container";
-import { V1DownwardAPIProjection } from "@utils/k8s-types";
+import type { V1DownwardAPIProjection } from "@kubernetes/client-node";
 import { DownwardAPIVolumeFileDetails } from "../V1DownwardAPIVolumeFile/details";
 
 export const DownwardAPIProjectionDetails = ({ resourceData }: { resourceData: V1DownwardAPIProjection }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.items].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

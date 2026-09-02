@@ -1,0 +1,6 @@
+resourceName: V1IngressStatus
+properties:
+  loadBalancer:
+    type: V1IngressLoadBalancerStatus
+    optional: true
+description: IngressStatus describe the current state of the Ingress.

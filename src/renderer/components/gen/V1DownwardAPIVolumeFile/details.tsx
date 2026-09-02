@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1DownwardAPIVolumeFile } from "@utils/k8s-types";
+import type { V1DownwardAPIVolumeFile } from "@kubernetes/client-node";
 import { ObjectFieldSelectorDetails } from "../V1ObjectFieldSelector/details";
 import { ResourceFieldSelectorDetails } from "../V1ResourceFieldSelector/details";
 
@@ -8,7 +8,7 @@ export const DownwardAPIVolumeFileDetails = ({ resourceData }: { resourceData: V
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.mode, resourceData.path].some(v => v !== undefined && v !== null));
         // Check k8s type properties

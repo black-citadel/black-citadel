@@ -1,6 +1,6 @@
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1PodDisruptionBudget } from "@utils/k8s-types";
+import type { V1PodDisruptionBudget } from "@kubernetes/client-node";
 import { PodDisruptionBudgetSpecDetails } from "../V1PodDisruptionBudgetSpec/details";
 import { PodDisruptionBudgetStatusDetails } from "../V1PodDisruptionBudgetStatus/details";
 
@@ -8,7 +8,7 @@ export const PodDisruptionBudgetDetails = ({ resourceData }: { resourceData: V1P
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.spec, resourceData.status].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

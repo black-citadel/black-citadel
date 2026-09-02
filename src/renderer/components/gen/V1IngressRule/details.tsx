@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1IngressRule } from "@utils/k8s-types";
+import type { V1IngressRule } from "@kubernetes/client-node";
 import { HTTPIngressRuleValueDetails } from "../V1HTTPIngressRuleValue/details";
 
 export const IngressRuleDetails = ({ resourceData }: { resourceData: V1IngressRule }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.host].some(v => v !== undefined && v !== null));
         // Check k8s type properties

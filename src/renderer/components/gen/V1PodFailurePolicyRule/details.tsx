@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1PodFailurePolicyRule } from "@utils/k8s-types";
+import type { V1PodFailurePolicyRule } from "@kubernetes/client-node";
 import { PodFailurePolicyOnExitCodesRequirementDetails } from "../V1PodFailurePolicyOnExitCodesRequirement/details";
 import { PodFailurePolicyOnPodConditionsPatternDetails } from "../V1PodFailurePolicyOnPodConditionsPattern/details";
 
@@ -8,7 +8,7 @@ export const PodFailurePolicyRuleDetails = ({ resourceData }: { resourceData: V1
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.action].some(v => v !== undefined && v !== null));
         // Check k8s type properties

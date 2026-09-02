@@ -1,0 +1,1850 @@
+V1ConfigMap:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ConfigMap.d.ts
+  order:
+    - data
+    - binaryData
+    - immutable
+    - metadata
+V1ResourceQuota:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ResourceQuota.d.ts
+  order:
+    - spec
+    - status
+    - metadata
+V1LimitRange:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1LimitRange.d.ts
+V1PodDisruptionBudget:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodDisruptionBudget.d.ts
+V2HorizontalPodAutoscaler:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2HorizontalPodAutoscaler.d.ts
+V1Pod:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Pod.d.ts
+V1Service:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Service.d.ts
+V1Secret:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Secret.d.ts
+V1Ingress:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Ingress.d.ts
+V1IngressClass:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressClass.d.ts
+V1Endpoints:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Endpoints.d.ts
+V1EndpointSlice:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EndpointSlice.d.ts
+V1NetworkPolicy:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NetworkPolicy.d.ts
+V1CronJob:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CronJob.d.ts
+V1DaemonSet:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DaemonSet.d.ts
+V1Deployment:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Deployment.d.ts
+V1Job:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Job.d.ts
+V1ReplicaSet:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ReplicaSet.d.ts
+V1StatefulSet:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1StatefulSet.d.ts
+V1CSIDriver:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CSIDriver.d.ts
+V1CSINode:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CSINode.d.ts
+V1PersistentVolume:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PersistentVolume.d.ts
+V1ObjectMeta:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ObjectMeta.d.ts
+  order:
+    - annotations
+    - creationTimestamp
+    - deletionGracePeriodSeconds
+    - deletionTimestamp
+    - finalizers
+    - generateName
+    - generation
+    - labels
+    - managedFields
+    - name
+    - namespace
+    - ownerReferences
+    - resourceVersion
+    - selfLink
+    - uid
+V1ManagedFieldsEntry:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ManagedFieldsEntry.d.ts
+  order:
+    - fieldsType
+    - fieldsV1
+    - manager
+    - operation
+    - subresource
+    - time
+V1OwnerReference:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1OwnerReference.d.ts
+  order:
+    - blockOwnerDeletion
+    - controller
+    - name
+    - uid
+V1ResourceQuotaSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ResourceQuotaSpec.d.ts
+  order:
+    - hard
+    - scopeSelector
+    - scopes
+V1ScopeSelector:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ScopeSelector.d.ts
+  order:
+    - matchExpressions
+V1ScopedResourceSelectorRequirement:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ScopedResourceSelectorRequirement.d.ts
+  order:
+    - operator
+    - scopeName
+    - values
+V1ResourceQuotaStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ResourceQuotaStatus.d.ts
+  order:
+    - hard
+    - used
+V1LimitRangeSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1LimitRangeSpec.d.ts
+  order:
+    - limits
+V1LimitRangeItem:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1LimitRangeItem.d.ts
+  order:
+    - _default
+    - defaultRequest
+    - max
+    - maxLimitRequestRatio
+    - min
+    - type
+V1PodDisruptionBudgetSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodDisruptionBudgetSpec.d.ts
+  order:
+    - maxUnavailable
+    - minAvailable
+    - selector
+    - unhealthyPodEvictionPolicy
+V1LabelSelector:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1LabelSelector.d.ts
+  order:
+    - matchExpressions
+    - matchLabels
+V1LabelSelectorRequirement:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1LabelSelectorRequirement.d.ts
+  order:
+    - key
+    - operator
+    - values
+V1PodDisruptionBudgetStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodDisruptionBudgetStatus.d.ts
+  order:
+    - conditions
+    - currentHealthy
+    - desiredHealthy
+    - disruptedPods
+    - disruptionsAllowed
+    - expectedPods
+    - observedGeneration
+V1Condition:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Condition.d.ts
+  order:
+    - lastTransitionTime
+    - message
+    - observedGeneration
+    - reason
+    - status
+    - type
+V1HorizontalPodAutoscalerSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1HorizontalPodAutoscalerSpec.d.ts
+  order:
+    - maxReplicas
+    - minReplicas
+    - scaleTargetRef
+    - targetCPUUtilizationPercentage
+V1CrossVersionObjectReference:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CrossVersionObjectReference.d.ts
+  order:
+    - name
+V1HorizontalPodAutoscalerStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1HorizontalPodAutoscalerStatus.d.ts
+  order:
+    - currentCPUUtilizationPercentage
+    - currentReplicas
+    - desiredReplicas
+    - lastScaleTime
+    - observedGeneration
+V2HorizontalPodAutoscalerSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2HorizontalPodAutoscalerSpec.d.ts
+  order:
+    - behavior
+    - maxReplicas
+    - metrics
+    - minReplicas
+    - scaleTargetRef
+V2HorizontalPodAutoscalerBehavior:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2HorizontalPodAutoscalerBehavior.d.ts
+  order:
+    - scaleDown
+    - scaleUp
+V2HPAScalingRules:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2HPAScalingRules.d.ts
+  order:
+    - policies
+    - selectPolicy
+    - stabilizationWindowSeconds
+    - tolerance
+V2HPAScalingPolicy:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2HPAScalingPolicy.d.ts
+  order:
+    - periodSeconds
+    - type
+    - value
+V2MetricSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2MetricSpec.d.ts
+  order:
+    - containerResource
+    - external
+    - object
+    - pods
+    - resource
+    - type
+V2ContainerResourceMetricSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2ContainerResourceMetricSource.d.ts
+  order:
+    - container
+    - name
+    - target
+V2MetricTarget:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2MetricTarget.d.ts
+  order:
+    - averageUtilization
+    - averageValue
+    - type
+    - value
+V2ExternalMetricSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2ExternalMetricSource.d.ts
+  order:
+    - metric
+    - target
+V2MetricIdentifier:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2MetricIdentifier.d.ts
+  order:
+    - name
+    - selector
+V2ObjectMetricSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2ObjectMetricSource.d.ts
+  order:
+    - describedObject
+    - metric
+    - target
+V2CrossVersionObjectReference:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2CrossVersionObjectReference.d.ts
+  order:
+    - name
+V2PodsMetricSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2PodsMetricSource.d.ts
+  order:
+    - metric
+    - target
+V2ResourceMetricSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2ResourceMetricSource.d.ts
+  order:
+    - name
+    - target
+V2HorizontalPodAutoscalerStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2HorizontalPodAutoscalerStatus.d.ts
+  order:
+    - conditions
+    - currentMetrics
+    - currentReplicas
+    - desiredReplicas
+    - lastScaleTime
+    - observedGeneration
+V2HorizontalPodAutoscalerCondition:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2HorizontalPodAutoscalerCondition.d.ts
+  order:
+    - lastTransitionTime
+    - message
+    - reason
+    - status
+    - type
+V2MetricStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2MetricStatus.d.ts
+  order:
+    - containerResource
+    - external
+    - object
+    - pods
+    - resource
+    - type
+V2ContainerResourceMetricStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2ContainerResourceMetricStatus.d.ts
+  order:
+    - container
+    - current
+    - name
+V2MetricValueStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2MetricValueStatus.d.ts
+  order:
+    - averageUtilization
+    - averageValue
+    - value
+V2ExternalMetricStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2ExternalMetricStatus.d.ts
+  order:
+    - current
+    - metric
+V2ObjectMetricStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2ObjectMetricStatus.d.ts
+  order:
+    - current
+    - describedObject
+    - metric
+V2PodsMetricStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2PodsMetricStatus.d.ts
+  order:
+    - current
+    - metric
+V2ResourceMetricStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v2ResourceMetricStatus.d.ts
+  order:
+    - current
+    - name
+V1PodSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodSpec.d.ts
+  order:
+    - activeDeadlineSeconds
+    - affinity
+    - automountServiceAccountToken
+    - containers
+    - dnsConfig
+    - dnsPolicy
+    - enableServiceLinks
+    - ephemeralContainers
+    - hostAliases
+    - hostIPC
+    - hostNetwork
+    - hostPID
+    - hostUsers
+    - hostname
+    - imagePullSecrets
+    - initContainers
+    - nodeName
+    - nodeSelector
+    - os
+    - overhead
+    - preemptionPolicy
+    - priority
+    - priorityClassName
+    - readinessGates
+    - resourceClaims
+    - resources
+    - restartPolicy
+    - runtimeClassName
+    - schedulerName
+    - schedulingGates
+    - securityContext
+    - serviceAccount
+    - serviceAccountName
+    - setHostnameAsFQDN
+    - shareProcessNamespace
+    - subdomain
+    - terminationGracePeriodSeconds
+    - tolerations
+    - topologySpreadConstraints
+    - volumes
+V1Affinity:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Affinity.d.ts
+  order:
+    - nodeAffinity
+    - podAffinity
+    - podAntiAffinity
+V1NodeAffinity:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NodeAffinity.d.ts
+  order:
+    - preferredDuringSchedulingIgnoredDuringExecution
+    - requiredDuringSchedulingIgnoredDuringExecution
+V1PreferredSchedulingTerm:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PreferredSchedulingTerm.d.ts
+  order:
+    - preference
+    - weight
+V1NodeSelectorTerm:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NodeSelectorTerm.d.ts
+  order:
+    - matchExpressions
+    - matchFields
+V1NodeSelectorRequirement:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NodeSelectorRequirement.d.ts
+  order:
+    - key
+    - operator
+    - values
+V1NodeSelector:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NodeSelector.d.ts
+  order:
+    - nodeSelectorTerms
+V1PodAffinity:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodAffinity.d.ts
+  order:
+    - preferredDuringSchedulingIgnoredDuringExecution
+    - requiredDuringSchedulingIgnoredDuringExecution
+V1WeightedPodAffinityTerm:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1WeightedPodAffinityTerm.d.ts
+  order:
+    - podAffinityTerm
+    - weight
+V1PodAffinityTerm:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodAffinityTerm.d.ts
+  order:
+    - labelSelector
+    - matchLabelKeys
+    - mismatchLabelKeys
+    - namespaceSelector
+    - namespaces
+    - topologyKey
+V1PodAntiAffinity:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodAntiAffinity.d.ts
+  order:
+    - preferredDuringSchedulingIgnoredDuringExecution
+    - requiredDuringSchedulingIgnoredDuringExecution
+V1Container:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Container.d.ts
+  order:
+    - args
+    - command
+    - env
+    - envFrom
+    - image
+    - imagePullPolicy
+    - lifecycle
+    - livenessProbe
+    - name
+    - ports
+    - readinessProbe
+    - resizePolicy
+    - resources
+    - restartPolicy
+    - securityContext
+    - startupProbe
+    - stdin
+    - stdinOnce
+    - terminationMessagePath
+    - terminationMessagePolicy
+    - tty
+    - volumeDevices
+    - volumeMounts
+    - workingDir
+V1EnvVar:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EnvVar.d.ts
+  order:
+    - name
+    - value
+    - valueFrom
+V1EnvVarSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EnvVarSource.d.ts
+  order:
+    - configMapKeyRef
+    - fieldRef
+    - resourceFieldRef
+    - secretKeyRef
+V1ConfigMapKeySelector:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ConfigMapKeySelector.d.ts
+  order:
+    - key
+    - name
+    - optional
+V1ObjectFieldSelector:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ObjectFieldSelector.d.ts
+  order:
+    - fieldPath
+V1ResourceFieldSelector:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ResourceFieldSelector.d.ts
+  order:
+    - containerName
+    - divisor
+    - resource
+V1SecretKeySelector:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SecretKeySelector.d.ts
+  order:
+    - key
+    - name
+    - optional
+V1EnvFromSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EnvFromSource.d.ts
+  order:
+    - configMapRef
+    - prefix
+    - secretRef
+V1ConfigMapEnvSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ConfigMapEnvSource.d.ts
+  order:
+    - name
+    - optional
+V1SecretEnvSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SecretEnvSource.d.ts
+  order:
+    - name
+    - optional
+V1Lifecycle:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Lifecycle.d.ts
+  order:
+    - postStart
+    - preStop
+    - stopSignal
+V1LifecycleHandler:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1LifecycleHandler.d.ts
+  order:
+    - exec
+    - httpGet
+    - sleep
+    - tcpSocket
+V1ExecAction:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ExecAction.d.ts
+  order:
+    - command
+V1HTTPGetAction:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1HTTPGetAction.d.ts
+  order:
+    - host
+    - httpHeaders
+    - path
+    - port
+    - scheme
+V1HTTPHeader:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1HTTPHeader.d.ts
+  order:
+    - name
+    - value
+V1SleepAction:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SleepAction.d.ts
+  order:
+    - seconds
+V1TCPSocketAction:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1TCPSocketAction.d.ts
+  order:
+    - host
+    - port
+V1Probe:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Probe.d.ts
+  order:
+    - exec
+    - failureThreshold
+    - grpc
+    - httpGet
+    - initialDelaySeconds
+    - periodSeconds
+    - successThreshold
+    - tcpSocket
+    - terminationGracePeriodSeconds
+    - timeoutSeconds
+V1GRPCAction:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1GRPCAction.d.ts
+  order:
+    - port
+    - service
+V1ContainerPort:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerPort.d.ts
+  order:
+    - containerPort
+    - hostIP
+    - hostPort
+    - name
+    - protocol
+V1ContainerResizePolicy:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerResizePolicy.d.ts
+  order:
+    - resourceName
+    - restartPolicy
+V1ResourceRequirements:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ResourceRequirements.d.ts
+  order:
+    - claims
+    - limits
+    - requests
+V1ResourceClaim:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ResourceClaim.d.ts
+  order:
+    - name
+    - request
+V1SecurityContext:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SecurityContext.d.ts
+  order:
+    - allowPrivilegeEscalation
+    - appArmorProfile
+    - capabilities
+    - privileged
+    - procMount
+    - readOnlyRootFilesystem
+    - runAsGroup
+    - runAsNonRoot
+    - runAsUser
+    - seLinuxOptions
+    - seccompProfile
+    - windowsOptions
+V1AppArmorProfile:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1AppArmorProfile.d.ts
+  order:
+    - localhostProfile
+    - type
+V1Capabilities:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Capabilities.d.ts
+  order:
+    - add
+    - drop
+V1SELinuxOptions:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SELinuxOptions.d.ts
+  order:
+    - level
+    - role
+    - type
+    - user
+V1SeccompProfile:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SeccompProfile.d.ts
+  order:
+    - localhostProfile
+    - type
+V1WindowsSecurityContextOptions:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1WindowsSecurityContextOptions.d.ts
+  order:
+    - gmsaCredentialSpec
+    - gmsaCredentialSpecName
+    - hostProcess
+    - runAsUserName
+V1VolumeDevice:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1VolumeDevice.d.ts
+  order:
+    - devicePath
+    - name
+V1VolumeMount:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1VolumeMount.d.ts
+  order:
+    - mountPath
+    - mountPropagation
+    - name
+    - readOnly
+    - recursiveReadOnly
+    - subPath
+    - subPathExpr
+V1PodDNSConfig:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodDNSConfig.d.ts
+  order:
+    - nameservers
+    - options
+    - searches
+V1PodDNSConfigOption:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodDNSConfigOption.d.ts
+  order:
+    - name
+    - value
+V1EphemeralContainer:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EphemeralContainer.d.ts
+  order:
+    - args
+    - command
+    - env
+    - envFrom
+    - image
+    - imagePullPolicy
+    - lifecycle
+    - livenessProbe
+    - name
+    - ports
+    - readinessProbe
+    - resizePolicy
+    - resources
+    - restartPolicy
+    - securityContext
+    - startupProbe
+    - stdin
+    - stdinOnce
+    - targetContainerName
+    - terminationMessagePath
+    - terminationMessagePolicy
+    - tty
+    - volumeDevices
+    - volumeMounts
+    - workingDir
+V1HostAlias:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1HostAlias.d.ts
+  order:
+    - hostnames
+    - ip
+V1LocalObjectReference:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1LocalObjectReference.d.ts
+  order:
+    - name
+V1PodOS:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodOS.d.ts
+  order:
+    - name
+V1PodReadinessGate:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodReadinessGate.d.ts
+  order:
+    - conditionType
+V1PodResourceClaim:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodResourceClaim.d.ts
+  order:
+    - name
+    - resourceClaimName
+    - resourceClaimTemplateName
+V1PodSchedulingGate:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodSchedulingGate.d.ts
+  order:
+    - name
+V1PodSecurityContext:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodSecurityContext.d.ts
+  order:
+    - appArmorProfile
+    - fsGroup
+    - fsGroupChangePolicy
+    - runAsGroup
+    - runAsNonRoot
+    - runAsUser
+    - seLinuxChangePolicy
+    - seLinuxOptions
+    - seccompProfile
+    - supplementalGroups
+    - supplementalGroupsPolicy
+    - sysctls
+    - windowsOptions
+V1Sysctl:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Sysctl.d.ts
+  order:
+    - name
+    - value
+V1Toleration:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Toleration.d.ts
+  order:
+    - effect
+    - key
+    - operator
+    - tolerationSeconds
+    - value
+V1TopologySpreadConstraint:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1TopologySpreadConstraint.d.ts
+  order:
+    - labelSelector
+    - matchLabelKeys
+    - maxSkew
+    - minDomains
+    - nodeAffinityPolicy
+    - nodeTaintsPolicy
+    - topologyKey
+    - whenUnsatisfiable
+V1Volume:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Volume.d.ts
+  order:
+    - awsElasticBlockStore
+    - azureDisk
+    - azureFile
+    - cephfs
+    - cinder
+    - configMap
+    - csi
+    - downwardAPI
+    - emptyDir
+    - ephemeral
+    - fc
+    - flexVolume
+    - flocker
+    - gcePersistentDisk
+    - gitRepo
+    - glusterfs
+    - hostPath
+    - image
+    - iscsi
+    - name
+    - nfs
+    - persistentVolumeClaim
+    - photonPersistentDisk
+    - portworxVolume
+    - projected
+    - quobyte
+    - rbd
+    - scaleIO
+    - secret
+    - storageos
+    - vsphereVolume
+V1AWSElasticBlockStoreVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1AWSElasticBlockStoreVolumeSource.d.ts
+  order:
+    - fsType
+    - partition
+    - readOnly
+    - volumeID
+V1AzureDiskVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1AzureDiskVolumeSource.d.ts
+  order:
+    - cachingMode
+    - diskName
+    - diskURI
+    - fsType
+    - readOnly
+V1AzureFileVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1AzureFileVolumeSource.d.ts
+  order:
+    - readOnly
+    - secretName
+    - shareName
+V1CephFSVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CephFSVolumeSource.d.ts
+  order:
+    - monitors
+    - path
+    - readOnly
+    - secretFile
+    - secretRef
+    - user
+V1CinderVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CinderVolumeSource.d.ts
+  order:
+    - fsType
+    - readOnly
+    - secretRef
+    - volumeID
+V1ConfigMapVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ConfigMapVolumeSource.d.ts
+  order:
+    - defaultMode
+    - items
+    - name
+    - optional
+V1KeyToPath:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1KeyToPath.d.ts
+  order:
+    - key
+    - mode
+    - path
+V1CSIVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CSIVolumeSource.d.ts
+  order:
+    - driver
+    - fsType
+    - nodePublishSecretRef
+    - readOnly
+    - volumeAttributes
+V1DownwardAPIVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DownwardAPIVolumeSource.d.ts
+  order:
+    - defaultMode
+    - items
+V1DownwardAPIVolumeFile:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DownwardAPIVolumeFile.d.ts
+  order:
+    - fieldRef
+    - mode
+    - path
+    - resourceFieldRef
+V1EmptyDirVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EmptyDirVolumeSource.d.ts
+  order:
+    - medium
+    - sizeLimit
+V1EphemeralVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EphemeralVolumeSource.d.ts
+  order:
+    - volumeClaimTemplate
+V1PersistentVolumeClaimTemplate:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PersistentVolumeClaimTemplate.d.ts
+  order:
+    - spec
+    - metadata
+V1PersistentVolumeClaimSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PersistentVolumeClaimSpec.d.ts
+  order:
+    - accessModes
+    - dataSource
+    - dataSourceRef
+    - resources
+    - selector
+    - storageClassName
+    - volumeAttributesClassName
+    - volumeMode
+    - volumeName
+V1TypedLocalObjectReference:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1TypedLocalObjectReference.d.ts
+  order:
+    - apiGroup
+    - name
+V1TypedObjectReference:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1TypedObjectReference.d.ts
+  order:
+    - apiGroup
+    - name
+    - namespace
+V1VolumeResourceRequirements:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1VolumeResourceRequirements.d.ts
+  order:
+    - limits
+    - requests
+V1FCVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1FCVolumeSource.d.ts
+  order:
+    - fsType
+    - lun
+    - readOnly
+    - targetWWNs
+    - wwids
+V1FlexVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1FlexVolumeSource.d.ts
+  order:
+    - driver
+    - fsType
+    - options
+    - readOnly
+    - secretRef
+V1FlockerVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1FlockerVolumeSource.d.ts
+  order:
+    - datasetName
+    - datasetUUID
+V1GCEPersistentDiskVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1GCEPersistentDiskVolumeSource.d.ts
+  order:
+    - fsType
+    - partition
+    - pdName
+    - readOnly
+V1GitRepoVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1GitRepoVolumeSource.d.ts
+  order:
+    - directory
+    - repository
+    - revision
+V1GlusterfsVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1GlusterfsVolumeSource.d.ts
+  order:
+    - endpoints
+    - path
+    - readOnly
+V1HostPathVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1HostPathVolumeSource.d.ts
+  order:
+    - path
+    - type
+V1ISCSIVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ISCSIVolumeSource.d.ts
+  order:
+    - chapAuthDiscovery
+    - chapAuthSession
+    - fsType
+    - initiatorName
+    - iqn
+    - iscsiInterface
+    - lun
+    - portals
+    - readOnly
+    - secretRef
+    - targetPortal
+V1NFSVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NFSVolumeSource.d.ts
+  order:
+    - path
+    - readOnly
+    - server
+V1PersistentVolumeClaimVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PersistentVolumeClaimVolumeSource.d.ts
+  order:
+    - claimName
+    - readOnly
+V1PhotonPersistentDiskVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PhotonPersistentDiskVolumeSource.d.ts
+  order:
+    - fsType
+    - pdID
+V1PortworxVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PortworxVolumeSource.d.ts
+  order:
+    - fsType
+    - readOnly
+    - volumeID
+V1ProjectedVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ProjectedVolumeSource.d.ts
+  order:
+    - defaultMode
+    - sources
+V1VolumeProjection:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1VolumeProjection.d.ts
+  order:
+    - clusterTrustBundle
+    - configMap
+    - downwardAPI
+    - secret
+    - serviceAccountToken
+V1ClusterTrustBundleProjection:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ClusterTrustBundleProjection.d.ts
+  order:
+    - labelSelector
+    - name
+    - optional
+    - path
+    - signerName
+V1ConfigMapProjection:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ConfigMapProjection.d.ts
+  order:
+    - items
+    - name
+    - optional
+V1DownwardAPIProjection:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DownwardAPIProjection.d.ts
+  order:
+    - items
+V1SecretProjection:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SecretProjection.d.ts
+  order:
+    - items
+    - name
+    - optional
+V1ServiceAccountTokenProjection:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ServiceAccountTokenProjection.d.ts
+  order:
+    - audience
+    - expirationSeconds
+    - path
+V1QuobyteVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1QuobyteVolumeSource.d.ts
+  order:
+    - group
+    - readOnly
+    - registry
+    - tenant
+    - user
+    - volume
+V1RBDVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1RBDVolumeSource.d.ts
+  order:
+    - fsType
+    - image
+    - keyring
+    - monitors
+    - pool
+    - readOnly
+    - secretRef
+    - user
+V1ScaleIOVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ScaleIOVolumeSource.d.ts
+  order:
+    - fsType
+    - gateway
+    - protectionDomain
+    - readOnly
+    - secretRef
+    - sslEnabled
+    - storageMode
+    - storagePool
+    - system
+    - volumeName
+V1SecretVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SecretVolumeSource.d.ts
+  order:
+    - defaultMode
+    - items
+    - optional
+    - secretName
+V1StorageOSVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1StorageOSVolumeSource.d.ts
+  order:
+    - fsType
+    - readOnly
+    - secretRef
+    - volumeName
+    - volumeNamespace
+V1VsphereVirtualDiskVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1VsphereVirtualDiskVolumeSource.d.ts
+  order:
+    - fsType
+    - storagePolicyID
+    - storagePolicyName
+    - volumePath
+V1PodStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodStatus.d.ts
+  order:
+    - conditions
+    - containerStatuses
+    - ephemeralContainerStatuses
+    - hostIP
+    - hostIPs
+    - initContainerStatuses
+    - message
+    - nominatedNodeName
+    - observedGeneration
+    - phase
+    - podIP
+    - podIPs
+    - qosClass
+    - reason
+    - resize
+    - resourceClaimStatuses
+    - startTime
+V1PodCondition:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodCondition.d.ts
+  order:
+    - lastProbeTime
+    - lastTransitionTime
+    - message
+    - observedGeneration
+    - reason
+    - status
+    - type
+V1ContainerStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerStatus.d.ts
+  order:
+    - allocatedResources
+    - allocatedResourcesStatus
+    - containerID
+    - image
+    - imageID
+    - lastState
+    - name
+    - ready
+    - resources
+    - restartCount
+    - started
+    - state
+    - stopSignal
+    - user
+    - volumeMounts
+V1ContainerState:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerState.d.ts
+  order:
+    - running
+    - terminated
+    - waiting
+V1ContainerStateRunning:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerStateRunning.d.ts
+  order:
+    - startedAt
+V1ContainerStateTerminated:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerStateTerminated.d.ts
+  order:
+    - containerID
+    - exitCode
+    - finishedAt
+    - message
+    - reason
+    - signal
+    - startedAt
+V1ContainerStateWaiting:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerStateWaiting.d.ts
+  order:
+    - message
+    - reason
+V1VolumeMountStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1VolumeMountStatus.d.ts
+  order:
+    - mountPath
+    - name
+    - readOnly
+    - recursiveReadOnly
+V1HostIP:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1HostIP.d.ts
+  order:
+    - ip
+V1PodIP:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodIP.d.ts
+  order:
+    - ip
+V1PodResourceClaimStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodResourceClaimStatus.d.ts
+  order:
+    - name
+    - resourceClaimName
+V1ServiceSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ServiceSpec.d.ts
+  order:
+    - allocateLoadBalancerNodePorts
+    - clusterIP
+    - clusterIPs
+    - externalIPs
+    - externalName
+    - externalTrafficPolicy
+    - healthCheckNodePort
+    - internalTrafficPolicy
+    - ipFamilies
+    - ipFamilyPolicy
+    - loadBalancerClass
+    - loadBalancerIP
+    - loadBalancerSourceRanges
+    - ports
+    - publishNotReadyAddresses
+    - selector
+    - sessionAffinity
+    - sessionAffinityConfig
+    - trafficDistribution
+    - type
+V1ServicePort:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ServicePort.d.ts
+  order:
+    - appProtocol
+    - name
+    - nodePort
+    - port
+    - protocol
+    - targetPort
+V1SessionAffinityConfig:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SessionAffinityConfig.d.ts
+  order:
+    - clientIP
+V1ClientIPConfig:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ClientIPConfig.d.ts
+  order:
+    - timeoutSeconds
+V1ServiceStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ServiceStatus.d.ts
+  order:
+    - conditions
+    - loadBalancer
+V1LoadBalancerStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1LoadBalancerStatus.d.ts
+  order:
+    - ingress
+V1LoadBalancerIngress:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1LoadBalancerIngress.d.ts
+  order:
+    - hostname
+    - ip
+    - ipMode
+    - ports
+V1PortStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PortStatus.d.ts
+  order:
+    - error
+    - port
+    - protocol
+V1IngressSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressSpec.d.ts
+  order:
+    - defaultBackend
+    - ingressClassName
+    - rules
+    - tls
+V1IngressBackend:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressBackend.d.ts
+  order:
+    - resource
+    - service
+V1IngressServiceBackend:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressServiceBackend.d.ts
+  order:
+    - name
+    - port
+V1ServiceBackendPort:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ServiceBackendPort.d.ts
+  order:
+    - name
+    - number
+V1IngressRule:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressRule.d.ts
+  order:
+    - host
+    - http
+V1HTTPIngressRuleValue:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1HTTPIngressRuleValue.d.ts
+  order:
+    - paths
+V1HTTPIngressPath:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1HTTPIngressPath.d.ts
+  order:
+    - backend
+    - path
+    - pathType
+V1IngressTLS:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressTLS.d.ts
+  order:
+    - hosts
+    - secretName
+V1IngressStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressStatus.d.ts
+  order:
+    - loadBalancer
+V1IngressLoadBalancerStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressLoadBalancerStatus.d.ts
+  order:
+    - ingress
+V1IngressLoadBalancerIngress:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressLoadBalancerIngress.d.ts
+  order:
+    - hostname
+    - ip
+    - ports
+V1IngressPortStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressPortStatus.d.ts
+  order:
+    - error
+    - port
+    - protocol
+V1IngressClassSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressClassSpec.d.ts
+  order:
+    - controller
+    - parameters
+V1IngressClassParametersReference:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IngressClassParametersReference.d.ts
+  order:
+    - apiGroup
+    - name
+    - namespace
+    - scope
+V1EndpointSubset:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EndpointSubset.d.ts
+  order:
+    - addresses
+    - notReadyAddresses
+    - ports
+V1EndpointAddress:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EndpointAddress.d.ts
+  order:
+    - hostname
+    - ip
+    - nodeName
+    - targetRef
+V1ObjectReference:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ObjectReference.d.ts
+  order:
+    - fieldPath
+    - name
+    - namespace
+    - resourceVersion
+    - uid
+V1Endpoint:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1Endpoint.d.ts
+  order:
+    - addresses
+    - conditions
+    - deprecatedTopology
+    - hints
+    - hostname
+    - nodeName
+    - targetRef
+    - zone
+V1EndpointConditions:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EndpointConditions.d.ts
+  order:
+    - ready
+    - serving
+    - terminating
+V1EndpointHints:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1EndpointHints.d.ts
+  order:
+    - forNodes
+    - forZones
+V1ForZone:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ForZone.d.ts
+  order:
+    - name
+V1NetworkPolicySpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NetworkPolicySpec.d.ts
+  order:
+    - egress
+    - ingress
+    - podSelector
+    - policyTypes
+V1NetworkPolicyEgressRule:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NetworkPolicyEgressRule.d.ts
+  order:
+    - ports
+    - to
+V1NetworkPolicyPort:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NetworkPolicyPort.d.ts
+  order:
+    - endPort
+    - port
+    - protocol
+V1NetworkPolicyPeer:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NetworkPolicyPeer.d.ts
+  order:
+    - ipBlock
+    - namespaceSelector
+    - podSelector
+V1IPBlock:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1IPBlock.d.ts
+  order:
+    - cidr
+    - except
+V1NetworkPolicyIngressRule:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1NetworkPolicyIngressRule.d.ts
+  order:
+    - _from
+    - ports
+V1CronJobSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CronJobSpec.d.ts
+  order:
+    - concurrencyPolicy
+    - failedJobsHistoryLimit
+    - jobTemplate
+    - schedule
+    - startingDeadlineSeconds
+    - successfulJobsHistoryLimit
+    - suspend
+    - timeZone
+V1JobTemplateSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1JobTemplateSpec.d.ts
+  order:
+    - spec
+    - metadata
+V1JobSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1JobSpec.d.ts
+  order:
+    - activeDeadlineSeconds
+    - backoffLimit
+    - backoffLimitPerIndex
+    - completionMode
+    - completions
+    - managedBy
+    - manualSelector
+    - maxFailedIndexes
+    - parallelism
+    - podFailurePolicy
+    - podReplacementPolicy
+    - selector
+    - successPolicy
+    - suspend
+    - template
+    - ttlSecondsAfterFinished
+V1PodFailurePolicy:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodFailurePolicy.d.ts
+  order:
+    - rules
+V1PodFailurePolicyRule:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodFailurePolicyRule.d.ts
+  order:
+    - action
+    - onExitCodes
+    - onPodConditions
+V1PodFailurePolicyOnExitCodesRequirement:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodFailurePolicyOnExitCodesRequirement.d.ts
+  order:
+    - containerName
+    - operator
+    - values
+V1PodFailurePolicyOnPodConditionsPattern:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodFailurePolicyOnPodConditionsPattern.d.ts
+  order:
+    - status
+    - type
+V1SuccessPolicy:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SuccessPolicy.d.ts
+  order:
+    - rules
+V1SuccessPolicyRule:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SuccessPolicyRule.d.ts
+  order:
+    - succeededCount
+    - succeededIndexes
+V1PodTemplateSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodTemplateSpec.d.ts
+  order:
+    - spec
+    - metadata
+V1CronJobStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CronJobStatus.d.ts
+  order:
+    - active
+    - lastScheduleTime
+    - lastSuccessfulTime
+V1DaemonSetSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DaemonSetSpec.d.ts
+  order:
+    - minReadySeconds
+    - revisionHistoryLimit
+    - selector
+    - template
+    - updateStrategy
+V1DaemonSetUpdateStrategy:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DaemonSetUpdateStrategy.d.ts
+  order:
+    - rollingUpdate
+    - type
+V1RollingUpdateDaemonSet:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1RollingUpdateDaemonSet.d.ts
+  order:
+    - maxSurge
+    - maxUnavailable
+V1DaemonSetStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DaemonSetStatus.d.ts
+  order:
+    - collisionCount
+    - conditions
+    - currentNumberScheduled
+    - desiredNumberScheduled
+    - numberAvailable
+    - numberMisscheduled
+    - numberReady
+    - numberUnavailable
+    - observedGeneration
+    - updatedNumberScheduled
+V1DaemonSetCondition:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DaemonSetCondition.d.ts
+  order:
+    - lastTransitionTime
+    - message
+    - reason
+    - status
+    - type
+V1DeploymentSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DeploymentSpec.d.ts
+  order:
+    - minReadySeconds
+    - paused
+    - progressDeadlineSeconds
+    - replicas
+    - revisionHistoryLimit
+    - selector
+    - strategy
+    - template
+V1DeploymentStrategy:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DeploymentStrategy.d.ts
+  order:
+    - rollingUpdate
+    - type
+V1RollingUpdateDeployment:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1RollingUpdateDeployment.d.ts
+  order:
+    - maxSurge
+    - maxUnavailable
+V1DeploymentStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DeploymentStatus.d.ts
+  order:
+    - availableReplicas
+    - collisionCount
+    - conditions
+    - observedGeneration
+    - readyReplicas
+    - replicas
+    - terminatingReplicas
+    - unavailableReplicas
+    - updatedReplicas
+V1DeploymentCondition:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1DeploymentCondition.d.ts
+  order:
+    - lastTransitionTime
+    - lastUpdateTime
+    - message
+    - reason
+    - status
+    - type
+V1JobStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1JobStatus.d.ts
+  order:
+    - active
+    - completedIndexes
+    - completionTime
+    - conditions
+    - failed
+    - failedIndexes
+    - ready
+    - startTime
+    - succeeded
+    - terminating
+    - uncountedTerminatedPods
+V1JobCondition:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1JobCondition.d.ts
+  order:
+    - lastProbeTime
+    - lastTransitionTime
+    - message
+    - reason
+    - status
+    - type
+V1UncountedTerminatedPods:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1UncountedTerminatedPods.d.ts
+  order:
+    - failed
+    - succeeded
+V1ReplicaSetSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ReplicaSetSpec.d.ts
+  order:
+    - minReadySeconds
+    - replicas
+    - selector
+    - template
+V1ReplicaSetStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ReplicaSetStatus.d.ts
+  order:
+    - availableReplicas
+    - conditions
+    - fullyLabeledReplicas
+    - observedGeneration
+    - readyReplicas
+    - replicas
+    - terminatingReplicas
+V1ReplicaSetCondition:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ReplicaSetCondition.d.ts
+  order:
+    - lastTransitionTime
+    - message
+    - reason
+    - status
+    - type
+V1StatefulSetSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1StatefulSetSpec.d.ts
+  order:
+    - minReadySeconds
+    - ordinals
+    - persistentVolumeClaimRetentionPolicy
+    - podManagementPolicy
+    - replicas
+    - revisionHistoryLimit
+    - selector
+    - serviceName
+    - template
+    - updateStrategy
+    - volumeClaimTemplates
+V1StatefulSetOrdinals:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1StatefulSetOrdinals.d.ts
+  order:
+    - start
+V1StatefulSetPersistentVolumeClaimRetentionPolicy:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1StatefulSetPersistentVolumeClaimRetentionPolicy.d.ts
+  order:
+    - whenDeleted
+    - whenScaled
+V1StatefulSetUpdateStrategy:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1StatefulSetUpdateStrategy.d.ts
+  order:
+    - rollingUpdate
+    - type
+V1RollingUpdateStatefulSetStrategy:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1RollingUpdateStatefulSetStrategy.d.ts
+  order:
+    - maxUnavailable
+    - partition
+V1PersistentVolumeClaim:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PersistentVolumeClaim.d.ts
+  order:
+    - spec
+    - status
+    - metadata
+V1PersistentVolumeClaimStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PersistentVolumeClaimStatus.d.ts
+  order:
+    - accessModes
+    - allocatedResourceStatuses
+    - allocatedResources
+    - capacity
+    - conditions
+    - currentVolumeAttributesClassName
+    - modifyVolumeStatus
+    - phase
+V1PersistentVolumeClaimCondition:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PersistentVolumeClaimCondition.d.ts
+  order:
+    - lastProbeTime
+    - lastTransitionTime
+    - message
+    - reason
+    - status
+    - type
+V1ModifyVolumeStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ModifyVolumeStatus.d.ts
+  order:
+    - status
+    - targetVolumeAttributesClassName
+V1StatefulSetStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1StatefulSetStatus.d.ts
+  order:
+    - availableReplicas
+    - collisionCount
+    - conditions
+    - currentReplicas
+    - currentRevision
+    - observedGeneration
+    - readyReplicas
+    - replicas
+    - updateRevision
+    - updatedReplicas
+V1StatefulSetCondition:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1StatefulSetCondition.d.ts
+  order:
+    - lastTransitionTime
+    - message
+    - reason
+    - status
+    - type
+V1CSIDriverSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CSIDriverSpec.d.ts
+  order:
+    - attachRequired
+    - fsGroupPolicy
+    - nodeAllocatableUpdatePeriodSeconds
+    - podInfoOnMount
+    - requiresRepublish
+    - seLinuxMount
+    - storageCapacity
+    - tokenRequests
+    - volumeLifecycleModes
+V1CSINodeSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CSINodeSpec.d.ts
+  order:
+    - drivers
+V1CSINodeDriver:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CSINodeDriver.d.ts
+  order:
+    - allocatable
+    - name
+    - nodeID
+    - topologyKeys
+V1VolumeNodeResources:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1VolumeNodeResources.d.ts
+  order:
+    - count
+V1PersistentVolumeSpec:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PersistentVolumeSpec.d.ts
+  order:
+    - accessModes
+    - awsElasticBlockStore
+    - azureDisk
+    - azureFile
+    - capacity
+    - cephfs
+    - cinder
+    - claimRef
+    - csi
+    - fc
+    - flexVolume
+    - flocker
+    - gcePersistentDisk
+    - glusterfs
+    - hostPath
+    - iscsi
+    - local
+    - mountOptions
+    - nfs
+    - nodeAffinity
+    - persistentVolumeReclaimPolicy
+    - photonPersistentDisk
+    - portworxVolume
+    - quobyte
+    - rbd
+    - scaleIO
+    - storageClassName
+    - storageos
+    - volumeAttributesClassName
+    - volumeMode
+    - vsphereVolume
+V1AzureFilePersistentVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1AzureFilePersistentVolumeSource.d.ts
+  order:
+    - readOnly
+    - secretName
+    - secretNamespace
+    - shareName
+V1CephFSPersistentVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CephFSPersistentVolumeSource.d.ts
+  order:
+    - monitors
+    - path
+    - readOnly
+    - secretFile
+    - secretRef
+    - user
+V1SecretReference:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1SecretReference.d.ts
+  order:
+    - name
+    - namespace
+V1CinderPersistentVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CinderPersistentVolumeSource.d.ts
+  order:
+    - fsType
+    - readOnly
+    - secretRef
+    - volumeID
+V1CSIPersistentVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1CSIPersistentVolumeSource.d.ts
+  order:
+    - controllerExpandSecretRef
+    - controllerPublishSecretRef
+    - driver
+    - fsType
+    - nodeExpandSecretRef
+    - nodePublishSecretRef
+    - nodeStageSecretRef
+    - readOnly
+    - volumeAttributes
+    - volumeHandle
+V1FlexPersistentVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1FlexPersistentVolumeSource.d.ts
+  order:
+    - driver
+    - fsType
+    - options
+    - readOnly
+    - secretRef
+V1GlusterfsPersistentVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1GlusterfsPersistentVolumeSource.d.ts
+  order:
+    - endpoints
+    - endpointsNamespace
+    - path
+    - readOnly
+V1ISCSIPersistentVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ISCSIPersistentVolumeSource.d.ts
+  order:
+    - chapAuthDiscovery
+    - chapAuthSession
+    - fsType
+    - initiatorName
+    - iqn
+    - iscsiInterface
+    - lun
+    - portals
+    - readOnly
+    - secretRef
+    - targetPortal
+V1LocalVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1LocalVolumeSource.d.ts
+  order:
+    - fsType
+    - path
+V1VolumeNodeAffinity:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1VolumeNodeAffinity.d.ts
+  order:
+    - required
+V1RBDPersistentVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1RBDPersistentVolumeSource.d.ts
+  order:
+    - fsType
+    - image
+    - keyring
+    - monitors
+    - pool
+    - readOnly
+    - secretRef
+    - user
+V1ScaleIOPersistentVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ScaleIOPersistentVolumeSource.d.ts
+  order:
+    - fsType
+    - gateway
+    - protectionDomain
+    - readOnly
+    - secretRef
+    - sslEnabled
+    - storageMode
+    - storagePool
+    - system
+    - volumeName
+V1StorageOSPersistentVolumeSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1StorageOSPersistentVolumeSource.d.ts
+  order:
+    - fsType
+    - readOnly
+    - secretRef
+    - volumeName
+    - volumeNamespace
+V1PersistentVolumeStatus:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1PersistentVolumeStatus.d.ts
+  order:
+    - lastPhaseTransitionTime
+    - message
+    - phase
+    - reason
+V1ClaimSource:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/v1ClaimSource.d.ts
+  order:
+    - resourceClaimName
+    - resourceClaimTemplateName

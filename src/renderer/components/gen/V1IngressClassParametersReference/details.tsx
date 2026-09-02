@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1IngressClassParametersReference } from "@utils/k8s-types";
+import type { V1IngressClassParametersReference } from "@kubernetes/client-node";
 
 export const IngressClassParametersReferenceDetails = ({ resourceData }: { resourceData: V1IngressClassParametersReference }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
-        checks.push([resourceData.apiGroup, resourceData.name, resourceData.namespace, resourceData.scope, resourceData.kind].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.apiGroup, resourceData.kind, resourceData.name, resourceData.namespace, resourceData.scope].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
     })();
 
@@ -21,10 +21,10 @@ export const IngressClassParametersReferenceDetails = ({ resourceData }: { resou
                 title="Properties"
                 items={[
                     { label: "Api Group", value: resourceData.apiGroup || '-' },
+                    { label: "Kind", value: resourceData.kind },
                     { label: "Name", value: resourceData.name },
                     { label: "Namespace", value: resourceData.namespace || '-' },
-                    { label: "Scope", value: resourceData.scope || '-' },
-                    { label: "Kind", value: resourceData.kind }
+                    { label: "Scope", value: resourceData.scope || '-' }
                 ]}
                 columns={1}
             />

@@ -1,0 +1,10 @@
+resourceName: V1DeploymentStrategy
+properties:
+  rollingUpdate:
+    type: V1RollingUpdateDeployment
+    optional: true
+  type:
+    type: string
+    optional: true
+    description: Type of deployment. Can be \"Recreate\" or \"RollingUpdate\". Default is RollingUpdate.
+description: DeploymentStrategy describes how to replace existing pods with new ones.

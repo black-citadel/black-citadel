@@ -1,0 +1,103 @@
+resourceName: V1PersistentVolumeSpec
+properties:
+  accessModes:
+    type: string[]
+    optional: true
+    description: "accessModes contains all ways the volume can be mounted. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes"
+  awsElasticBlockStore:
+    type: V1AWSElasticBlockStoreVolumeSource
+    optional: true
+  azureDisk:
+    type: V1AzureDiskVolumeSource
+    optional: true
+  azureFile:
+    type: V1AzureFilePersistentVolumeSource
+    optional: true
+  capacity:
+    type: Record<string, string>
+    optional: true
+    description: "capacity is the description of the persistent volume\\'s resources and capacity. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity"
+  cephfs:
+    type: V1CephFSPersistentVolumeSource
+    optional: true
+  cinder:
+    type: V1CinderPersistentVolumeSource
+    optional: true
+  claimRef:
+    type: V1ObjectReference
+    optional: true
+  csi:
+    type: V1CSIPersistentVolumeSource
+    optional: true
+  fc:
+    type: V1FCVolumeSource
+    optional: true
+  flexVolume:
+    type: V1FlexPersistentVolumeSource
+    optional: true
+  flocker:
+    type: V1FlockerVolumeSource
+    optional: true
+  gcePersistentDisk:
+    type: V1GCEPersistentDiskVolumeSource
+    optional: true
+  glusterfs:
+    type: V1GlusterfsPersistentVolumeSource
+    optional: true
+  hostPath:
+    type: V1HostPathVolumeSource
+    optional: true
+  iscsi:
+    type: V1ISCSIPersistentVolumeSource
+    optional: true
+  local:
+    type: V1LocalVolumeSource
+    optional: true
+  mountOptions:
+    type: string[]
+    optional: true
+    description: "mountOptions is the list of mount options, e.g. [\\\"ro\\\", \\\"soft\\\"]. Not validated - mount will simply fail if one is invalid. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#mount-options"
+  nfs:
+    type: V1NFSVolumeSource
+    optional: true
+  nodeAffinity:
+    type: V1VolumeNodeAffinity
+    optional: true
+  persistentVolumeReclaimPolicy:
+    type: string
+    optional: true
+    description: "persistentVolumeReclaimPolicy defines what happens to a persistent volume when released from its claim. Valid options are Retain (default for manually created PersistentVolumes), Delete (default for dynamically provisioned PersistentVolumes), and Recycle (deprecated). Recycle must be supported by the volume plugin underlying this PersistentVolume. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#reclaiming"
+  photonPersistentDisk:
+    type: V1PhotonPersistentDiskVolumeSource
+    optional: true
+  portworxVolume:
+    type: V1PortworxVolumeSource
+    optional: true
+  quobyte:
+    type: V1QuobyteVolumeSource
+    optional: true
+  rbd:
+    type: V1RBDPersistentVolumeSource
+    optional: true
+  scaleIO:
+    type: V1ScaleIOPersistentVolumeSource
+    optional: true
+  storageClassName:
+    type: string
+    optional: true
+    description: storageClassName is the name of StorageClass to which this persistent volume belongs. Empty value means that this volume does not belong to any StorageClass.
+  storageos:
+    type: V1StorageOSPersistentVolumeSource
+    optional: true
+  volumeAttributesClassName:
+    type: string
+    optional: true
+    description: Name of VolumeAttributesClass to which this persistent volume belongs. Empty value is not allowed. When this field is not set, it indicates that this volume does not belong to any VolumeAttributesClass. This field is mutable and can be changed by the CSI driver after a volume has been updated successfully to a new class. For an unbound PersistentVolume, the volumeAttributesClassName will be matched with unbound PersistentVolumeClaims during the binding process. This is an alpha field and requires enabling VolumeAttributesClass feature.
+  volumeMode:
+    type: string
+    optional: true
+    description: volumeMode defines if a volume is intended to be used with a formatted filesystem or to remain in raw block state. Value of Filesystem is implied when not included in spec.
+  vsphereVolume:
+    type: V1VsphereVirtualDiskVolumeSource
+    optional: true
+description: PersistentVolumeSpec is the specification of a persistent volume.

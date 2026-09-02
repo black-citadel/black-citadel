@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1RBDPersistentVolumeSource } from "@utils/k8s-types";
+import type { V1RBDPersistentVolumeSource } from "@kubernetes/client-node";
 import { SecretReferenceDetails } from "../V1SecretReference/details";
 
 export const RBDPersistentVolumeSourceDetails = ({ resourceData }: { resourceData: V1RBDPersistentVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.fsType, resourceData.image, resourceData.keyring, resourceData.pool, resourceData.user].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

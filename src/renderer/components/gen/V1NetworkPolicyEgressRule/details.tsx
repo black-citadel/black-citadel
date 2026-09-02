@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1NetworkPolicyEgressRule } from "@utils/k8s-types";
+import type { V1NetworkPolicyEgressRule } from "@kubernetes/client-node";
 import { NetworkPolicyPortDetails } from "../V1NetworkPolicyPort/details";
 import { NetworkPolicyPeerDetails } from "../V1NetworkPolicyPeer/details";
 
@@ -7,7 +7,7 @@ export const NetworkPolicyEgressRuleDetails = ({ resourceData }: { resourceData:
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.ports, resourceData.to].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

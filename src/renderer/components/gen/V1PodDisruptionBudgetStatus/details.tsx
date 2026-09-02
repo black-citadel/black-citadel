@@ -1,5 +1,5 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1PodDisruptionBudgetStatus } from "@utils/k8s-types";
+import type { V1PodDisruptionBudgetStatus } from "@kubernetes/client-node";
 import { ConditionsTable } from "@components/base/conditions-table";
 
 export const PodDisruptionBudgetStatusDetails = ({ resourceData }: { resourceData: V1PodDisruptionBudgetStatus }): JSX.Element => {
@@ -7,13 +7,13 @@ export const PodDisruptionBudgetStatusDetails = ({ resourceData }: { resourceDat
     const disruptedPodsItems = resourceData.disruptedPods
         ? Object.entries(resourceData.disruptedPods).map(([key, value]) => ({
             label: key,
-            value: value instanceof Date ? value.toISOString() : String(value)
+            value: value
         }))
         : [];
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(disruptedPodsItems.length > 0);
         // Check simple properties

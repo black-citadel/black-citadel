@@ -1,0 +1,9 @@
+resourceName: V1IngressBackend
+properties:
+  resource:
+    type: V1TypedLocalObjectReference
+    optional: true
+  service:
+    type: V1IngressServiceBackend
+    optional: true
+description: IngressBackend describes all endpoints for a given service and port.

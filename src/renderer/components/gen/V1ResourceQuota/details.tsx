@@ -1,6 +1,6 @@
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1ResourceQuota } from "@utils/k8s-types";
+import type { V1ResourceQuota } from "@kubernetes/client-node";
 import { ResourceQuotaSpecDetails } from "../V1ResourceQuotaSpec/details";
 import { ResourceQuotaStatusDetails } from "../V1ResourceQuotaStatus/details";
 
@@ -8,7 +8,7 @@ export const ResourceQuotaDetails = ({ resourceData }: { resourceData: V1Resourc
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.spec, resourceData.status].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

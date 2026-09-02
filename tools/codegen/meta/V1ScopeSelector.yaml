@@ -1,0 +1,7 @@
+resourceName: V1ScopeSelector
+properties:
+  matchExpressions:
+    type: V1ScopedResourceSelectorRequirement[]
+    optional: true
+    description: A list of scope selector requirements by scope of the resources.
+description: A scope selector represents the AND of the selectors represented by the scoped-resource selector requirements.

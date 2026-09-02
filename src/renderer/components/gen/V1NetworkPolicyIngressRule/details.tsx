@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1NetworkPolicyIngressRule } from "@utils/k8s-types";
+import type { V1NetworkPolicyIngressRule } from "@kubernetes/client-node";
 import { NetworkPolicyPeerDetails } from "../V1NetworkPolicyPeer/details";
 import { NetworkPolicyPortDetails } from "../V1NetworkPolicyPort/details";
 
@@ -7,7 +7,7 @@ export const NetworkPolicyIngressRuleDetails = ({ resourceData }: { resourceData
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.from, resourceData.ports].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
@@ -21,7 +21,7 @@ export const NetworkPolicyIngressRuleDetails = ({ resourceData }: { resourceData
         <>
             {resourceData.from && (
                 <Container title="From">
-                    {resourceData.from.map((item: any, index: number) => (
+                    {resourceData.from.map((item, index) => (
                         <NetworkPolicyPeerDetails key={index} resourceData={item} />
                     ))}
                 </Container>

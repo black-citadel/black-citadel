@@ -1,0 +1,10 @@
+resourceName: V2MetricIdentifier
+properties:
+  name:
+    type: string
+    optional: false
+    description: name is the name of the given metric
+  selector:
+    type: V1LabelSelector
+    optional: true
+description: MetricIdentifier defines the name and optionally selector for a metric

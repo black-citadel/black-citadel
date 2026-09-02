@@ -1,12 +1,12 @@
 import { MetadataDetails } from "@components/metadata";
-import { V1PodTemplateSpec } from "@utils/k8s-types";
+import type { V1PodTemplateSpec } from "@kubernetes/client-node";
 import { PodSpecDetails } from "../V1PodSpec/details";
 
 export const PodTemplateSpecDetails = ({ resourceData }: { resourceData: V1PodTemplateSpec }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.spec].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

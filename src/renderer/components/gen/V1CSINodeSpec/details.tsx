@@ -1,12 +1,12 @@
 import { Container } from "@components/base/container";
-import { V1CSINodeSpec } from "@utils/k8s-types";
+import type { V1CSINodeSpec } from "@kubernetes/client-node";
 import { CSINodeDriverDetails } from "../V1CSINodeDriver/details";
 
 export const CSINodeSpecDetails = ({ resourceData }: { resourceData: V1CSINodeSpec }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.drivers].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

@@ -1,6 +1,6 @@
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1StatefulSet } from "@utils/k8s-types";
+import type { V1StatefulSet } from "@kubernetes/client-node";
 import { StatefulSetSpecDetails } from "../V1StatefulSetSpec/details";
 import { StatefulSetStatusDetails } from "../V1StatefulSetStatus/details";
 
@@ -8,7 +8,7 @@ export const StatefulSetDetails = ({ resourceData }: { resourceData: V1StatefulS
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.spec, resourceData.status].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

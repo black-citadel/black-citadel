@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1PodAffinity } from "@utils/k8s-types";
+import type { V1PodAffinity } from "@kubernetes/client-node";
 import { WeightedPodAffinityTermDetails } from "../V1WeightedPodAffinityTerm/details";
 import { PodAffinityTermDetails } from "../V1PodAffinityTerm/details";
 
@@ -7,7 +7,7 @@ export const PodAffinityDetails = ({ resourceData }: { resourceData: V1PodAffini
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.preferredDuringSchedulingIgnoredDuringExecution, resourceData.requiredDuringSchedulingIgnoredDuringExecution].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

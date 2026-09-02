@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1AzureFilePersistentVolumeSource } from "@utils/k8s-types";
+import type { V1AzureFilePersistentVolumeSource } from "@kubernetes/client-node";
 
 export const AzureFilePersistentVolumeSourceDetails = ({ resourceData }: { resourceData: V1AzureFilePersistentVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.secretName, resourceData.secretNamespace, resourceData.shareName].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

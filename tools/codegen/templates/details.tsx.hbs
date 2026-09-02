@@ -1,0 +1,139 @@
+{{#if needsPanelGrid}}import { PanelGrid } from "@components/layout/panel";
+{{/if}}{{#if needsContainer}}import { Container } from "@components/base/container";
+{{/if}}{{#if hasMetadata}}import { MetadataDetails } from "@components/metadata";
+{{/if}}import type { {{resourceTypeName}} } from "@kubernetes/client-node";
+{{#each nestedK8sTypes}}
+{{#if this.isCustom}}
+import { {{this.componentName}} } from "{{#if this.importPath}}{{this.importPath}}{{else}}@components/{{this.componentName}}{{/if}}";
+{{else}}
+import { {{this.componentName}} } from "../{{this.typeName}}/details";
+{{/if}}
+{{/each}}
+
+export const {{componentName}} = ({ resourceData }: { resourceData: {{resourceTypeName}} }): JSX.Element => {
+{{#each objectProperties}}
+    // Transform the {{displayName}} object into an array of PanelGridItem objects
+    const {{varName}} = resourceData.{{name}}
+        ? Object.entries(resourceData.{{name}}).map(([key, value]) => ({
+            label: key,
+            value: value
+        }))
+        : [];
+{{/each}}
+
+    // Check if component has any content to display
+    const hasContent = (() => {
+        const checks: boolean[] = [];
+        {{#if objectProperties}}
+        // Check object properties
+        checks.push({{#each objectProperties}}{{varName}}.length > 0{{#unless @last}} || {{/unless}}{{/each}});
+        {{/if}}
+        {{#if simpleProperties}}
+        // Check simple properties
+        checks.push([{{#each simpleProperties}}resourceData.{{name}}{{#unless @last}}, {{/unless}}{{/each}}].some(v => v !== undefined && v !== null));
+        {{/if}}
+        {{#if booleanProperties}}
+        // Boolean properties always have content
+        checks.push(true);
+        {{/if}}
+        {{#if k8sTypeProperties}}
+        // Check k8s type properties
+        checks.push([{{#each k8sTypeProperties}}resourceData.{{name}}{{#unless @last}}, {{/unless}}{{/each}}].some(v => v !== undefined && v !== null));
+        {{/if}}
+        return checks.length > 0 ? checks.some(v => v) : false;
+    })();
+
+    if (!hasContent) {
+        return <div className="italic text-neutral-400 text-sm">No data</div>;
+    }
+
+    return (
+        <>
+{{#each objectProperties}}
+            <PanelGrid
+                title="{{displayName}}"
+                items={ {{varName}} }
+                columns={1}
+            />
+
+{{/each}}
+{{#if simpleProperties}}
+            <PanelGrid
+                title="Properties"
+                items={[
+{{#each simpleProperties}}
+                    { label: "{{displayName}}", value: resourceData.{{name}}{{#if optional}} || '-'{{/if}} }{{#unless @last}},{{/unless}}
+{{/each}}
+                ]}
+                columns={1}
+            />
+
+{{/if}}
+{{#if booleanProperties}}
+            <PanelGrid
+                title="Configuration"
+                items={[
+{{#each booleanProperties}}
+                    { label: "{{displayName}}", value: resourceData.{{name}} ? "Yes" : "No" }{{#unless @last}},{{/unless}}
+{{/each}}
+                ]}
+                columns={1}
+            />
+
+{{/if}}
+{{#each k8sTypeProperties}}
+            {{#if isArray}}
+            {resourceData.{{name}} && (
+                {{#if hasCustomRenderer}}
+                {{#if (eq name 'conditions')}}
+                <{{customComponentName}} {{customPropName}}={ resourceData.{{name}} } />
+                {{else}}
+                <Container title="{{displayName}}">
+                    <{{customComponentName}} {{customPropName}}={ resourceData.{{name}} } />
+                </Container>
+                {{/if}}
+                {{else}}
+                <Container title="{{displayName}}">
+                    {resourceData.{{name}}.map((item, index) => (
+                        <{{componentName}} key={index} resourceData={item} />
+                    ))}
+                </Container>
+                {{/if}}
+            )}
+            {{else}}
+            {{#if hasCustomRenderer}}
+            {{#if optional}}
+            {resourceData.{{name}} && <{{customComponentName}} {{customPropName}}={ resourceData.{{name}} } />}
+            {{else}}
+            <{{customComponentName}} {{customPropName}}={ resourceData.{{name}} } />
+            {{/if}}
+            {{else}}
+            {{#if isSpec}}
+            {{#if optional}}
+            {resourceData.{{name}} && <{{componentName}} resourceData={ resourceData.{{name}} } />}
+            {{else}}
+            <{{componentName}} resourceData={ resourceData.{{name}} } />
+            {{/if}}
+            {{else}}
+            {{#if optional}}
+            {resourceData.{{name}} && (
+                <Container title="{{displayName}}">
+                    <{{componentName}} resourceData={ resourceData.{{name}} } />
+                </Container>
+            )}
+            {{else}}
+            <Container title="{{displayName}}">
+                <{{componentName}} resourceData={ resourceData.{{name}} } />
+            </Container>
+            {{/if}}
+            {{/if}}
+            {{/if}}
+            {{/if}}
+
+{{/each}}
+{{#if hasMetadata}}
+            <MetadataDetails metadata={resourceData.metadata} />
+{{/if}}
+        </>
+    )
+}

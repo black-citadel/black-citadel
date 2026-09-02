@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { MetadataDetails } from "@components/metadata";
-import { V1Secret } from "@utils/k8s-types";
+import type { V1Secret } from "@kubernetes/client-node";
 import { SecretData } from "@components/configuration/secret/secret-data";
 
 export const SecretDetails = ({ resourceData }: { resourceData: V1Secret }): JSX.Element => {
@@ -14,7 +14,7 @@ export const SecretDetails = ({ resourceData }: { resourceData: V1Secret }): JSX
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(stringDataItems.length > 0);
         // Check simple properties

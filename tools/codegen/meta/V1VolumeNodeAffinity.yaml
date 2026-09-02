@@ -1,0 +1,6 @@
+resourceName: V1VolumeNodeAffinity
+properties:
+  required:
+    type: V1NodeSelector
+    optional: true
+description: VolumeNodeAffinity defines constraints that limit what nodes this volume can be accessed from.

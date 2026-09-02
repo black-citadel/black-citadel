@@ -1,0 +1,15 @@
+resourceName: V1CronJobStatus
+properties:
+  active:
+    type: V1ObjectReference[]
+    optional: true
+    description: A list of pointers to currently running jobs.
+  lastScheduleTime:
+    type: Date
+    optional: true
+    description: Information when was the last time the job was successfully scheduled.
+  lastSuccessfulTime:
+    type: Date
+    optional: true
+    description: Information when was the last time the job successfully completed.
+description: CronJobStatus represents the current state of a cron job.

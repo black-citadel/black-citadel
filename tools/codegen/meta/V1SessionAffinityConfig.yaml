@@ -1,0 +1,6 @@
+resourceName: V1SessionAffinityConfig
+properties:
+  clientIP:
+    type: V1ClientIPConfig
+    optional: true
+description: SessionAffinityConfig represents the configurations of session affinity.

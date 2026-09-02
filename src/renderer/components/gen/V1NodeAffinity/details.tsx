@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1NodeAffinity } from "@utils/k8s-types";
+import type { V1NodeAffinity } from "@kubernetes/client-node";
 import { PreferredSchedulingTermDetails } from "../V1PreferredSchedulingTerm/details";
 import { NodeSelectorDetails } from "../V1NodeSelector/details";
 
@@ -7,7 +7,7 @@ export const NodeAffinityDetails = ({ resourceData }: { resourceData: V1NodeAffi
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.preferredDuringSchedulingIgnoredDuringExecution, resourceData.requiredDuringSchedulingIgnoredDuringExecution].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

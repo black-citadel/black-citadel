@@ -1,0 +1,18 @@
+resourceName: V1VolumeProjection
+properties:
+  clusterTrustBundle:
+    type: V1ClusterTrustBundleProjection
+    optional: true
+  configMap:
+    type: V1ConfigMapProjection
+    optional: true
+  downwardAPI:
+    type: V1DownwardAPIProjection
+    optional: true
+  secret:
+    type: V1SecretProjection
+    optional: true
+  serviceAccountToken:
+    type: V1ServiceAccountTokenProjection
+    optional: true
+description: Projection that may be projected along with other supported volume types

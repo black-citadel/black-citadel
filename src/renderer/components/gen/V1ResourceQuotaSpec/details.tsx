@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1ResourceQuotaSpec } from "@utils/k8s-types";
+import type { V1ResourceQuotaSpec } from "@kubernetes/client-node";
 import { ScopeSelectorDetails } from "../V1ScopeSelector/details";
 
 export const ResourceQuotaSpecDetails = ({ resourceData }: { resourceData: V1ResourceQuotaSpec }): JSX.Element => {
@@ -14,7 +14,7 @@ export const ResourceQuotaSpecDetails = ({ resourceData }: { resourceData: V1Res
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(hardItems.length > 0);
         // Check k8s type properties

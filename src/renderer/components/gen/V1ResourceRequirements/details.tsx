@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1ResourceRequirements } from "@utils/k8s-types";
+import type { V1ResourceRequirements } from "@kubernetes/client-node";
 import { ResourceClaimDetails } from "../V1ResourceClaim/details";
 
 export const ResourceRequirementsDetails = ({ resourceData }: { resourceData: V1ResourceRequirements }): JSX.Element => {
@@ -21,7 +21,7 @@ export const ResourceRequirementsDetails = ({ resourceData }: { resourceData: V1
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(limitsItems.length > 0 || requestsItems.length > 0);
         // Check k8s type properties

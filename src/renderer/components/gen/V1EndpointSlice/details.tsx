@@ -1,14 +1,14 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1EndpointSlice } from "@utils/k8s-types";
+import type { V1EndpointSlice } from "@kubernetes/client-node";
 import { EndpointDetails } from "../V1Endpoint/details";
 
 export const EndpointSliceDetails = ({ resourceData }: { resourceData: V1EndpointSlice }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.addressType].some(v => v !== undefined && v !== null));
         // Check k8s type properties

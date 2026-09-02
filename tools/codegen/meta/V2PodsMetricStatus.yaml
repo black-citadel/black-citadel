@@ -1,0 +1,9 @@
+resourceName: V2PodsMetricStatus
+properties:
+  current:
+    type: V2MetricValueStatus
+    optional: false
+  metric:
+    type: V2MetricIdentifier
+    optional: false
+description: PodsMetricStatus indicates the current value of a metric describing each pod in the current scale target (for example, transactions-processed-per-second).

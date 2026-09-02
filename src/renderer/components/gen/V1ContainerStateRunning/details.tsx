@@ -1,6 +1,6 @@
-import { V1ContainerStateRunning } from "@utils/k8s-types";
+import type { V1ContainerStateRunning } from "@kubernetes/client-node";
 
-export const ContainerStateRunningDetails = ({ resourceData: _resourceData }: { resourceData: V1ContainerStateRunning }): JSX.Element => {
+export const ContainerStateRunningDetails = ({ resourceData }: { resourceData: V1ContainerStateRunning }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {

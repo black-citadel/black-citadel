@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1NetworkPolicySpec } from "@utils/k8s-types";
+import type { V1NetworkPolicySpec } from "@kubernetes/client-node";
 import { NetworkPolicyEgressRuleDetails } from "../V1NetworkPolicyEgressRule/details";
 import { NetworkPolicyIngressRuleDetails } from "../V1NetworkPolicyIngressRule/details";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
@@ -8,7 +8,7 @@ export const NetworkPolicySpecDetails = ({ resourceData }: { resourceData: V1Net
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.egress, resourceData.ingress, resourceData.podSelector].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

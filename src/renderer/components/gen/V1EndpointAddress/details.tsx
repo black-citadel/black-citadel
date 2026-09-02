@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1EndpointAddress } from "@utils/k8s-types";
+import type { V1EndpointAddress } from "@kubernetes/client-node";
 import { ObjectReferenceDetails } from "../V1ObjectReference/details";
 
 export const EndpointAddressDetails = ({ resourceData }: { resourceData: V1EndpointAddress }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.hostname, resourceData.ip, resourceData.nodeName].some(v => v !== undefined && v !== null));
         // Check k8s type properties

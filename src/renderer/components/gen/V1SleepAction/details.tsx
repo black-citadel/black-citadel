@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1SleepAction } from "@utils/k8s-types";
+import type { V1SleepAction } from "@kubernetes/client-node";
 
 export const SleepActionDetails = ({ resourceData }: { resourceData: V1SleepAction }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.seconds].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1DeploymentStatus } from "@utils/k8s-types";
+import type { V1DeploymentStatus } from "@kubernetes/client-node";
 import { DeploymentConditionDetails } from "../V1DeploymentCondition/details";
 
 export const DeploymentStatusDetails = ({ resourceData }: { resourceData: V1DeploymentStatus }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.availableReplicas, resourceData.collisionCount, resourceData.observedGeneration, resourceData.readyReplicas, resourceData.replicas, resourceData.unavailableReplicas, resourceData.updatedReplicas].some(v => v !== undefined && v !== null));
         // Check k8s type properties

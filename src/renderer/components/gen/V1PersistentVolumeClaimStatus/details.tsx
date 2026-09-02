@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1PersistentVolumeClaimStatus } from "@utils/k8s-types";
+import type { V1PersistentVolumeClaimStatus } from "@kubernetes/client-node";
 import { ConditionsTable } from "@components/base/conditions-table";
 import { ModifyVolumeStatusDetails } from "../V1ModifyVolumeStatus/details";
 
@@ -29,7 +29,7 @@ export const PersistentVolumeClaimStatusDetails = ({ resourceData }: { resourceD
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(allocatedResourceStatusesItems.length > 0 || allocatedResourcesItems.length > 0 || capacityItems.length > 0);
         // Check simple properties

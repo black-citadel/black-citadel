@@ -1,0 +1,9 @@
+resourceName: V1JobTemplateSpec
+properties:
+  metadata:
+    type: V1ObjectMeta
+    optional: true
+  spec:
+    type: V1JobSpec
+    optional: true
+description: JobTemplateSpec describes the data a Job should have when created from a template

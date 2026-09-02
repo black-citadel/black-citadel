@@ -1,0 +1,10 @@
+resourceName: V1DaemonSetUpdateStrategy
+properties:
+  rollingUpdate:
+    type: V1RollingUpdateDaemonSet
+    optional: true
+  type:
+    type: string
+    optional: true
+    description: Type of daemon set update. Can be \"RollingUpdate\" or \"OnDelete\". Default is RollingUpdate.
+description: DaemonSetUpdateStrategy is a struct used to control the update strategy for a DaemonSet.

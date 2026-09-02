@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1ContainerPort } from "@utils/k8s-types";
+import type { V1ContainerPort } from "@kubernetes/client-node";
 
 export const ContainerPortDetails = ({ resourceData }: { resourceData: V1ContainerPort }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.containerPort, resourceData.hostIP, resourceData.hostPort, resourceData.name, resourceData.protocol].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

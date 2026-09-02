@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1HTTPIngressPath } from "@utils/k8s-types";
+import type { V1HTTPIngressPath } from "@kubernetes/client-node";
 import { IngressBackendDetails } from "../V1IngressBackend/details";
 
 export const HTTPIngressPathDetails = ({ resourceData }: { resourceData: V1HTTPIngressPath }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.path, resourceData.pathType].some(v => v !== undefined && v !== null));
         // Check k8s type properties

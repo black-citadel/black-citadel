@@ -1,0 +1,9 @@
+resourceName: V2ExternalMetricStatus
+properties:
+  current:
+    type: V2MetricValueStatus
+    optional: false
+  metric:
+    type: V2MetricIdentifier
+    optional: false
+description: ExternalMetricStatus indicates the current value of a global metric not associated with any Kubernetes object.

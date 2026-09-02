@@ -75,6 +75,14 @@ The application follows Electron's multi-process architecture:
   - Views folder with list/details/create pages
   - Consistent pattern: list.tsx, details.tsx, create.tsx (where applicable)
 
+## Generated resource components
+
+The detail components under `src/renderer/components/gen/` are generated, not hand-written. The
+generator lives in `tools/codegen/` (see its README) and reads the Kubernetes types from the
+installed `@kubernetes/client-node`. To change how generated details render, edit the template in
+`tools/codegen/templates/` or the shared layout components it uses, then run `npm run generate`
+and commit the regenerated output with the change. Never edit files under `gen/` directly.
+
 ## Key Patterns
 
 ### Resource Views

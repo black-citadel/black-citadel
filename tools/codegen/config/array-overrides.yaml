@@ -1,0 +1,85 @@
+# Array rendering overrides configuration
+# This file defines custom rendering for specific array types
+
+overrides:
+  # V1ServicePort array should use ServicePorts component
+  V1ServicePort:
+    componentName: ServicePorts
+    propName: ports
+    importPath: "@components/networking/service/service-ports"
+  
+  CoreV1EndpointPort:
+    componentName: EndpointPorts
+    propName: ports
+    importPath: "@components/networking/endpoints/endpoint-ports"
+  
+  V1IngressRule:
+    componentName: IngressRules
+    propName: rules
+    importPath: "@components/networking/ingress/ingress-rules"
+  
+  # All condition arrays should use ConditionsTable component
+  V1PodCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1Condition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V2HorizontalPodAutoscalerCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1StatefulSetCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1JobCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1NodeCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1PersistentVolumeClaimCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1ReplicationControllerCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1ComponentCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1APIServiceCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1FlowSchemaCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1CustomResourceDefinitionCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+    
+  V1CertificateSigningRequestCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"

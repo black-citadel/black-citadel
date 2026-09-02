@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1PersistentVolumeSpec } from "@utils/k8s-types";
+import type { V1PersistentVolumeSpec } from "@kubernetes/client-node";
 import { AWSElasticBlockStoreVolumeSourceDetails } from "../V1AWSElasticBlockStoreVolumeSource/details";
 import { AzureDiskVolumeSourceDetails } from "../V1AzureDiskVolumeSource/details";
 import { AzureFilePersistentVolumeSourceDetails } from "../V1AzureFilePersistentVolumeSource/details";
@@ -37,7 +37,7 @@ export const PersistentVolumeSpecDetails = ({ resourceData }: { resourceData: V1
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(capacityItems.length > 0);
         // Check simple properties

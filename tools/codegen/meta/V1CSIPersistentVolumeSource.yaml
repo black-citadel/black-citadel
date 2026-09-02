@@ -1,0 +1,38 @@
+resourceName: V1CSIPersistentVolumeSource
+properties:
+  controllerExpandSecretRef:
+    type: V1SecretReference
+    optional: true
+  controllerPublishSecretRef:
+    type: V1SecretReference
+    optional: true
+  driver:
+    type: string
+    optional: false
+    description: driver is the name of the driver to use for this volume. Required.
+  fsType:
+    type: string
+    optional: true
+    description: fsType to mount. Must be a filesystem type supported by the host operating system. Ex. \"ext4\", \"xfs\", \"ntfs\".
+  nodeExpandSecretRef:
+    type: V1SecretReference
+    optional: true
+  nodePublishSecretRef:
+    type: V1SecretReference
+    optional: true
+  nodeStageSecretRef:
+    type: V1SecretReference
+    optional: true
+  readOnly:
+    type: boolean
+    optional: true
+    description: readOnly value to pass to ControllerPublishVolumeRequest. Defaults to false (read/write).
+  volumeAttributes:
+    type: Record<string, string>
+    optional: true
+    description: volumeAttributes of the volume to publish.
+  volumeHandle:
+    type: string
+    optional: false
+    description: volumeHandle is the unique volume name returned by the CSI volume plugin’s CreateVolume to refer to the volume on all subsequent calls. Required.
+description: Represents storage that is managed by an external CSI volume driver (Beta feature)

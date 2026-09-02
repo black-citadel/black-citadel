@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1OwnerReference } from "@utils/k8s-types";
+import type { V1OwnerReference } from "@kubernetes/client-node";
 
 export const OwnerReferenceDetails = ({ resourceData }: { resourceData: V1OwnerReference }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
-        checks.push([resourceData.name, resourceData.uid, resourceData.apiVersion, resourceData.kind].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.apiVersion, resourceData.kind, resourceData.name, resourceData.uid].some(v => v !== undefined && v !== null));
         // Boolean properties always have content
         checks.push(true);
         return checks.length > 0 ? checks.some(v => v) : false;
@@ -22,10 +22,10 @@ export const OwnerReferenceDetails = ({ resourceData }: { resourceData: V1OwnerR
             <PanelGrid
                 title="Properties"
                 items={[
-                    { label: "Name", value: resourceData.name },
-                    { label: "Uid", value: resourceData.uid },
                     { label: "Api Version", value: resourceData.apiVersion },
-                    { label: "Kind", value: resourceData.kind }
+                    { label: "Kind", value: resourceData.kind },
+                    { label: "Name", value: resourceData.name },
+                    { label: "Uid", value: resourceData.uid }
                 ]}
                 columns={1}
             />

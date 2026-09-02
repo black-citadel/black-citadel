@@ -1,5 +1,5 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1LimitRangeItem } from "@utils/k8s-types";
+import type { V1LimitRangeItem } from "@kubernetes/client-node";
 
 export const LimitRangeItemDetails = ({ resourceData }: { resourceData: V1LimitRangeItem }): JSX.Element => {
     // Transform the _default object into an array of PanelGridItem objects
@@ -40,7 +40,7 @@ export const LimitRangeItemDetails = ({ resourceData }: { resourceData: V1LimitR
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(_defaultItems.length > 0 || defaultRequestItems.length > 0 || maxItems.length > 0 || maxLimitRequestRatioItems.length > 0 || minItems.length > 0);
         // Check simple properties

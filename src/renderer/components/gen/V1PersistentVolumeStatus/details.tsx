@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1PersistentVolumeStatus } from "@utils/k8s-types";
+import type { V1PersistentVolumeStatus } from "@kubernetes/client-node";
 
 export const PersistentVolumeStatusDetails = ({ resourceData }: { resourceData: V1PersistentVolumeStatus }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.message, resourceData.phase, resourceData.reason].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

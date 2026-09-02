@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1SuccessPolicyRule } from "@utils/k8s-types";
+import type { V1SuccessPolicyRule } from "@kubernetes/client-node";
 
 export const SuccessPolicyRuleDetails = ({ resourceData }: { resourceData: V1SuccessPolicyRule }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.succeededCount, resourceData.succeededIndexes].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

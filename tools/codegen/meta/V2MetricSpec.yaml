@@ -1,0 +1,22 @@
+resourceName: V2MetricSpec
+properties:
+  containerResource:
+    type: V2ContainerResourceMetricSource
+    optional: true
+  external:
+    type: V2ExternalMetricSource
+    optional: true
+  object:
+    type: V2ObjectMetricSource
+    optional: true
+  pods:
+    type: V2PodsMetricSource
+    optional: true
+  resource:
+    type: V2ResourceMetricSource
+    optional: true
+  type:
+    type: string
+    optional: false
+    description: "type is the type of metric source.  It should be one of \\\"ContainerResource\\\", \\\"External\\\", \\\"Object\\\", \\\"Pods\\\" or \\\"Resource\\\", each mapping to a matching field in the object. Note: \\\"ContainerResource\\\" type is available on when the feature-gate HPAContainerMetrics is enabled"
+description: MetricSpec specifies how to scale based on a single metric (only `type` and one other matching field should be set at once).

@@ -1,6 +1,6 @@
-import { V1ExecAction } from "@utils/k8s-types";
+import type { V1ExecAction } from "@kubernetes/client-node";
 
-export const ExecActionDetails = ({ resourceData: _resourceData }: { resourceData: V1ExecAction }): JSX.Element => {
+export const ExecActionDetails = ({ resourceData }: { resourceData: V1ExecAction }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {

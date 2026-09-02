@@ -1,0 +1,12 @@
+resourceName: V1NetworkPolicyPeer
+properties:
+  ipBlock:
+    type: V1IPBlock
+    optional: true
+  namespaceSelector:
+    type: V1LabelSelector
+    optional: true
+  podSelector:
+    type: V1LabelSelector
+    optional: true
+description: NetworkPolicyPeer describes a peer to allow traffic to/from. Only certain combinations of fields are allowed

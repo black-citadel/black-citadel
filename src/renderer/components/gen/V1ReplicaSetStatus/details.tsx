@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1ReplicaSetStatus } from "@utils/k8s-types";
+import type { V1ReplicaSetStatus } from "@kubernetes/client-node";
 import { ReplicaSetConditionDetails } from "../V1ReplicaSetCondition/details";
 
 export const ReplicaSetStatusDetails = ({ resourceData }: { resourceData: V1ReplicaSetStatus }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.availableReplicas, resourceData.fullyLabeledReplicas, resourceData.observedGeneration, resourceData.readyReplicas, resourceData.replicas].some(v => v !== undefined && v !== null));
         // Check k8s type properties

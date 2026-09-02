@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1LabelSelector } from "@utils/k8s-types";
+import type { V1LabelSelector } from "@kubernetes/client-node";
 import { LabelSelectorRequirementDetails } from "../V1LabelSelectorRequirement/details";
 
 export const LabelSelectorDetails = ({ resourceData }: { resourceData: V1LabelSelector }): JSX.Element => {
@@ -14,7 +14,7 @@ export const LabelSelectorDetails = ({ resourceData }: { resourceData: V1LabelSe
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(matchLabelsItems.length > 0);
         // Check k8s type properties

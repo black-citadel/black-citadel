@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1LifecycleHandler } from "@utils/k8s-types";
+import type { V1LifecycleHandler } from "@kubernetes/client-node";
 import { ExecActionDetails } from "../V1ExecAction/details";
 import { HTTPGetActionDetails } from "../V1HTTPGetAction/details";
 import { SleepActionDetails } from "../V1SleepAction/details";
@@ -9,7 +9,7 @@ export const LifecycleHandlerDetails = ({ resourceData }: { resourceData: V1Life
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.exec, resourceData.httpGet, resourceData.sleep, resourceData.tcpSocket].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

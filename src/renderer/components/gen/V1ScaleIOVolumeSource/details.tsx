@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1ScaleIOVolumeSource } from "@utils/k8s-types";
+import type { V1ScaleIOVolumeSource } from "@kubernetes/client-node";
 import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
 
 export const ScaleIOVolumeSourceDetails = ({ resourceData }: { resourceData: V1ScaleIOVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.fsType, resourceData.gateway, resourceData.protectionDomain, resourceData.storageMode, resourceData.storagePool, resourceData.system, resourceData.volumeName].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

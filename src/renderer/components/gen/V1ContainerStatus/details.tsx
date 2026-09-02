@@ -1,10 +1,8 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1ContainerStatus } from "@utils/k8s-types";
-import { ResourceStatusDetails } from "../V1ResourceStatus/details";
+import type { V1ContainerStatus } from "@kubernetes/client-node";
 import { ContainerStateDetails } from "../V1ContainerState/details";
 import { ResourceRequirementsDetails } from "../V1ResourceRequirements/details";
-import { ContainerUserDetails } from "../V1ContainerUser/details";
 import { VolumeMountStatusDetails } from "../V1VolumeMountStatus/details";
 
 export const ContainerStatusDetails = ({ resourceData }: { resourceData: V1ContainerStatus }): JSX.Element => {
@@ -18,7 +16,7 @@ export const ContainerStatusDetails = ({ resourceData }: { resourceData: V1Conta
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(allocatedResourcesItems.length > 0);
         // Check simple properties

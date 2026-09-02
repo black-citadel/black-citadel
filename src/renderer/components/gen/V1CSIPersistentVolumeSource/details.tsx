@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1CSIPersistentVolumeSource } from "@utils/k8s-types";
+import type { V1CSIPersistentVolumeSource } from "@kubernetes/client-node";
 import { SecretReferenceDetails } from "../V1SecretReference/details";
 
 export const CSIPersistentVolumeSourceDetails = ({ resourceData }: { resourceData: V1CSIPersistentVolumeSource }): JSX.Element => {
@@ -14,7 +14,7 @@ export const CSIPersistentVolumeSourceDetails = ({ resourceData }: { resourceDat
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(volumeAttributesItems.length > 0);
         // Check simple properties

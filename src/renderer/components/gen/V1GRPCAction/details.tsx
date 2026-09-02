@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1GRPCAction } from "@utils/k8s-types";
+import type { V1GRPCAction } from "@kubernetes/client-node";
 
 export const GRPCActionDetails = ({ resourceData }: { resourceData: V1GRPCAction }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.port, resourceData.service].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

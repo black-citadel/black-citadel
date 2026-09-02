@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1DeploymentSpec } from "@utils/k8s-types";
+import type { V1DeploymentSpec } from "@kubernetes/client-node";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 import { DeploymentStrategyDetails } from "../V1DeploymentStrategy/details";
 import { PodTemplateSpecDetails } from "../V1PodTemplateSpec/details";
@@ -9,7 +9,7 @@ export const DeploymentSpecDetails = ({ resourceData }: { resourceData: V1Deploy
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.minReadySeconds, resourceData.progressDeadlineSeconds, resourceData.replicas, resourceData.revisionHistoryLimit].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

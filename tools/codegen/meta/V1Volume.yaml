@@ -1,0 +1,94 @@
+resourceName: V1Volume
+properties:
+  awsElasticBlockStore:
+    type: V1AWSElasticBlockStoreVolumeSource
+    optional: true
+  azureDisk:
+    type: V1AzureDiskVolumeSource
+    optional: true
+  azureFile:
+    type: V1AzureFileVolumeSource
+    optional: true
+  cephfs:
+    type: V1CephFSVolumeSource
+    optional: true
+  cinder:
+    type: V1CinderVolumeSource
+    optional: true
+  configMap:
+    type: V1ConfigMapVolumeSource
+    optional: true
+  csi:
+    type: V1CSIVolumeSource
+    optional: true
+  downwardAPI:
+    type: V1DownwardAPIVolumeSource
+    optional: true
+  emptyDir:
+    type: V1EmptyDirVolumeSource
+    optional: true
+  ephemeral:
+    type: V1EphemeralVolumeSource
+    optional: true
+  fc:
+    type: V1FCVolumeSource
+    optional: true
+  flexVolume:
+    type: V1FlexVolumeSource
+    optional: true
+  flocker:
+    type: V1FlockerVolumeSource
+    optional: true
+  gcePersistentDisk:
+    type: V1GCEPersistentDiskVolumeSource
+    optional: true
+  gitRepo:
+    type: V1GitRepoVolumeSource
+    optional: true
+  glusterfs:
+    type: V1GlusterfsVolumeSource
+    optional: true
+  hostPath:
+    type: V1HostPathVolumeSource
+    optional: true
+  iscsi:
+    type: V1ISCSIVolumeSource
+    optional: true
+  name:
+    type: string
+    optional: false
+    description: "name of the volume. Must be a DNS_LABEL and unique within the pod. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names"
+  nfs:
+    type: V1NFSVolumeSource
+    optional: true
+  persistentVolumeClaim:
+    type: V1PersistentVolumeClaimVolumeSource
+    optional: true
+  photonPersistentDisk:
+    type: V1PhotonPersistentDiskVolumeSource
+    optional: true
+  portworxVolume:
+    type: V1PortworxVolumeSource
+    optional: true
+  projected:
+    type: V1ProjectedVolumeSource
+    optional: true
+  quobyte:
+    type: V1QuobyteVolumeSource
+    optional: true
+  rbd:
+    type: V1RBDVolumeSource
+    optional: true
+  scaleIO:
+    type: V1ScaleIOVolumeSource
+    optional: true
+  secret:
+    type: V1SecretVolumeSource
+    optional: true
+  storageos:
+    type: V1StorageOSVolumeSource
+    optional: true
+  vsphereVolume:
+    type: V1VsphereVirtualDiskVolumeSource
+    optional: true
+description: Volume represents a named volume in a pod that may be accessed by any container in the pod.

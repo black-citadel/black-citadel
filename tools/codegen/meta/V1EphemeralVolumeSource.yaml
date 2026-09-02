@@ -1,0 +1,6 @@
+resourceName: V1EphemeralVolumeSource
+properties:
+  volumeClaimTemplate:
+    type: V1PersistentVolumeClaimTemplate
+    optional: true
+description: Represents an ephemeral volume that is handled by a normal storage driver.

@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1ObjectMeta } from "@utils/k8s-types";
+import type { V1ObjectMeta } from "@kubernetes/client-node";
 import { ManagedFieldsEntryDetails } from "../V1ManagedFieldsEntry/details";
 import { OwnerReferenceDetails } from "../V1OwnerReference/details";
 
@@ -22,7 +22,7 @@ export const ObjectMetaDetails = ({ resourceData }: { resourceData: V1ObjectMeta
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(annotationsItems.length > 0 || labelsItems.length > 0);
         // Check simple properties

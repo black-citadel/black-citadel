@@ -1,0 +1,10 @@
+resourceName: V1ServiceStatus
+properties:
+  conditions:
+    type: V1Condition[]
+    optional: true
+    description: Current service state
+  loadBalancer:
+    type: V1LoadBalancerStatus
+    optional: true
+description: ServiceStatus represents the current status of a service.

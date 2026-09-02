@@ -1,12 +1,12 @@
 import { MetadataDetails } from "@components/metadata";
-import { V1JobTemplateSpec } from "@utils/k8s-types";
+import type { V1JobTemplateSpec } from "@kubernetes/client-node";
 import { JobSpecDetails } from "../V1JobSpec/details";
 
 export const JobTemplateSpecDetails = ({ resourceData }: { resourceData: V1JobTemplateSpec }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.spec].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

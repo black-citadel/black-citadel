@@ -22,7 +22,7 @@ export const Panel = ({ title, children }: PanelProps): JSX.Element => {
 
 interface PanelGridItem {
 	label: string;
-	value: React.ReactNode;
+	value: React.ReactNode | Date;
 }
 
 interface PanelGridProps {
@@ -47,7 +47,7 @@ export const PanelGrid = ({ title, items, columns = 3 }: PanelGridProps): JSX.El
 					<div className={`grid ${gridColsClass} gap-4`}>
 						{items.map((item, index) => (
 							<DetailsItem key={index} label={item.label}>
-								{item.value}
+								{item.value instanceof Date ? item.value.toLocaleString() : item.value}
 							</DetailsItem>
 						))}
 					</div>

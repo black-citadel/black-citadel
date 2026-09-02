@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1NFSVolumeSource } from "@utils/k8s-types";
+import type { V1NFSVolumeSource } from "@kubernetes/client-node";
 
 export const NFSVolumeSourceDetails = ({ resourceData }: { resourceData: V1NFSVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.path, resourceData.server].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

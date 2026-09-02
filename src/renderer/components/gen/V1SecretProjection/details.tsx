@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1SecretProjection } from "@utils/k8s-types";
+import type { V1SecretProjection } from "@kubernetes/client-node";
 import { KeyToPathDetails } from "../V1KeyToPath/details";
 
 export const SecretProjectionDetails = ({ resourceData }: { resourceData: V1SecretProjection }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.name].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

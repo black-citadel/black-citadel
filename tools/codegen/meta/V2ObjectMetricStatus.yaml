@@ -1,0 +1,12 @@
+resourceName: V2ObjectMetricStatus
+properties:
+  current:
+    type: V2MetricValueStatus
+    optional: false
+  describedObject:
+    type: V2CrossVersionObjectReference
+    optional: false
+  metric:
+    type: V2MetricIdentifier
+    optional: false
+description: ObjectMetricStatus indicates the current value of a metric describing a kubernetes object (for example, hits-per-second on an Ingress object).

@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V2ObjectMetricSource } from "@utils/k8s-types";
+import type { V2ObjectMetricSource } from "@kubernetes/client-node";
 import { CrossVersionObjectReferenceDetails } from "../V2CrossVersionObjectReference/details";
 import { MetricIdentifierDetails } from "../V2MetricIdentifier/details";
 import { MetricTargetDetails } from "../V2MetricTarget/details";
@@ -8,7 +8,7 @@ export const ObjectMetricSourceDetails = ({ resourceData }: { resourceData: V2Ob
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.describedObject, resourceData.metric, resourceData.target].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

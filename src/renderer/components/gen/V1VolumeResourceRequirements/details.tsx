@@ -1,5 +1,5 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1VolumeResourceRequirements } from "@utils/k8s-types";
+import type { V1VolumeResourceRequirements } from "@kubernetes/client-node";
 
 export const VolumeResourceRequirementsDetails = ({ resourceData }: { resourceData: V1VolumeResourceRequirements }): JSX.Element => {
     // Transform the Limits object into an array of PanelGridItem objects
@@ -19,7 +19,7 @@ export const VolumeResourceRequirementsDetails = ({ resourceData }: { resourceDa
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(limitsItems.length > 0 || requestsItems.length > 0);
         return checks.length > 0 ? checks.some(v => v) : false;

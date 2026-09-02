@@ -1,6 +1,6 @@
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
-import { V1Pod } from "@utils/k8s-types";
+import type { V1Pod } from "@kubernetes/client-node";
 import { PodSpecDetails } from "../V1PodSpec/details";
 import { PodStatusDetails } from "../V1PodStatus/details";
 
@@ -8,7 +8,7 @@ export const PodDetails = ({ resourceData }: { resourceData: V1Pod }): JSX.Eleme
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.spec, resourceData.status].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

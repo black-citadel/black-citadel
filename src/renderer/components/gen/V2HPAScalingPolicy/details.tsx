@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V2HPAScalingPolicy } from "@utils/k8s-types";
+import type { V2HPAScalingPolicy } from "@kubernetes/client-node";
 
 export const HPAScalingPolicyDetails = ({ resourceData }: { resourceData: V2HPAScalingPolicy }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.periodSeconds, resourceData.type, resourceData.value].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

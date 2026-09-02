@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1StorageOSPersistentVolumeSource } from "@utils/k8s-types";
+import type { V1StorageOSPersistentVolumeSource } from "@kubernetes/client-node";
 import { ObjectReferenceDetails } from "../V1ObjectReference/details";
 
 export const StorageOSPersistentVolumeSourceDetails = ({ resourceData }: { resourceData: V1StorageOSPersistentVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.fsType, resourceData.volumeName, resourceData.volumeNamespace].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

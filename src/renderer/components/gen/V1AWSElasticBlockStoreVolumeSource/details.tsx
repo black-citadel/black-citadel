@@ -1,11 +1,11 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1AWSElasticBlockStoreVolumeSource } from "@utils/k8s-types";
+import type { V1AWSElasticBlockStoreVolumeSource } from "@kubernetes/client-node";
 
 export const AWSElasticBlockStoreVolumeSourceDetails = ({ resourceData }: { resourceData: V1AWSElasticBlockStoreVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.fsType, resourceData.partition, resourceData.volumeID].some(v => v !== undefined && v !== null));
         // Boolean properties always have content

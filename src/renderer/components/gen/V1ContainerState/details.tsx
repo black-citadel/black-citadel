@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1ContainerState } from "@utils/k8s-types";
+import type { V1ContainerState } from "@kubernetes/client-node";
 import { ContainerStateRunningDetails } from "../V1ContainerStateRunning/details";
 import { ContainerStateTerminatedDetails } from "../V1ContainerStateTerminated/details";
 import { ContainerStateWaitingDetails } from "../V1ContainerStateWaiting/details";
@@ -8,7 +8,7 @@ export const ContainerStateDetails = ({ resourceData }: { resourceData: V1Contai
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.running, resourceData.terminated, resourceData.waiting].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

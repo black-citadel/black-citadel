@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1ProjectedVolumeSource } from "@utils/k8s-types";
+import type { V1ProjectedVolumeSource } from "@kubernetes/client-node";
 import { VolumeProjectionDetails } from "../V1VolumeProjection/details";
 
 export const ProjectedVolumeSourceDetails = ({ resourceData }: { resourceData: V1ProjectedVolumeSource }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.defaultMode].some(v => v !== undefined && v !== null));
         // Check k8s type properties

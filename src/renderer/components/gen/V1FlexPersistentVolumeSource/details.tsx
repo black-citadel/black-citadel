@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1FlexPersistentVolumeSource } from "@utils/k8s-types";
+import type { V1FlexPersistentVolumeSource } from "@kubernetes/client-node";
 import { SecretReferenceDetails } from "../V1SecretReference/details";
 
 export const FlexPersistentVolumeSourceDetails = ({ resourceData }: { resourceData: V1FlexPersistentVolumeSource }): JSX.Element => {
@@ -14,7 +14,7 @@ export const FlexPersistentVolumeSourceDetails = ({ resourceData }: { resourceDa
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(optionsItems.length > 0);
         // Check simple properties

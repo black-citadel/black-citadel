@@ -1,5 +1,5 @@
 import { Container } from "@components/base/container";
-import { V1EndpointSubset } from "@utils/k8s-types";
+import type { V1EndpointSubset } from "@kubernetes/client-node";
 import { EndpointAddressDetails } from "../V1EndpointAddress/details";
 import { EndpointPorts } from "@components/networking/endpoints/endpoint-ports";
 
@@ -7,7 +7,7 @@ export const EndpointSubsetDetails = ({ resourceData }: { resourceData: V1Endpoi
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.addresses, resourceData.notReadyAddresses, resourceData.ports].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

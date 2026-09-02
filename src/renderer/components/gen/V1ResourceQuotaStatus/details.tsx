@@ -1,5 +1,5 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1ResourceQuotaStatus } from "@utils/k8s-types";
+import type { V1ResourceQuotaStatus } from "@kubernetes/client-node";
 
 export const ResourceQuotaStatusDetails = ({ resourceData }: { resourceData: V1ResourceQuotaStatus }): JSX.Element => {
     // Transform the Hard object into an array of PanelGridItem objects
@@ -19,7 +19,7 @@ export const ResourceQuotaStatusDetails = ({ resourceData }: { resourceData: V1R
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(hardItems.length > 0 || usedItems.length > 0);
         return checks.length > 0 ? checks.some(v => v) : false;

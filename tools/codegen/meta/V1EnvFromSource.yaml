@@ -1,0 +1,13 @@
+resourceName: V1EnvFromSource
+properties:
+  configMapRef:
+    type: V1ConfigMapEnvSource
+    optional: true
+  prefix:
+    type: string
+    optional: true
+    description: An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+  secretRef:
+    type: V1SecretEnvSource
+    optional: true
+description: EnvFromSource represents the source of a set of ConfigMaps

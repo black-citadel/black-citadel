@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
-import { V1ObjectReference } from "@utils/k8s-types";
+import type { V1ObjectReference } from "@kubernetes/client-node";
 
 export const ObjectReferenceDetails = ({ resourceData }: { resourceData: V1ObjectReference }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
-        checks.push([resourceData.fieldPath, resourceData.name, resourceData.namespace, resourceData.resourceVersion, resourceData.uid, resourceData.apiVersion, resourceData.kind].some(v => v !== undefined && v !== null));
+        checks.push([resourceData.apiVersion, resourceData.fieldPath, resourceData.kind, resourceData.name, resourceData.namespace, resourceData.resourceVersion, resourceData.uid].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;
     })();
 
@@ -20,13 +20,13 @@ export const ObjectReferenceDetails = ({ resourceData }: { resourceData: V1Objec
             <PanelGrid
                 title="Properties"
                 items={[
+                    { label: "Api Version", value: resourceData.apiVersion || '-' },
                     { label: "Field Path", value: resourceData.fieldPath || '-' },
+                    { label: "Kind", value: resourceData.kind || '-' },
                     { label: "Name", value: resourceData.name || '-' },
                     { label: "Namespace", value: resourceData.namespace || '-' },
                     { label: "Resource Version", value: resourceData.resourceVersion || '-' },
-                    { label: "Uid", value: resourceData.uid || '-' },
-                    { label: "Api Version", value: resourceData.apiVersion || '-' },
-                    { label: "Kind", value: resourceData.kind || '-' }
+                    { label: "Uid", value: resourceData.uid || '-' }
                 ]}
                 columns={1}
             />

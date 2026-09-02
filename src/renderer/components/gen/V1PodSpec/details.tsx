@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1PodSpec } from "@utils/k8s-types";
+import type { V1PodSpec } from "@kubernetes/client-node";
 import { AffinityDetails } from "../V1Affinity/details";
 import { ContainerDetails } from "../V1Container/details";
 import { PodDNSConfigDetails } from "../V1PodDNSConfig/details";
@@ -10,7 +10,6 @@ import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
 import { PodOSDetails } from "../V1PodOS/details";
 import { PodReadinessGateDetails } from "../V1PodReadinessGate/details";
 import { PodResourceClaimDetails } from "../V1PodResourceClaim/details";
-import { ResourceRequirementsDetails } from "../V1ResourceRequirements/details";
 import { PodSchedulingGateDetails } from "../V1PodSchedulingGate/details";
 import { PodSecurityContextDetails } from "../V1PodSecurityContext/details";
 import { TolerationDetails } from "../V1Toleration/details";
@@ -35,7 +34,7 @@ export const PodSpecDetails = ({ resourceData }: { resourceData: V1PodSpec }): J
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(nodeSelectorItems.length > 0 || overheadItems.length > 0);
         // Check simple properties

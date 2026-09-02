@@ -1,12 +1,12 @@
 import { Container } from "@components/base/container";
-import { V1HTTPIngressRuleValue } from "@utils/k8s-types";
+import type { V1HTTPIngressRuleValue } from "@kubernetes/client-node";
 import { HTTPIngressPathDetails } from "../V1HTTPIngressPath/details";
 
 export const HTTPIngressRuleValueDetails = ({ resourceData }: { resourceData: V1HTTPIngressRuleValue }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check k8s type properties
         checks.push([resourceData.paths].some(v => v !== undefined && v !== null));
         return checks.length > 0 ? checks.some(v => v) : false;

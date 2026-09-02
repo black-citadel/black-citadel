@@ -1,6 +1,6 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1Endpoint } from "@utils/k8s-types";
+import type { V1Endpoint } from "@kubernetes/client-node";
 import { EndpointConditionsDetails } from "../V1EndpointConditions/details";
 import { EndpointHintsDetails } from "../V1EndpointHints/details";
 import { ObjectReferenceDetails } from "../V1ObjectReference/details";
@@ -16,7 +16,7 @@ export const EndpointDetails = ({ resourceData }: { resourceData: V1Endpoint }):
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check object properties
         checks.push(deprecatedTopologyItems.length > 0);
         // Check simple properties

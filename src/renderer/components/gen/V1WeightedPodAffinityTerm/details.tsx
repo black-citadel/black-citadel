@@ -1,13 +1,13 @@
 import { PanelGrid } from "@components/layout/panel";
 import { Container } from "@components/base/container";
-import { V1WeightedPodAffinityTerm } from "@utils/k8s-types";
+import type { V1WeightedPodAffinityTerm } from "@kubernetes/client-node";
 import { PodAffinityTermDetails } from "../V1PodAffinityTerm/details";
 
 export const WeightedPodAffinityTermDetails = ({ resourceData }: { resourceData: V1WeightedPodAffinityTerm }): JSX.Element => {
 
     // Check if component has any content to display
     const hasContent = (() => {
-        const checks = [];
+        const checks: boolean[] = [];
         // Check simple properties
         checks.push([resourceData.weight].some(v => v !== undefined && v !== null));
         // Check k8s type properties
