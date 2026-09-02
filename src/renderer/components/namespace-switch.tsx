@@ -43,7 +43,9 @@ export const NamespaceSwitch = (): JSX.Element => {
           onChange={handleNamespaceChange}
           options={namespaceOptions}
           placeholder="Select namespace"
-          className="w-48"
+          className="w-80"
+          noTruncate
+          align="end"
         />
       )}
     </>
