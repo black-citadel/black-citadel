@@ -53,8 +53,10 @@ function initializeK8sClients() {
       kc.loadFromDefault();
     }
     
-    // Apply the agent to the kc before creating API clients
+    // WebSocket features (pod exec) authenticate through applyToHTTPSOptions, so the original
+    // must still run to attach the token or client certificate before the agent is swapped in.
     kc.applyToHTTPSOptions = async (opts) => {
+      await k8s.KubeConfig.prototype.applyToHTTPSOptions.call(kc, opts);
       opts.agent = httpsAgent;
     };
     
@@ -284,12 +286,7 @@ ipcMain.handle('setCurrentContext', (event, name) => {
     }
   }
   kc.setCurrentContext(name);
-  
-  // Reconfigure the HTTPS agent for the new context
-  kc.applyToHTTPSOptions = async (opts) => {
-    opts.agent = httpsAgent;
-  };
-  
+
   // Reinitialize API clients with the new context
   initializeK8sClients();
   warnIfExecPluginMissing();
