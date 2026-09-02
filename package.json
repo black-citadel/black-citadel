@@ -68,11 +68,17 @@
     ],
     "mac": {
       "category": "public.app-category.developer-tools",
-      "icon": "icons/mac/icon.icns"
+      "icon": "icons/mac/icon.icns",
+      "sign": "scripts/mac-sign.js",
+      "target": [
+        "dmg"
+      ],
+      "artifactName": "${name}-${version}-${arch}.${ext}"
     },
     "win": {
       "target": "nsis",
-      "icon": "icons/win/icon.ico"
+      "icon": "icons/windows/icon.ico",
+      "artifactName": "${name}-${version}-setup.${ext}"
     },
     "linux": {
       "target": [

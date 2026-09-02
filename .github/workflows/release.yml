@@ -1,0 +1,154 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g., v1.0.4)'
+        required: true
+
+jobs:
+  build:
+    name: Build ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            name: linux
+            args: --linux
+          - os: windows-latest
+            name: windows
+            args: --win
+          - os: macos-latest
+            name: macos
+            args: --mac --x64 --arm64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build renderer, preload and main bundles
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Package with electron-builder
+        run: npx electron-builder ${{ matrix.args }} --publish=never
+        env:
+          # No Apple Developer certificate: skip identity lookup and produce an unsigned build
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+
+      - name: List build artifacts
+        shell: bash
+        run: ls -la out/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: black-citadel-${{ matrix.name }}
+          path: |
+            out/*.deb
+            out/*.rpm
+            out/*.snap
+            out/*.exe
+            out/*.dmg
+          if-no-files-found: error
+
+  release:
+    name: Create GitHub release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: List downloaded artifacts
+        run: ls -la artifacts/
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION=${{ github.event.inputs.tag }}
+          else
+            VERSION=${GITHUB_REF#refs/tags/}
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          name: Black Citadel ${{ steps.get_version.outputs.VERSION }}
+          draft: true
+          prerelease: false
+          files: artifacts/*
+          body: |
+            ## Black Citadel ${{ steps.get_version.outputs.VERSION }}
+
+            Cross-platform Kubernetes GUI, built with Electron.
+
+            ### Downloads
+
+            | Platform | File |
+            | --- | --- |
+            | Linux (Debian/Ubuntu) | `black-citadel_*_amd64.deb` |
+            | Linux (Fedora/RHEL) | `black-citadel-*.x86_64.rpm` |
+            | Linux (Snap) | `black-citadel_*_amd64.snap` |
+            | Windows | `black-citadel-*-setup.exe` |
+            | macOS (Apple Silicon) | `black-citadel-*-arm64.dmg` |
+            | macOS (Intel) | `black-citadel-*-x64.dmg` |
+
+            ### Installation
+
+            **Debian/Ubuntu**
+            ```bash
+            sudo dpkg -i black-citadel_*_amd64.deb
+            sudo apt-get install -f
+            ```
+
+            **Fedora/RHEL**
+            ```bash
+            sudo dnf install black-citadel-*.x86_64.rpm
+            ```
+
+            **Snap**
+            ```bash
+            sudo snap install --dangerous black-citadel_*_amd64.snap
+            ```
+
+            **Windows**: run the installer. Windows SmartScreen may warn because the binary is not code-signed; choose "More info" then "Run anyway".
+
+            **macOS**: open the DMG and drag Black Citadel to Applications. The app is ad-hoc signed but not notarized, so on first launch right-click the app and choose "Open". If macOS still refuses, run:
+            ```bash
+            xattr -cr "/Applications/Black Citadel.app"
+            ```
+
+            ### Requirements
+            - A kubeconfig with access to your clusters
+
+            ### What's Changed
+            See the [commit history](https://github.com/${{ github.repository }}/commits/${{ steps.get_version.outputs.VERSION }}) for details.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
