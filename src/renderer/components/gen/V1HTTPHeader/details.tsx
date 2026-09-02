@@ -1,15 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1HTTPHeader } from "@kubernetes/client-node";
 
 export const HTTPHeaderDetails = ({ resourceData }: { resourceData: V1HTTPHeader }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.name, resourceData.value].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.name),
+        hasValue(resourceData.value),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,12 +15,10 @@ export const HTTPHeaderDetails = ({ resourceData }: { resourceData: V1HTTPHeader
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Name", value: resourceData.name },
-                    { label: "Value", value: resourceData.value }
+                    { label: "Name", value: resourceData.name, description: "The header field name." },
+                    { label: "Value", value: resourceData.value, description: "The header field value" },
                 ]}
-                columns={1}
             />
 
         </>

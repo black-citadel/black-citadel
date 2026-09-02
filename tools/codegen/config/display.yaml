@@ -1,0 +1,28 @@
+# Presentation rules for generated detail components.
+
+# Nested sections that start folded. Everything else starts open. Match on the property name,
+# so `tolerations` folds wherever it appears.
+collapsedByDefault:
+  - affinity
+  - tolerations
+  - topologySpreadConstraints
+  - securityContext
+  - dnsConfig
+  - hostAliases
+  - imagePullSecrets
+  - readinessGates
+  - resourceClaims
+  - schedulingGates
+  - lifecycle
+  - resizePolicy
+  - volumeDevices
+  - os
+  - managedFields
+  - ownerReferences
+  - lastState
+  - podFailurePolicy
+  - persistentVolumeClaimRetentionPolicy
+  - ordinals
+  - updateStrategy
+  - sessionAffinityConfig
+  - ipFamilies

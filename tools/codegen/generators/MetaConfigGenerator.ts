@@ -33,7 +33,6 @@ export class MetaConfigGenerator {
 
     // Process each resource
     for (const [resourceName, resourceConfig] of Object.entries(resources)) {
-      console.log(`Processing ${resourceName}...`);
       
       try {
         // Add the TypeScript definition file to the project
@@ -128,7 +127,6 @@ export class MetaConfigGenerator {
         });
         fs.writeFileSync(outputPath, yamlContent);
         
-        console.log(`  Generated: ${outputPath}`);
         
       } catch (error) {
         console.error(`Error processing ${resourceName}: ${error.message}`);

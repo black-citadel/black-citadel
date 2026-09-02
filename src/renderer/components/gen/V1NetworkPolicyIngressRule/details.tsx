@@ -1,17 +1,15 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1NetworkPolicyIngressRule } from "@kubernetes/client-node";
-import { NetworkPolicyPeerDetails } from "../V1NetworkPolicyPeer/details";
 import { NetworkPolicyPortDetails } from "../V1NetworkPolicyPort/details";
+import { NetworkPolicyPeerDetails } from "../V1NetworkPolicyPeer/details";
 
 export const NetworkPolicyIngressRuleDetails = ({ resourceData }: { resourceData: V1NetworkPolicyIngressRule }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.from, resourceData.ports].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.ports),
+        hasValue(resourceData.from),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -19,18 +17,22 @@ export const NetworkPolicyIngressRuleDetails = ({ resourceData }: { resourceData
 
     return (
         <>
-            {resourceData.from && (
-                <Container title="From">
-                    {resourceData.from.map((item, index) => (
-                        <NetworkPolicyPeerDetails key={index} resourceData={item} />
+            {hasValue(resourceData.ports) && (
+                <Container title="Ports" count={resourceData.ports.length} collapsible defaultOpen={ true }>
+                    {resourceData.ports.map((item, index) => (
+                        <PanelListItem key={index}>
+                            <NetworkPolicyPortDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.ports && (
-                <Container title="Ports">
-                    {resourceData.ports.map((item, index) => (
-                        <NetworkPolicyPortDetails key={index} resourceData={item} />
+            {hasValue(resourceData.from) && (
+                <Container title="From" count={resourceData.from.length} collapsible defaultOpen={ true }>
+                    {resourceData.from.map((item, index) => (
+                        <PanelListItem key={index}>
+                            <NetworkPolicyPeerDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

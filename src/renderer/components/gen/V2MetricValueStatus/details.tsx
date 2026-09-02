@@ -1,15 +1,13 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V2MetricValueStatus } from "@kubernetes/client-node";
 
 export const MetricValueStatusDetails = ({ resourceData }: { resourceData: V2MetricValueStatus }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.averageUtilization, resourceData.averageValue, resourceData.value].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.averageUtilization),
+        hasValue(resourceData.averageValue),
+        hasValue(resourceData.value),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,13 +16,11 @@ export const MetricValueStatusDetails = ({ resourceData }: { resourceData: V2Met
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Average Utilization", value: resourceData.averageUtilization || '-' },
-                    { label: "Average Value", value: resourceData.averageValue || '-' },
-                    { label: "Value", value: resourceData.value || '-' }
+                    { label: "Average Utilization", value: resourceData.averageUtilization, description: "currentAverageUtilization is the current value of the average of the resource metric across all relevant pods, represented as a percentage of the requested val…" },
+                    { label: "Average Value", value: resourceData.averageValue, description: "averageValue is the current value of the average of the metric across all relevant pods (as a quantity)" },
+                    { label: "Value", value: resourceData.value, description: "value is the current value of the metric (as a quantity)." },
                 ]}
-                columns={1}
             />
 
         </>

@@ -1,17 +1,14 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1WindowsSecurityContextOptions } from "@kubernetes/client-node";
 
 export const WindowsSecurityContextOptionsDetails = ({ resourceData }: { resourceData: V1WindowsSecurityContextOptions }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.gmsaCredentialSpec, resourceData.gmsaCredentialSpecName, resourceData.runAsUserName].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.gmsaCredentialSpec),
+        hasValue(resourceData.gmsaCredentialSpecName),
+        hasValue(resourceData.runAsUserName),
+        resourceData.hostProcess === true,
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,21 +17,14 @@ export const WindowsSecurityContextOptionsDetails = ({ resourceData }: { resourc
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Gmsa Credential Spec", value: resourceData.gmsaCredentialSpec || '-' },
-                    { label: "Gmsa Credential Spec Name", value: resourceData.gmsaCredentialSpecName || '-' },
-                    { label: "Run As User Name", value: resourceData.runAsUserName || '-' }
+                    { label: "Gmsa Credential Spec", value: resourceData.gmsaCredentialSpec, description: "GMSACredentialSpec is where the GMSA admission webhook (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the GMSA credential spec named…" },
+                    { label: "Gmsa Credential Spec Name", value: resourceData.gmsaCredentialSpecName, description: "GMSACredentialSpecName is the name of the GMSA credential spec to use." },
+                    { label: "Run As User Name", value: resourceData.runAsUserName, description: "The UserName in Windows to run the entrypoint of the container process." },
                 ]}
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Host Process", value: resourceData.hostProcess ? "Yes" : "No" }
+                flags={[
+                    { label: "Host Process", value: resourceData.hostProcess, description: "HostProcess determines if a container should be run as a 'Host Process' container." },
                 ]}
-                columns={1}
             />
 
         </>

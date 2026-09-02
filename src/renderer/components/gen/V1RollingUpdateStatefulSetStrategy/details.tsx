@@ -1,15 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1RollingUpdateStatefulSetStrategy } from "@kubernetes/client-node";
 
 export const RollingUpdateStatefulSetStrategyDetails = ({ resourceData }: { resourceData: V1RollingUpdateStatefulSetStrategy }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.maxUnavailable, resourceData.partition].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.maxUnavailable),
+        hasValue(resourceData.partition),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,12 +15,10 @@ export const RollingUpdateStatefulSetStrategyDetails = ({ resourceData }: { reso
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Max Unavailable", value: resourceData.maxUnavailable || '-' },
-                    { label: "Partition", value: resourceData.partition || '-' }
+                    { label: "Max Unavailable", value: resourceData.maxUnavailable, description: "IntOrString is a type that can hold an int32 or a string." },
+                    { label: "Partition", value: resourceData.partition, description: "Partition indicates the ordinal at which the StatefulSet should be partitioned for updates." },
                 ]}
-                columns={1}
             />
 
         </>

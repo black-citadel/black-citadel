@@ -1,15 +1,13 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V2CrossVersionObjectReference } from "@kubernetes/client-node";
 
 export const CrossVersionObjectReferenceDetails = ({ resourceData }: { resourceData: V2CrossVersionObjectReference }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.apiVersion, resourceData.kind, resourceData.name].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.name),
+        hasValue(resourceData.apiVersion),
+        hasValue(resourceData.kind),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,13 +16,11 @@ export const CrossVersionObjectReferenceDetails = ({ resourceData }: { resourceD
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Api Version", value: resourceData.apiVersion || '-' },
-                    { label: "Kind", value: resourceData.kind },
-                    { label: "Name", value: resourceData.name }
+                    { label: "Name", value: resourceData.name, description: "name is the name of the referent; More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names" },
+                    { label: "Api Version", value: resourceData.apiVersion, description: "apiVersion is the API version of the referent" },
+                    { label: "Kind", value: resourceData.kind, description: "kind is the kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds" },
                 ]}
-                columns={1}
             />
 
         </>

@@ -1,52 +1,21 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1LimitRangeItem } from "@kubernetes/client-node";
 
 export const LimitRangeItemDetails = ({ resourceData }: { resourceData: V1LimitRangeItem }): JSX.Element => {
-    // Transform the _default object into an array of PanelGridItem objects
-    const _defaultItems = resourceData._default
-        ? Object.entries(resourceData._default).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
-    // Transform the Default Request object into an array of PanelGridItem objects
-    const defaultRequestItems = resourceData.defaultRequest
-        ? Object.entries(resourceData.defaultRequest).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
-    // Transform the Max object into an array of PanelGridItem objects
-    const maxItems = resourceData.max
-        ? Object.entries(resourceData.max).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
-    // Transform the Max Limit Request Ratio object into an array of PanelGridItem objects
-    const maxLimitRequestRatioItems = resourceData.maxLimitRequestRatio
-        ? Object.entries(resourceData.maxLimitRequestRatio).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
-    // Transform the Min object into an array of PanelGridItem objects
-    const minItems = resourceData.min
-        ? Object.entries(resourceData.min).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
+    const _defaultItems = Object.entries(resourceData._default ?? {}).map(([key, value]) => ({ label: key, value }));
+    const defaultRequestItems = Object.entries(resourceData.defaultRequest ?? {}).map(([key, value]) => ({ label: key, value }));
+    const maxItems = Object.entries(resourceData.max ?? {}).map(([key, value]) => ({ label: key, value }));
+    const maxLimitRequestRatioItems = Object.entries(resourceData.maxLimitRequestRatio ?? {}).map(([key, value]) => ({ label: key, value }));
+    const minItems = Object.entries(resourceData.min ?? {}).map(([key, value]) => ({ label: key, value }));
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check object properties
-        checks.push(_defaultItems.length > 0 || defaultRequestItems.length > 0 || maxItems.length > 0 || maxLimitRequestRatioItems.length > 0 || minItems.length > 0);
-        // Check simple properties
-        checks.push([resourceData.type].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        _defaultItems.length > 0,
+        defaultRequestItems.length > 0,
+        maxItems.length > 0,
+        maxLimitRequestRatioItems.length > 0,
+        minItems.length > 0,
+        hasValue(resourceData.type),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -55,42 +24,20 @@ export const LimitRangeItemDetails = ({ resourceData }: { resourceData: V1LimitR
     return (
         <>
             <PanelGrid
-                title="_default"
-                items={ _defaultItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Default Request"
-                items={ defaultRequestItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Max"
-                items={ maxItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Max Limit Request Ratio"
-                items={ maxLimitRequestRatioItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Min"
-                items={ minItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Type", value: resourceData.type }
+                    { label: "Type", value: resourceData.type, description: "Type of resource that this limit applies to." },
                 ]}
-                columns={1}
             />
+
+            <PanelGrid title="_default" items={ _defaultItems } />
+
+            <PanelGrid title="Default Request" items={ defaultRequestItems } />
+
+            <PanelGrid title="Max" items={ maxItems } />
+
+            <PanelGrid title="Max Limit Request Ratio" items={ maxLimitRequestRatioItems } />
+
+            <PanelGrid title="Min" items={ minItems } />
 
         </>
     )

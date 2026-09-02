@@ -1,15 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1VolumeDevice } from "@kubernetes/client-node";
 
 export const VolumeDeviceDetails = ({ resourceData }: { resourceData: V1VolumeDevice }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.devicePath, resourceData.name].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.devicePath),
+        hasValue(resourceData.name),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,12 +15,10 @@ export const VolumeDeviceDetails = ({ resourceData }: { resourceData: V1VolumeDe
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Device Path", value: resourceData.devicePath },
-                    { label: "Name", value: resourceData.name }
+                    { label: "Device Path", value: resourceData.devicePath, description: "devicePath is the path inside of the container that the device will be mapped to." },
+                    { label: "Name", value: resourceData.name, description: "name must match the name of a persistentVolumeClaim in the pod" },
                 ]}
-                columns={1}
             />
 
         </>

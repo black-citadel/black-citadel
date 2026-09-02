@@ -1,16 +1,13 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1NodeSelector } from "@kubernetes/client-node";
 import { NodeSelectorTermDetails } from "../V1NodeSelectorTerm/details";
 
 export const NodeSelectorDetails = ({ resourceData }: { resourceData: V1NodeSelector }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.nodeSelectorTerms].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.nodeSelectorTerms),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,10 +15,12 @@ export const NodeSelectorDetails = ({ resourceData }: { resourceData: V1NodeSele
 
     return (
         <>
-            {resourceData.nodeSelectorTerms && (
-                <Container title="Node Selector Terms">
+            {hasValue(resourceData.nodeSelectorTerms) && (
+                <Container title="Node Selector Terms" count={resourceData.nodeSelectorTerms.length} collapsible defaultOpen={ true }>
                     {resourceData.nodeSelectorTerms.map((item, index) => (
-                        <NodeSelectorTermDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <NodeSelectorTermDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

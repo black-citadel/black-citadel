@@ -1,15 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1IPBlock } from "@kubernetes/client-node";
 
 export const IPBlockDetails = ({ resourceData }: { resourceData: V1IPBlock }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.cidr].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.cidr),
+        hasValue(resourceData.except),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,11 +15,10 @@ export const IPBlockDetails = ({ resourceData }: { resourceData: V1IPBlock }): J
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Cidr", value: resourceData.cidr }
+                    { label: "Cidr", value: resourceData.cidr, description: "cidr is a string representing the IPBlock Valid examples are \"192.168.1.0/24\" or \"2001:db8::/64\"" },
+                    { label: "Except", value: resourceData.except, description: "except is a slice of CIDRs that should not be included within an IPBlock Valid examples are \"192.168.1.0/24\" or \"2001:db8::/64\" Except values will be rejected…" },
                 ]}
-                columns={1}
             />
 
         </>

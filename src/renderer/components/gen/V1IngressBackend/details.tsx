@@ -1,3 +1,4 @@
+import { hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1IngressBackend } from "@kubernetes/client-node";
 import { TypedLocalObjectReferenceDetails } from "../V1TypedLocalObjectReference/details";
@@ -5,13 +6,10 @@ import { IngressServiceBackendDetails } from "../V1IngressServiceBackend/details
 
 export const IngressBackendDetails = ({ resourceData }: { resourceData: V1IngressBackend }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.resource, resourceData.service].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.resource),
+        hasValue(resourceData.service),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -19,15 +17,15 @@ export const IngressBackendDetails = ({ resourceData }: { resourceData: V1Ingres
 
     return (
         <>
-            {resourceData.resource && (
-                <Container title="Resource">
-                    <TypedLocalObjectReferenceDetails resourceData={ resourceData.resource } />
+            {hasValue(resourceData.resource) && (
+                <Container title="Resource" collapsible defaultOpen={ true }>
+                    <TypedLocalObjectReferenceDetails resourceData={resourceData.resource } />
                 </Container>
             )}
 
-            {resourceData.service && (
-                <Container title="Service">
-                    <IngressServiceBackendDetails resourceData={ resourceData.service } />
+            {hasValue(resourceData.service) && (
+                <Container title="Service" collapsible defaultOpen={ true }>
+                    <IngressServiceBackendDetails resourceData={resourceData.service } />
                 </Container>
             )}
 

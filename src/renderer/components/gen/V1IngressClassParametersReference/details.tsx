@@ -1,15 +1,15 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1IngressClassParametersReference } from "@kubernetes/client-node";
 
 export const IngressClassParametersReferenceDetails = ({ resourceData }: { resourceData: V1IngressClassParametersReference }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.apiGroup, resourceData.kind, resourceData.name, resourceData.namespace, resourceData.scope].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.apiGroup),
+        hasValue(resourceData.name),
+        hasValue(resourceData.namespace),
+        hasValue(resourceData.scope),
+        hasValue(resourceData.kind),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,15 +18,13 @@ export const IngressClassParametersReferenceDetails = ({ resourceData }: { resou
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Api Group", value: resourceData.apiGroup || '-' },
-                    { label: "Kind", value: resourceData.kind },
-                    { label: "Name", value: resourceData.name },
-                    { label: "Namespace", value: resourceData.namespace || '-' },
-                    { label: "Scope", value: resourceData.scope || '-' }
+                    { label: "Api Group", value: resourceData.apiGroup, description: "apiGroup is the group for the resource being referenced." },
+                    { label: "Name", value: resourceData.name, description: "name is the name of resource being referenced." },
+                    { label: "Namespace", value: resourceData.namespace, description: "namespace is the namespace of the resource being referenced." },
+                    { label: "Scope", value: resourceData.scope, description: "scope represents if this refers to a cluster or namespace scoped resource." },
+                    { label: "Kind", value: resourceData.kind, description: "kind is the type of resource being referenced." },
                 ]}
-                columns={1}
             />
 
         </>

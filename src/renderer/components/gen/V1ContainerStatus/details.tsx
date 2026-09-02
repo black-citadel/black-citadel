@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1ContainerStatus } from "@kubernetes/client-node";
 import { ContainerStateDetails } from "../V1ContainerState/details";
@@ -6,27 +6,22 @@ import { ResourceRequirementsDetails } from "../V1ResourceRequirements/details";
 import { VolumeMountStatusDetails } from "../V1VolumeMountStatus/details";
 
 export const ContainerStatusDetails = ({ resourceData }: { resourceData: V1ContainerStatus }): JSX.Element => {
-    // Transform the Allocated Resources object into an array of PanelGridItem objects
-    const allocatedResourcesItems = resourceData.allocatedResources
-        ? Object.entries(resourceData.allocatedResources).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
+    const allocatedResourcesItems = Object.entries(resourceData.allocatedResources ?? {}).map(([key, value]) => ({ label: key, value }));
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check object properties
-        checks.push(allocatedResourcesItems.length > 0);
-        // Check simple properties
-        checks.push([resourceData.containerID, resourceData.image, resourceData.imageID, resourceData.name, resourceData.restartCount].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        // Check k8s type properties
-        checks.push([resourceData.lastState, resourceData.resources, resourceData.state, resourceData.volumeMounts].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        allocatedResourcesItems.length > 0,
+        hasValue(resourceData.name),
+        hasValue(resourceData.restartCount),
+        hasValue(resourceData.image),
+        hasValue(resourceData.imageID),
+        hasValue(resourceData.containerID),
+        resourceData.ready === true,
+        resourceData.started === true,
+        hasValue(resourceData.state),
+        hasValue(resourceData.lastState),
+        hasValue(resourceData.resources),
+        hasValue(resourceData.volumeMounts),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -35,54 +30,45 @@ export const ContainerStatusDetails = ({ resourceData }: { resourceData: V1Conta
     return (
         <>
             <PanelGrid
-                title="Allocated Resources"
-                items={ allocatedResourcesItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Container ID", value: resourceData.containerID || '-' },
-                    { label: "Image", value: resourceData.image },
-                    { label: "Image ID", value: resourceData.imageID },
-                    { label: "Name", value: resourceData.name },
-                    { label: "Restart Count", value: resourceData.restartCount }
+                    { label: "Name", value: resourceData.name, description: "Name is a DNS_LABEL representing the unique name of the container." },
+                    { label: "Restart Count", value: resourceData.restartCount, description: "RestartCount holds the number of times the container has been restarted." },
+                    { label: "Image", value: resourceData.image, description: "Image is the name of container image that the container is running." },
+                    { label: "Image ID", value: resourceData.imageID, description: "ImageID is the image ID of the container's image." },
+                    { label: "Container ID", value: resourceData.containerID, description: "ContainerID is the ID of the container in the format '<type>://<container_id>'." },
                 ]}
-                columns={1}
+                flags={[
+                    { label: "Ready", value: resourceData.ready, description: "Ready specifies whether the container is currently passing its readiness check." },
+                    { label: "Started", value: resourceData.started, description: "Started indicates whether the container has finished its postStart lifecycle hook and passed its startup probe." },
+                ]}
             />
 
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Ready", value: resourceData.ready ? "Yes" : "No" },
-                    { label: "Started", value: resourceData.started ? "Yes" : "No" }
-                ]}
-                columns={1}
-            />
+            <PanelGrid title="Allocated Resources" items={ allocatedResourcesItems } />
 
-            {resourceData.lastState && (
-                <Container title="Last State">
-                    <ContainerStateDetails resourceData={ resourceData.lastState } />
+            {hasValue(resourceData.state) && (
+                <Container title="State" collapsible defaultOpen={ true }>
+                    <ContainerStateDetails resourceData={resourceData.state } />
                 </Container>
             )}
 
-            {resourceData.resources && (
-                <Container title="Resources">
-                    <ResourceRequirementsDetails resourceData={ resourceData.resources } />
+            {hasValue(resourceData.lastState) && (
+                <Container title="Last State" collapsible defaultOpen={ false }>
+                    <ContainerStateDetails resourceData={resourceData.lastState } />
                 </Container>
             )}
 
-            {resourceData.state && (
-                <Container title="State">
-                    <ContainerStateDetails resourceData={ resourceData.state } />
+            {hasValue(resourceData.resources) && (
+                <Container title="Resources" collapsible defaultOpen={ true }>
+                    <ResourceRequirementsDetails resourceData={resourceData.resources } />
                 </Container>
             )}
 
-            {resourceData.volumeMounts && (
-                <Container title="Volume Mounts">
+            {hasValue(resourceData.volumeMounts) && (
+                <Container title="Volume Mounts" count={resourceData.volumeMounts.length} collapsible defaultOpen={ true }>
                     {resourceData.volumeMounts.map((item, index) => (
-                        <VolumeMountStatusDetails key={index} resourceData={item} />
+                        <PanelListItem key={index} title={item.name }>
+                            <VolumeMountStatusDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

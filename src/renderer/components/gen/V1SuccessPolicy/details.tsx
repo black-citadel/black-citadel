@@ -1,16 +1,13 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1SuccessPolicy } from "@kubernetes/client-node";
 import { SuccessPolicyRuleDetails } from "../V1SuccessPolicyRule/details";
 
 export const SuccessPolicyDetails = ({ resourceData }: { resourceData: V1SuccessPolicy }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.rules].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.rules),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,10 +15,12 @@ export const SuccessPolicyDetails = ({ resourceData }: { resourceData: V1Success
 
     return (
         <>
-            {resourceData.rules && (
-                <Container title="Rules">
+            {hasValue(resourceData.rules) && (
+                <Container title="Rules" count={resourceData.rules.length} collapsible defaultOpen={ true }>
                     {resourceData.rules.map((item, index) => (
-                        <SuccessPolicyRuleDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <SuccessPolicyRuleDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

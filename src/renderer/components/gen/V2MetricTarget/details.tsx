@@ -1,15 +1,14 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V2MetricTarget } from "@kubernetes/client-node";
 
 export const MetricTargetDetails = ({ resourceData }: { resourceData: V2MetricTarget }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.averageUtilization, resourceData.averageValue, resourceData.type, resourceData.value].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.averageUtilization),
+        hasValue(resourceData.averageValue),
+        hasValue(resourceData.type),
+        hasValue(resourceData.value),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,14 +17,12 @@ export const MetricTargetDetails = ({ resourceData }: { resourceData: V2MetricTa
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Average Utilization", value: resourceData.averageUtilization || '-' },
-                    { label: "Average Value", value: resourceData.averageValue || '-' },
-                    { label: "Type", value: resourceData.type },
-                    { label: "Value", value: resourceData.value || '-' }
+                    { label: "Average Utilization", value: resourceData.averageUtilization, description: "averageUtilization is the target value of the average of the resource metric across all relevant pods, represented as a percentage of the requested value of th…" },
+                    { label: "Average Value", value: resourceData.averageValue, description: "averageValue is the target value of the average of the metric across all relevant pods (as a quantity)" },
+                    { label: "Type", value: resourceData.type, description: "type represents whether the metric type is Utilization, Value, or AverageValue" },
+                    { label: "Value", value: resourceData.value, description: "value is the target value of the metric (as a quantity)." },
                 ]}
-                columns={1}
             />
 
         </>

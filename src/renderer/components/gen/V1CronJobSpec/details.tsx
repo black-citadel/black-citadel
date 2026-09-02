@@ -1,21 +1,20 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1CronJobSpec } from "@kubernetes/client-node";
 import { JobTemplateSpecDetails } from "../V1JobTemplateSpec/details";
 
 export const CronJobSpecDetails = ({ resourceData }: { resourceData: V1CronJobSpec }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.concurrencyPolicy, resourceData.failedJobsHistoryLimit, resourceData.schedule, resourceData.startingDeadlineSeconds, resourceData.successfulJobsHistoryLimit, resourceData.timeZone].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        // Check k8s type properties
-        checks.push([resourceData.jobTemplate].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.schedule),
+        hasValue(resourceData.timeZone),
+        hasValue(resourceData.concurrencyPolicy),
+        hasValue(resourceData.startingDeadlineSeconds),
+        hasValue(resourceData.successfulJobsHistoryLimit),
+        hasValue(resourceData.failedJobsHistoryLimit),
+        resourceData.suspend === true,
+        hasValue(resourceData.jobTemplate),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -24,29 +23,24 @@ export const CronJobSpecDetails = ({ resourceData }: { resourceData: V1CronJobSp
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Concurrency Policy", value: resourceData.concurrencyPolicy || '-' },
-                    { label: "Failed Jobs History Limit", value: resourceData.failedJobsHistoryLimit || '-' },
-                    { label: "Schedule", value: resourceData.schedule },
-                    { label: "Starting Deadline Seconds", value: resourceData.startingDeadlineSeconds || '-' },
-                    { label: "Successful Jobs History Limit", value: resourceData.successfulJobsHistoryLimit || '-' },
-                    { label: "Time Zone", value: resourceData.timeZone || '-' }
+                    { label: "Schedule", value: resourceData.schedule, description: "The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron." },
+                    { label: "Time Zone", value: resourceData.timeZone, description: "The time zone name for the given schedule, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones." },
+                    { label: "Concurrency Policy", value: resourceData.concurrencyPolicy, description: "Specifies how to treat concurrent executions of a Job." },
+                    { label: "Starting Deadline Seconds", value: resourceData.startingDeadlineSeconds, description: "Optional deadline in seconds for starting the job if it misses scheduled time for any reason." },
+                    { label: "Successful Jobs History Limit", value: resourceData.successfulJobsHistoryLimit, description: "The number of successful finished jobs to retain." },
+                    { label: "Failed Jobs History Limit", value: resourceData.failedJobsHistoryLimit, description: "The number of failed finished jobs to retain." },
                 ]}
-                columns={1}
+                flags={[
+                    { label: "Suspend", value: resourceData.suspend, description: "This flag tells the controller to suspend subsequent executions, it does not apply to already started executions." },
+                ]}
             />
 
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Suspend", value: resourceData.suspend ? "Yes" : "No" }
-                ]}
-                columns={1}
-            />
-
-            <Container title="Job Template">
-                <JobTemplateSpecDetails resourceData={ resourceData.jobTemplate } />
-            </Container>
+            {hasValue(resourceData.jobTemplate) && (
+                <Container title="Job Template" collapsible defaultOpen={ true }>
+                    <JobTemplateSpecDetails resourceData={resourceData.jobTemplate } />
+                </Container>
+            )}
 
         </>
     )

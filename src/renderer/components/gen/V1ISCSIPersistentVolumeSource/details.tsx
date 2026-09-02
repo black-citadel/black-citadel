@@ -1,21 +1,23 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1ISCSIPersistentVolumeSource } from "@kubernetes/client-node";
 import { SecretReferenceDetails } from "../V1SecretReference/details";
 
 export const ISCSIPersistentVolumeSourceDetails = ({ resourceData }: { resourceData: V1ISCSIPersistentVolumeSource }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.fsType, resourceData.initiatorName, resourceData.iqn, resourceData.iscsiInterface, resourceData.lun, resourceData.targetPortal].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        // Check k8s type properties
-        checks.push([resourceData.secretRef].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.fsType),
+        hasValue(resourceData.initiatorName),
+        hasValue(resourceData.iqn),
+        hasValue(resourceData.iscsiInterface),
+        hasValue(resourceData.lun),
+        hasValue(resourceData.portals),
+        hasValue(resourceData.targetPortal),
+        resourceData.chapAuthDiscovery === true,
+        resourceData.chapAuthSession === true,
+        resourceData.readOnly === true,
+        hasValue(resourceData.secretRef),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -24,31 +26,25 @@ export const ISCSIPersistentVolumeSourceDetails = ({ resourceData }: { resourceD
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Fs Type", value: resourceData.fsType || '-' },
-                    { label: "Initiator Name", value: resourceData.initiatorName || '-' },
-                    { label: "Iqn", value: resourceData.iqn },
-                    { label: "Iscsi Interface", value: resourceData.iscsiInterface || '-' },
-                    { label: "Lun", value: resourceData.lun },
-                    { label: "Target Portal", value: resourceData.targetPortal }
+                    { label: "Fs Type", value: resourceData.fsType, description: "fsType is the filesystem type of the volume that you want to mount." },
+                    { label: "Initiator Name", value: resourceData.initiatorName, description: "initiatorName is the custom iSCSI Initiator Name." },
+                    { label: "Iqn", value: resourceData.iqn, description: "iqn is Target iSCSI Qualified Name." },
+                    { label: "Iscsi Interface", value: resourceData.iscsiInterface, description: "iscsiInterface is the interface Name that uses an iSCSI transport." },
+                    { label: "Lun", value: resourceData.lun, description: "lun is iSCSI Target Lun number." },
+                    { label: "Portals", value: resourceData.portals, description: "portals is the iSCSI Target Portal List." },
+                    { label: "Target Portal", value: resourceData.targetPortal, description: "targetPortal is iSCSI Target Portal." },
                 ]}
-                columns={1}
+                flags={[
+                    { label: "Chap Auth Discovery", value: resourceData.chapAuthDiscovery, description: "chapAuthDiscovery defines whether support iSCSI Discovery CHAP authentication" },
+                    { label: "Chap Auth Session", value: resourceData.chapAuthSession, description: "chapAuthSession defines whether support iSCSI Session CHAP authentication" },
+                    { label: "Read Only", value: resourceData.readOnly, description: "readOnly here will force the ReadOnly setting in VolumeMounts." },
+                ]}
             />
 
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Chap Auth Discovery", value: resourceData.chapAuthDiscovery ? "Yes" : "No" },
-                    { label: "Chap Auth Session", value: resourceData.chapAuthSession ? "Yes" : "No" },
-                    { label: "Read Only", value: resourceData.readOnly ? "Yes" : "No" }
-                ]}
-                columns={1}
-            />
-
-            {resourceData.secretRef && (
-                <Container title="Secret Ref">
-                    <SecretReferenceDetails resourceData={ resourceData.secretRef } />
+            {hasValue(resourceData.secretRef) && (
+                <Container title="Secret Ref" collapsible defaultOpen={ true }>
+                    <SecretReferenceDetails resourceData={resourceData.secretRef } />
                 </Container>
             )}
 

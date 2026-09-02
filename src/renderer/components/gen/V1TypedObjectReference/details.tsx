@@ -1,15 +1,14 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1TypedObjectReference } from "@kubernetes/client-node";
 
 export const TypedObjectReferenceDetails = ({ resourceData }: { resourceData: V1TypedObjectReference }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.apiGroup, resourceData.kind, resourceData.name, resourceData.namespace].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.apiGroup),
+        hasValue(resourceData.name),
+        hasValue(resourceData.namespace),
+        hasValue(resourceData.kind),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,14 +17,12 @@ export const TypedObjectReferenceDetails = ({ resourceData }: { resourceData: V1
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Api Group", value: resourceData.apiGroup || '-' },
-                    { label: "Kind", value: resourceData.kind },
-                    { label: "Name", value: resourceData.name },
-                    { label: "Namespace", value: resourceData.namespace || '-' }
+                    { label: "Api Group", value: resourceData.apiGroup, description: "APIGroup is the group for the resource being referenced." },
+                    { label: "Name", value: resourceData.name, description: "Name is the name of resource being referenced" },
+                    { label: "Namespace", value: resourceData.namespace, description: "Namespace is the namespace of resource being referenced Note that when a namespace is specified, a gateway.networking.k8s.io/ReferenceGrant object is required…" },
+                    { label: "Kind", value: resourceData.kind, description: "Kind is the type of resource being referenced" },
                 ]}
-                columns={1}
             />
 
         </>

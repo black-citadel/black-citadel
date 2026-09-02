@@ -1,3 +1,4 @@
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1NetworkPolicySpec } from "@kubernetes/client-node";
 import { NetworkPolicyEgressRuleDetails } from "../V1NetworkPolicyEgressRule/details";
@@ -6,13 +7,12 @@ import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const NetworkPolicySpecDetails = ({ resourceData }: { resourceData: V1NetworkPolicySpec }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.egress, resourceData.ingress, resourceData.podSelector].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.policyTypes),
+        hasValue(resourceData.egress),
+        hasValue(resourceData.ingress),
+        hasValue(resourceData.podSelector),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,25 +20,37 @@ export const NetworkPolicySpecDetails = ({ resourceData }: { resourceData: V1Net
 
     return (
         <>
-            {resourceData.egress && (
-                <Container title="Egress">
+            <PanelGrid
+                items={[
+                    { label: "Policy Types", value: resourceData.policyTypes, description: "policyTypes is a list of rule types that the NetworkPolicy relates to." },
+                ]}
+            />
+
+            {hasValue(resourceData.egress) && (
+                <Container title="Egress" count={resourceData.egress.length} collapsible defaultOpen={ true }>
                     {resourceData.egress.map((item, index) => (
-                        <NetworkPolicyEgressRuleDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <NetworkPolicyEgressRuleDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.ingress && (
-                <Container title="Ingress">
+            {hasValue(resourceData.ingress) && (
+                <Container title="Ingress" count={resourceData.ingress.length} collapsible defaultOpen={ true }>
                     {resourceData.ingress.map((item, index) => (
-                        <NetworkPolicyIngressRuleDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <NetworkPolicyIngressRuleDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            <Container title="Pod Selector">
-                <LabelSelectorDetails resourceData={ resourceData.podSelector } />
-            </Container>
+            {hasValue(resourceData.podSelector) && (
+                <Container title="Pod Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.podSelector } />
+                </Container>
+            )}
 
         </>
     )

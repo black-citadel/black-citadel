@@ -1,19 +1,16 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1CSINodeDriver } from "@kubernetes/client-node";
 import { VolumeNodeResourcesDetails } from "../V1VolumeNodeResources/details";
 
 export const CSINodeDriverDetails = ({ resourceData }: { resourceData: V1CSINodeDriver }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.name, resourceData.nodeID].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.allocatable].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.name),
+        hasValue(resourceData.nodeID),
+        hasValue(resourceData.topologyKeys),
+        hasValue(resourceData.allocatable),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,17 +19,16 @@ export const CSINodeDriverDetails = ({ resourceData }: { resourceData: V1CSINode
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Name", value: resourceData.name },
-                    { label: "Node ID", value: resourceData.nodeID }
+                    { label: "Name", value: resourceData.name, description: "name represents the name of the CSI driver that this object refers to." },
+                    { label: "Node ID", value: resourceData.nodeID, description: "nodeID of the node from the driver point of view." },
+                    { label: "Topology Keys", value: resourceData.topologyKeys, description: "topologyKeys is the list of keys supported by the driver." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.allocatable && (
-                <Container title="Allocatable">
-                    <VolumeNodeResourcesDetails resourceData={ resourceData.allocatable } />
+            {hasValue(resourceData.allocatable) && (
+                <Container title="Allocatable" collapsible defaultOpen={ true }>
+                    <VolumeNodeResourcesDetails resourceData={resourceData.allocatable } />
                 </Container>
             )}
 

@@ -1,15 +1,11 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1ClientIPConfig } from "@kubernetes/client-node";
 
 export const ClientIPConfigDetails = ({ resourceData }: { resourceData: V1ClientIPConfig }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.timeoutSeconds].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.timeoutSeconds),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,11 +14,9 @@ export const ClientIPConfigDetails = ({ resourceData }: { resourceData: V1Client
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Timeout Seconds", value: resourceData.timeoutSeconds || '-' }
+                    { label: "Timeout Seconds", value: resourceData.timeoutSeconds, description: "timeoutSeconds specifies the seconds of ClientIP type session sticky time." },
                 ]}
-                columns={1}
             />
 
         </>

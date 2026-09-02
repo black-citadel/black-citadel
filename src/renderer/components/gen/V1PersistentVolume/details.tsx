@@ -1,3 +1,4 @@
+import { hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
 import type { V1PersistentVolume } from "@kubernetes/client-node";
@@ -6,13 +7,10 @@ import { PersistentVolumeStatusDetails } from "../V1PersistentVolumeStatus/detai
 
 export const PersistentVolumeDetails = ({ resourceData }: { resourceData: V1PersistentVolume }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.spec, resourceData.status].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.spec),
+        hasValue(resourceData.status),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,15 +18,16 @@ export const PersistentVolumeDetails = ({ resourceData }: { resourceData: V1Pers
 
     return (
         <>
-            {resourceData.spec && <PersistentVolumeSpecDetails resourceData={ resourceData.spec } />}
+            <MetadataDetails metadata={resourceData.metadata} />
 
-            {resourceData.status && (
-                <Container title="Status">
-                    <PersistentVolumeStatusDetails resourceData={ resourceData.status } />
+            {hasValue(resourceData.spec) && <PersistentVolumeSpecDetails resourceData={resourceData.spec } />}
+
+            {hasValue(resourceData.status) && (
+                <Container title="Status" collapsible defaultOpen={ true }>
+                    <PersistentVolumeStatusDetails resourceData={resourceData.status } />
                 </Container>
             )}
 
-            <MetadataDetails metadata={resourceData.metadata} />
         </>
     )
 }

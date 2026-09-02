@@ -1,16 +1,14 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1NodeSelectorTerm } from "@kubernetes/client-node";
 import { NodeSelectorRequirementDetails } from "../V1NodeSelectorRequirement/details";
 
 export const NodeSelectorTermDetails = ({ resourceData }: { resourceData: V1NodeSelectorTerm }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.matchExpressions, resourceData.matchFields].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.matchExpressions),
+        hasValue(resourceData.matchFields),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,18 +16,22 @@ export const NodeSelectorTermDetails = ({ resourceData }: { resourceData: V1Node
 
     return (
         <>
-            {resourceData.matchExpressions && (
-                <Container title="Match Expressions">
+            {hasValue(resourceData.matchExpressions) && (
+                <Container title="Match Expressions" count={resourceData.matchExpressions.length} collapsible defaultOpen={ true }>
                     {resourceData.matchExpressions.map((item, index) => (
-                        <NodeSelectorRequirementDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <NodeSelectorRequirementDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.matchFields && (
-                <Container title="Match Fields">
+            {hasValue(resourceData.matchFields) && (
+                <Container title="Match Fields" count={resourceData.matchFields.length} collapsible defaultOpen={ true }>
                     {resourceData.matchFields.map((item, index) => (
-                        <NodeSelectorRequirementDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <NodeSelectorRequirementDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

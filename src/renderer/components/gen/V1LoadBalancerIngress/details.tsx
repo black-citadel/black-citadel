@@ -1,19 +1,16 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1LoadBalancerIngress } from "@kubernetes/client-node";
 import { PortStatusDetails } from "../V1PortStatus/details";
 
 export const LoadBalancerIngressDetails = ({ resourceData }: { resourceData: V1LoadBalancerIngress }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.hostname, resourceData.ip, resourceData.ipMode].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.ports].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.hostname),
+        hasValue(resourceData.ip),
+        hasValue(resourceData.ipMode),
+        hasValue(resourceData.ports),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,19 +19,19 @@ export const LoadBalancerIngressDetails = ({ resourceData }: { resourceData: V1L
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Hostname", value: resourceData.hostname || '-' },
-                    { label: "Ip", value: resourceData.ip || '-' },
-                    { label: "Ip Mode", value: resourceData.ipMode || '-' }
+                    { label: "Hostname", value: resourceData.hostname, description: "Hostname is set for load-balancer ingress points that are DNS based (typically AWS load-balancers)" },
+                    { label: "Ip", value: resourceData.ip, description: "IP is set for load-balancer ingress points that are IP based (typically GCE or OpenStack load-balancers)" },
+                    { label: "Ip Mode", value: resourceData.ipMode, description: "IPMode specifies how the load-balancer IP behaves, and may only be specified when the ip field is specified." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.ports && (
-                <Container title="Ports">
+            {hasValue(resourceData.ports) && (
+                <Container title="Ports" count={resourceData.ports.length} collapsible defaultOpen={ true }>
                     {resourceData.ports.map((item, index) => (
-                        <PortStatusDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <PortStatusDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

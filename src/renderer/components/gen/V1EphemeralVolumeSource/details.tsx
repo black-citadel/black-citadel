@@ -1,16 +1,13 @@
+import { hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1EphemeralVolumeSource } from "@kubernetes/client-node";
 import { PersistentVolumeClaimTemplateDetails } from "../V1PersistentVolumeClaimTemplate/details";
 
 export const EphemeralVolumeSourceDetails = ({ resourceData }: { resourceData: V1EphemeralVolumeSource }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.volumeClaimTemplate].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.volumeClaimTemplate),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,9 +15,9 @@ export const EphemeralVolumeSourceDetails = ({ resourceData }: { resourceData: V
 
     return (
         <>
-            {resourceData.volumeClaimTemplate && (
-                <Container title="Volume Claim Template">
-                    <PersistentVolumeClaimTemplateDetails resourceData={ resourceData.volumeClaimTemplate } />
+            {hasValue(resourceData.volumeClaimTemplate) && (
+                <Container title="Volume Claim Template" collapsible defaultOpen={ true }>
+                    <PersistentVolumeClaimTemplateDetails resourceData={resourceData.volumeClaimTemplate } />
                 </Container>
             )}
 

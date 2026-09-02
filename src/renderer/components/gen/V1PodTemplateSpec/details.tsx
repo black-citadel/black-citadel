@@ -1,16 +1,13 @@
+import { hasValue } from "@components/layout/panel";
 import { MetadataDetails } from "@components/metadata";
 import type { V1PodTemplateSpec } from "@kubernetes/client-node";
 import { PodSpecDetails } from "../V1PodSpec/details";
 
 export const PodTemplateSpecDetails = ({ resourceData }: { resourceData: V1PodTemplateSpec }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.spec].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.spec),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,9 +15,10 @@ export const PodTemplateSpecDetails = ({ resourceData }: { resourceData: V1PodTe
 
     return (
         <>
-            {resourceData.spec && <PodSpecDetails resourceData={ resourceData.spec } />}
-
             <MetadataDetails metadata={resourceData.metadata} />
+
+            {hasValue(resourceData.spec) && <PodSpecDetails resourceData={resourceData.spec } />}
+
         </>
     )
 }

@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1PodFailurePolicyRule } from "@kubernetes/client-node";
 import { PodFailurePolicyOnExitCodesRequirementDetails } from "../V1PodFailurePolicyOnExitCodesRequirement/details";
@@ -6,15 +6,11 @@ import { PodFailurePolicyOnPodConditionsPatternDetails } from "../V1PodFailurePo
 
 export const PodFailurePolicyRuleDetails = ({ resourceData }: { resourceData: V1PodFailurePolicyRule }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.action].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.onExitCodes, resourceData.onPodConditions].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.action),
+        hasValue(resourceData.onExitCodes),
+        hasValue(resourceData.onPodConditions),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -23,23 +19,23 @@ export const PodFailurePolicyRuleDetails = ({ resourceData }: { resourceData: V1
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Action", value: resourceData.action }
+                    { label: "Action", value: resourceData.action, description: "Specifies the action taken on a pod failure when the requirements are satisfied." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.onExitCodes && (
-                <Container title="On Exit Codes">
-                    <PodFailurePolicyOnExitCodesRequirementDetails resourceData={ resourceData.onExitCodes } />
+            {hasValue(resourceData.onExitCodes) && (
+                <Container title="On Exit Codes" collapsible defaultOpen={ true }>
+                    <PodFailurePolicyOnExitCodesRequirementDetails resourceData={resourceData.onExitCodes } />
                 </Container>
             )}
 
-            {resourceData.onPodConditions && (
-                <Container title="On Pod Conditions">
+            {hasValue(resourceData.onPodConditions) && (
+                <Container title="On Pod Conditions" count={resourceData.onPodConditions.length} collapsible defaultOpen={ true }>
                     {resourceData.onPodConditions.map((item, index) => (
-                        <PodFailurePolicyOnPodConditionsPatternDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <PodFailurePolicyOnPodConditionsPatternDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

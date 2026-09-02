@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1DownwardAPIVolumeFile } from "@kubernetes/client-node";
 import { ObjectFieldSelectorDetails } from "../V1ObjectFieldSelector/details";
@@ -6,15 +6,12 @@ import { ResourceFieldSelectorDetails } from "../V1ResourceFieldSelector/details
 
 export const DownwardAPIVolumeFileDetails = ({ resourceData }: { resourceData: V1DownwardAPIVolumeFile }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.mode, resourceData.path].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.fieldRef, resourceData.resourceFieldRef].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.mode),
+        hasValue(resourceData.path),
+        hasValue(resourceData.fieldRef),
+        hasValue(resourceData.resourceFieldRef),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -23,23 +20,21 @@ export const DownwardAPIVolumeFileDetails = ({ resourceData }: { resourceData: V
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Mode", value: resourceData.mode || '-' },
-                    { label: "Path", value: resourceData.path }
+                    { label: "Mode", value: resourceData.mode, description: "Optional: mode bits used to set permissions on this file, must be an octal value between 0000 and 0777 or a decimal value between 0 and 511." },
+                    { label: "Path", value: resourceData.path, description: "Required: Path is the relative path name of the file to be created." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.fieldRef && (
-                <Container title="Field Ref">
-                    <ObjectFieldSelectorDetails resourceData={ resourceData.fieldRef } />
+            {hasValue(resourceData.fieldRef) && (
+                <Container title="Field Ref" collapsible defaultOpen={ true }>
+                    <ObjectFieldSelectorDetails resourceData={resourceData.fieldRef } />
                 </Container>
             )}
 
-            {resourceData.resourceFieldRef && (
-                <Container title="Resource Field Ref">
-                    <ResourceFieldSelectorDetails resourceData={ resourceData.resourceFieldRef } />
+            {hasValue(resourceData.resourceFieldRef) && (
+                <Container title="Resource Field Ref" collapsible defaultOpen={ true }>
+                    <ResourceFieldSelectorDetails resourceData={resourceData.resourceFieldRef } />
                 </Container>
             )}
 

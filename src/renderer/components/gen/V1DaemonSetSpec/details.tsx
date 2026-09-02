@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1DaemonSetSpec } from "@kubernetes/client-node";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
@@ -7,15 +7,13 @@ import { DaemonSetUpdateStrategyDetails } from "../V1DaemonSetUpdateStrategy/det
 
 export const DaemonSetSpecDetails = ({ resourceData }: { resourceData: V1DaemonSetSpec }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.minReadySeconds, resourceData.revisionHistoryLimit].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.selector, resourceData.template, resourceData.updateStrategy].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.minReadySeconds),
+        hasValue(resourceData.revisionHistoryLimit),
+        hasValue(resourceData.selector),
+        hasValue(resourceData.template),
+        hasValue(resourceData.updateStrategy),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -24,25 +22,27 @@ export const DaemonSetSpecDetails = ({ resourceData }: { resourceData: V1DaemonS
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Min Ready Seconds", value: resourceData.minReadySeconds || '-' },
-                    { label: "Revision History Limit", value: resourceData.revisionHistoryLimit || '-' }
+                    { label: "Min Ready Seconds", value: resourceData.minReadySeconds, description: "The minimum number of seconds for which a newly created DaemonSet pod should be ready without any of its container crashing, for it to be considered available." },
+                    { label: "Revision History Limit", value: resourceData.revisionHistoryLimit, description: "The number of old history to retain to allow rollback." },
                 ]}
-                columns={1}
             />
 
-            <Container title="Selector">
-                <LabelSelectorDetails resourceData={ resourceData.selector } />
-            </Container>
+            {hasValue(resourceData.selector) && (
+                <Container title="Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.selector } />
+                </Container>
+            )}
 
-            <Container title="Template">
-                <PodTemplateSpecDetails resourceData={ resourceData.template } />
-            </Container>
+            {hasValue(resourceData.template) && (
+                <Container title="Template" collapsible defaultOpen={ true }>
+                    <PodTemplateSpecDetails resourceData={resourceData.template } />
+                </Container>
+            )}
 
-            {resourceData.updateStrategy && (
-                <Container title="Update Strategy">
-                    <DaemonSetUpdateStrategyDetails resourceData={ resourceData.updateStrategy } />
+            {hasValue(resourceData.updateStrategy) && (
+                <Container title="Update Strategy" collapsible defaultOpen={ false }>
+                    <DaemonSetUpdateStrategyDetails resourceData={resourceData.updateStrategy } />
                 </Container>
             )}
 

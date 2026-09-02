@@ -19,6 +19,10 @@ V2HorizontalPodAutoscaler:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v2HorizontalPodAutoscaler.d.ts
 V1Pod:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1Pod.d.ts
+  order:
+    - spec
+    - status
+    - metadata
 V1Service:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1Service.d.ts
 V1Secret:
@@ -39,6 +43,10 @@ V1DaemonSet:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1DaemonSet.d.ts
 V1Deployment:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1Deployment.d.ts
+  order:
+    - spec
+    - status
+    - metadata
 V1Job:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1Job.d.ts
 V1ReplicaSet:
@@ -315,46 +323,37 @@ V2ResourceMetricStatus:
 V1PodSpec:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodSpec.d.ts
   order:
-    - activeDeadlineSeconds
-    - affinity
-    - automountServiceAccountToken
     - containers
-    - dnsConfig
-    - dnsPolicy
-    - enableServiceLinks
-    - ephemeralContainers
-    - hostAliases
-    - hostIPC
-    - hostNetwork
-    - hostPID
-    - hostUsers
-    - hostname
-    - imagePullSecrets
     - initContainers
+    - ephemeralContainers
+    - volumes
+    - serviceAccountName
+    - serviceAccount
+    - restartPolicy
+    - terminationGracePeriodSeconds
+    - activeDeadlineSeconds
+    - dnsPolicy
+    - dnsConfig
+    - hostname
+    - subdomain
     - nodeName
     - nodeSelector
-    - os
-    - overhead
-    - preemptionPolicy
-    - priority
-    - priorityClassName
-    - readinessGates
-    - resourceClaims
-    - resources
-    - restartPolicy
-    - runtimeClassName
-    - schedulerName
-    - schedulingGates
-    - securityContext
-    - serviceAccount
-    - serviceAccountName
-    - setHostnameAsFQDN
-    - shareProcessNamespace
-    - subdomain
-    - terminationGracePeriodSeconds
+    - affinity
     - tolerations
     - topologySpreadConstraints
-    - volumes
+    - priorityClassName
+    - priority
+    - preemptionPolicy
+    - schedulerName
+    - schedulingGates
+    - runtimeClassName
+    - securityContext
+    - imagePullSecrets
+    - hostAliases
+    - readinessGates
+    - resourceClaims
+    - overhead
+    - os
 V1Affinity:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1Affinity.d.ts
   order:
@@ -413,30 +412,30 @@ V1PodAntiAffinity:
 V1Container:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1Container.d.ts
   order:
-    - args
-    - command
-    - env
-    - envFrom
+    - name
     - image
     - imagePullPolicy
-    - lifecycle
-    - livenessProbe
-    - name
+    - command
+    - args
+    - workingDir
     - ports
-    - readinessProbe
-    - resizePolicy
+    - env
+    - envFrom
     - resources
-    - restartPolicy
-    - securityContext
+    - resizePolicy
+    - volumeMounts
+    - volumeDevices
+    - livenessProbe
+    - readinessProbe
     - startupProbe
-    - stdin
-    - stdinOnce
+    - lifecycle
+    - securityContext
+    - restartPolicy
     - terminationMessagePath
     - terminationMessagePolicy
+    - stdin
+    - stdinOnce
     - tty
-    - volumeDevices
-    - volumeMounts
-    - workingDir
 V1EnvVar:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1EnvVar.d.ts
   order:
@@ -530,16 +529,16 @@ V1TCPSocketAction:
 V1Probe:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1Probe.d.ts
   order:
-    - exec
-    - failureThreshold
-    - grpc
     - httpGet
+    - tcpSocket
+    - exec
+    - grpc
     - initialDelaySeconds
     - periodSeconds
-    - successThreshold
-    - tcpSocket
-    - terminationGracePeriodSeconds
     - timeoutSeconds
+    - successThreshold
+    - failureThreshold
+    - terminationGracePeriodSeconds
 V1GRPCAction:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1GRPCAction.d.ts
   order:
@@ -548,11 +547,11 @@ V1GRPCAction:
 V1ContainerPort:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerPort.d.ts
   order:
-    - containerPort
-    - hostIP
-    - hostPort
     - name
+    - containerPort
     - protocol
+    - hostPort
+    - hostIP
 V1ContainerResizePolicy:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerResizePolicy.d.ts
   order:
@@ -561,9 +560,9 @@ V1ContainerResizePolicy:
 V1ResourceRequirements:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1ResourceRequirements.d.ts
   order:
-    - claims
-    - limits
     - requests
+    - limits
+    - claims
 V1ResourceClaim:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1ResourceClaim.d.ts
   order:
@@ -621,13 +620,13 @@ V1VolumeDevice:
 V1VolumeMount:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1VolumeMount.d.ts
   order:
-    - mountPath
-    - mountPropagation
     - name
-    - readOnly
-    - recursiveReadOnly
+    - mountPath
     - subPath
     - subPathExpr
+    - readOnly
+    - mountPropagation
+    - recursiveReadOnly
 V1PodDNSConfig:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodDNSConfig.d.ts
   order:
@@ -642,31 +641,20 @@ V1PodDNSConfigOption:
 V1EphemeralContainer:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1EphemeralContainer.d.ts
   order:
-    - args
-    - command
-    - env
-    - envFrom
+    - name
+    - targetContainerName
     - image
     - imagePullPolicy
-    - lifecycle
-    - livenessProbe
-    - name
-    - ports
-    - readinessProbe
-    - resizePolicy
-    - resources
-    - restartPolicy
-    - securityContext
-    - startupProbe
-    - stdin
-    - stdinOnce
-    - targetContainerName
-    - terminationMessagePath
-    - terminationMessagePolicy
-    - tty
-    - volumeDevices
-    - volumeMounts
+    - command
+    - args
     - workingDir
+    - ports
+    - env
+    - envFrom
+    - resources
+    - volumeMounts
+    - volumeDevices
+    - securityContext
 V1HostAlias:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1HostAlias.d.ts
   order:
@@ -1062,23 +1050,22 @@ V1VsphereVirtualDiskVolumeSource:
 V1PodStatus:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodStatus.d.ts
   order:
-    - conditions
-    - containerStatuses
-    - ephemeralContainerStatuses
-    - hostIP
-    - hostIPs
-    - initContainerStatuses
-    - message
-    - nominatedNodeName
-    - observedGeneration
     - phase
+    - message
+    - reason
     - podIP
     - podIPs
+    - hostIP
+    - hostIPs
+    - startTime
     - qosClass
-    - reason
+    - nominatedNodeName
+    - containerStatuses
+    - initContainerStatuses
+    - ephemeralContainerStatuses
+    - conditions
     - resize
     - resourceClaimStatuses
-    - startTime
 V1PodCondition:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodCondition.d.ts
   order:
@@ -1092,20 +1079,17 @@ V1PodCondition:
 V1ContainerStatus:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerStatus.d.ts
   order:
-    - allocatedResources
-    - allocatedResourcesStatus
-    - containerID
-    - image
-    - imageID
-    - lastState
     - name
     - ready
-    - resources
-    - restartCount
     - started
+    - restartCount
     - state
-    - stopSignal
-    - user
+    - lastState
+    - image
+    - imageID
+    - containerID
+    - allocatedResources
+    - resources
     - volumeMounts
 V1ContainerState:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1ContainerState.d.ts
@@ -1155,26 +1139,20 @@ V1PodResourceClaimStatus:
 V1ServiceSpec:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1ServiceSpec.d.ts
   order:
-    - allocateLoadBalancerNodePorts
+    - type
     - clusterIP
     - clusterIPs
+    - ports
+    - selector
     - externalIPs
     - externalName
-    - externalTrafficPolicy
-    - healthCheckNodePort
-    - internalTrafficPolicy
-    - ipFamilies
-    - ipFamilyPolicy
-    - loadBalancerClass
     - loadBalancerIP
-    - loadBalancerSourceRanges
-    - ports
-    - publishNotReadyAddresses
-    - selector
+    - loadBalancerClass
     - sessionAffinity
-    - sessionAffinityConfig
-    - trafficDistribution
-    - type
+    - externalTrafficPolicy
+    - internalTrafficPolicy
+    - ipFamilyPolicy
+    - ipFamilies
 V1ServicePort:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1ServicePort.d.ts
   order:
@@ -1372,14 +1350,14 @@ V1NetworkPolicyIngressRule:
 V1CronJobSpec:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1CronJobSpec.d.ts
   order:
-    - concurrencyPolicy
-    - failedJobsHistoryLimit
-    - jobTemplate
     - schedule
+    - timeZone
+    - suspend
+    - concurrencyPolicy
     - startingDeadlineSeconds
     - successfulJobsHistoryLimit
-    - suspend
-    - timeZone
+    - failedJobsHistoryLimit
+    - jobTemplate
 V1JobTemplateSpec:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1JobTemplateSpec.d.ts
   order:
@@ -1388,22 +1366,16 @@ V1JobTemplateSpec:
 V1JobSpec:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1JobSpec.d.ts
   order:
-    - activeDeadlineSeconds
-    - backoffLimit
-    - backoffLimitPerIndex
-    - completionMode
-    - completions
-    - managedBy
-    - manualSelector
-    - maxFailedIndexes
     - parallelism
-    - podFailurePolicy
-    - podReplacementPolicy
-    - selector
-    - successPolicy
-    - suspend
-    - template
+    - completions
+    - completionMode
+    - backoffLimit
+    - activeDeadlineSeconds
     - ttlSecondsAfterFinished
+    - suspend
+    - selector
+    - template
+    - podFailurePolicy
 V1PodFailurePolicy:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1PodFailurePolicy.d.ts
   order:
@@ -1448,11 +1420,11 @@ V1CronJobStatus:
 V1DaemonSetSpec:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1DaemonSetSpec.d.ts
   order:
-    - minReadySeconds
-    - revisionHistoryLimit
     - selector
     - template
     - updateStrategy
+    - minReadySeconds
+    - revisionHistoryLimit
 V1DaemonSetUpdateStrategy:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1DaemonSetUpdateStrategy.d.ts
   order:
@@ -1487,14 +1459,14 @@ V1DaemonSetCondition:
 V1DeploymentSpec:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1DeploymentSpec.d.ts
   order:
-    - minReadySeconds
-    - paused
-    - progressDeadlineSeconds
     - replicas
-    - revisionHistoryLimit
     - selector
     - strategy
     - template
+    - minReadySeconds
+    - progressDeadlineSeconds
+    - revisionHistoryLimit
+    - paused
 V1DeploymentStrategy:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1DeploymentStrategy.d.ts
   order:
@@ -1508,15 +1480,14 @@ V1RollingUpdateDeployment:
 V1DeploymentStatus:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1DeploymentStatus.d.ts
   order:
-    - availableReplicas
-    - collisionCount
-    - conditions
-    - observedGeneration
-    - readyReplicas
     - replicas
-    - terminatingReplicas
+    - readyReplicas
+    - availableReplicas
     - unavailableReplicas
     - updatedReplicas
+    - observedGeneration
+    - collisionCount
+    - conditions
 V1DeploymentCondition:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1DeploymentCondition.d.ts
   order:
@@ -1557,10 +1528,10 @@ V1UncountedTerminatedPods:
 V1ReplicaSetSpec:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1ReplicaSetSpec.d.ts
   order:
-    - minReadySeconds
     - replicas
     - selector
     - template
+    - minReadySeconds
 V1ReplicaSetStatus:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1ReplicaSetStatus.d.ts
   order:
@@ -1582,17 +1553,17 @@ V1ReplicaSetCondition:
 V1StatefulSetSpec:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1StatefulSetSpec.d.ts
   order:
-    - minReadySeconds
-    - ordinals
-    - persistentVolumeClaimRetentionPolicy
-    - podManagementPolicy
     - replicas
-    - revisionHistoryLimit
-    - selector
     - serviceName
+    - selector
     - template
-    - updateStrategy
     - volumeClaimTemplates
+    - updateStrategy
+    - podManagementPolicy
+    - minReadySeconds
+    - revisionHistoryLimit
+    - persistentVolumeClaimRetentionPolicy
+    - ordinals
 V1StatefulSetOrdinals:
   type: node_modules/@kubernetes/client-node/dist/gen/model/v1StatefulSetOrdinals.d.ts
   order:
@@ -1848,3 +1819,22 @@ V1ClaimSource:
   order:
     - resourceClaimName
     - resourceClaimTemplateName
+CoreV1EndpointPort:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/coreV1EndpointPort.d.ts
+  order:
+    - appProtocol
+    - name
+    - port
+    - protocol
+DiscoveryV1EndpointPort:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/discoveryV1EndpointPort.d.ts
+  order:
+    - appProtocol
+    - name
+    - port
+    - protocol
+StorageV1TokenRequest:
+  type: node_modules/@kubernetes/client-node/dist/gen/model/storageV1TokenRequest.d.ts
+  order:
+    - audience
+    - expirationSeconds

@@ -1,16 +1,13 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1HTTPIngressRuleValue } from "@kubernetes/client-node";
 import { HTTPIngressPathDetails } from "../V1HTTPIngressPath/details";
 
 export const HTTPIngressRuleValueDetails = ({ resourceData }: { resourceData: V1HTTPIngressRuleValue }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.paths].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.paths),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,10 +15,12 @@ export const HTTPIngressRuleValueDetails = ({ resourceData }: { resourceData: V1
 
     return (
         <>
-            {resourceData.paths && (
-                <Container title="Paths">
+            {hasValue(resourceData.paths) && (
+                <Container title="Paths" count={resourceData.paths.length} collapsible defaultOpen={ true }>
                     {resourceData.paths.map((item, index) => (
-                        <HTTPIngressPathDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <HTTPIngressPathDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

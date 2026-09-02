@@ -1,15 +1,11 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1VolumeNodeResources } from "@kubernetes/client-node";
 
 export const VolumeNodeResourcesDetails = ({ resourceData }: { resourceData: V1VolumeNodeResources }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.count].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.count),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,11 +14,9 @@ export const VolumeNodeResourcesDetails = ({ resourceData }: { resourceData: V1V
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Count", value: resourceData.count || '-' }
+                    { label: "Count", value: resourceData.count, description: "count indicates the maximum number of unique volumes managed by the CSI driver that can be used on a node." },
                 ]}
-                columns={1}
             />
 
         </>

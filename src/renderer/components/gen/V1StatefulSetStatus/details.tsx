@@ -1,18 +1,21 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1StatefulSetStatus } from "@kubernetes/client-node";
 import { ConditionsTable } from "@components/base/conditions-table";
 
 export const StatefulSetStatusDetails = ({ resourceData }: { resourceData: V1StatefulSetStatus }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.availableReplicas, resourceData.collisionCount, resourceData.currentReplicas, resourceData.currentRevision, resourceData.observedGeneration, resourceData.readyReplicas, resourceData.replicas, resourceData.updateRevision, resourceData.updatedReplicas].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.conditions].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.availableReplicas),
+        hasValue(resourceData.collisionCount),
+        hasValue(resourceData.currentReplicas),
+        hasValue(resourceData.currentRevision),
+        hasValue(resourceData.observedGeneration),
+        hasValue(resourceData.readyReplicas),
+        hasValue(resourceData.replicas),
+        hasValue(resourceData.updateRevision),
+        hasValue(resourceData.updatedReplicas),
+        hasValue(resourceData.conditions),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -21,24 +24,20 @@ export const StatefulSetStatusDetails = ({ resourceData }: { resourceData: V1Sta
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Available Replicas", value: resourceData.availableReplicas || '-' },
-                    { label: "Collision Count", value: resourceData.collisionCount || '-' },
-                    { label: "Current Replicas", value: resourceData.currentReplicas || '-' },
-                    { label: "Current Revision", value: resourceData.currentRevision || '-' },
-                    { label: "Observed Generation", value: resourceData.observedGeneration || '-' },
-                    { label: "Ready Replicas", value: resourceData.readyReplicas || '-' },
-                    { label: "Replicas", value: resourceData.replicas },
-                    { label: "Update Revision", value: resourceData.updateRevision || '-' },
-                    { label: "Updated Replicas", value: resourceData.updatedReplicas || '-' }
+                    { label: "Available Replicas", value: resourceData.availableReplicas, description: "Total number of available pods (ready for at least minReadySeconds) targeted by this statefulset." },
+                    { label: "Collision Count", value: resourceData.collisionCount, description: "collisionCount is the count of hash collisions for the StatefulSet." },
+                    { label: "Current Replicas", value: resourceData.currentReplicas, description: "currentReplicas is the number of Pods created by the StatefulSet controller from the StatefulSet version indicated by currentRevision." },
+                    { label: "Current Revision", value: resourceData.currentRevision, description: "currentRevision, if not empty, indicates the version of the StatefulSet used to generate Pods in the sequence [0,currentReplicas)." },
+                    { label: "Observed Generation", value: resourceData.observedGeneration, description: "observedGeneration is the most recent generation observed for this StatefulSet." },
+                    { label: "Ready Replicas", value: resourceData.readyReplicas, description: "readyReplicas is the number of pods created for this StatefulSet with a Ready Condition." },
+                    { label: "Replicas", value: resourceData.replicas, description: "replicas is the number of Pods created by the StatefulSet controller." },
+                    { label: "Update Revision", value: resourceData.updateRevision, description: "updateRevision, if not empty, indicates the version of the StatefulSet used to generate Pods in the sequence [replicas-updatedReplicas,replicas)" },
+                    { label: "Updated Replicas", value: resourceData.updatedReplicas, description: "updatedReplicas is the number of Pods created by the StatefulSet controller from the StatefulSet version indicated by updateRevision." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.conditions && (
-                <ConditionsTable conditions={ resourceData.conditions } />
-            )}
+            {hasValue(resourceData.conditions) && <ConditionsTable conditions={resourceData.conditions } />}
 
         </>
     )

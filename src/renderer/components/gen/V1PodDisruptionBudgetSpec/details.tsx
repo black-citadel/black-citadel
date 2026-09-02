@@ -1,19 +1,16 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1PodDisruptionBudgetSpec } from "@kubernetes/client-node";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const PodDisruptionBudgetSpecDetails = ({ resourceData }: { resourceData: V1PodDisruptionBudgetSpec }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.maxUnavailable, resourceData.minAvailable, resourceData.unhealthyPodEvictionPolicy].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.selector].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.maxUnavailable),
+        hasValue(resourceData.minAvailable),
+        hasValue(resourceData.unhealthyPodEvictionPolicy),
+        hasValue(resourceData.selector),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,18 +19,16 @@ export const PodDisruptionBudgetSpecDetails = ({ resourceData }: { resourceData:
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Max Unavailable", value: resourceData.maxUnavailable || '-' },
-                    { label: "Min Available", value: resourceData.minAvailable || '-' },
-                    { label: "Unhealthy Pod Eviction Policy", value: resourceData.unhealthyPodEvictionPolicy || '-' }
+                    { label: "Max Unavailable", value: resourceData.maxUnavailable, description: "IntOrString is a type that can hold an int32 or a string." },
+                    { label: "Min Available", value: resourceData.minAvailable, description: "IntOrString is a type that can hold an int32 or a string." },
+                    { label: "Unhealthy Pod Eviction Policy", value: resourceData.unhealthyPodEvictionPolicy, description: "UnhealthyPodEvictionPolicy defines the criteria for when unhealthy pods should be considered for eviction." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.selector && (
-                <Container title="Selector">
-                    <LabelSelectorDetails resourceData={ resourceData.selector } />
+            {hasValue(resourceData.selector) && (
+                <Container title="Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.selector } />
                 </Container>
             )}
 

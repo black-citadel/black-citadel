@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1PodSecurityContext } from "@kubernetes/client-node";
 import { AppArmorProfileDetails } from "../V1AppArmorProfile/details";
@@ -9,17 +9,19 @@ import { WindowsSecurityContextOptionsDetails } from "../V1WindowsSecurityContex
 
 export const PodSecurityContextDetails = ({ resourceData }: { resourceData: V1PodSecurityContext }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.fsGroup, resourceData.fsGroupChangePolicy, resourceData.runAsGroup, resourceData.runAsUser].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        // Check k8s type properties
-        checks.push([resourceData.appArmorProfile, resourceData.seLinuxOptions, resourceData.seccompProfile, resourceData.sysctls, resourceData.windowsOptions].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.fsGroup),
+        hasValue(resourceData.fsGroupChangePolicy),
+        hasValue(resourceData.runAsGroup),
+        hasValue(resourceData.runAsUser),
+        hasValue(resourceData.supplementalGroups),
+        resourceData.runAsNonRoot === true,
+        hasValue(resourceData.appArmorProfile),
+        hasValue(resourceData.seLinuxOptions),
+        hasValue(resourceData.seccompProfile),
+        hasValue(resourceData.sysctls),
+        hasValue(resourceData.windowsOptions),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -28,53 +30,49 @@ export const PodSecurityContextDetails = ({ resourceData }: { resourceData: V1Po
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Fs Group", value: resourceData.fsGroup || '-' },
-                    { label: "Fs Group Change Policy", value: resourceData.fsGroupChangePolicy || '-' },
-                    { label: "Run As Group", value: resourceData.runAsGroup || '-' },
-                    { label: "Run As User", value: resourceData.runAsUser || '-' }
+                    { label: "Fs Group", value: resourceData.fsGroup, description: "A special supplemental group that applies to all containers in a pod." },
+                    { label: "Fs Group Change Policy", value: resourceData.fsGroupChangePolicy, description: "fsGroupChangePolicy defines behavior of changing ownership and permission of the volume before being exposed inside Pod." },
+                    { label: "Run As Group", value: resourceData.runAsGroup, description: "The GID to run the entrypoint of the container process." },
+                    { label: "Run As User", value: resourceData.runAsUser, description: "The UID to run the entrypoint of the container process." },
+                    { label: "Supplemental Groups", value: resourceData.supplementalGroups, description: "A list of groups applied to the first process run in each container, in addition to the container's primary GID, the fsGroup (if specified), and group membersh…" },
                 ]}
-                columns={1}
+                flags={[
+                    { label: "Run As Non Root", value: resourceData.runAsNonRoot, description: "Indicates that the container must run as a non-root user." },
+                ]}
             />
 
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Run As Non Root", value: resourceData.runAsNonRoot ? "Yes" : "No" }
-                ]}
-                columns={1}
-            />
-
-            {resourceData.appArmorProfile && (
-                <Container title="App Armor Profile">
-                    <AppArmorProfileDetails resourceData={ resourceData.appArmorProfile } />
+            {hasValue(resourceData.appArmorProfile) && (
+                <Container title="App Armor Profile" collapsible defaultOpen={ true }>
+                    <AppArmorProfileDetails resourceData={resourceData.appArmorProfile } />
                 </Container>
             )}
 
-            {resourceData.seLinuxOptions && (
-                <Container title="Se Linux Options">
-                    <SELinuxOptionsDetails resourceData={ resourceData.seLinuxOptions } />
+            {hasValue(resourceData.seLinuxOptions) && (
+                <Container title="Se Linux Options" collapsible defaultOpen={ true }>
+                    <SELinuxOptionsDetails resourceData={resourceData.seLinuxOptions } />
                 </Container>
             )}
 
-            {resourceData.seccompProfile && (
-                <Container title="Seccomp Profile">
-                    <SeccompProfileDetails resourceData={ resourceData.seccompProfile } />
+            {hasValue(resourceData.seccompProfile) && (
+                <Container title="Seccomp Profile" collapsible defaultOpen={ true }>
+                    <SeccompProfileDetails resourceData={resourceData.seccompProfile } />
                 </Container>
             )}
 
-            {resourceData.sysctls && (
-                <Container title="Sysctls">
+            {hasValue(resourceData.sysctls) && (
+                <Container title="Sysctls" count={resourceData.sysctls.length} collapsible defaultOpen={ true }>
                     {resourceData.sysctls.map((item, index) => (
-                        <SysctlDetails key={index} resourceData={item} />
+                        <PanelListItem key={index} title={item.name }>
+                            <SysctlDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.windowsOptions && (
-                <Container title="Windows Options">
-                    <WindowsSecurityContextOptionsDetails resourceData={ resourceData.windowsOptions } />
+            {hasValue(resourceData.windowsOptions) && (
+                <Container title="Windows Options" collapsible defaultOpen={ true }>
+                    <WindowsSecurityContextOptionsDetails resourceData={resourceData.windowsOptions } />
                 </Container>
             )}
 

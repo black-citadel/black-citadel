@@ -1,3 +1,4 @@
+import { hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V2ObjectMetricStatus } from "@kubernetes/client-node";
 import { MetricValueStatusDetails } from "../V2MetricValueStatus/details";
@@ -6,13 +7,11 @@ import { MetricIdentifierDetails } from "../V2MetricIdentifier/details";
 
 export const ObjectMetricStatusDetails = ({ resourceData }: { resourceData: V2ObjectMetricStatus }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.current, resourceData.describedObject, resourceData.metric].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.current),
+        hasValue(resourceData.describedObject),
+        hasValue(resourceData.metric),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,17 +19,23 @@ export const ObjectMetricStatusDetails = ({ resourceData }: { resourceData: V2Ob
 
     return (
         <>
-            <Container title="Current">
-                <MetricValueStatusDetails resourceData={ resourceData.current } />
-            </Container>
+            {hasValue(resourceData.current) && (
+                <Container title="Current" collapsible defaultOpen={ true }>
+                    <MetricValueStatusDetails resourceData={resourceData.current } />
+                </Container>
+            )}
 
-            <Container title="Described Object">
-                <CrossVersionObjectReferenceDetails resourceData={ resourceData.describedObject } />
-            </Container>
+            {hasValue(resourceData.describedObject) && (
+                <Container title="Described Object" collapsible defaultOpen={ true }>
+                    <CrossVersionObjectReferenceDetails resourceData={resourceData.describedObject } />
+                </Container>
+            )}
 
-            <Container title="Metric">
-                <MetricIdentifierDetails resourceData={ resourceData.metric } />
-            </Container>
+            {hasValue(resourceData.metric) && (
+                <Container title="Metric" collapsible defaultOpen={ true }>
+                    <MetricIdentifierDetails resourceData={resourceData.metric } />
+                </Container>
+            )}
 
         </>
     )

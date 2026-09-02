@@ -1,30 +1,45 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1Container } from "@kubernetes/client-node";
+import { ContainerPortDetails } from "../V1ContainerPort/details";
 import { EnvVarDetails } from "../V1EnvVar/details";
 import { EnvFromSourceDetails } from "../V1EnvFromSource/details";
-import { LifecycleDetails } from "../V1Lifecycle/details";
-import { ProbeDetails } from "../V1Probe/details";
-import { ContainerPortDetails } from "../V1ContainerPort/details";
-import { ContainerResizePolicyDetails } from "../V1ContainerResizePolicy/details";
 import { ResourceRequirementsDetails } from "../V1ResourceRequirements/details";
-import { SecurityContextDetails } from "../V1SecurityContext/details";
-import { VolumeDeviceDetails } from "../V1VolumeDevice/details";
+import { ContainerResizePolicyDetails } from "../V1ContainerResizePolicy/details";
 import { VolumeMountDetails } from "../V1VolumeMount/details";
+import { VolumeDeviceDetails } from "../V1VolumeDevice/details";
+import { ProbeDetails } from "../V1Probe/details";
+import { LifecycleDetails } from "../V1Lifecycle/details";
+import { SecurityContextDetails } from "../V1SecurityContext/details";
 
 export const ContainerDetails = ({ resourceData }: { resourceData: V1Container }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.image, resourceData.imagePullPolicy, resourceData.name, resourceData.restartPolicy, resourceData.terminationMessagePath, resourceData.terminationMessagePolicy, resourceData.workingDir].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        // Check k8s type properties
-        checks.push([resourceData.env, resourceData.envFrom, resourceData.lifecycle, resourceData.livenessProbe, resourceData.ports, resourceData.readinessProbe, resourceData.resizePolicy, resourceData.resources, resourceData.securityContext, resourceData.startupProbe, resourceData.volumeDevices, resourceData.volumeMounts].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.name),
+        hasValue(resourceData.image),
+        hasValue(resourceData.imagePullPolicy),
+        hasValue(resourceData.command),
+        hasValue(resourceData.args),
+        hasValue(resourceData.workingDir),
+        hasValue(resourceData.restartPolicy),
+        hasValue(resourceData.terminationMessagePath),
+        hasValue(resourceData.terminationMessagePolicy),
+        resourceData.stdin === true,
+        resourceData.stdinOnce === true,
+        resourceData.tty === true,
+        hasValue(resourceData.ports),
+        hasValue(resourceData.env),
+        hasValue(resourceData.envFrom),
+        hasValue(resourceData.resources),
+        hasValue(resourceData.resizePolicy),
+        hasValue(resourceData.volumeMounts),
+        hasValue(resourceData.volumeDevices),
+        hasValue(resourceData.livenessProbe),
+        hasValue(resourceData.readinessProbe),
+        hasValue(resourceData.startupProbe),
+        hasValue(resourceData.lifecycle),
+        hasValue(resourceData.securityContext),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -33,110 +48,117 @@ export const ContainerDetails = ({ resourceData }: { resourceData: V1Container }
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Image", value: resourceData.image || '-' },
-                    { label: "Image Pull Policy", value: resourceData.imagePullPolicy || '-' },
-                    { label: "Name", value: resourceData.name },
-                    { label: "Restart Policy", value: resourceData.restartPolicy || '-' },
-                    { label: "Termination Message Path", value: resourceData.terminationMessagePath || '-' },
-                    { label: "Termination Message Policy", value: resourceData.terminationMessagePolicy || '-' },
-                    { label: "Working Dir", value: resourceData.workingDir || '-' }
+                    { label: "Name", value: resourceData.name, description: "Name of the container specified as a DNS_LABEL." },
+                    { label: "Image", value: resourceData.image, description: "Container image name." },
+                    { label: "Image Pull Policy", value: resourceData.imagePullPolicy, description: "Image pull policy." },
+                    { label: "Command", value: resourceData.command, description: "Entrypoint array." },
+                    { label: "Args", value: resourceData.args, description: "Arguments to the entrypoint." },
+                    { label: "Working Dir", value: resourceData.workingDir, description: "Container's working directory." },
+                    { label: "Restart Policy", value: resourceData.restartPolicy, description: "RestartPolicy defines the restart behavior of individual containers in a pod." },
+                    { label: "Termination Message Path", value: resourceData.terminationMessagePath, description: "Optional: Path at which the file to which the container's termination message will be written is mounted into the container's filesystem." },
+                    { label: "Termination Message Policy", value: resourceData.terminationMessagePolicy, description: "Indicate how the termination message should be populated." },
                 ]}
-                columns={1}
+                flags={[
+                    { label: "Stdin", value: resourceData.stdin, description: "Whether this container should allocate a buffer for stdin in the container runtime." },
+                    { label: "Stdin Once", value: resourceData.stdinOnce, description: "Whether the container runtime should close the stdin channel after it has been opened by a single attach." },
+                    { label: "Tty", value: resourceData.tty, description: "Whether this container should allocate a TTY for itself, also requires 'stdin' to be true." },
+                ]}
             />
 
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Stdin", value: resourceData.stdin ? "Yes" : "No" },
-                    { label: "Stdin Once", value: resourceData.stdinOnce ? "Yes" : "No" },
-                    { label: "Tty", value: resourceData.tty ? "Yes" : "No" }
-                ]}
-                columns={1}
-            />
-
-            {resourceData.env && (
-                <Container title="Env">
-                    {resourceData.env.map((item, index) => (
-                        <EnvVarDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.envFrom && (
-                <Container title="Env From">
-                    {resourceData.envFrom.map((item, index) => (
-                        <EnvFromSourceDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.lifecycle && (
-                <Container title="Lifecycle">
-                    <LifecycleDetails resourceData={ resourceData.lifecycle } />
-                </Container>
-            )}
-
-            {resourceData.livenessProbe && (
-                <Container title="Liveness Probe">
-                    <ProbeDetails resourceData={ resourceData.livenessProbe } />
-                </Container>
-            )}
-
-            {resourceData.ports && (
-                <Container title="Ports">
+            {hasValue(resourceData.ports) && (
+                <Container title="Ports" count={resourceData.ports.length} collapsible defaultOpen={ true }>
                     {resourceData.ports.map((item, index) => (
-                        <ContainerPortDetails key={index} resourceData={item} />
+                        <PanelListItem key={index} title={item.name }>
+                            <ContainerPortDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.readinessProbe && (
-                <Container title="Readiness Probe">
-                    <ProbeDetails resourceData={ resourceData.readinessProbe } />
+            {hasValue(resourceData.env) && (
+                <Container title="Env" count={resourceData.env.length} collapsible defaultOpen={ true }>
+                    {resourceData.env.map((item, index) => (
+                        <PanelListItem key={index} title={item.name }>
+                            <EnvVarDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
                 </Container>
             )}
 
-            {resourceData.resizePolicy && (
-                <Container title="Resize Policy">
+            {hasValue(resourceData.envFrom) && (
+                <Container title="Env From" count={resourceData.envFrom.length} collapsible defaultOpen={ true }>
+                    {resourceData.envFrom.map((item, index) => (
+                        <PanelListItem key={index}>
+                            <EnvFromSourceDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.resources) && (
+                <Container title="Resources" collapsible defaultOpen={ true }>
+                    <ResourceRequirementsDetails resourceData={resourceData.resources } />
+                </Container>
+            )}
+
+            {hasValue(resourceData.resizePolicy) && (
+                <Container title="Resize Policy" count={resourceData.resizePolicy.length} collapsible defaultOpen={ false }>
                     {resourceData.resizePolicy.map((item, index) => (
-                        <ContainerResizePolicyDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <ContainerResizePolicyDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.resources && (
-                <Container title="Resources">
-                    <ResourceRequirementsDetails resourceData={ resourceData.resources } />
-                </Container>
-            )}
-
-            {resourceData.securityContext && (
-                <Container title="Security Context">
-                    <SecurityContextDetails resourceData={ resourceData.securityContext } />
-                </Container>
-            )}
-
-            {resourceData.startupProbe && (
-                <Container title="Startup Probe">
-                    <ProbeDetails resourceData={ resourceData.startupProbe } />
-                </Container>
-            )}
-
-            {resourceData.volumeDevices && (
-                <Container title="Volume Devices">
-                    {resourceData.volumeDevices.map((item, index) => (
-                        <VolumeDeviceDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.volumeMounts && (
-                <Container title="Volume Mounts">
+            {hasValue(resourceData.volumeMounts) && (
+                <Container title="Volume Mounts" count={resourceData.volumeMounts.length} collapsible defaultOpen={ true }>
                     {resourceData.volumeMounts.map((item, index) => (
-                        <VolumeMountDetails key={index} resourceData={item} />
+                        <PanelListItem key={index} title={item.name }>
+                            <VolumeMountDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.volumeDevices) && (
+                <Container title="Volume Devices" count={resourceData.volumeDevices.length} collapsible defaultOpen={ false }>
+                    {resourceData.volumeDevices.map((item, index) => (
+                        <PanelListItem key={index} title={item.name }>
+                            <VolumeDeviceDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.livenessProbe) && (
+                <Container title="Liveness Probe" collapsible defaultOpen={ true }>
+                    <ProbeDetails resourceData={resourceData.livenessProbe } />
+                </Container>
+            )}
+
+            {hasValue(resourceData.readinessProbe) && (
+                <Container title="Readiness Probe" collapsible defaultOpen={ true }>
+                    <ProbeDetails resourceData={resourceData.readinessProbe } />
+                </Container>
+            )}
+
+            {hasValue(resourceData.startupProbe) && (
+                <Container title="Startup Probe" collapsible defaultOpen={ true }>
+                    <ProbeDetails resourceData={resourceData.startupProbe } />
+                </Container>
+            )}
+
+            {hasValue(resourceData.lifecycle) && (
+                <Container title="Lifecycle" collapsible defaultOpen={ false }>
+                    <LifecycleDetails resourceData={resourceData.lifecycle } />
+                </Container>
+            )}
+
+            {hasValue(resourceData.securityContext) && (
+                <Container title="Security Context" collapsible defaultOpen={ false }>
+                    <SecurityContextDetails resourceData={resourceData.securityContext } />
                 </Container>
             )}
 

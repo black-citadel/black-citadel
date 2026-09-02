@@ -1,15 +1,13 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1ResourceFieldSelector } from "@kubernetes/client-node";
 
 export const ResourceFieldSelectorDetails = ({ resourceData }: { resourceData: V1ResourceFieldSelector }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.containerName, resourceData.divisor, resourceData.resource].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.containerName),
+        hasValue(resourceData.divisor),
+        hasValue(resourceData.resource),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,13 +16,11 @@ export const ResourceFieldSelectorDetails = ({ resourceData }: { resourceData: V
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Container Name", value: resourceData.containerName || '-' },
-                    { label: "Divisor", value: resourceData.divisor || '-' },
-                    { label: "Resource", value: resourceData.resource }
+                    { label: "Container Name", value: resourceData.containerName, description: "Container name: required for volumes, optional for env vars" },
+                    { label: "Divisor", value: resourceData.divisor, description: "Specifies the output format of the exposed resources, defaults to \"1\"" },
+                    { label: "Resource", value: resourceData.resource, description: "Required: resource to select" },
                 ]}
-                columns={1}
             />
 
         </>

@@ -1,15 +1,17 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1ObjectReference } from "@kubernetes/client-node";
 
 export const ObjectReferenceDetails = ({ resourceData }: { resourceData: V1ObjectReference }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.apiVersion, resourceData.fieldPath, resourceData.kind, resourceData.name, resourceData.namespace, resourceData.resourceVersion, resourceData.uid].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.fieldPath),
+        hasValue(resourceData.name),
+        hasValue(resourceData.namespace),
+        hasValue(resourceData.resourceVersion),
+        hasValue(resourceData.uid),
+        hasValue(resourceData.apiVersion),
+        hasValue(resourceData.kind),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,17 +20,15 @@ export const ObjectReferenceDetails = ({ resourceData }: { resourceData: V1Objec
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Api Version", value: resourceData.apiVersion || '-' },
-                    { label: "Field Path", value: resourceData.fieldPath || '-' },
-                    { label: "Kind", value: resourceData.kind || '-' },
-                    { label: "Name", value: resourceData.name || '-' },
-                    { label: "Namespace", value: resourceData.namespace || '-' },
-                    { label: "Resource Version", value: resourceData.resourceVersion || '-' },
-                    { label: "Uid", value: resourceData.uid || '-' }
+                    { label: "Field Path", value: resourceData.fieldPath, description: "If referring to a piece of an object instead of an entire object, this string should contain a valid JSON/Go field access statement, such as desiredState.manif…" },
+                    { label: "Name", value: resourceData.name, description: "Name of the referent." },
+                    { label: "Namespace", value: resourceData.namespace, description: "Namespace of the referent." },
+                    { label: "Resource Version", value: resourceData.resourceVersion, description: "Specific resourceVersion to which this reference is made, if any." },
+                    { label: "Uid", value: resourceData.uid, description: "UID of the referent." },
+                    { label: "Api Version", value: resourceData.apiVersion, description: "API version of the referent." },
+                    { label: "Kind", value: resourceData.kind, description: "Kind of the referent." },
                 ]}
-                columns={1}
             />
 
         </>

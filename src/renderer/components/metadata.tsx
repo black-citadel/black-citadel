@@ -9,7 +9,14 @@ interface Props {
   metadata: k8s.V1ObjectMeta;
 }
 
+// The last-applied-configuration annotation is kubectl bookkeeping, not information about the resource.
+const HIDDEN_ANNOTATIONS = ['kubectl.kubernetes.io/last-applied-configuration'];
+
 export const MetadataDetails = ({ metadata }: Props): JSX.Element => {
+  const hasLabels = !!metadata.labels && Object.keys(metadata.labels).length > 0;
+  const hasAnnotations = !!metadata.annotations
+    && Object.keys(metadata.annotations).some((key) => !HIDDEN_ANNOTATIONS.includes(key));
+
   return (
     <>
       <Subheading className='mt-8 mb-2'>Metadata</Subheading>
@@ -22,33 +29,35 @@ export const MetadataDetails = ({ metadata }: Props): JSX.Element => {
               <DescriptionDetails><NamespaceResourceLink name={metadata.namespace} /></DescriptionDetails>
             </>}
 
-            <DescriptionTerm>Labels</DescriptionTerm>
-            <DescriptionDetails>
-              {metadata.labels && (
-                <>
-                  {Object.entries(metadata.labels).map(([key, value]) => (
-                    <div key={key}>
-                      <span className="bg-neutral-900 py-0.5 px-2 mb-2 rounded text-xs">
-                        {key}: {value}
-                      </span>
-                    </div>
-                  ))}
-                </>
-              )}
-            </DescriptionDetails>
+            {hasLabels && <>
+              <DescriptionTerm>Labels</DescriptionTerm>
+              <DescriptionDetails>
+                {Object.entries(metadata.labels).map(([key, value]) => (
+                  <div key={key}>
+                    <span className="bg-neutral-900 py-0.5 px-2 mb-2 rounded text-xs">
+                      {key}: {value}
+                    </span>
+                  </div>
+                ))}
+              </DescriptionDetails>
+            </>}
 
 
           </DescriptionList>
         </div>
         <div className='border border-dotted border-neutral-800 p-4'>
           <DescriptionList>
-          <DescriptionTerm>Age</DescriptionTerm>
-          <DescriptionDetails>{calculateAge(metadata.creationTimestamp)}</DescriptionDetails>
+            {metadata.creationTimestamp && <>
+              <DescriptionTerm>Age</DescriptionTerm>
+              <DescriptionDetails>{calculateAge(metadata.creationTimestamp)}</DescriptionDetails>
+            </>}
 
-            <DescriptionTerm>Annotations</DescriptionTerm>
-            <DescriptionDetails>
-              <DetailsAnnotations annotations={metadata.annotations} />
-            </DescriptionDetails>
+            {hasAnnotations && <>
+              <DescriptionTerm>Annotations</DescriptionTerm>
+              <DescriptionDetails>
+                <DetailsAnnotations annotations={metadata.annotations} />
+              </DescriptionDetails>
+            </>}
           </DescriptionList>
         </div>
       </div>

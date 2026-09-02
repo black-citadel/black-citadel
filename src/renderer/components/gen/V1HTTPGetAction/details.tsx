@@ -1,19 +1,17 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1HTTPGetAction } from "@kubernetes/client-node";
 import { HTTPHeaderDetails } from "../V1HTTPHeader/details";
 
 export const HTTPGetActionDetails = ({ resourceData }: { resourceData: V1HTTPGetAction }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.host, resourceData.path, resourceData.port, resourceData.scheme].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.httpHeaders].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.host),
+        hasValue(resourceData.path),
+        hasValue(resourceData.port),
+        hasValue(resourceData.scheme),
+        hasValue(resourceData.httpHeaders),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,20 +20,20 @@ export const HTTPGetActionDetails = ({ resourceData }: { resourceData: V1HTTPGet
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Host", value: resourceData.host || '-' },
-                    { label: "Path", value: resourceData.path || '-' },
-                    { label: "Port", value: resourceData.port },
-                    { label: "Scheme", value: resourceData.scheme || '-' }
+                    { label: "Host", value: resourceData.host, description: "Host name to connect to, defaults to the pod IP." },
+                    { label: "Path", value: resourceData.path, description: "Path to access on the HTTP server." },
+                    { label: "Port", value: resourceData.port, description: "IntOrString is a type that can hold an int32 or a string." },
+                    { label: "Scheme", value: resourceData.scheme, description: "Scheme to use for connecting to the host." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.httpHeaders && (
-                <Container title="Http Headers">
+            {hasValue(resourceData.httpHeaders) && (
+                <Container title="Http Headers" count={resourceData.httpHeaders.length} collapsible defaultOpen={ true }>
                     {resourceData.httpHeaders.map((item, index) => (
-                        <HTTPHeaderDetails key={index} resourceData={item} />
+                        <PanelListItem key={index} title={item.name }>
+                            <HTTPHeaderDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

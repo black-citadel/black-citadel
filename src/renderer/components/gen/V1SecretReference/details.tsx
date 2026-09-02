@@ -1,15 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1SecretReference } from "@kubernetes/client-node";
 
 export const SecretReferenceDetails = ({ resourceData }: { resourceData: V1SecretReference }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.name, resourceData.namespace].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.name),
+        hasValue(resourceData.namespace),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,12 +15,10 @@ export const SecretReferenceDetails = ({ resourceData }: { resourceData: V1Secre
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Name", value: resourceData.name || '-' },
-                    { label: "Namespace", value: resourceData.namespace || '-' }
+                    { label: "Name", value: resourceData.name, description: "name is unique within a namespace to reference a secret resource." },
+                    { label: "Namespace", value: resourceData.namespace, description: "namespace defines the space within which the secret name must be unique." },
                 ]}
-                columns={1}
             />
 
         </>

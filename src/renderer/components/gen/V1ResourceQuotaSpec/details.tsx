@@ -1,26 +1,16 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1ResourceQuotaSpec } from "@kubernetes/client-node";
 import { ScopeSelectorDetails } from "../V1ScopeSelector/details";
 
 export const ResourceQuotaSpecDetails = ({ resourceData }: { resourceData: V1ResourceQuotaSpec }): JSX.Element => {
-    // Transform the Hard object into an array of PanelGridItem objects
-    const hardItems = resourceData.hard
-        ? Object.entries(resourceData.hard).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
+    const hardItems = Object.entries(resourceData.hard ?? {}).map(([key, value]) => ({ label: key, value }));
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check object properties
-        checks.push(hardItems.length > 0);
-        // Check k8s type properties
-        checks.push([resourceData.scopeSelector].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hardItems.length > 0,
+        hasValue(resourceData.scopes),
+        hasValue(resourceData.scopeSelector),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -29,14 +19,16 @@ export const ResourceQuotaSpecDetails = ({ resourceData }: { resourceData: V1Res
     return (
         <>
             <PanelGrid
-                title="Hard"
-                items={ hardItems }
-                columns={1}
+                items={[
+                    { label: "Scopes", value: resourceData.scopes, description: "A collection of filters that must match each object tracked by a quota." },
+                ]}
             />
 
-            {resourceData.scopeSelector && (
-                <Container title="Scope Selector">
-                    <ScopeSelectorDetails resourceData={ resourceData.scopeSelector } />
+            <PanelGrid title="Hard" items={ hardItems } />
+
+            {hasValue(resourceData.scopeSelector) && (
+                <Container title="Scope Selector" collapsible defaultOpen={ true }>
+                    <ScopeSelectorDetails resourceData={resourceData.scopeSelector } />
                 </Container>
             )}
 

@@ -1,17 +1,13 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1SecretKeySelector } from "@kubernetes/client-node";
 
 export const SecretKeySelectorDetails = ({ resourceData }: { resourceData: V1SecretKeySelector }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.key, resourceData.name].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.key),
+        hasValue(resourceData.name),
+        resourceData.optional === true,
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,20 +16,13 @@ export const SecretKeySelectorDetails = ({ resourceData }: { resourceData: V1Sec
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Key", value: resourceData.key },
-                    { label: "Name", value: resourceData.name || '-' }
+                    { label: "Key", value: resourceData.key, description: "The key of the secret to select from." },
+                    { label: "Name", value: resourceData.name, description: "Name of the referent." },
                 ]}
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Optional", value: resourceData.optional ? "Yes" : "No" }
+                flags={[
+                    { label: "Optional", value: resourceData.optional, description: "Specify whether the Secret or its key must be defined" },
                 ]}
-                columns={1}
             />
 
         </>

@@ -1,3 +1,4 @@
+import { hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1LifecycleHandler } from "@kubernetes/client-node";
 import { ExecActionDetails } from "../V1ExecAction/details";
@@ -7,13 +8,12 @@ import { TCPSocketActionDetails } from "../V1TCPSocketAction/details";
 
 export const LifecycleHandlerDetails = ({ resourceData }: { resourceData: V1LifecycleHandler }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.exec, resourceData.httpGet, resourceData.sleep, resourceData.tcpSocket].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.exec),
+        hasValue(resourceData.httpGet),
+        hasValue(resourceData.sleep),
+        hasValue(resourceData.tcpSocket),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -21,27 +21,27 @@ export const LifecycleHandlerDetails = ({ resourceData }: { resourceData: V1Life
 
     return (
         <>
-            {resourceData.exec && (
-                <Container title="Exec">
-                    <ExecActionDetails resourceData={ resourceData.exec } />
+            {hasValue(resourceData.exec) && (
+                <Container title="Exec" collapsible defaultOpen={ true }>
+                    <ExecActionDetails resourceData={resourceData.exec } />
                 </Container>
             )}
 
-            {resourceData.httpGet && (
-                <Container title="Http Get">
-                    <HTTPGetActionDetails resourceData={ resourceData.httpGet } />
+            {hasValue(resourceData.httpGet) && (
+                <Container title="Http Get" collapsible defaultOpen={ true }>
+                    <HTTPGetActionDetails resourceData={resourceData.httpGet } />
                 </Container>
             )}
 
-            {resourceData.sleep && (
-                <Container title="Sleep">
-                    <SleepActionDetails resourceData={ resourceData.sleep } />
+            {hasValue(resourceData.sleep) && (
+                <Container title="Sleep" collapsible defaultOpen={ true }>
+                    <SleepActionDetails resourceData={resourceData.sleep } />
                 </Container>
             )}
 
-            {resourceData.tcpSocket && (
-                <Container title="Tcp Socket">
-                    <TCPSocketActionDetails resourceData={ resourceData.tcpSocket } />
+            {hasValue(resourceData.tcpSocket) && (
+                <Container title="Tcp Socket" collapsible defaultOpen={ true }>
+                    <TCPSocketActionDetails resourceData={resourceData.tcpSocket } />
                 </Container>
             )}
 

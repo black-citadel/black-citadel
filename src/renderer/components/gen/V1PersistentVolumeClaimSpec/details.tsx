@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1PersistentVolumeClaimSpec } from "@kubernetes/client-node";
 import { TypedLocalObjectReferenceDetails } from "../V1TypedLocalObjectReference/details";
@@ -8,15 +8,17 @@ import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const PersistentVolumeClaimSpecDetails = ({ resourceData }: { resourceData: V1PersistentVolumeClaimSpec }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.storageClassName, resourceData.volumeAttributesClassName, resourceData.volumeMode, resourceData.volumeName].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.dataSource, resourceData.dataSourceRef, resourceData.resources, resourceData.selector].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.accessModes),
+        hasValue(resourceData.storageClassName),
+        hasValue(resourceData.volumeAttributesClassName),
+        hasValue(resourceData.volumeMode),
+        hasValue(resourceData.volumeName),
+        hasValue(resourceData.dataSource),
+        hasValue(resourceData.dataSourceRef),
+        hasValue(resourceData.resources),
+        hasValue(resourceData.selector),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -25,37 +27,36 @@ export const PersistentVolumeClaimSpecDetails = ({ resourceData }: { resourceDat
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Storage Class Name", value: resourceData.storageClassName || '-' },
-                    { label: "Volume Attributes Class Name", value: resourceData.volumeAttributesClassName || '-' },
-                    { label: "Volume Mode", value: resourceData.volumeMode || '-' },
-                    { label: "Volume Name", value: resourceData.volumeName || '-' }
+                    { label: "Access Modes", value: resourceData.accessModes, description: "accessModes contains the desired access modes the volume should have." },
+                    { label: "Storage Class Name", value: resourceData.storageClassName, description: "storageClassName is the name of the StorageClass required by the claim." },
+                    { label: "Volume Attributes Class Name", value: resourceData.volumeAttributesClassName, description: "volumeAttributesClassName may be used to set the VolumeAttributesClass used by this claim." },
+                    { label: "Volume Mode", value: resourceData.volumeMode, description: "volumeMode defines what type of volume is required by the claim." },
+                    { label: "Volume Name", value: resourceData.volumeName, description: "volumeName is the binding reference to the PersistentVolume backing this claim." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.dataSource && (
-                <Container title="Data Source">
-                    <TypedLocalObjectReferenceDetails resourceData={ resourceData.dataSource } />
+            {hasValue(resourceData.dataSource) && (
+                <Container title="Data Source" collapsible defaultOpen={ true }>
+                    <TypedLocalObjectReferenceDetails resourceData={resourceData.dataSource } />
                 </Container>
             )}
 
-            {resourceData.dataSourceRef && (
-                <Container title="Data Source Ref">
-                    <TypedObjectReferenceDetails resourceData={ resourceData.dataSourceRef } />
+            {hasValue(resourceData.dataSourceRef) && (
+                <Container title="Data Source Ref" collapsible defaultOpen={ true }>
+                    <TypedObjectReferenceDetails resourceData={resourceData.dataSourceRef } />
                 </Container>
             )}
 
-            {resourceData.resources && (
-                <Container title="Resources">
-                    <VolumeResourceRequirementsDetails resourceData={ resourceData.resources } />
+            {hasValue(resourceData.resources) && (
+                <Container title="Resources" collapsible defaultOpen={ true }>
+                    <VolumeResourceRequirementsDetails resourceData={resourceData.resources } />
                 </Container>
             )}
 
-            {resourceData.selector && (
-                <Container title="Selector">
-                    <LabelSelectorDetails resourceData={ resourceData.selector } />
+            {hasValue(resourceData.selector) && (
+                <Container title="Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.selector } />
                 </Container>
             )}
 

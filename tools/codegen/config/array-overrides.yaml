@@ -83,3 +83,17 @@ overrides:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+  V1DeploymentCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+
+  V1DaemonSetCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"
+
+  V1ReplicaSetCondition:
+    componentName: ConditionsTable
+    propName: conditions
+    importPath: "@components/base/conditions-table"

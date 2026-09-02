@@ -1,15 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1SeccompProfile } from "@kubernetes/client-node";
 
 export const SeccompProfileDetails = ({ resourceData }: { resourceData: V1SeccompProfile }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.localhostProfile, resourceData.type].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.localhostProfile),
+        hasValue(resourceData.type),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,12 +15,10 @@ export const SeccompProfileDetails = ({ resourceData }: { resourceData: V1Seccom
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Localhost Profile", value: resourceData.localhostProfile || '-' },
-                    { label: "Type", value: resourceData.type }
+                    { label: "Localhost Profile", value: resourceData.localhostProfile, description: "localhostProfile indicates a profile defined in a file on the node should be used." },
+                    { label: "Type", value: resourceData.type, description: "type indicates which kind of seccomp profile will be applied." },
                 ]}
-                columns={1}
             />
 
         </>

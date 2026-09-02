@@ -1,3 +1,4 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1NodeAffinity } from "@kubernetes/client-node";
 import { PreferredSchedulingTermDetails } from "../V1PreferredSchedulingTerm/details";
@@ -5,13 +6,10 @@ import { NodeSelectorDetails } from "../V1NodeSelector/details";
 
 export const NodeAffinityDetails = ({ resourceData }: { resourceData: V1NodeAffinity }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.preferredDuringSchedulingIgnoredDuringExecution, resourceData.requiredDuringSchedulingIgnoredDuringExecution].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.preferredDuringSchedulingIgnoredDuringExecution),
+        hasValue(resourceData.requiredDuringSchedulingIgnoredDuringExecution),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -19,17 +17,19 @@ export const NodeAffinityDetails = ({ resourceData }: { resourceData: V1NodeAffi
 
     return (
         <>
-            {resourceData.preferredDuringSchedulingIgnoredDuringExecution && (
-                <Container title="Preferred During Scheduling Ignored During Execution">
+            {hasValue(resourceData.preferredDuringSchedulingIgnoredDuringExecution) && (
+                <Container title="Preferred During Scheduling Ignored During Execution" count={resourceData.preferredDuringSchedulingIgnoredDuringExecution.length} collapsible defaultOpen={ true }>
                     {resourceData.preferredDuringSchedulingIgnoredDuringExecution.map((item, index) => (
-                        <PreferredSchedulingTermDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <PreferredSchedulingTermDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.requiredDuringSchedulingIgnoredDuringExecution && (
-                <Container title="Required During Scheduling Ignored During Execution">
-                    <NodeSelectorDetails resourceData={ resourceData.requiredDuringSchedulingIgnoredDuringExecution } />
+            {hasValue(resourceData.requiredDuringSchedulingIgnoredDuringExecution) && (
+                <Container title="Required During Scheduling Ignored During Execution" collapsible defaultOpen={ true }>
+                    <NodeSelectorDetails resourceData={resourceData.requiredDuringSchedulingIgnoredDuringExecution } />
                 </Container>
             )}
 

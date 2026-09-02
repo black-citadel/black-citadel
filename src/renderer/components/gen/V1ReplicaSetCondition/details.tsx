@@ -1,15 +1,15 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1ReplicaSetCondition } from "@kubernetes/client-node";
 
 export const ReplicaSetConditionDetails = ({ resourceData }: { resourceData: V1ReplicaSetCondition }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.message, resourceData.reason, resourceData.status, resourceData.type].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.lastTransitionTime),
+        hasValue(resourceData.message),
+        hasValue(resourceData.reason),
+        hasValue(resourceData.status),
+        hasValue(resourceData.type),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,14 +18,13 @@ export const ReplicaSetConditionDetails = ({ resourceData }: { resourceData: V1R
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Message", value: resourceData.message || '-' },
-                    { label: "Reason", value: resourceData.reason || '-' },
-                    { label: "Status", value: resourceData.status },
-                    { label: "Type", value: resourceData.type }
+                    { label: "Last Transition Time", value: resourceData.lastTransitionTime, description: "The last time the condition transitioned from one status to another." },
+                    { label: "Message", value: resourceData.message, description: "A human readable message indicating details about the transition." },
+                    { label: "Reason", value: resourceData.reason, description: "The reason for the condition's last transition." },
+                    { label: "Status", value: resourceData.status, description: "Status of the condition, one of True, False, Unknown." },
+                    { label: "Type", value: resourceData.type, description: "Type of replica set condition." },
                 ]}
-                columns={1}
             />
 
         </>

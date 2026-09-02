@@ -1,19 +1,14 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1StatefulSetUpdateStrategy } from "@kubernetes/client-node";
 import { RollingUpdateStatefulSetStrategyDetails } from "../V1RollingUpdateStatefulSetStrategy/details";
 
 export const StatefulSetUpdateStrategyDetails = ({ resourceData }: { resourceData: V1StatefulSetUpdateStrategy }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.type].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.rollingUpdate].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.type),
+        hasValue(resourceData.rollingUpdate),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,16 +17,14 @@ export const StatefulSetUpdateStrategyDetails = ({ resourceData }: { resourceDat
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Type", value: resourceData.type || '-' }
+                    { label: "Type", value: resourceData.type, description: "Type indicates the type of the StatefulSetUpdateStrategy." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.rollingUpdate && (
-                <Container title="Rolling Update">
-                    <RollingUpdateStatefulSetStrategyDetails resourceData={ resourceData.rollingUpdate } />
+            {hasValue(resourceData.rollingUpdate) && (
+                <Container title="Rolling Update" collapsible defaultOpen={ true }>
+                    <RollingUpdateStatefulSetStrategyDetails resourceData={resourceData.rollingUpdate } />
                 </Container>
             )}
 

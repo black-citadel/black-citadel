@@ -1,3 +1,4 @@
+import { hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1VolumeProjection } from "@kubernetes/client-node";
 import { ClusterTrustBundleProjectionDetails } from "../V1ClusterTrustBundleProjection/details";
@@ -8,13 +9,13 @@ import { ServiceAccountTokenProjectionDetails } from "../V1ServiceAccountTokenPr
 
 export const VolumeProjectionDetails = ({ resourceData }: { resourceData: V1VolumeProjection }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.clusterTrustBundle, resourceData.configMap, resourceData.downwardAPI, resourceData.secret, resourceData.serviceAccountToken].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.clusterTrustBundle),
+        hasValue(resourceData.configMap),
+        hasValue(resourceData.downwardAPI),
+        hasValue(resourceData.secret),
+        hasValue(resourceData.serviceAccountToken),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,33 +23,33 @@ export const VolumeProjectionDetails = ({ resourceData }: { resourceData: V1Volu
 
     return (
         <>
-            {resourceData.clusterTrustBundle && (
-                <Container title="Cluster Trust Bundle">
-                    <ClusterTrustBundleProjectionDetails resourceData={ resourceData.clusterTrustBundle } />
+            {hasValue(resourceData.clusterTrustBundle) && (
+                <Container title="Cluster Trust Bundle" collapsible defaultOpen={ true }>
+                    <ClusterTrustBundleProjectionDetails resourceData={resourceData.clusterTrustBundle } />
                 </Container>
             )}
 
-            {resourceData.configMap && (
-                <Container title="Config Map">
-                    <ConfigMapProjectionDetails resourceData={ resourceData.configMap } />
+            {hasValue(resourceData.configMap) && (
+                <Container title="Config Map" collapsible defaultOpen={ true }>
+                    <ConfigMapProjectionDetails resourceData={resourceData.configMap } />
                 </Container>
             )}
 
-            {resourceData.downwardAPI && (
-                <Container title="Downward API">
-                    <DownwardAPIProjectionDetails resourceData={ resourceData.downwardAPI } />
+            {hasValue(resourceData.downwardAPI) && (
+                <Container title="Downward API" collapsible defaultOpen={ true }>
+                    <DownwardAPIProjectionDetails resourceData={resourceData.downwardAPI } />
                 </Container>
             )}
 
-            {resourceData.secret && (
-                <Container title="Secret">
-                    <SecretProjectionDetails resourceData={ resourceData.secret } />
+            {hasValue(resourceData.secret) && (
+                <Container title="Secret" collapsible defaultOpen={ true }>
+                    <SecretProjectionDetails resourceData={resourceData.secret } />
                 </Container>
             )}
 
-            {resourceData.serviceAccountToken && (
-                <Container title="Service Account Token">
-                    <ServiceAccountTokenProjectionDetails resourceData={ resourceData.serviceAccountToken } />
+            {hasValue(resourceData.serviceAccountToken) && (
+                <Container title="Service Account Token" collapsible defaultOpen={ true }>
+                    <ServiceAccountTokenProjectionDetails resourceData={resourceData.serviceAccountToken } />
                 </Container>
             )}
 

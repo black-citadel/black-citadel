@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1DeploymentSpec } from "@kubernetes/client-node";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
@@ -7,17 +7,16 @@ import { PodTemplateSpecDetails } from "../V1PodTemplateSpec/details";
 
 export const DeploymentSpecDetails = ({ resourceData }: { resourceData: V1DeploymentSpec }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.minReadySeconds, resourceData.progressDeadlineSeconds, resourceData.replicas, resourceData.revisionHistoryLimit].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        // Check k8s type properties
-        checks.push([resourceData.selector, resourceData.strategy, resourceData.template].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.replicas),
+        hasValue(resourceData.minReadySeconds),
+        hasValue(resourceData.progressDeadlineSeconds),
+        hasValue(resourceData.revisionHistoryLimit),
+        resourceData.paused === true,
+        hasValue(resourceData.selector),
+        hasValue(resourceData.strategy),
+        hasValue(resourceData.template),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -26,37 +25,34 @@ export const DeploymentSpecDetails = ({ resourceData }: { resourceData: V1Deploy
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Min Ready Seconds", value: resourceData.minReadySeconds || '-' },
-                    { label: "Progress Deadline Seconds", value: resourceData.progressDeadlineSeconds || '-' },
-                    { label: "Replicas", value: resourceData.replicas || '-' },
-                    { label: "Revision History Limit", value: resourceData.revisionHistoryLimit || '-' }
+                    { label: "Replicas", value: resourceData.replicas, description: "Number of desired pods." },
+                    { label: "Min Ready Seconds", value: resourceData.minReadySeconds, description: "Minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available." },
+                    { label: "Progress Deadline Seconds", value: resourceData.progressDeadlineSeconds, description: "The maximum time in seconds for a deployment to make progress before it is considered to be failed." },
+                    { label: "Revision History Limit", value: resourceData.revisionHistoryLimit, description: "The number of old ReplicaSets to retain to allow rollback." },
                 ]}
-                columns={1}
+                flags={[
+                    { label: "Paused", value: resourceData.paused, description: "Indicates that the deployment is paused." },
+                ]}
             />
 
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Paused", value: resourceData.paused ? "Yes" : "No" }
-                ]}
-                columns={1}
-            />
-
-            <Container title="Selector">
-                <LabelSelectorDetails resourceData={ resourceData.selector } />
-            </Container>
-
-            {resourceData.strategy && (
-                <Container title="Strategy">
-                    <DeploymentStrategyDetails resourceData={ resourceData.strategy } />
+            {hasValue(resourceData.selector) && (
+                <Container title="Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.selector } />
                 </Container>
             )}
 
-            <Container title="Template">
-                <PodTemplateSpecDetails resourceData={ resourceData.template } />
-            </Container>
+            {hasValue(resourceData.strategy) && (
+                <Container title="Strategy" collapsible defaultOpen={ true }>
+                    <DeploymentStrategyDetails resourceData={resourceData.strategy } />
+                </Container>
+            )}
+
+            {hasValue(resourceData.template) && (
+                <Container title="Template" collapsible defaultOpen={ true }>
+                    <PodTemplateSpecDetails resourceData={resourceData.template } />
+                </Container>
+            )}
 
         </>
     )

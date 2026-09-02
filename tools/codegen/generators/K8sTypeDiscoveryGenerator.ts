@@ -76,11 +76,9 @@ export class K8sTypeDiscoveryGenerator {
       const interfaces = sourceFile.getInterfaces();
       
       // Process classes
-      console.log(`    Found ${classes.length} classes in ${typePath}`);
       for (const cls of classes) {
         const className = cls.getName();
-        console.log(`      Class: ${className}`);
-        if (className && className.match(/^V\d+[A-Z]/)) {
+        if (className && className.match(/^[A-Za-z]*V\d+[A-Z]/)) {
           await this.processClass(cls, typePath);
         }
       }
@@ -88,7 +86,7 @@ export class K8sTypeDiscoveryGenerator {
       // Process interfaces
       for (const iface of interfaces) {
         const ifaceName = iface.getName();
-        if (ifaceName && ifaceName.match(/^V\d+[A-Z]/)) {
+        if (ifaceName && ifaceName.match(/^[A-Za-z]*V\d+[A-Z]/)) {
           await this.processInterface(iface, typePath);
         }
       }
@@ -101,7 +99,6 @@ export class K8sTypeDiscoveryGenerator {
     const className = cls.getName();
     if (!className) return;
     
-    console.log(`    Processing class: ${className}`);
     const isNewType = !this.processedTypes.has(className);
     this.processedTypes.add(className);
     
@@ -126,10 +123,8 @@ export class K8sTypeDiscoveryGenerator {
       const propType = prop.getType().getText();
       // Also check for import types
       const cleanType = propType.replace(/import\([^)]+\)\./g, '');
-      console.log(`      Property ${propName}: ${cleanType}`);
-      const typeMatch = cleanType.match(/V\d+[A-Z]\w+/);
+      const typeMatch = cleanType.match(/\b[A-Za-z]*V\d+[A-Z]\w+/);
       if (typeMatch) {
-        console.log(`        -> Found nested type: ${typeMatch[0]}`);
         nestedTypes.push(typeMatch[0]);
       }
     }
@@ -182,10 +177,8 @@ export class K8sTypeDiscoveryGenerator {
       const propType = prop.getType().getText();
       // Also check for import types
       const cleanType = propType.replace(/import\([^)]+\)\./g, '');
-      console.log(`      Property ${propName}: ${cleanType}`);
-      const typeMatch = cleanType.match(/V\d+[A-Z]\w+/);
+      const typeMatch = cleanType.match(/\b[A-Za-z]*V\d+[A-Z]\w+/);
       if (typeMatch) {
-        console.log(`        -> Found nested type: ${typeMatch[0]}`);
         nestedTypes.push(typeMatch[0]);
       }
     }

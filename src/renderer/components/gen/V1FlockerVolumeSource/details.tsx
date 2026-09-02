@@ -1,15 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1FlockerVolumeSource } from "@kubernetes/client-node";
 
 export const FlockerVolumeSourceDetails = ({ resourceData }: { resourceData: V1FlockerVolumeSource }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.datasetName, resourceData.datasetUUID].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.datasetName),
+        hasValue(resourceData.datasetUUID),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,12 +15,10 @@ export const FlockerVolumeSourceDetails = ({ resourceData }: { resourceData: V1F
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Dataset Name", value: resourceData.datasetName || '-' },
-                    { label: "Dataset UUID", value: resourceData.datasetUUID || '-' }
+                    { label: "Dataset Name", value: resourceData.datasetName, description: "datasetName is Name of the dataset stored as metadata -> name on the dataset for Flocker should be considered as deprecated" },
+                    { label: "Dataset UUID", value: resourceData.datasetUUID, description: "datasetUUID is the UUID of the dataset." },
                 ]}
-                columns={1}
             />
 
         </>

@@ -1,15 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1RollingUpdateDeployment } from "@kubernetes/client-node";
 
 export const RollingUpdateDeploymentDetails = ({ resourceData }: { resourceData: V1RollingUpdateDeployment }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.maxSurge, resourceData.maxUnavailable].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.maxSurge),
+        hasValue(resourceData.maxUnavailable),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,12 +15,10 @@ export const RollingUpdateDeploymentDetails = ({ resourceData }: { resourceData:
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Max Surge", value: resourceData.maxSurge || '-' },
-                    { label: "Max Unavailable", value: resourceData.maxUnavailable || '-' }
+                    { label: "Max Surge", value: resourceData.maxSurge, description: "IntOrString is a type that can hold an int32 or a string." },
+                    { label: "Max Unavailable", value: resourceData.maxUnavailable, description: "IntOrString is a type that can hold an int32 or a string." },
                 ]}
-                columns={1}
             />
 
         </>

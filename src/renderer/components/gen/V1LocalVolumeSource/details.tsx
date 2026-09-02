@@ -1,15 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1LocalVolumeSource } from "@kubernetes/client-node";
 
 export const LocalVolumeSourceDetails = ({ resourceData }: { resourceData: V1LocalVolumeSource }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.fsType, resourceData.path].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.fsType),
+        hasValue(resourceData.path),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,12 +15,10 @@ export const LocalVolumeSourceDetails = ({ resourceData }: { resourceData: V1Loc
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Fs Type", value: resourceData.fsType || '-' },
-                    { label: "Path", value: resourceData.path }
+                    { label: "Fs Type", value: resourceData.fsType, description: "fsType is the filesystem type to mount." },
+                    { label: "Path", value: resourceData.path, description: "path of the full path to the volume on the node." },
                 ]}
-                columns={1}
             />
 
         </>

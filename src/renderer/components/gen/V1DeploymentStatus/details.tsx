@@ -1,19 +1,19 @@
-import { PanelGrid } from "@components/layout/panel";
-import { Container } from "@components/base/container";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1DeploymentStatus } from "@kubernetes/client-node";
-import { DeploymentConditionDetails } from "../V1DeploymentCondition/details";
+import { ConditionsTable } from "@components/base/conditions-table";
 
 export const DeploymentStatusDetails = ({ resourceData }: { resourceData: V1DeploymentStatus }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.availableReplicas, resourceData.collisionCount, resourceData.observedGeneration, resourceData.readyReplicas, resourceData.replicas, resourceData.unavailableReplicas, resourceData.updatedReplicas].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.conditions].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.replicas),
+        hasValue(resourceData.readyReplicas),
+        hasValue(resourceData.availableReplicas),
+        hasValue(resourceData.unavailableReplicas),
+        hasValue(resourceData.updatedReplicas),
+        hasValue(resourceData.observedGeneration),
+        hasValue(resourceData.collisionCount),
+        hasValue(resourceData.conditions),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,26 +22,18 @@ export const DeploymentStatusDetails = ({ resourceData }: { resourceData: V1Depl
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Available Replicas", value: resourceData.availableReplicas || '-' },
-                    { label: "Collision Count", value: resourceData.collisionCount || '-' },
-                    { label: "Observed Generation", value: resourceData.observedGeneration || '-' },
-                    { label: "Ready Replicas", value: resourceData.readyReplicas || '-' },
-                    { label: "Replicas", value: resourceData.replicas || '-' },
-                    { label: "Unavailable Replicas", value: resourceData.unavailableReplicas || '-' },
-                    { label: "Updated Replicas", value: resourceData.updatedReplicas || '-' }
+                    { label: "Replicas", value: resourceData.replicas, description: "Total number of non-terminated pods targeted by this deployment (their labels match the selector)." },
+                    { label: "Ready Replicas", value: resourceData.readyReplicas, description: "readyReplicas is the number of pods targeted by this Deployment with a Ready Condition." },
+                    { label: "Available Replicas", value: resourceData.availableReplicas, description: "Total number of available pods (ready for at least minReadySeconds) targeted by this deployment." },
+                    { label: "Unavailable Replicas", value: resourceData.unavailableReplicas, description: "Total number of unavailable pods targeted by this deployment." },
+                    { label: "Updated Replicas", value: resourceData.updatedReplicas, description: "Total number of non-terminated pods targeted by this deployment that have the desired template spec." },
+                    { label: "Observed Generation", value: resourceData.observedGeneration, description: "The generation observed by the deployment controller." },
+                    { label: "Collision Count", value: resourceData.collisionCount, description: "Count of hash collisions for the Deployment." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.conditions && (
-                <Container title="Conditions">
-                    {resourceData.conditions.map((item, index) => (
-                        <DeploymentConditionDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
+            {hasValue(resourceData.conditions) && <ConditionsTable conditions={resourceData.conditions } />}
 
         </>
     )

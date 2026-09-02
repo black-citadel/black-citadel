@@ -1,30 +1,18 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1CSIVolumeSource } from "@kubernetes/client-node";
 import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
 
 export const CSIVolumeSourceDetails = ({ resourceData }: { resourceData: V1CSIVolumeSource }): JSX.Element => {
-    // Transform the Volume Attributes object into an array of PanelGridItem objects
-    const volumeAttributesItems = resourceData.volumeAttributes
-        ? Object.entries(resourceData.volumeAttributes).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
+    const volumeAttributesItems = Object.entries(resourceData.volumeAttributes ?? {}).map(([key, value]) => ({ label: key, value }));
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check object properties
-        checks.push(volumeAttributesItems.length > 0);
-        // Check simple properties
-        checks.push([resourceData.driver, resourceData.fsType].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        // Check k8s type properties
-        checks.push([resourceData.nodePublishSecretRef].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        volumeAttributesItems.length > 0,
+        hasValue(resourceData.driver),
+        hasValue(resourceData.fsType),
+        resourceData.readOnly === true,
+        hasValue(resourceData.nodePublishSecretRef),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -33,31 +21,20 @@ export const CSIVolumeSourceDetails = ({ resourceData }: { resourceData: V1CSIVo
     return (
         <>
             <PanelGrid
-                title="Volume Attributes"
-                items={ volumeAttributesItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Driver", value: resourceData.driver },
-                    { label: "Fs Type", value: resourceData.fsType || '-' }
+                    { label: "Driver", value: resourceData.driver, description: "driver is the name of the CSI driver that handles this volume." },
+                    { label: "Fs Type", value: resourceData.fsType, description: "fsType to mount." },
                 ]}
-                columns={1}
+                flags={[
+                    { label: "Read Only", value: resourceData.readOnly, description: "readOnly specifies a read-only configuration for the volume." },
+                ]}
             />
 
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Read Only", value: resourceData.readOnly ? "Yes" : "No" }
-                ]}
-                columns={1}
-            />
+            <PanelGrid title="Volume Attributes" items={ volumeAttributesItems } />
 
-            {resourceData.nodePublishSecretRef && (
-                <Container title="Node Publish Secret Ref">
-                    <LocalObjectReferenceDetails resourceData={ resourceData.nodePublishSecretRef } />
+            {hasValue(resourceData.nodePublishSecretRef) && (
+                <Container title="Node Publish Secret Ref" collapsible defaultOpen={ true }>
+                    <LocalObjectReferenceDetails resourceData={resourceData.nodePublishSecretRef } />
                 </Container>
             )}
 

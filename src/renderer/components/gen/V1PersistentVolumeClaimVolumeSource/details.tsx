@@ -1,17 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1PersistentVolumeClaimVolumeSource } from "@kubernetes/client-node";
 
 export const PersistentVolumeClaimVolumeSourceDetails = ({ resourceData }: { resourceData: V1PersistentVolumeClaimVolumeSource }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.claimName].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.claimName),
+        resourceData.readOnly === true,
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,19 +15,12 @@ export const PersistentVolumeClaimVolumeSourceDetails = ({ resourceData }: { res
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Claim Name", value: resourceData.claimName }
+                    { label: "Claim Name", value: resourceData.claimName, description: "claimName is the name of a PersistentVolumeClaim in the same namespace as the pod using this volume." },
                 ]}
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Read Only", value: resourceData.readOnly ? "Yes" : "No" }
+                flags={[
+                    { label: "Read Only", value: resourceData.readOnly, description: "readOnly Will force the ReadOnly setting in VolumeMounts." },
                 ]}
-                columns={1}
             />
 
         </>

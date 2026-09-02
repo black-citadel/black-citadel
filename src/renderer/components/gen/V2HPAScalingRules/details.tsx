@@ -1,19 +1,15 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V2HPAScalingRules } from "@kubernetes/client-node";
 import { HPAScalingPolicyDetails } from "../V2HPAScalingPolicy/details";
 
 export const HPAScalingRulesDetails = ({ resourceData }: { resourceData: V2HPAScalingRules }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.selectPolicy, resourceData.stabilizationWindowSeconds].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.policies].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.selectPolicy),
+        hasValue(resourceData.stabilizationWindowSeconds),
+        hasValue(resourceData.policies),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,18 +18,18 @@ export const HPAScalingRulesDetails = ({ resourceData }: { resourceData: V2HPASc
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Select Policy", value: resourceData.selectPolicy || '-' },
-                    { label: "Stabilization Window Seconds", value: resourceData.stabilizationWindowSeconds || '-' }
+                    { label: "Select Policy", value: resourceData.selectPolicy, description: "selectPolicy is used to specify which policy should be used." },
+                    { label: "Stabilization Window Seconds", value: resourceData.stabilizationWindowSeconds, description: "stabilizationWindowSeconds is the number of seconds for which past recommendations should be considered while scaling up or scaling down." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.policies && (
-                <Container title="Policies">
+            {hasValue(resourceData.policies) && (
+                <Container title="Policies" count={resourceData.policies.length} collapsible defaultOpen={ true }>
                     {resourceData.policies.map((item, index) => (
-                        <HPAScalingPolicyDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <HPAScalingPolicyDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

@@ -1,19 +1,14 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1PreferredSchedulingTerm } from "@kubernetes/client-node";
 import { NodeSelectorTermDetails } from "../V1NodeSelectorTerm/details";
 
 export const PreferredSchedulingTermDetails = ({ resourceData }: { resourceData: V1PreferredSchedulingTerm }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.weight].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.preference].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.weight),
+        hasValue(resourceData.preference),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,16 +17,16 @@ export const PreferredSchedulingTermDetails = ({ resourceData }: { resourceData:
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Weight", value: resourceData.weight }
+                    { label: "Weight", value: resourceData.weight, description: "Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100." },
                 ]}
-                columns={1}
             />
 
-            <Container title="Preference">
-                <NodeSelectorTermDetails resourceData={ resourceData.preference } />
-            </Container>
+            {hasValue(resourceData.preference) && (
+                <Container title="Preference" collapsible defaultOpen={ true }>
+                    <NodeSelectorTermDetails resourceData={resourceData.preference } />
+                </Container>
+            )}
 
         </>
     )

@@ -1,21 +1,17 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1ClusterTrustBundleProjection } from "@kubernetes/client-node";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const ClusterTrustBundleProjectionDetails = ({ resourceData }: { resourceData: V1ClusterTrustBundleProjection }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.name, resourceData.path, resourceData.signerName].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        // Check k8s type properties
-        checks.push([resourceData.labelSelector].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.name),
+        hasValue(resourceData.path),
+        hasValue(resourceData.signerName),
+        resourceData.optional === true,
+        hasValue(resourceData.labelSelector),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -24,26 +20,19 @@ export const ClusterTrustBundleProjectionDetails = ({ resourceData }: { resource
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Name", value: resourceData.name || '-' },
-                    { label: "Path", value: resourceData.path },
-                    { label: "Signer Name", value: resourceData.signerName || '-' }
+                    { label: "Name", value: resourceData.name, description: "Select a single ClusterTrustBundle by object name." },
+                    { label: "Path", value: resourceData.path, description: "Relative path from the volume root to write the bundle." },
+                    { label: "Signer Name", value: resourceData.signerName, description: "Select all ClusterTrustBundles that match this signer name." },
                 ]}
-                columns={1}
+                flags={[
+                    { label: "Optional", value: resourceData.optional, description: "If true, don't block pod startup if the referenced ClusterTrustBundle(s) aren't available." },
+                ]}
             />
 
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Optional", value: resourceData.optional ? "Yes" : "No" }
-                ]}
-                columns={1}
-            />
-
-            {resourceData.labelSelector && (
-                <Container title="Label Selector">
-                    <LabelSelectorDetails resourceData={ resourceData.labelSelector } />
+            {hasValue(resourceData.labelSelector) && (
+                <Container title="Label Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.labelSelector } />
                 </Container>
             )}
 

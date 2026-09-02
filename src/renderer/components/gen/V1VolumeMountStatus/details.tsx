@@ -1,17 +1,14 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1VolumeMountStatus } from "@kubernetes/client-node";
 
 export const VolumeMountStatusDetails = ({ resourceData }: { resourceData: V1VolumeMountStatus }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.mountPath, resourceData.name, resourceData.recursiveReadOnly].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.mountPath),
+        hasValue(resourceData.name),
+        hasValue(resourceData.recursiveReadOnly),
+        resourceData.readOnly === true,
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,21 +17,14 @@ export const VolumeMountStatusDetails = ({ resourceData }: { resourceData: V1Vol
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Mount Path", value: resourceData.mountPath },
-                    { label: "Name", value: resourceData.name },
-                    { label: "Recursive Read Only", value: resourceData.recursiveReadOnly || '-' }
+                    { label: "Mount Path", value: resourceData.mountPath, description: "MountPath corresponds to the original VolumeMount." },
+                    { label: "Name", value: resourceData.name, description: "Name corresponds to the name of the original VolumeMount." },
+                    { label: "Recursive Read Only", value: resourceData.recursiveReadOnly, description: "RecursiveReadOnly must be set to Disabled, Enabled, or unspecified (for non-readonly mounts)." },
                 ]}
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Read Only", value: resourceData.readOnly ? "Yes" : "No" }
+                flags={[
+                    { label: "Read Only", value: resourceData.readOnly, description: "ReadOnly corresponds to the original VolumeMount." },
                 ]}
-                columns={1}
             />
 
         </>

@@ -1,15 +1,13 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1ServiceAccountTokenProjection } from "@kubernetes/client-node";
 
 export const ServiceAccountTokenProjectionDetails = ({ resourceData }: { resourceData: V1ServiceAccountTokenProjection }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.audience, resourceData.expirationSeconds, resourceData.path].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.audience),
+        hasValue(resourceData.expirationSeconds),
+        hasValue(resourceData.path),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,13 +16,11 @@ export const ServiceAccountTokenProjectionDetails = ({ resourceData }: { resourc
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Audience", value: resourceData.audience || '-' },
-                    { label: "Expiration Seconds", value: resourceData.expirationSeconds || '-' },
-                    { label: "Path", value: resourceData.path }
+                    { label: "Audience", value: resourceData.audience, description: "audience is the intended audience of the token." },
+                    { label: "Expiration Seconds", value: resourceData.expirationSeconds, description: "expirationSeconds is the requested duration of validity of the service account token." },
+                    { label: "Path", value: resourceData.path, description: "path is the path relative to the mount point of the file to project the token into." },
                 ]}
-                columns={1}
             />
 
         </>

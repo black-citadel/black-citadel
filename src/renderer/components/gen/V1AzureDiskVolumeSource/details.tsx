@@ -1,17 +1,15 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1AzureDiskVolumeSource } from "@kubernetes/client-node";
 
 export const AzureDiskVolumeSourceDetails = ({ resourceData }: { resourceData: V1AzureDiskVolumeSource }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.cachingMode, resourceData.diskName, resourceData.diskURI, resourceData.fsType].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.cachingMode),
+        hasValue(resourceData.diskName),
+        hasValue(resourceData.diskURI),
+        hasValue(resourceData.fsType),
+        resourceData.readOnly === true,
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,22 +18,15 @@ export const AzureDiskVolumeSourceDetails = ({ resourceData }: { resourceData: V
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Caching Mode", value: resourceData.cachingMode || '-' },
-                    { label: "Disk Name", value: resourceData.diskName },
-                    { label: "Disk URI", value: resourceData.diskURI },
-                    { label: "Fs Type", value: resourceData.fsType || '-' }
+                    { label: "Caching Mode", value: resourceData.cachingMode, description: "cachingMode is the Host Caching mode: None, Read Only, Read Write." },
+                    { label: "Disk Name", value: resourceData.diskName, description: "diskName is the Name of the data disk in the blob storage" },
+                    { label: "Disk URI", value: resourceData.diskURI, description: "diskURI is the URI of data disk in the blob storage" },
+                    { label: "Fs Type", value: resourceData.fsType, description: "fsType is Filesystem type to mount." },
                 ]}
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Read Only", value: resourceData.readOnly ? "Yes" : "No" }
+                flags={[
+                    { label: "Read Only", value: resourceData.readOnly, description: "readOnly Defaults to false (read/write)." },
                 ]}
-                columns={1}
             />
 
         </>

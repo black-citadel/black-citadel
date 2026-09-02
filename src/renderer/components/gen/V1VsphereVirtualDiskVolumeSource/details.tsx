@@ -1,15 +1,14 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1VsphereVirtualDiskVolumeSource } from "@kubernetes/client-node";
 
 export const VsphereVirtualDiskVolumeSourceDetails = ({ resourceData }: { resourceData: V1VsphereVirtualDiskVolumeSource }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.fsType, resourceData.storagePolicyID, resourceData.storagePolicyName, resourceData.volumePath].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.fsType),
+        hasValue(resourceData.storagePolicyID),
+        hasValue(resourceData.storagePolicyName),
+        hasValue(resourceData.volumePath),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,14 +17,12 @@ export const VsphereVirtualDiskVolumeSourceDetails = ({ resourceData }: { resour
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Fs Type", value: resourceData.fsType || '-' },
-                    { label: "Storage Policy ID", value: resourceData.storagePolicyID || '-' },
-                    { label: "Storage Policy Name", value: resourceData.storagePolicyName || '-' },
-                    { label: "Volume Path", value: resourceData.volumePath }
+                    { label: "Fs Type", value: resourceData.fsType, description: "fsType is filesystem type to mount." },
+                    { label: "Storage Policy ID", value: resourceData.storagePolicyID, description: "storagePolicyID is the storage Policy Based Management (SPBM) profile ID associated with the StoragePolicyName." },
+                    { label: "Storage Policy Name", value: resourceData.storagePolicyName, description: "storagePolicyName is the storage Policy Based Management (SPBM) profile name." },
+                    { label: "Volume Path", value: resourceData.volumePath, description: "volumePath is the path that identifies vSphere volume vmdk" },
                 ]}
-                columns={1}
             />
 
         </>

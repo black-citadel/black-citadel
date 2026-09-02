@@ -1,15 +1,15 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V2HorizontalPodAutoscalerCondition } from "@kubernetes/client-node";
 
 export const HorizontalPodAutoscalerConditionDetails = ({ resourceData }: { resourceData: V2HorizontalPodAutoscalerCondition }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.message, resourceData.reason, resourceData.status, resourceData.type].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.lastTransitionTime),
+        hasValue(resourceData.message),
+        hasValue(resourceData.reason),
+        hasValue(resourceData.status),
+        hasValue(resourceData.type),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,14 +18,13 @@ export const HorizontalPodAutoscalerConditionDetails = ({ resourceData }: { reso
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Message", value: resourceData.message || '-' },
-                    { label: "Reason", value: resourceData.reason || '-' },
-                    { label: "Status", value: resourceData.status },
-                    { label: "Type", value: resourceData.type }
+                    { label: "Last Transition Time", value: resourceData.lastTransitionTime, description: "lastTransitionTime is the last time the condition transitioned from one status to another" },
+                    { label: "Message", value: resourceData.message, description: "message is a human-readable explanation containing details about the transition" },
+                    { label: "Reason", value: resourceData.reason, description: "reason is the reason for the condition's last transition." },
+                    { label: "Status", value: resourceData.status, description: "status is the status of the condition (True, False, Unknown)" },
+                    { label: "Type", value: resourceData.type, description: "type describes the current condition" },
                 ]}
-                columns={1}
             />
 
         </>

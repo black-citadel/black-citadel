@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1PersistentVolumeSpec } from "@kubernetes/client-node";
 import { AWSElasticBlockStoreVolumeSourceDetails } from "../V1AWSElasticBlockStoreVolumeSource/details";
@@ -27,25 +27,41 @@ import { StorageOSPersistentVolumeSourceDetails } from "../V1StorageOSPersistent
 import { VsphereVirtualDiskVolumeSourceDetails } from "../V1VsphereVirtualDiskVolumeSource/details";
 
 export const PersistentVolumeSpecDetails = ({ resourceData }: { resourceData: V1PersistentVolumeSpec }): JSX.Element => {
-    // Transform the Capacity object into an array of PanelGridItem objects
-    const capacityItems = resourceData.capacity
-        ? Object.entries(resourceData.capacity).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
+    const capacityItems = Object.entries(resourceData.capacity ?? {}).map(([key, value]) => ({ label: key, value }));
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check object properties
-        checks.push(capacityItems.length > 0);
-        // Check simple properties
-        checks.push([resourceData.persistentVolumeReclaimPolicy, resourceData.storageClassName, resourceData.volumeAttributesClassName, resourceData.volumeMode].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.awsElasticBlockStore, resourceData.azureDisk, resourceData.azureFile, resourceData.cephfs, resourceData.cinder, resourceData.claimRef, resourceData.csi, resourceData.fc, resourceData.flexVolume, resourceData.flocker, resourceData.gcePersistentDisk, resourceData.glusterfs, resourceData.hostPath, resourceData.iscsi, resourceData.local, resourceData.nfs, resourceData.nodeAffinity, resourceData.photonPersistentDisk, resourceData.portworxVolume, resourceData.quobyte, resourceData.rbd, resourceData.scaleIO, resourceData.storageos, resourceData.vsphereVolume].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        capacityItems.length > 0,
+        hasValue(resourceData.accessModes),
+        hasValue(resourceData.mountOptions),
+        hasValue(resourceData.persistentVolumeReclaimPolicy),
+        hasValue(resourceData.storageClassName),
+        hasValue(resourceData.volumeAttributesClassName),
+        hasValue(resourceData.volumeMode),
+        hasValue(resourceData.awsElasticBlockStore),
+        hasValue(resourceData.azureDisk),
+        hasValue(resourceData.azureFile),
+        hasValue(resourceData.cephfs),
+        hasValue(resourceData.cinder),
+        hasValue(resourceData.claimRef),
+        hasValue(resourceData.csi),
+        hasValue(resourceData.fc),
+        hasValue(resourceData.flexVolume),
+        hasValue(resourceData.flocker),
+        hasValue(resourceData.gcePersistentDisk),
+        hasValue(resourceData.glusterfs),
+        hasValue(resourceData.hostPath),
+        hasValue(resourceData.iscsi),
+        hasValue(resourceData.local),
+        hasValue(resourceData.nfs),
+        hasValue(resourceData.nodeAffinity),
+        hasValue(resourceData.photonPersistentDisk),
+        hasValue(resourceData.portworxVolume),
+        hasValue(resourceData.quobyte),
+        hasValue(resourceData.rbd),
+        hasValue(resourceData.scaleIO),
+        hasValue(resourceData.storageos),
+        hasValue(resourceData.vsphereVolume),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -54,163 +70,159 @@ export const PersistentVolumeSpecDetails = ({ resourceData }: { resourceData: V1
     return (
         <>
             <PanelGrid
-                title="Capacity"
-                items={ capacityItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Persistent Volume Reclaim Policy", value: resourceData.persistentVolumeReclaimPolicy || '-' },
-                    { label: "Storage Class Name", value: resourceData.storageClassName || '-' },
-                    { label: "Volume Attributes Class Name", value: resourceData.volumeAttributesClassName || '-' },
-                    { label: "Volume Mode", value: resourceData.volumeMode || '-' }
+                    { label: "Access Modes", value: resourceData.accessModes, description: "accessModes contains all ways the volume can be mounted." },
+                    { label: "Mount Options", value: resourceData.mountOptions, description: "mountOptions is the list of mount options, e.g." },
+                    { label: "Persistent Volume Reclaim Policy", value: resourceData.persistentVolumeReclaimPolicy, description: "persistentVolumeReclaimPolicy defines what happens to a persistent volume when released from its claim." },
+                    { label: "Storage Class Name", value: resourceData.storageClassName, description: "storageClassName is the name of StorageClass to which this persistent volume belongs." },
+                    { label: "Volume Attributes Class Name", value: resourceData.volumeAttributesClassName, description: "Name of VolumeAttributesClass to which this persistent volume belongs." },
+                    { label: "Volume Mode", value: resourceData.volumeMode, description: "volumeMode defines if a volume is intended to be used with a formatted filesystem or to remain in raw block state." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.awsElasticBlockStore && (
-                <Container title="Aws Elastic Block Store">
-                    <AWSElasticBlockStoreVolumeSourceDetails resourceData={ resourceData.awsElasticBlockStore } />
+            <PanelGrid title="Capacity" items={ capacityItems } />
+
+            {hasValue(resourceData.awsElasticBlockStore) && (
+                <Container title="Aws Elastic Block Store" collapsible defaultOpen={ true }>
+                    <AWSElasticBlockStoreVolumeSourceDetails resourceData={resourceData.awsElasticBlockStore } />
                 </Container>
             )}
 
-            {resourceData.azureDisk && (
-                <Container title="Azure Disk">
-                    <AzureDiskVolumeSourceDetails resourceData={ resourceData.azureDisk } />
+            {hasValue(resourceData.azureDisk) && (
+                <Container title="Azure Disk" collapsible defaultOpen={ true }>
+                    <AzureDiskVolumeSourceDetails resourceData={resourceData.azureDisk } />
                 </Container>
             )}
 
-            {resourceData.azureFile && (
-                <Container title="Azure File">
-                    <AzureFilePersistentVolumeSourceDetails resourceData={ resourceData.azureFile } />
+            {hasValue(resourceData.azureFile) && (
+                <Container title="Azure File" collapsible defaultOpen={ true }>
+                    <AzureFilePersistentVolumeSourceDetails resourceData={resourceData.azureFile } />
                 </Container>
             )}
 
-            {resourceData.cephfs && (
-                <Container title="Cephfs">
-                    <CephFSPersistentVolumeSourceDetails resourceData={ resourceData.cephfs } />
+            {hasValue(resourceData.cephfs) && (
+                <Container title="Cephfs" collapsible defaultOpen={ true }>
+                    <CephFSPersistentVolumeSourceDetails resourceData={resourceData.cephfs } />
                 </Container>
             )}
 
-            {resourceData.cinder && (
-                <Container title="Cinder">
-                    <CinderPersistentVolumeSourceDetails resourceData={ resourceData.cinder } />
+            {hasValue(resourceData.cinder) && (
+                <Container title="Cinder" collapsible defaultOpen={ true }>
+                    <CinderPersistentVolumeSourceDetails resourceData={resourceData.cinder } />
                 </Container>
             )}
 
-            {resourceData.claimRef && (
-                <Container title="Claim Ref">
-                    <ObjectReferenceDetails resourceData={ resourceData.claimRef } />
+            {hasValue(resourceData.claimRef) && (
+                <Container title="Claim Ref" collapsible defaultOpen={ true }>
+                    <ObjectReferenceDetails resourceData={resourceData.claimRef } />
                 </Container>
             )}
 
-            {resourceData.csi && (
-                <Container title="Csi">
-                    <CSIPersistentVolumeSourceDetails resourceData={ resourceData.csi } />
+            {hasValue(resourceData.csi) && (
+                <Container title="Csi" collapsible defaultOpen={ true }>
+                    <CSIPersistentVolumeSourceDetails resourceData={resourceData.csi } />
                 </Container>
             )}
 
-            {resourceData.fc && (
-                <Container title="Fc">
-                    <FCVolumeSourceDetails resourceData={ resourceData.fc } />
+            {hasValue(resourceData.fc) && (
+                <Container title="Fc" collapsible defaultOpen={ true }>
+                    <FCVolumeSourceDetails resourceData={resourceData.fc } />
                 </Container>
             )}
 
-            {resourceData.flexVolume && (
-                <Container title="Flex Volume">
-                    <FlexPersistentVolumeSourceDetails resourceData={ resourceData.flexVolume } />
+            {hasValue(resourceData.flexVolume) && (
+                <Container title="Flex Volume" collapsible defaultOpen={ true }>
+                    <FlexPersistentVolumeSourceDetails resourceData={resourceData.flexVolume } />
                 </Container>
             )}
 
-            {resourceData.flocker && (
-                <Container title="Flocker">
-                    <FlockerVolumeSourceDetails resourceData={ resourceData.flocker } />
+            {hasValue(resourceData.flocker) && (
+                <Container title="Flocker" collapsible defaultOpen={ true }>
+                    <FlockerVolumeSourceDetails resourceData={resourceData.flocker } />
                 </Container>
             )}
 
-            {resourceData.gcePersistentDisk && (
-                <Container title="Gce Persistent Disk">
-                    <GCEPersistentDiskVolumeSourceDetails resourceData={ resourceData.gcePersistentDisk } />
+            {hasValue(resourceData.gcePersistentDisk) && (
+                <Container title="Gce Persistent Disk" collapsible defaultOpen={ true }>
+                    <GCEPersistentDiskVolumeSourceDetails resourceData={resourceData.gcePersistentDisk } />
                 </Container>
             )}
 
-            {resourceData.glusterfs && (
-                <Container title="Glusterfs">
-                    <GlusterfsPersistentVolumeSourceDetails resourceData={ resourceData.glusterfs } />
+            {hasValue(resourceData.glusterfs) && (
+                <Container title="Glusterfs" collapsible defaultOpen={ true }>
+                    <GlusterfsPersistentVolumeSourceDetails resourceData={resourceData.glusterfs } />
                 </Container>
             )}
 
-            {resourceData.hostPath && (
-                <Container title="Host Path">
-                    <HostPathVolumeSourceDetails resourceData={ resourceData.hostPath } />
+            {hasValue(resourceData.hostPath) && (
+                <Container title="Host Path" collapsible defaultOpen={ true }>
+                    <HostPathVolumeSourceDetails resourceData={resourceData.hostPath } />
                 </Container>
             )}
 
-            {resourceData.iscsi && (
-                <Container title="Iscsi">
-                    <ISCSIPersistentVolumeSourceDetails resourceData={ resourceData.iscsi } />
+            {hasValue(resourceData.iscsi) && (
+                <Container title="Iscsi" collapsible defaultOpen={ true }>
+                    <ISCSIPersistentVolumeSourceDetails resourceData={resourceData.iscsi } />
                 </Container>
             )}
 
-            {resourceData.local && (
-                <Container title="Local">
-                    <LocalVolumeSourceDetails resourceData={ resourceData.local } />
+            {hasValue(resourceData.local) && (
+                <Container title="Local" collapsible defaultOpen={ true }>
+                    <LocalVolumeSourceDetails resourceData={resourceData.local } />
                 </Container>
             )}
 
-            {resourceData.nfs && (
-                <Container title="Nfs">
-                    <NFSVolumeSourceDetails resourceData={ resourceData.nfs } />
+            {hasValue(resourceData.nfs) && (
+                <Container title="Nfs" collapsible defaultOpen={ true }>
+                    <NFSVolumeSourceDetails resourceData={resourceData.nfs } />
                 </Container>
             )}
 
-            {resourceData.nodeAffinity && (
-                <Container title="Node Affinity">
-                    <VolumeNodeAffinityDetails resourceData={ resourceData.nodeAffinity } />
+            {hasValue(resourceData.nodeAffinity) && (
+                <Container title="Node Affinity" collapsible defaultOpen={ true }>
+                    <VolumeNodeAffinityDetails resourceData={resourceData.nodeAffinity } />
                 </Container>
             )}
 
-            {resourceData.photonPersistentDisk && (
-                <Container title="Photon Persistent Disk">
-                    <PhotonPersistentDiskVolumeSourceDetails resourceData={ resourceData.photonPersistentDisk } />
+            {hasValue(resourceData.photonPersistentDisk) && (
+                <Container title="Photon Persistent Disk" collapsible defaultOpen={ true }>
+                    <PhotonPersistentDiskVolumeSourceDetails resourceData={resourceData.photonPersistentDisk } />
                 </Container>
             )}
 
-            {resourceData.portworxVolume && (
-                <Container title="Portworx Volume">
-                    <PortworxVolumeSourceDetails resourceData={ resourceData.portworxVolume } />
+            {hasValue(resourceData.portworxVolume) && (
+                <Container title="Portworx Volume" collapsible defaultOpen={ true }>
+                    <PortworxVolumeSourceDetails resourceData={resourceData.portworxVolume } />
                 </Container>
             )}
 
-            {resourceData.quobyte && (
-                <Container title="Quobyte">
-                    <QuobyteVolumeSourceDetails resourceData={ resourceData.quobyte } />
+            {hasValue(resourceData.quobyte) && (
+                <Container title="Quobyte" collapsible defaultOpen={ true }>
+                    <QuobyteVolumeSourceDetails resourceData={resourceData.quobyte } />
                 </Container>
             )}
 
-            {resourceData.rbd && (
-                <Container title="Rbd">
-                    <RBDPersistentVolumeSourceDetails resourceData={ resourceData.rbd } />
+            {hasValue(resourceData.rbd) && (
+                <Container title="Rbd" collapsible defaultOpen={ true }>
+                    <RBDPersistentVolumeSourceDetails resourceData={resourceData.rbd } />
                 </Container>
             )}
 
-            {resourceData.scaleIO && (
-                <Container title="Scale IO">
-                    <ScaleIOPersistentVolumeSourceDetails resourceData={ resourceData.scaleIO } />
+            {hasValue(resourceData.scaleIO) && (
+                <Container title="Scale IO" collapsible defaultOpen={ true }>
+                    <ScaleIOPersistentVolumeSourceDetails resourceData={resourceData.scaleIO } />
                 </Container>
             )}
 
-            {resourceData.storageos && (
-                <Container title="Storageos">
-                    <StorageOSPersistentVolumeSourceDetails resourceData={ resourceData.storageos } />
+            {hasValue(resourceData.storageos) && (
+                <Container title="Storageos" collapsible defaultOpen={ true }>
+                    <StorageOSPersistentVolumeSourceDetails resourceData={resourceData.storageos } />
                 </Container>
             )}
 
-            {resourceData.vsphereVolume && (
-                <Container title="Vsphere Volume">
-                    <VsphereVirtualDiskVolumeSourceDetails resourceData={ resourceData.vsphereVolume } />
+            {hasValue(resourceData.vsphereVolume) && (
+                <Container title="Vsphere Volume" collapsible defaultOpen={ true }>
+                    <VsphereVirtualDiskVolumeSourceDetails resourceData={resourceData.vsphereVolume } />
                 </Container>
             )}
 

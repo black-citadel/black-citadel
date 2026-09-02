@@ -1,19 +1,14 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V2MetricIdentifier } from "@kubernetes/client-node";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const MetricIdentifierDetails = ({ resourceData }: { resourceData: V2MetricIdentifier }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.name].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.selector].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.name),
+        hasValue(resourceData.selector),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,16 +17,14 @@ export const MetricIdentifierDetails = ({ resourceData }: { resourceData: V2Metr
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Name", value: resourceData.name }
+                    { label: "Name", value: resourceData.name, description: "name is the name of the given metric" },
                 ]}
-                columns={1}
             />
 
-            {resourceData.selector && (
-                <Container title="Selector">
-                    <LabelSelectorDetails resourceData={ resourceData.selector } />
+            {hasValue(resourceData.selector) && (
+                <Container title="Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.selector } />
                 </Container>
             )}
 

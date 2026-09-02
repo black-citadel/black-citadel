@@ -1,19 +1,15 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1HTTPIngressPath } from "@kubernetes/client-node";
 import { IngressBackendDetails } from "../V1IngressBackend/details";
 
 export const HTTPIngressPathDetails = ({ resourceData }: { resourceData: V1HTTPIngressPath }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.path, resourceData.pathType].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.backend].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.path),
+        hasValue(resourceData.pathType),
+        hasValue(resourceData.backend),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,17 +18,17 @@ export const HTTPIngressPathDetails = ({ resourceData }: { resourceData: V1HTTPI
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Path", value: resourceData.path || '-' },
-                    { label: "Path Type", value: resourceData.pathType }
+                    { label: "Path", value: resourceData.path, description: "path is matched against the path of an incoming request." },
+                    { label: "Path Type", value: resourceData.pathType, description: "pathType determines the interpretation of the path matching." },
                 ]}
-                columns={1}
             />
 
-            <Container title="Backend">
-                <IngressBackendDetails resourceData={ resourceData.backend } />
-            </Container>
+            {hasValue(resourceData.backend) && (
+                <Container title="Backend" collapsible defaultOpen={ true }>
+                    <IngressBackendDetails resourceData={resourceData.backend } />
+                </Container>
+            )}
 
         </>
     )

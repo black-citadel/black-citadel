@@ -1,16 +1,13 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1ScopeSelector } from "@kubernetes/client-node";
 import { ScopedResourceSelectorRequirementDetails } from "../V1ScopedResourceSelectorRequirement/details";
 
 export const ScopeSelectorDetails = ({ resourceData }: { resourceData: V1ScopeSelector }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.matchExpressions].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.matchExpressions),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,10 +15,12 @@ export const ScopeSelectorDetails = ({ resourceData }: { resourceData: V1ScopeSe
 
     return (
         <>
-            {resourceData.matchExpressions && (
-                <Container title="Match Expressions">
+            {hasValue(resourceData.matchExpressions) && (
+                <Container title="Match Expressions" count={resourceData.matchExpressions.length} collapsible defaultOpen={ true }>
                     {resourceData.matchExpressions.map((item, index) => (
-                        <ScopedResourceSelectorRequirementDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <ScopedResourceSelectorRequirementDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

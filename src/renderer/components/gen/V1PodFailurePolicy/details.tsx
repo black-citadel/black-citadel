@@ -1,16 +1,13 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1PodFailurePolicy } from "@kubernetes/client-node";
 import { PodFailurePolicyRuleDetails } from "../V1PodFailurePolicyRule/details";
 
 export const PodFailurePolicyDetails = ({ resourceData }: { resourceData: V1PodFailurePolicy }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.rules].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.rules),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,10 +15,12 @@ export const PodFailurePolicyDetails = ({ resourceData }: { resourceData: V1PodF
 
     return (
         <>
-            {resourceData.rules && (
-                <Container title="Rules">
+            {hasValue(resourceData.rules) && (
+                <Container title="Rules" count={resourceData.rules.length} collapsible defaultOpen={ true }>
                     {resourceData.rules.map((item, index) => (
-                        <PodFailurePolicyRuleDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <PodFailurePolicyRuleDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

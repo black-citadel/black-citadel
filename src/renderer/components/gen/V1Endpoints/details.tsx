@@ -1,3 +1,4 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
 import type { V1Endpoints } from "@kubernetes/client-node";
@@ -5,13 +6,9 @@ import { EndpointSubsetDetails } from "../V1EndpointSubset/details";
 
 export const EndpointsDetails = ({ resourceData }: { resourceData: V1Endpoints }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.subsets].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.subsets),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -19,15 +16,18 @@ export const EndpointsDetails = ({ resourceData }: { resourceData: V1Endpoints }
 
     return (
         <>
-            {resourceData.subsets && (
-                <Container title="Subsets">
+            <MetadataDetails metadata={resourceData.metadata} />
+
+            {hasValue(resourceData.subsets) && (
+                <Container title="Subsets" count={resourceData.subsets.length} collapsible defaultOpen={ true }>
                     {resourceData.subsets.map((item, index) => (
-                        <EndpointSubsetDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <EndpointSubsetDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            <MetadataDetails metadata={resourceData.metadata} />
         </>
     )
 }

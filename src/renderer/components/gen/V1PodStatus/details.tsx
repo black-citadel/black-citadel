@@ -1,23 +1,32 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1PodStatus } from "@kubernetes/client-node";
-import { ConditionsTable } from "@components/base/conditions-table";
-import { ContainerStatusDetails } from "../V1ContainerStatus/details";
-import { HostIPDetails } from "../V1HostIP/details";
 import { PodIPDetails } from "../V1PodIP/details";
+import { HostIPDetails } from "../V1HostIP/details";
+import { ContainerStatusDetails } from "../V1ContainerStatus/details";
+import { ConditionsTable } from "@components/base/conditions-table";
 import { PodResourceClaimStatusDetails } from "../V1PodResourceClaimStatus/details";
 
 export const PodStatusDetails = ({ resourceData }: { resourceData: V1PodStatus }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.hostIP, resourceData.message, resourceData.nominatedNodeName, resourceData.phase, resourceData.podIP, resourceData.qosClass, resourceData.reason, resourceData.resize].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.conditions, resourceData.containerStatuses, resourceData.ephemeralContainerStatuses, resourceData.hostIPs, resourceData.initContainerStatuses, resourceData.podIPs, resourceData.resourceClaimStatuses].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.phase),
+        hasValue(resourceData.message),
+        hasValue(resourceData.reason),
+        hasValue(resourceData.podIP),
+        hasValue(resourceData.hostIP),
+        hasValue(resourceData.startTime),
+        hasValue(resourceData.qosClass),
+        hasValue(resourceData.nominatedNodeName),
+        hasValue(resourceData.resize),
+        hasValue(resourceData.podIPs),
+        hasValue(resourceData.hostIPs),
+        hasValue(resourceData.containerStatuses),
+        hasValue(resourceData.initContainerStatuses),
+        hasValue(resourceData.ephemeralContainerStatuses),
+        hasValue(resourceData.conditions),
+        hasValue(resourceData.resourceClaimStatuses),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -26,68 +35,77 @@ export const PodStatusDetails = ({ resourceData }: { resourceData: V1PodStatus }
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Host IP", value: resourceData.hostIP || '-' },
-                    { label: "Message", value: resourceData.message || '-' },
-                    { label: "Nominated Node Name", value: resourceData.nominatedNodeName || '-' },
-                    { label: "Phase", value: resourceData.phase || '-' },
-                    { label: "Pod IP", value: resourceData.podIP || '-' },
-                    { label: "Qos Class", value: resourceData.qosClass || '-' },
-                    { label: "Reason", value: resourceData.reason || '-' },
-                    { label: "Resize", value: resourceData.resize || '-' }
+                    { label: "Phase", value: resourceData.phase, description: "The phase of a Pod is a simple, high-level summary of where the Pod is in its lifecycle." },
+                    { label: "Message", value: resourceData.message, description: "A human readable message indicating details about why the pod is in this condition." },
+                    { label: "Reason", value: resourceData.reason, description: "A brief CamelCase message indicating details about why the pod is in this state." },
+                    { label: "Pod IP", value: resourceData.podIP, description: "podIP address allocated to the pod." },
+                    { label: "Host IP", value: resourceData.hostIP, description: "hostIP holds the IP address of the host to which the pod is assigned." },
+                    { label: "Start Time", value: resourceData.startTime, description: "RFC 3339 date and time at which the object was acknowledged by the Kubelet." },
+                    { label: "Qos Class", value: resourceData.qosClass, description: "The Quality of Service (QOS) classification assigned to the pod based on resource requirements See PodQOSClass type for available QOS classes More info: https:…" },
+                    { label: "Nominated Node Name", value: resourceData.nominatedNodeName, description: "nominatedNodeName is set only when this pod preempts other pods on the node, but it cannot be scheduled right away as preemption victims receive their graceful…" },
+                    { label: "Resize", value: resourceData.resize, description: "Status of resources resize desired for pod's containers." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.conditions && (
-                <ConditionsTable conditions={ resourceData.conditions } />
-            )}
-
-            {resourceData.containerStatuses && (
-                <Container title="Container Statuses">
-                    {resourceData.containerStatuses.map((item, index) => (
-                        <ContainerStatusDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.ephemeralContainerStatuses && (
-                <Container title="Ephemeral Container Statuses">
-                    {resourceData.ephemeralContainerStatuses.map((item, index) => (
-                        <ContainerStatusDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.hostIPs && (
-                <Container title="Host IPs">
-                    {resourceData.hostIPs.map((item, index) => (
-                        <HostIPDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.initContainerStatuses && (
-                <Container title="Init Container Statuses">
-                    {resourceData.initContainerStatuses.map((item, index) => (
-                        <ContainerStatusDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.podIPs && (
-                <Container title="Pod IPs">
+            {hasValue(resourceData.podIPs) && (
+                <Container title="Pod IPs" count={resourceData.podIPs.length} collapsible defaultOpen={ true }>
                     {resourceData.podIPs.map((item, index) => (
-                        <PodIPDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <PodIPDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.resourceClaimStatuses && (
-                <Container title="Resource Claim Statuses">
+            {hasValue(resourceData.hostIPs) && (
+                <Container title="Host IPs" count={resourceData.hostIPs.length} collapsible defaultOpen={ true }>
+                    {resourceData.hostIPs.map((item, index) => (
+                        <PanelListItem key={index}>
+                            <HostIPDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.containerStatuses) && (
+                <Container title="Container Statuses" count={resourceData.containerStatuses.length} collapsible defaultOpen={ true }>
+                    {resourceData.containerStatuses.map((item, index) => (
+                        <PanelListItem key={index} title={item.name }>
+                            <ContainerStatusDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.initContainerStatuses) && (
+                <Container title="Init Container Statuses" count={resourceData.initContainerStatuses.length} collapsible defaultOpen={ true }>
+                    {resourceData.initContainerStatuses.map((item, index) => (
+                        <PanelListItem key={index} title={item.name }>
+                            <ContainerStatusDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.ephemeralContainerStatuses) && (
+                <Container title="Ephemeral Container Statuses" count={resourceData.ephemeralContainerStatuses.length} collapsible defaultOpen={ true }>
+                    {resourceData.ephemeralContainerStatuses.map((item, index) => (
+                        <PanelListItem key={index} title={item.name }>
+                            <ContainerStatusDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.conditions) && <ConditionsTable conditions={resourceData.conditions } />}
+
+            {hasValue(resourceData.resourceClaimStatuses) && (
+                <Container title="Resource Claim Statuses" count={resourceData.resourceClaimStatuses.length} collapsible defaultOpen={ true }>
                     {resourceData.resourceClaimStatuses.map((item, index) => (
-                        <PodResourceClaimStatusDetails key={index} resourceData={item} />
+                        <PanelListItem key={index} title={item.name }>
+                            <PodResourceClaimStatusDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

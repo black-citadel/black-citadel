@@ -1,15 +1,13 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1KeyToPath } from "@kubernetes/client-node";
 
 export const KeyToPathDetails = ({ resourceData }: { resourceData: V1KeyToPath }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.key, resourceData.mode, resourceData.path].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.key),
+        hasValue(resourceData.mode),
+        hasValue(resourceData.path),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,13 +16,11 @@ export const KeyToPathDetails = ({ resourceData }: { resourceData: V1KeyToPath }
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Key", value: resourceData.key },
-                    { label: "Mode", value: resourceData.mode || '-' },
-                    { label: "Path", value: resourceData.path }
+                    { label: "Key", value: resourceData.key, description: "key is the key to project." },
+                    { label: "Mode", value: resourceData.mode, description: "mode is Optional: mode bits used to set permissions on this file." },
+                    { label: "Path", value: resourceData.path, description: "path is the relative path of the file to map the key to." },
                 ]}
-                columns={1}
             />
 
         </>

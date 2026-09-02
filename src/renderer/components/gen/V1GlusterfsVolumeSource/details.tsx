@@ -1,17 +1,13 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1GlusterfsVolumeSource } from "@kubernetes/client-node";
 
 export const GlusterfsVolumeSourceDetails = ({ resourceData }: { resourceData: V1GlusterfsVolumeSource }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.endpoints, resourceData.path].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.endpoints),
+        hasValue(resourceData.path),
+        resourceData.readOnly === true,
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,20 +16,13 @@ export const GlusterfsVolumeSourceDetails = ({ resourceData }: { resourceData: V
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Endpoints", value: resourceData.endpoints },
-                    { label: "Path", value: resourceData.path }
+                    { label: "Endpoints", value: resourceData.endpoints, description: "endpoints is the endpoint name that details Glusterfs topology." },
+                    { label: "Path", value: resourceData.path, description: "path is the Glusterfs volume path." },
                 ]}
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Read Only", value: resourceData.readOnly ? "Yes" : "No" }
+                flags={[
+                    { label: "Read Only", value: resourceData.readOnly, description: "readOnly here will force the Glusterfs volume to be mounted with read-only permissions." },
                 ]}
-                columns={1}
             />
 
         </>

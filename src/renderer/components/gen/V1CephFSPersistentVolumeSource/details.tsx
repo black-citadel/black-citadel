@@ -1,21 +1,18 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1CephFSPersistentVolumeSource } from "@kubernetes/client-node";
 import { SecretReferenceDetails } from "../V1SecretReference/details";
 
 export const CephFSPersistentVolumeSourceDetails = ({ resourceData }: { resourceData: V1CephFSPersistentVolumeSource }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.path, resourceData.secretFile, resourceData.user].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        // Check k8s type properties
-        checks.push([resourceData.secretRef].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.monitors),
+        hasValue(resourceData.path),
+        hasValue(resourceData.secretFile),
+        hasValue(resourceData.user),
+        resourceData.readOnly === true,
+        hasValue(resourceData.secretRef),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -24,26 +21,20 @@ export const CephFSPersistentVolumeSourceDetails = ({ resourceData }: { resource
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Path", value: resourceData.path || '-' },
-                    { label: "Secret File", value: resourceData.secretFile || '-' },
-                    { label: "User", value: resourceData.user || '-' }
+                    { label: "Monitors", value: resourceData.monitors, description: "monitors is Required: Monitors is a collection of Ceph monitors More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it" },
+                    { label: "Path", value: resourceData.path, description: "path is Optional: Used as the mounted root, rather than the full Ceph tree, default is /" },
+                    { label: "Secret File", value: resourceData.secretFile, description: "secretFile is Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret More info: https://examples.k8s.io/volumes/cephfs/README.…" },
+                    { label: "User", value: resourceData.user, description: "user is Optional: User is the rados user name, default is admin More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it" },
                 ]}
-                columns={1}
+                flags={[
+                    { label: "Read Only", value: resourceData.readOnly, description: "readOnly is Optional: Defaults to false (read/write)." },
+                ]}
             />
 
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Read Only", value: resourceData.readOnly ? "Yes" : "No" }
-                ]}
-                columns={1}
-            />
-
-            {resourceData.secretRef && (
-                <Container title="Secret Ref">
-                    <SecretReferenceDetails resourceData={ resourceData.secretRef } />
+            {hasValue(resourceData.secretRef) && (
+                <Container title="Secret Ref" collapsible defaultOpen={ true }>
+                    <SecretReferenceDetails resourceData={resourceData.secretRef } />
                 </Container>
             )}
 

@@ -1,16 +1,13 @@
+import { hasValue } from "@components/layout/panel";
 import { MetadataDetails } from "@components/metadata";
 import type { V1PersistentVolumeClaimTemplate } from "@kubernetes/client-node";
 import { PersistentVolumeClaimSpecDetails } from "../V1PersistentVolumeClaimSpec/details";
 
 export const PersistentVolumeClaimTemplateDetails = ({ resourceData }: { resourceData: V1PersistentVolumeClaimTemplate }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.spec].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.spec),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,9 +15,10 @@ export const PersistentVolumeClaimTemplateDetails = ({ resourceData }: { resourc
 
     return (
         <>
-            <PersistentVolumeClaimSpecDetails resourceData={ resourceData.spec } />
-
             <MetadataDetails metadata={resourceData.metadata} />
+
+            {hasValue(resourceData.spec) && <PersistentVolumeClaimSpecDetails resourceData={resourceData.spec } />}
+
         </>
     )
 }

@@ -1,3 +1,4 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1NetworkPolicyEgressRule } from "@kubernetes/client-node";
 import { NetworkPolicyPortDetails } from "../V1NetworkPolicyPort/details";
@@ -5,13 +6,10 @@ import { NetworkPolicyPeerDetails } from "../V1NetworkPolicyPeer/details";
 
 export const NetworkPolicyEgressRuleDetails = ({ resourceData }: { resourceData: V1NetworkPolicyEgressRule }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.ports, resourceData.to].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.ports),
+        hasValue(resourceData.to),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -19,18 +17,22 @@ export const NetworkPolicyEgressRuleDetails = ({ resourceData }: { resourceData:
 
     return (
         <>
-            {resourceData.ports && (
-                <Container title="Ports">
+            {hasValue(resourceData.ports) && (
+                <Container title="Ports" count={resourceData.ports.length} collapsible defaultOpen={ true }>
                     {resourceData.ports.map((item, index) => (
-                        <NetworkPolicyPortDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <NetworkPolicyPortDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.to && (
-                <Container title="To">
+            {hasValue(resourceData.to) && (
+                <Container title="To" count={resourceData.to.length} collapsible defaultOpen={ true }>
                     {resourceData.to.map((item, index) => (
-                        <NetworkPolicyPeerDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <NetworkPolicyPeerDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

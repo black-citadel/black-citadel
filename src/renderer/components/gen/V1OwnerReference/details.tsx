@@ -1,17 +1,16 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1OwnerReference } from "@kubernetes/client-node";
 
 export const OwnerReferenceDetails = ({ resourceData }: { resourceData: V1OwnerReference }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.apiVersion, resourceData.kind, resourceData.name, resourceData.uid].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.name),
+        hasValue(resourceData.uid),
+        hasValue(resourceData.apiVersion),
+        hasValue(resourceData.kind),
+        resourceData.blockOwnerDeletion === true,
+        resourceData.controller === true,
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,23 +19,16 @@ export const OwnerReferenceDetails = ({ resourceData }: { resourceData: V1OwnerR
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Api Version", value: resourceData.apiVersion },
-                    { label: "Kind", value: resourceData.kind },
-                    { label: "Name", value: resourceData.name },
-                    { label: "Uid", value: resourceData.uid }
+                    { label: "Name", value: resourceData.name, description: "Name of the referent." },
+                    { label: "Uid", value: resourceData.uid, description: "UID of the referent." },
+                    { label: "Api Version", value: resourceData.apiVersion, description: "API version of the referent." },
+                    { label: "Kind", value: resourceData.kind, description: "Kind of the referent." },
                 ]}
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Block Owner Deletion", value: resourceData.blockOwnerDeletion ? "Yes" : "No" },
-                    { label: "Controller", value: resourceData.controller ? "Yes" : "No" }
+                flags={[
+                    { label: "Block Owner Deletion", value: resourceData.blockOwnerDeletion, description: "If true, AND if the owner has the \"foregroundDeletion\" finalizer, then the owner cannot be deleted from the key-value store until this reference is removed." },
+                    { label: "Controller", value: resourceData.controller, description: "If true, this reference points to the managing controller." },
                 ]}
-                columns={1}
             />
 
         </>

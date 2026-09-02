@@ -1,19 +1,18 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1PodAffinityTerm } from "@kubernetes/client-node";
 import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const PodAffinityTermDetails = ({ resourceData }: { resourceData: V1PodAffinityTerm }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.topologyKey].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.labelSelector, resourceData.namespaceSelector].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.matchLabelKeys),
+        hasValue(resourceData.mismatchLabelKeys),
+        hasValue(resourceData.namespaces),
+        hasValue(resourceData.topologyKey),
+        hasValue(resourceData.labelSelector),
+        hasValue(resourceData.namespaceSelector),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,22 +21,23 @@ export const PodAffinityTermDetails = ({ resourceData }: { resourceData: V1PodAf
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Topology Key", value: resourceData.topologyKey }
+                    { label: "Match Label Keys", value: resourceData.matchLabelKeys, description: "MatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration." },
+                    { label: "Mismatch Label Keys", value: resourceData.mismatchLabelKeys, description: "MismatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration." },
+                    { label: "Namespaces", value: resourceData.namespaces, description: "namespaces specifies a static list of namespace names that the term applies to." },
+                    { label: "Topology Key", value: resourceData.topologyKey, description: "This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching the labelSelector in the specified namespaces, where co-locat…" },
                 ]}
-                columns={1}
             />
 
-            {resourceData.labelSelector && (
-                <Container title="Label Selector">
-                    <LabelSelectorDetails resourceData={ resourceData.labelSelector } />
+            {hasValue(resourceData.labelSelector) && (
+                <Container title="Label Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.labelSelector } />
                 </Container>
             )}
 
-            {resourceData.namespaceSelector && (
-                <Container title="Namespace Selector">
-                    <LabelSelectorDetails resourceData={ resourceData.namespaceSelector } />
+            {hasValue(resourceData.namespaceSelector) && (
+                <Container title="Namespace Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.namespaceSelector } />
                 </Container>
             )}
 

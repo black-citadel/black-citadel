@@ -1,17 +1,15 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1FCVolumeSource } from "@kubernetes/client-node";
 
 export const FCVolumeSourceDetails = ({ resourceData }: { resourceData: V1FCVolumeSource }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.fsType, resourceData.lun].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.fsType),
+        hasValue(resourceData.lun),
+        hasValue(resourceData.targetWWNs),
+        hasValue(resourceData.wwids),
+        resourceData.readOnly === true,
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,20 +18,15 @@ export const FCVolumeSourceDetails = ({ resourceData }: { resourceData: V1FCVolu
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Fs Type", value: resourceData.fsType || '-' },
-                    { label: "Lun", value: resourceData.lun || '-' }
+                    { label: "Fs Type", value: resourceData.fsType, description: "fsType is the filesystem type to mount." },
+                    { label: "Lun", value: resourceData.lun, description: "lun is Optional: FC target lun number" },
+                    { label: "Target WWNs", value: resourceData.targetWWNs, description: "targetWWNs is Optional: FC target worldwide names (WWNs)" },
+                    { label: "Wwids", value: resourceData.wwids, description: "wwids Optional: FC volume world wide identifiers (wwids) Either wwids or combination of targetWWNs and lun must be set, but not both simultaneously." },
                 ]}
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Read Only", value: resourceData.readOnly ? "Yes" : "No" }
+                flags={[
+                    { label: "Read Only", value: resourceData.readOnly, description: "readOnly is Optional: Defaults to false (read/write)." },
                 ]}
-                columns={1}
             />
 
         </>

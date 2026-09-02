@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V2MetricSpec } from "@kubernetes/client-node";
 import { ContainerResourceMetricSourceDetails } from "../V2ContainerResourceMetricSource/details";
@@ -9,15 +9,14 @@ import { ResourceMetricSourceDetails } from "../V2ResourceMetricSource/details";
 
 export const MetricSpecDetails = ({ resourceData }: { resourceData: V2MetricSpec }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.type].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.containerResource, resourceData.external, resourceData.object, resourceData.pods, resourceData.resource].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.type),
+        hasValue(resourceData.containerResource),
+        hasValue(resourceData.external),
+        hasValue(resourceData.object),
+        hasValue(resourceData.pods),
+        hasValue(resourceData.resource),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -26,40 +25,38 @@ export const MetricSpecDetails = ({ resourceData }: { resourceData: V2MetricSpec
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Type", value: resourceData.type }
+                    { label: "Type", value: resourceData.type, description: "type is the type of metric source." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.containerResource && (
-                <Container title="Container Resource">
-                    <ContainerResourceMetricSourceDetails resourceData={ resourceData.containerResource } />
+            {hasValue(resourceData.containerResource) && (
+                <Container title="Container Resource" collapsible defaultOpen={ true }>
+                    <ContainerResourceMetricSourceDetails resourceData={resourceData.containerResource } />
                 </Container>
             )}
 
-            {resourceData.external && (
-                <Container title="External">
-                    <ExternalMetricSourceDetails resourceData={ resourceData.external } />
+            {hasValue(resourceData.external) && (
+                <Container title="External" collapsible defaultOpen={ true }>
+                    <ExternalMetricSourceDetails resourceData={resourceData.external } />
                 </Container>
             )}
 
-            {resourceData.object && (
-                <Container title="Object">
-                    <ObjectMetricSourceDetails resourceData={ resourceData.object } />
+            {hasValue(resourceData.object) && (
+                <Container title="Object" collapsible defaultOpen={ true }>
+                    <ObjectMetricSourceDetails resourceData={resourceData.object } />
                 </Container>
             )}
 
-            {resourceData.pods && (
-                <Container title="Pods">
-                    <PodsMetricSourceDetails resourceData={ resourceData.pods } />
+            {hasValue(resourceData.pods) && (
+                <Container title="Pods" collapsible defaultOpen={ true }>
+                    <PodsMetricSourceDetails resourceData={resourceData.pods } />
                 </Container>
             )}
 
-            {resourceData.resource && (
-                <Container title="Resource">
-                    <ResourceMetricSourceDetails resourceData={ resourceData.resource } />
+            {hasValue(resourceData.resource) && (
+                <Container title="Resource" collapsible defaultOpen={ true }>
+                    <ResourceMetricSourceDetails resourceData={resourceData.resource } />
                 </Container>
             )}
 

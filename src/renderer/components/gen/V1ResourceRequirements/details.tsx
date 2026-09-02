@@ -1,33 +1,17 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1ResourceRequirements } from "@kubernetes/client-node";
 import { ResourceClaimDetails } from "../V1ResourceClaim/details";
 
 export const ResourceRequirementsDetails = ({ resourceData }: { resourceData: V1ResourceRequirements }): JSX.Element => {
-    // Transform the Limits object into an array of PanelGridItem objects
-    const limitsItems = resourceData.limits
-        ? Object.entries(resourceData.limits).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
-    // Transform the Requests object into an array of PanelGridItem objects
-    const requestsItems = resourceData.requests
-        ? Object.entries(resourceData.requests).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
+    const requestsItems = Object.entries(resourceData.requests ?? {}).map(([key, value]) => ({ label: key, value }));
+    const limitsItems = Object.entries(resourceData.limits ?? {}).map(([key, value]) => ({ label: key, value }));
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check object properties
-        checks.push(limitsItems.length > 0 || requestsItems.length > 0);
-        // Check k8s type properties
-        checks.push([resourceData.claims].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        requestsItems.length > 0,
+        limitsItems.length > 0,
+        hasValue(resourceData.claims),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -35,22 +19,16 @@ export const ResourceRequirementsDetails = ({ resourceData }: { resourceData: V1
 
     return (
         <>
-            <PanelGrid
-                title="Limits"
-                items={ limitsItems }
-                columns={1}
-            />
+            <PanelGrid title="Requests" items={ requestsItems } />
 
-            <PanelGrid
-                title="Requests"
-                items={ requestsItems }
-                columns={1}
-            />
+            <PanelGrid title="Limits" items={ limitsItems } />
 
-            {resourceData.claims && (
-                <Container title="Claims">
+            {hasValue(resourceData.claims) && (
+                <Container title="Claims" count={resourceData.claims.length} collapsible defaultOpen={ true }>
                     {resourceData.claims.map((item, index) => (
-                        <ResourceClaimDetails key={index} resourceData={item} />
+                        <PanelListItem key={index} title={item.name }>
+                            <ResourceClaimDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

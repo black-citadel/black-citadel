@@ -1,15 +1,11 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1StatefulSetOrdinals } from "@kubernetes/client-node";
 
 export const StatefulSetOrdinalsDetails = ({ resourceData }: { resourceData: V1StatefulSetOrdinals }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.start].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.start),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,11 +14,9 @@ export const StatefulSetOrdinalsDetails = ({ resourceData }: { resourceData: V1S
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Start", value: resourceData.start || '-' }
+                    { label: "Start", value: resourceData.start, description: "start is the number representing the first replica's index." },
                 ]}
-                columns={1}
             />
 
         </>

@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1IngressSpec } from "@kubernetes/client-node";
 import { IngressBackendDetails } from "../V1IngressBackend/details";
@@ -7,15 +7,12 @@ import { IngressTLSDetails } from "../V1IngressTLS/details";
 
 export const IngressSpecDetails = ({ resourceData }: { resourceData: V1IngressSpec }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.ingressClassName].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.defaultBackend, resourceData.rules, resourceData.tls].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.ingressClassName),
+        hasValue(resourceData.defaultBackend),
+        hasValue(resourceData.rules),
+        hasValue(resourceData.tls),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -24,29 +21,29 @@ export const IngressSpecDetails = ({ resourceData }: { resourceData: V1IngressSp
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Ingress Class Name", value: resourceData.ingressClassName || '-' }
+                    { label: "Ingress Class Name", value: resourceData.ingressClassName, description: "ingressClassName is the name of an IngressClass cluster resource." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.defaultBackend && (
-                <Container title="Default Backend">
-                    <IngressBackendDetails resourceData={ resourceData.defaultBackend } />
+            {hasValue(resourceData.defaultBackend) && (
+                <Container title="Default Backend" collapsible defaultOpen={ true }>
+                    <IngressBackendDetails resourceData={resourceData.defaultBackend } />
                 </Container>
             )}
 
-            {resourceData.rules && (
-                <Container title="Rules">
-                    <IngressRules rules={ resourceData.rules } />
+            {hasValue(resourceData.rules) && (
+                <Container title="Rules" count={resourceData.rules.length} collapsible defaultOpen={ true }>
+                    <IngressRules rules={resourceData.rules } />
                 </Container>
             )}
 
-            {resourceData.tls && (
-                <Container title="Tls">
+            {hasValue(resourceData.tls) && (
+                <Container title="Tls" count={resourceData.tls.length} collapsible defaultOpen={ true }>
                     {resourceData.tls.map((item, index) => (
-                        <IngressTLSDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <IngressTLSDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

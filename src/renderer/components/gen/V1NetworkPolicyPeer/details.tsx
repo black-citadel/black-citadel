@@ -1,3 +1,4 @@
+import { hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1NetworkPolicyPeer } from "@kubernetes/client-node";
 import { IPBlockDetails } from "../V1IPBlock/details";
@@ -5,13 +6,11 @@ import { LabelSelectorDetails } from "../V1LabelSelector/details";
 
 export const NetworkPolicyPeerDetails = ({ resourceData }: { resourceData: V1NetworkPolicyPeer }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.ipBlock, resourceData.namespaceSelector, resourceData.podSelector].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.ipBlock),
+        hasValue(resourceData.namespaceSelector),
+        hasValue(resourceData.podSelector),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -19,21 +18,21 @@ export const NetworkPolicyPeerDetails = ({ resourceData }: { resourceData: V1Net
 
     return (
         <>
-            {resourceData.ipBlock && (
-                <Container title="Ip Block">
-                    <IPBlockDetails resourceData={ resourceData.ipBlock } />
+            {hasValue(resourceData.ipBlock) && (
+                <Container title="Ip Block" collapsible defaultOpen={ true }>
+                    <IPBlockDetails resourceData={resourceData.ipBlock } />
                 </Container>
             )}
 
-            {resourceData.namespaceSelector && (
-                <Container title="Namespace Selector">
-                    <LabelSelectorDetails resourceData={ resourceData.namespaceSelector } />
+            {hasValue(resourceData.namespaceSelector) && (
+                <Container title="Namespace Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.namespaceSelector } />
                 </Container>
             )}
 
-            {resourceData.podSelector && (
-                <Container title="Pod Selector">
-                    <LabelSelectorDetails resourceData={ resourceData.podSelector } />
+            {hasValue(resourceData.podSelector) && (
+                <Container title="Pod Selector" collapsible defaultOpen={ true }>
+                    <LabelSelectorDetails resourceData={resourceData.podSelector } />
                 </Container>
             )}
 

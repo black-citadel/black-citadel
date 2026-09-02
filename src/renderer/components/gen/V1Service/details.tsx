@@ -1,3 +1,4 @@
+import { hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import { MetadataDetails } from "@components/metadata";
 import type { V1Service } from "@kubernetes/client-node";
@@ -6,13 +7,10 @@ import { ServiceStatusDetails } from "../V1ServiceStatus/details";
 
 export const ServiceDetails = ({ resourceData }: { resourceData: V1Service }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.spec, resourceData.status].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.spec),
+        hasValue(resourceData.status),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -20,15 +18,16 @@ export const ServiceDetails = ({ resourceData }: { resourceData: V1Service }): J
 
     return (
         <>
-            {resourceData.spec && <ServiceSpecDetails resourceData={ resourceData.spec } />}
+            <MetadataDetails metadata={resourceData.metadata} />
 
-            {resourceData.status && (
-                <Container title="Status">
-                    <ServiceStatusDetails resourceData={ resourceData.status } />
+            {hasValue(resourceData.spec) && <ServiceSpecDetails resourceData={resourceData.spec } />}
+
+            {hasValue(resourceData.status) && (
+                <Container title="Status" collapsible defaultOpen={ true }>
+                    <ServiceStatusDetails resourceData={resourceData.status } />
                 </Container>
             )}
 
-            <MetadataDetails metadata={resourceData.metadata} />
         </>
     )
 }

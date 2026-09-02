@@ -1,16 +1,13 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1IngressLoadBalancerStatus } from "@kubernetes/client-node";
 import { IngressLoadBalancerIngressDetails } from "../V1IngressLoadBalancerIngress/details";
 
 export const IngressLoadBalancerStatusDetails = ({ resourceData }: { resourceData: V1IngressLoadBalancerStatus }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.ingress].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.ingress),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,10 +15,12 @@ export const IngressLoadBalancerStatusDetails = ({ resourceData }: { resourceDat
 
     return (
         <>
-            {resourceData.ingress && (
-                <Container title="Ingress">
+            {hasValue(resourceData.ingress) && (
+                <Container title="Ingress" count={resourceData.ingress.length} collapsible defaultOpen={ true }>
                     {resourceData.ingress.map((item, index) => (
-                        <IngressLoadBalancerIngressDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <IngressLoadBalancerIngressDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

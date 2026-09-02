@@ -1,16 +1,13 @@
+import { hasValue } from "@components/layout/panel";
 import { MetadataDetails } from "@components/metadata";
 import type { V1CSIDriver } from "@kubernetes/client-node";
 import { CSIDriverSpecDetails } from "../V1CSIDriverSpec/details";
 
 export const CSIDriverDetails = ({ resourceData }: { resourceData: V1CSIDriver }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.spec].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.spec),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,9 +15,10 @@ export const CSIDriverDetails = ({ resourceData }: { resourceData: V1CSIDriver }
 
     return (
         <>
-            <CSIDriverSpecDetails resourceData={ resourceData.spec } />
-
             <MetadataDetails metadata={resourceData.metadata} />
+
+            {hasValue(resourceData.spec) && <CSIDriverSpecDetails resourceData={resourceData.spec } />}
+
         </>
     )
 }

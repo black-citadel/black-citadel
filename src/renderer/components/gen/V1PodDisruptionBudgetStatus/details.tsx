@@ -1,27 +1,19 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1PodDisruptionBudgetStatus } from "@kubernetes/client-node";
 import { ConditionsTable } from "@components/base/conditions-table";
 
 export const PodDisruptionBudgetStatusDetails = ({ resourceData }: { resourceData: V1PodDisruptionBudgetStatus }): JSX.Element => {
-    // Transform the Disrupted Pods object into an array of PanelGridItem objects
-    const disruptedPodsItems = resourceData.disruptedPods
-        ? Object.entries(resourceData.disruptedPods).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
+    const disruptedPodsItems = Object.entries(resourceData.disruptedPods ?? {}).map(([key, value]) => ({ label: key, value }));
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check object properties
-        checks.push(disruptedPodsItems.length > 0);
-        // Check simple properties
-        checks.push([resourceData.currentHealthy, resourceData.desiredHealthy, resourceData.disruptionsAllowed, resourceData.expectedPods, resourceData.observedGeneration].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.conditions].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        disruptedPodsItems.length > 0,
+        hasValue(resourceData.currentHealthy),
+        hasValue(resourceData.desiredHealthy),
+        hasValue(resourceData.disruptionsAllowed),
+        hasValue(resourceData.expectedPods),
+        hasValue(resourceData.observedGeneration),
+        hasValue(resourceData.conditions),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -30,26 +22,18 @@ export const PodDisruptionBudgetStatusDetails = ({ resourceData }: { resourceDat
     return (
         <>
             <PanelGrid
-                title="Disrupted Pods"
-                items={ disruptedPodsItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Current Healthy", value: resourceData.currentHealthy },
-                    { label: "Desired Healthy", value: resourceData.desiredHealthy },
-                    { label: "Disruptions Allowed", value: resourceData.disruptionsAllowed },
-                    { label: "Expected Pods", value: resourceData.expectedPods },
-                    { label: "Observed Generation", value: resourceData.observedGeneration || '-' }
+                    { label: "Current Healthy", value: resourceData.currentHealthy, description: "current number of healthy pods" },
+                    { label: "Desired Healthy", value: resourceData.desiredHealthy, description: "minimum desired number of healthy pods" },
+                    { label: "Disruptions Allowed", value: resourceData.disruptionsAllowed, description: "Number of pod disruptions that are currently allowed." },
+                    { label: "Expected Pods", value: resourceData.expectedPods, description: "total number of pods counted by this disruption budget" },
+                    { label: "Observed Generation", value: resourceData.observedGeneration, description: "Most recent generation observed when updating this PDB status." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.conditions && (
-                <ConditionsTable conditions={ resourceData.conditions } />
-            )}
+            <PanelGrid title="Disrupted Pods" items={ disruptedPodsItems } />
+
+            {hasValue(resourceData.conditions) && <ConditionsTable conditions={resourceData.conditions } />}
 
         </>
     )

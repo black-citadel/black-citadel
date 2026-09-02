@@ -1,50 +1,66 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1PodSpec } from "@kubernetes/client-node";
-import { AffinityDetails } from "../V1Affinity/details";
 import { ContainerDetails } from "../V1Container/details";
-import { PodDNSConfigDetails } from "../V1PodDNSConfig/details";
 import { EphemeralContainerDetails } from "../V1EphemeralContainer/details";
-import { HostAliasDetails } from "../V1HostAlias/details";
-import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
-import { PodOSDetails } from "../V1PodOS/details";
-import { PodReadinessGateDetails } from "../V1PodReadinessGate/details";
-import { PodResourceClaimDetails } from "../V1PodResourceClaim/details";
-import { PodSchedulingGateDetails } from "../V1PodSchedulingGate/details";
-import { PodSecurityContextDetails } from "../V1PodSecurityContext/details";
+import { VolumeDetails } from "../V1Volume/details";
+import { PodDNSConfigDetails } from "../V1PodDNSConfig/details";
+import { AffinityDetails } from "../V1Affinity/details";
 import { TolerationDetails } from "../V1Toleration/details";
 import { TopologySpreadConstraintDetails } from "../V1TopologySpreadConstraint/details";
-import { VolumeDetails } from "../V1Volume/details";
+import { PodSchedulingGateDetails } from "../V1PodSchedulingGate/details";
+import { PodSecurityContextDetails } from "../V1PodSecurityContext/details";
+import { LocalObjectReferenceDetails } from "../V1LocalObjectReference/details";
+import { HostAliasDetails } from "../V1HostAlias/details";
+import { PodReadinessGateDetails } from "../V1PodReadinessGate/details";
+import { PodResourceClaimDetails } from "../V1PodResourceClaim/details";
+import { PodOSDetails } from "../V1PodOS/details";
 
 export const PodSpecDetails = ({ resourceData }: { resourceData: V1PodSpec }): JSX.Element => {
-    // Transform the Node Selector object into an array of PanelGridItem objects
-    const nodeSelectorItems = resourceData.nodeSelector
-        ? Object.entries(resourceData.nodeSelector).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
-    // Transform the Overhead object into an array of PanelGridItem objects
-    const overheadItems = resourceData.overhead
-        ? Object.entries(resourceData.overhead).map(([key, value]) => ({
-            label: key,
-            value: value
-        }))
-        : [];
+    const nodeSelectorItems = Object.entries(resourceData.nodeSelector ?? {}).map(([key, value]) => ({ label: key, value }));
+    const overheadItems = Object.entries(resourceData.overhead ?? {}).map(([key, value]) => ({ label: key, value }));
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check object properties
-        checks.push(nodeSelectorItems.length > 0 || overheadItems.length > 0);
-        // Check simple properties
-        checks.push([resourceData.activeDeadlineSeconds, resourceData.dnsPolicy, resourceData.hostname, resourceData.nodeName, resourceData.preemptionPolicy, resourceData.priority, resourceData.priorityClassName, resourceData.restartPolicy, resourceData.runtimeClassName, resourceData.schedulerName, resourceData.serviceAccount, resourceData.serviceAccountName, resourceData.subdomain, resourceData.terminationGracePeriodSeconds].some(v => v !== undefined && v !== null));
-        // Boolean properties always have content
-        checks.push(true);
-        // Check k8s type properties
-        checks.push([resourceData.affinity, resourceData.containers, resourceData.dnsConfig, resourceData.ephemeralContainers, resourceData.hostAliases, resourceData.imagePullSecrets, resourceData.initContainers, resourceData.os, resourceData.readinessGates, resourceData.resourceClaims, resourceData.schedulingGates, resourceData.securityContext, resourceData.tolerations, resourceData.topologySpreadConstraints, resourceData.volumes].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        nodeSelectorItems.length > 0,
+        overheadItems.length > 0,
+        hasValue(resourceData.serviceAccountName),
+        hasValue(resourceData.serviceAccount),
+        hasValue(resourceData.restartPolicy),
+        hasValue(resourceData.terminationGracePeriodSeconds),
+        hasValue(resourceData.activeDeadlineSeconds),
+        hasValue(resourceData.dnsPolicy),
+        hasValue(resourceData.hostname),
+        hasValue(resourceData.subdomain),
+        hasValue(resourceData.nodeName),
+        hasValue(resourceData.priorityClassName),
+        hasValue(resourceData.priority),
+        hasValue(resourceData.preemptionPolicy),
+        hasValue(resourceData.schedulerName),
+        hasValue(resourceData.runtimeClassName),
+        resourceData.automountServiceAccountToken === true,
+        resourceData.enableServiceLinks === true,
+        resourceData.hostIPC === true,
+        resourceData.hostNetwork === true,
+        resourceData.hostPID === true,
+        resourceData.hostUsers === true,
+        resourceData.setHostnameAsFQDN === true,
+        resourceData.shareProcessNamespace === true,
+        hasValue(resourceData.containers),
+        hasValue(resourceData.initContainers),
+        hasValue(resourceData.ephemeralContainers),
+        hasValue(resourceData.volumes),
+        hasValue(resourceData.dnsConfig),
+        hasValue(resourceData.affinity),
+        hasValue(resourceData.tolerations),
+        hasValue(resourceData.topologySpreadConstraints),
+        hasValue(resourceData.schedulingGates),
+        hasValue(resourceData.securityContext),
+        hasValue(resourceData.imagePullSecrets),
+        hasValue(resourceData.hostAliases),
+        hasValue(resourceData.readinessGates),
+        hasValue(resourceData.resourceClaims),
+        hasValue(resourceData.os),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -53,162 +69,169 @@ export const PodSpecDetails = ({ resourceData }: { resourceData: V1PodSpec }): J
     return (
         <>
             <PanelGrid
-                title="Node Selector"
-                items={ nodeSelectorItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Overhead"
-                items={ overheadItems }
-                columns={1}
-            />
-
-            <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Active Deadline Seconds", value: resourceData.activeDeadlineSeconds || '-' },
-                    { label: "Dns Policy", value: resourceData.dnsPolicy || '-' },
-                    { label: "Hostname", value: resourceData.hostname || '-' },
-                    { label: "Node Name", value: resourceData.nodeName || '-' },
-                    { label: "Preemption Policy", value: resourceData.preemptionPolicy || '-' },
-                    { label: "Priority", value: resourceData.priority || '-' },
-                    { label: "Priority Class Name", value: resourceData.priorityClassName || '-' },
-                    { label: "Restart Policy", value: resourceData.restartPolicy || '-' },
-                    { label: "Runtime Class Name", value: resourceData.runtimeClassName || '-' },
-                    { label: "Scheduler Name", value: resourceData.schedulerName || '-' },
-                    { label: "Service Account", value: resourceData.serviceAccount || '-' },
-                    { label: "Service Account Name", value: resourceData.serviceAccountName || '-' },
-                    { label: "Subdomain", value: resourceData.subdomain || '-' },
-                    { label: "Termination Grace Period Seconds", value: resourceData.terminationGracePeriodSeconds || '-' }
+                    { label: "Service Account Name", value: resourceData.serviceAccountName, description: "ServiceAccountName is the name of the ServiceAccount to use to run this pod." },
+                    { label: "Service Account", value: resourceData.serviceAccount, description: "DeprecatedServiceAccount is a deprecated alias for ServiceAccountName." },
+                    { label: "Restart Policy", value: resourceData.restartPolicy, description: "Restart policy for all containers within the pod." },
+                    { label: "Termination Grace Period Seconds", value: resourceData.terminationGracePeriodSeconds, description: "Optional duration in seconds the pod needs to terminate gracefully." },
+                    { label: "Active Deadline Seconds", value: resourceData.activeDeadlineSeconds, description: "Optional duration in seconds the pod may be active on the node relative to StartTime before the system will actively try to mark it failed and kill associated…" },
+                    { label: "Dns Policy", value: resourceData.dnsPolicy, description: "Set DNS policy for the pod." },
+                    { label: "Hostname", value: resourceData.hostname, description: "Specifies the hostname of the Pod If not specified, the pod's hostname will be set to a system-defined value." },
+                    { label: "Subdomain", value: resourceData.subdomain, description: "If specified, the fully qualified Pod hostname will be \"<hostname>.<subdomain>.<pod namespace>.svc.<cluster domain>\"." },
+                    { label: "Node Name", value: resourceData.nodeName, description: "NodeName is a request to schedule this pod onto a specific node." },
+                    { label: "Priority Class Name", value: resourceData.priorityClassName, description: "If specified, indicates the pod's priority." },
+                    { label: "Priority", value: resourceData.priority, description: "The priority value." },
+                    { label: "Preemption Policy", value: resourceData.preemptionPolicy, description: "PreemptionPolicy is the Policy for preempting pods with lower priority." },
+                    { label: "Scheduler Name", value: resourceData.schedulerName, description: "If specified, the pod will be dispatched by specified scheduler." },
+                    { label: "Runtime Class Name", value: resourceData.runtimeClassName, description: "RuntimeClassName refers to a RuntimeClass object in the node.k8s.io group, which should be used to run this pod." },
                 ]}
-                columns={1}
+                flags={[
+                    { label: "Automount Service Account Token", value: resourceData.automountServiceAccountToken, description: "AutomountServiceAccountToken indicates whether a service account token should be automatically mounted." },
+                    { label: "Enable Service Links", value: resourceData.enableServiceLinks, description: "EnableServiceLinks indicates whether information about services should be injected into pod's environment variables, matching the syntax of Docker links." },
+                    { label: "Host IPC", value: resourceData.hostIPC, description: "Use the host's ipc namespace." },
+                    { label: "Host Network", value: resourceData.hostNetwork, description: "Host networking requested for this pod." },
+                    { label: "Host PID", value: resourceData.hostPID, description: "Use the host's pid namespace." },
+                    { label: "Host Users", value: resourceData.hostUsers, description: "Use the host's user namespace." },
+                    { label: "Set Hostname As FQDN", value: resourceData.setHostnameAsFQDN, description: "If true the pod's hostname will be configured as the pod's FQDN, rather than the leaf name (the default)." },
+                    { label: "Share Process Namespace", value: resourceData.shareProcessNamespace, description: "Share a single process namespace between all of the containers in a pod." },
+                ]}
             />
 
-            <PanelGrid
-                title="Configuration"
-                items={[
-                    { label: "Automount Service Account Token", value: resourceData.automountServiceAccountToken ? "Yes" : "No" },
-                    { label: "Enable Service Links", value: resourceData.enableServiceLinks ? "Yes" : "No" },
-                    { label: "Host IPC", value: resourceData.hostIPC ? "Yes" : "No" },
-                    { label: "Host Network", value: resourceData.hostNetwork ? "Yes" : "No" },
-                    { label: "Host PID", value: resourceData.hostPID ? "Yes" : "No" },
-                    { label: "Host Users", value: resourceData.hostUsers ? "Yes" : "No" },
-                    { label: "Set Hostname As FQDN", value: resourceData.setHostnameAsFQDN ? "Yes" : "No" },
-                    { label: "Share Process Namespace", value: resourceData.shareProcessNamespace ? "Yes" : "No" }
-                ]}
-                columns={1}
-            />
+            <PanelGrid title="Node Selector" items={ nodeSelectorItems } />
 
-            {resourceData.affinity && (
-                <Container title="Affinity">
-                    <AffinityDetails resourceData={ resourceData.affinity } />
-                </Container>
-            )}
+            <PanelGrid title="Overhead" items={ overheadItems } />
 
-            {resourceData.containers && (
-                <Container title="Containers">
+            {hasValue(resourceData.containers) && (
+                <Container title="Containers" count={resourceData.containers.length} collapsible defaultOpen={ true }>
                     {resourceData.containers.map((item, index) => (
-                        <ContainerDetails key={index} resourceData={item} />
+                        <PanelListItem key={index} title={item.name }>
+                            <ContainerDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.dnsConfig && (
-                <Container title="Dns Config">
-                    <PodDNSConfigDetails resourceData={ resourceData.dnsConfig } />
-                </Container>
-            )}
-
-            {resourceData.ephemeralContainers && (
-                <Container title="Ephemeral Containers">
-                    {resourceData.ephemeralContainers.map((item, index) => (
-                        <EphemeralContainerDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.hostAliases && (
-                <Container title="Host Aliases">
-                    {resourceData.hostAliases.map((item, index) => (
-                        <HostAliasDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.imagePullSecrets && (
-                <Container title="Image Pull Secrets">
-                    {resourceData.imagePullSecrets.map((item, index) => (
-                        <LocalObjectReferenceDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.initContainers && (
-                <Container title="Init Containers">
+            {hasValue(resourceData.initContainers) && (
+                <Container title="Init Containers" count={resourceData.initContainers.length} collapsible defaultOpen={ true }>
                     {resourceData.initContainers.map((item, index) => (
-                        <ContainerDetails key={index} resourceData={item} />
+                        <PanelListItem key={index} title={item.name }>
+                            <ContainerDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.os && (
-                <Container title="Os">
-                    <PodOSDetails resourceData={ resourceData.os } />
-                </Container>
-            )}
-
-            {resourceData.readinessGates && (
-                <Container title="Readiness Gates">
-                    {resourceData.readinessGates.map((item, index) => (
-                        <PodReadinessGateDetails key={index} resourceData={item} />
+            {hasValue(resourceData.ephemeralContainers) && (
+                <Container title="Ephemeral Containers" count={resourceData.ephemeralContainers.length} collapsible defaultOpen={ true }>
+                    {resourceData.ephemeralContainers.map((item, index) => (
+                        <PanelListItem key={index} title={item.name }>
+                            <EphemeralContainerDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.resourceClaims && (
-                <Container title="Resource Claims">
-                    {resourceData.resourceClaims.map((item, index) => (
-                        <PodResourceClaimDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.schedulingGates && (
-                <Container title="Scheduling Gates">
-                    {resourceData.schedulingGates.map((item, index) => (
-                        <PodSchedulingGateDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.securityContext && (
-                <Container title="Security Context">
-                    <PodSecurityContextDetails resourceData={ resourceData.securityContext } />
-                </Container>
-            )}
-
-            {resourceData.tolerations && (
-                <Container title="Tolerations">
-                    {resourceData.tolerations.map((item, index) => (
-                        <TolerationDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.topologySpreadConstraints && (
-                <Container title="Topology Spread Constraints">
-                    {resourceData.topologySpreadConstraints.map((item, index) => (
-                        <TopologySpreadConstraintDetails key={index} resourceData={item} />
-                    ))}
-                </Container>
-            )}
-
-            {resourceData.volumes && (
-                <Container title="Volumes">
+            {hasValue(resourceData.volumes) && (
+                <Container title="Volumes" count={resourceData.volumes.length} collapsible defaultOpen={ true }>
                     {resourceData.volumes.map((item, index) => (
-                        <VolumeDetails key={index} resourceData={item} />
+                        <PanelListItem key={index} title={item.name }>
+                            <VolumeDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.dnsConfig) && (
+                <Container title="Dns Config" collapsible defaultOpen={ false }>
+                    <PodDNSConfigDetails resourceData={resourceData.dnsConfig } />
+                </Container>
+            )}
+
+            {hasValue(resourceData.affinity) && (
+                <Container title="Affinity" collapsible defaultOpen={ false }>
+                    <AffinityDetails resourceData={resourceData.affinity } />
+                </Container>
+            )}
+
+            {hasValue(resourceData.tolerations) && (
+                <Container title="Tolerations" count={resourceData.tolerations.length} collapsible defaultOpen={ false }>
+                    {resourceData.tolerations.map((item, index) => (
+                        <PanelListItem key={index}>
+                            <TolerationDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.topologySpreadConstraints) && (
+                <Container title="Topology Spread Constraints" count={resourceData.topologySpreadConstraints.length} collapsible defaultOpen={ false }>
+                    {resourceData.topologySpreadConstraints.map((item, index) => (
+                        <PanelListItem key={index}>
+                            <TopologySpreadConstraintDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.schedulingGates) && (
+                <Container title="Scheduling Gates" count={resourceData.schedulingGates.length} collapsible defaultOpen={ false }>
+                    {resourceData.schedulingGates.map((item, index) => (
+                        <PanelListItem key={index} title={item.name }>
+                            <PodSchedulingGateDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.securityContext) && (
+                <Container title="Security Context" collapsible defaultOpen={ false }>
+                    <PodSecurityContextDetails resourceData={resourceData.securityContext } />
+                </Container>
+            )}
+
+            {hasValue(resourceData.imagePullSecrets) && (
+                <Container title="Image Pull Secrets" count={resourceData.imagePullSecrets.length} collapsible defaultOpen={ false }>
+                    {resourceData.imagePullSecrets.map((item, index) => (
+                        <PanelListItem key={index} title={item.name }>
+                            <LocalObjectReferenceDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.hostAliases) && (
+                <Container title="Host Aliases" count={resourceData.hostAliases.length} collapsible defaultOpen={ false }>
+                    {resourceData.hostAliases.map((item, index) => (
+                        <PanelListItem key={index}>
+                            <HostAliasDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.readinessGates) && (
+                <Container title="Readiness Gates" count={resourceData.readinessGates.length} collapsible defaultOpen={ false }>
+                    {resourceData.readinessGates.map((item, index) => (
+                        <PanelListItem key={index}>
+                            <PodReadinessGateDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.resourceClaims) && (
+                <Container title="Resource Claims" count={resourceData.resourceClaims.length} collapsible defaultOpen={ false }>
+                    {resourceData.resourceClaims.map((item, index) => (
+                        <PanelListItem key={index} title={item.name }>
+                            <PodResourceClaimDetails resourceData={item} />
+                        </PanelListItem>
+                    ))}
+                </Container>
+            )}
+
+            {hasValue(resourceData.os) && (
+                <Container title="Os" collapsible defaultOpen={ false }>
+                    <PodOSDetails resourceData={resourceData.os } />
                 </Container>
             )}
 

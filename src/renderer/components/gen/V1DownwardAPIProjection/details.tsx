@@ -1,16 +1,13 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1DownwardAPIProjection } from "@kubernetes/client-node";
 import { DownwardAPIVolumeFileDetails } from "../V1DownwardAPIVolumeFile/details";
 
 export const DownwardAPIProjectionDetails = ({ resourceData }: { resourceData: V1DownwardAPIProjection }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.items].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.items),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,10 +15,12 @@ export const DownwardAPIProjectionDetails = ({ resourceData }: { resourceData: V
 
     return (
         <>
-            {resourceData.items && (
-                <Container title="Items">
+            {hasValue(resourceData.items) && (
+                <Container title="Items" count={resourceData.items.length} collapsible defaultOpen={ true }>
                     {resourceData.items.map((item, index) => (
-                        <DownwardAPIVolumeFileDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <DownwardAPIVolumeFileDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}

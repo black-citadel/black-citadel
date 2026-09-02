@@ -1,15 +1,12 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1StatefulSetPersistentVolumeClaimRetentionPolicy } from "@kubernetes/client-node";
 
 export const StatefulSetPersistentVolumeClaimRetentionPolicyDetails = ({ resourceData }: { resourceData: V1StatefulSetPersistentVolumeClaimRetentionPolicy }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.whenDeleted, resourceData.whenScaled].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.whenDeleted),
+        hasValue(resourceData.whenScaled),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,12 +15,10 @@ export const StatefulSetPersistentVolumeClaimRetentionPolicyDetails = ({ resourc
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "When Deleted", value: resourceData.whenDeleted || '-' },
-                    { label: "When Scaled", value: resourceData.whenScaled || '-' }
+                    { label: "When Deleted", value: resourceData.whenDeleted, description: "WhenDeleted specifies what happens to PVCs created from StatefulSet VolumeClaimTemplates when the StatefulSet is deleted." },
+                    { label: "When Scaled", value: resourceData.whenScaled, description: "WhenScaled specifies what happens to PVCs created from StatefulSet VolumeClaimTemplates when the StatefulSet is scaled down." },
                 ]}
-                columns={1}
             />
 
         </>

@@ -1,19 +1,14 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1IngressServiceBackend } from "@kubernetes/client-node";
 import { ServiceBackendPortDetails } from "../V1ServiceBackendPort/details";
 
 export const IngressServiceBackendDetails = ({ resourceData }: { resourceData: V1IngressServiceBackend }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.name].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.port].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.name),
+        hasValue(resourceData.port),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -22,16 +17,14 @@ export const IngressServiceBackendDetails = ({ resourceData }: { resourceData: V
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Name", value: resourceData.name }
+                    { label: "Name", value: resourceData.name, description: "name is the referenced service." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.port && (
-                <Container title="Port">
-                    <ServiceBackendPortDetails resourceData={ resourceData.port } />
+            {hasValue(resourceData.port) && (
+                <Container title="Port" collapsible defaultOpen={ true }>
+                    <ServiceBackendPortDetails resourceData={resourceData.port } />
                 </Container>
             )}
 

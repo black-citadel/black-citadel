@@ -1,3 +1,4 @@
+import { PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1EndpointSubset } from "@kubernetes/client-node";
 import { EndpointAddressDetails } from "../V1EndpointAddress/details";
@@ -5,13 +6,11 @@ import { EndpointPorts } from "@components/networking/endpoints/endpoint-ports";
 
 export const EndpointSubsetDetails = ({ resourceData }: { resourceData: V1EndpointSubset }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.addresses, resourceData.notReadyAddresses, resourceData.ports].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.addresses),
+        hasValue(resourceData.notReadyAddresses),
+        hasValue(resourceData.ports),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -19,25 +18,29 @@ export const EndpointSubsetDetails = ({ resourceData }: { resourceData: V1Endpoi
 
     return (
         <>
-            {resourceData.addresses && (
-                <Container title="Addresses">
+            {hasValue(resourceData.addresses) && (
+                <Container title="Addresses" count={resourceData.addresses.length} collapsible defaultOpen={ true }>
                     {resourceData.addresses.map((item, index) => (
-                        <EndpointAddressDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <EndpointAddressDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.notReadyAddresses && (
-                <Container title="Not Ready Addresses">
+            {hasValue(resourceData.notReadyAddresses) && (
+                <Container title="Not Ready Addresses" count={resourceData.notReadyAddresses.length} collapsible defaultOpen={ true }>
                     {resourceData.notReadyAddresses.map((item, index) => (
-                        <EndpointAddressDetails key={index} resourceData={item} />
+                        <PanelListItem key={index}>
+                            <EndpointAddressDetails resourceData={item} />
+                        </PanelListItem>
                     ))}
                 </Container>
             )}
 
-            {resourceData.ports && (
-                <Container title="Ports">
-                    <EndpointPorts ports={ resourceData.ports } />
+            {hasValue(resourceData.ports) && (
+                <Container title="Ports" count={resourceData.ports.length} collapsible defaultOpen={ true }>
+                    <EndpointPorts ports={resourceData.ports } />
                 </Container>
             )}
 

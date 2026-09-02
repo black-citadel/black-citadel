@@ -1,4 +1,4 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V2MetricStatus } from "@kubernetes/client-node";
 import { ContainerResourceMetricStatusDetails } from "../V2ContainerResourceMetricStatus/details";
@@ -9,15 +9,14 @@ import { ResourceMetricStatusDetails } from "../V2ResourceMetricStatus/details";
 
 export const MetricStatusDetails = ({ resourceData }: { resourceData: V2MetricStatus }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.type].some(v => v !== undefined && v !== null));
-        // Check k8s type properties
-        checks.push([resourceData.containerResource, resourceData.external, resourceData.object, resourceData.pods, resourceData.resource].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.type),
+        hasValue(resourceData.containerResource),
+        hasValue(resourceData.external),
+        hasValue(resourceData.object),
+        hasValue(resourceData.pods),
+        hasValue(resourceData.resource),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -26,40 +25,38 @@ export const MetricStatusDetails = ({ resourceData }: { resourceData: V2MetricSt
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Type", value: resourceData.type }
+                    { label: "Type", value: resourceData.type, description: "type is the type of metric source." },
                 ]}
-                columns={1}
             />
 
-            {resourceData.containerResource && (
-                <Container title="Container Resource">
-                    <ContainerResourceMetricStatusDetails resourceData={ resourceData.containerResource } />
+            {hasValue(resourceData.containerResource) && (
+                <Container title="Container Resource" collapsible defaultOpen={ true }>
+                    <ContainerResourceMetricStatusDetails resourceData={resourceData.containerResource } />
                 </Container>
             )}
 
-            {resourceData.external && (
-                <Container title="External">
-                    <ExternalMetricStatusDetails resourceData={ resourceData.external } />
+            {hasValue(resourceData.external) && (
+                <Container title="External" collapsible defaultOpen={ true }>
+                    <ExternalMetricStatusDetails resourceData={resourceData.external } />
                 </Container>
             )}
 
-            {resourceData.object && (
-                <Container title="Object">
-                    <ObjectMetricStatusDetails resourceData={ resourceData.object } />
+            {hasValue(resourceData.object) && (
+                <Container title="Object" collapsible defaultOpen={ true }>
+                    <ObjectMetricStatusDetails resourceData={resourceData.object } />
                 </Container>
             )}
 
-            {resourceData.pods && (
-                <Container title="Pods">
-                    <PodsMetricStatusDetails resourceData={ resourceData.pods } />
+            {hasValue(resourceData.pods) && (
+                <Container title="Pods" collapsible defaultOpen={ true }>
+                    <PodsMetricStatusDetails resourceData={resourceData.pods } />
                 </Container>
             )}
 
-            {resourceData.resource && (
-                <Container title="Resource">
-                    <ResourceMetricStatusDetails resourceData={ resourceData.resource } />
+            {hasValue(resourceData.resource) && (
+                <Container title="Resource" collapsible defaultOpen={ true }>
+                    <ResourceMetricStatusDetails resourceData={resourceData.resource } />
                 </Container>
             )}
 

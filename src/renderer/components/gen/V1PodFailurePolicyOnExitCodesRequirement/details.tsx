@@ -1,15 +1,13 @@
-import { PanelGrid } from "@components/layout/panel";
+import { PanelGrid, hasValue } from "@components/layout/panel";
 import type { V1PodFailurePolicyOnExitCodesRequirement } from "@kubernetes/client-node";
 
 export const PodFailurePolicyOnExitCodesRequirementDetails = ({ resourceData }: { resourceData: V1PodFailurePolicyOnExitCodesRequirement }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check simple properties
-        checks.push([resourceData.containerName, resourceData.operator].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.containerName),
+        hasValue(resourceData.operator),
+        hasValue(resourceData.values),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,12 +16,11 @@ export const PodFailurePolicyOnExitCodesRequirementDetails = ({ resourceData }: 
     return (
         <>
             <PanelGrid
-                title="Properties"
                 items={[
-                    { label: "Container Name", value: resourceData.containerName || '-' },
-                    { label: "Operator", value: resourceData.operator }
+                    { label: "Container Name", value: resourceData.containerName, description: "Restricts the check for exit codes to the container with the specified name." },
+                    { label: "Operator", value: resourceData.operator, description: "Represents the relationship between the container exit code(s) and the specified values." },
+                    { label: "Values", value: resourceData.values, description: "Specifies the set of values." },
                 ]}
-                columns={1}
             />
 
         </>

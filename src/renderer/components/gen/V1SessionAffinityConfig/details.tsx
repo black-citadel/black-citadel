@@ -1,16 +1,13 @@
+import { hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1SessionAffinityConfig } from "@kubernetes/client-node";
 import { ClientIPConfigDetails } from "../V1ClientIPConfig/details";
 
 export const SessionAffinityConfigDetails = ({ resourceData }: { resourceData: V1SessionAffinityConfig }): JSX.Element => {
 
-    // Check if component has any content to display
-    const hasContent = (() => {
-        const checks: boolean[] = [];
-        // Check k8s type properties
-        checks.push([resourceData.clientIP].some(v => v !== undefined && v !== null));
-        return checks.length > 0 ? checks.some(v => v) : false;
-    })();
+    const hasContent = [
+        hasValue(resourceData.clientIP),
+    ].some(Boolean);
 
     if (!hasContent) {
         return <div className="italic text-neutral-400 text-sm">No data</div>;
@@ -18,9 +15,9 @@ export const SessionAffinityConfigDetails = ({ resourceData }: { resourceData: V
 
     return (
         <>
-            {resourceData.clientIP && (
-                <Container title="Client IP">
-                    <ClientIPConfigDetails resourceData={ resourceData.clientIP } />
+            {hasValue(resourceData.clientIP) && (
+                <Container title="Client IP" collapsible defaultOpen={ true }>
+                    <ClientIPConfigDetails resourceData={resourceData.clientIP } />
                 </Container>
             )}
 
