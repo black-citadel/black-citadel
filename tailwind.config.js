@@ -5,8 +5,7 @@ module.exports = {
   darkMode: 'class',
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
-    "./node_modules/@protoku/design-system/dist/**/*.{js,mjs}",
-    "./node_modules/@protoku/design-system/src/**/*.{ts,tsx}",
+    "./node_modules/@protoku-bv/design-system/dist/**/*.{js,mjs}",
   ],
   theme: {
     extend: {
