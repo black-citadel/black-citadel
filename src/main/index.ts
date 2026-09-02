@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, globalShortcut } from 'electron';
+import { app, BrowserWindow, ipcMain, shell, globalShortcut, dialog } from 'electron';
 import k8s = require('@kubernetes/client-node');
 import { dumpYaml, loadYaml } from '@kubernetes/client-node/dist/yaml';
 import * as net from 'net';
@@ -11,6 +11,11 @@ import { PortForwardInfo, PortForwardRequest, ExecRequest, ExecSession } from '.
 import { PortForwardStatus } from '../renderer/utils/enums';
 import { WebSocket } from 'ws';
 import { startMCPServer, stopMCPServer, getToolCallHistory, getActiveConnections, clearToolCallHistory } from './mcp-server';
+import { fixProcessPath } from './shell-path';
+import { describeMissingExecPlugin } from './kube-auth-check';
+
+// Must run before the kubeconfig is loaded: exec credential plugins are resolved through PATH.
+fixProcessPath();
 
 // Initialize KubeConfig with error handling
 let kc: k8s.KubeConfig;
@@ -79,6 +84,17 @@ function initializeK8sClients() {
 
 // Try to initialize on startup, but don't fail if it doesn't work
 initializeK8sClients();
+
+function warnIfExecPluginMissing() {
+  if (!kc) {
+    return;
+  }
+  const problem = describeMissingExecPlugin(kc);
+  if (problem) {
+    console.error(problem);
+    dialog.showErrorBox('Kubernetes authentication', problem);
+  }
+}
 
 // Helper function to handle K8s API calls safely
 async function handleK8sListRequest(apiCall: () => Promise<any>) {
@@ -164,6 +180,7 @@ const createWindow = (): BrowserWindow => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   const mainWindow = createWindow();
+  warnIfExecPluginMissing();
   
   // Register keyboard shortcuts for navigation
   globalShortcut.register('Alt+Left', () => {
@@ -275,6 +292,7 @@ ipcMain.handle('setCurrentContext', (event, name) => {
   
   // Reinitialize API clients with the new context
   initializeK8sClients();
+  warnIfExecPluginMissing();
   
   return name;
 });
