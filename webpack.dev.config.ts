@@ -11,12 +11,24 @@ const rendererConfig: webpack.Configuration = {
     path: path.resolve(__dirname, 'dist/renderer'),
     filename: 'index.js',
   },
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [__filename],
+    },
+  },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            experimentalWatchApi: true,
+          },
+        },
         exclude: /node_modules/,
       },
       {

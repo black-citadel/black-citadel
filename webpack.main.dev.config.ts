@@ -9,12 +9,24 @@ const mainConfig: webpack.Configuration = {
     path: path.resolve(__dirname, 'dist/main'),
     filename: 'index.js',
   },
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [__filename],
+    },
+  },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            experimentalWatchApi: true,
+          },
+        },
         exclude: /node_modules/,
       },
       {
@@ -31,6 +43,9 @@ const mainConfig: webpack.Configuration = {
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
   ],
+  watchOptions: {
+    ignored: /node_modules/,
+  },
 };
 
 const preloadConfig: webpack.Configuration = {
@@ -41,18 +56,33 @@ const preloadConfig: webpack.Configuration = {
     path: path.resolve(__dirname, 'dist/preload'),
     filename: 'index.js',
   },
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [__filename],
+    },
+  },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            experimentalWatchApi: true,
+          },
+        },
         exclude: /node_modules/,
       },
     ],
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+  },
+  watchOptions: {
+    ignored: /node_modules/,
   },
 };
 
