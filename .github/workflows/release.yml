@@ -30,12 +30,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -45,6 +45,8 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          # The production webpack build needs more heap than V8 allows by default on 7 GB runners
+          NODE_OPTIONS: --max-old-space-size=6144
 
       - name: Package with electron-builder
         run: npx electron-builder ${{ matrix.args }} --publish=never
