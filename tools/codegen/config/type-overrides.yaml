@@ -1,0 +1,15 @@
+# Custom renderers for single nested objects, keyed by type. Applies wherever the type appears.
+#   wrap: true   -> wrapped in a foldable Container titled after the property
+#   passTitle: true -> the component receives the property's display name as `title`
+overrides:
+  V1Probe:
+    componentName: ProbeSummary
+    propName: probe
+    importPath: "@components/workloads/container/probe-summary"
+    passTitle: true
+
+  V1ResourceRequirements:
+    componentName: ResourcesTable
+    propName: resources
+    importPath: "@components/workloads/container/resources-table"
+    wrap: true

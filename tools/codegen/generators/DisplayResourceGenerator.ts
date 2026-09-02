@@ -9,6 +9,10 @@ interface RendererOverride {
   componentName: string;
   propName: string;
   importPath?: string;
+  /** Wrap in a foldable Container titled after the property. Arrays default to true, objects to false. */
+  wrap?: boolean;
+  /** Pass the property's display name to the component as `title`. */
+  passTitle?: boolean;
 }
 
 interface ArrayOverridesConfig {
@@ -17,6 +21,10 @@ interface ArrayOverridesConfig {
 
 interface ObjectOverridesConfig {
   overrides: Record<string, Record<string, RendererOverride>>;
+}
+
+interface TypeOverridesConfig {
+  overrides: Record<string, RendererOverride>;
 }
 
 interface DisplayConfig {
@@ -35,12 +43,13 @@ interface PropertyData {
 interface NestedPropertyData extends PropertyData {
   isArray: boolean;
   isSpec: boolean;
-  isConditions: boolean;
   defaultOpen: boolean;
   componentName: string;
   hasCustomRenderer?: boolean;
   customComponentName?: string;
   customPropName?: string;
+  wrap: boolean;
+  passTitle: boolean;
   itemTitleProperty?: string;
 }
 
@@ -60,12 +69,14 @@ const MAX_DESCRIPTION_LENGTH = 160;
 export class DisplayResourceGenerator {
   private arrayOverrides: Record<string, RendererOverride> = {};
   private objectOverrides: Record<string, Record<string, RendererOverride>> = {};
+  private typeOverrides: Record<string, RendererOverride> = {};
   private collapsedByDefault = new Set<string>();
   private metaByType = new Map<string, ResourceMetaConfig>();
 
   constructor() {
     this.arrayOverrides = this.loadYaml<ArrayOverridesConfig>('array-overrides.yaml')?.overrides || {};
     this.objectOverrides = this.loadYaml<ObjectOverridesConfig>('object-overrides.yaml')?.overrides || {};
+    this.typeOverrides = this.loadYaml<TypeOverridesConfig>('type-overrides.yaml')?.overrides || {};
     this.collapsedByDefault = new Set(this.loadYaml<DisplayConfig>('display.yaml')?.collapsedByDefault || []);
   }
 
@@ -173,16 +184,19 @@ export class DisplayResourceGenerator {
           ...propData,
           isArray: isArrayType,
           isSpec: name === 'spec',
-          isConditions: name === 'conditions',
           defaultOpen: !this.collapsedByDefault.has(name),
           componentName,
+          wrap: true,
+          passTitle: false,
         };
 
-        const override = isArrayType ? this.arrayOverrides[baseType] : undefined;
+        const override = isArrayType ? this.arrayOverrides[baseType] : this.typeOverrides[baseType];
         if (override) {
           nested.hasCustomRenderer = true;
           nested.customComponentName = override.componentName;
           nested.customPropName = override.propName;
+          nested.wrap = override.wrap ?? isArrayType;
+          nested.passTitle = override.passTitle ?? false;
           addImport({ typeName: override.componentName, componentName: override.componentName, isCustom: true, importPath: override.importPath });
         } else {
           nested.itemTitleProperty = isArrayType ? this.titlePropertyOf(baseType) : undefined;
@@ -196,12 +210,13 @@ export class DisplayResourceGenerator {
             ...propData,
             isArray: false,
             isSpec: false,
-            isConditions: false,
             defaultOpen: true,
             componentName: override.componentName,
             hasCustomRenderer: true,
             customComponentName: override.componentName,
             customPropName: override.propName,
+            wrap: override.wrap ?? false,
+            passTitle: override.passTitle ?? false,
           });
           addImport({ typeName: name, componentName: override.componentName, isCustom: true, importPath: override.importPath });
         } else {
@@ -220,10 +235,10 @@ export class DisplayResourceGenerator {
     const hasAnyProperty = hasSimpleBlock || objectProperties.length > 0 || k8sTypeProperties.length > 0 || hasMetadata;
 
     const needsContainer = k8sTypeProperties.some((prop) => {
-      if (prop.isArray) {
-        return !prop.hasCustomRenderer || !prop.isConditions;
+      if (prop.hasCustomRenderer) {
+        return prop.wrap;
       }
-      return !prop.isSpec && !prop.hasCustomRenderer;
+      return prop.isArray || !prop.isSpec;
     });
     const needsPanelListItem = k8sTypeProperties.some((prop) => prop.isArray && !prop.hasCustomRenderer);
 

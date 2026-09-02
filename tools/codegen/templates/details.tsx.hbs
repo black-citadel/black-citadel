@@ -64,14 +64,14 @@ export const {{componentName}} = ({ resourceData{{#unless hasAnyProperty}}: _res
 {{#each k8sTypeProperties}}
 {{#if isArray}}
 {{#if hasCustomRenderer}}
-{{#if isConditions}}
-            {hasValue(resourceData.{{name}}) && <{{customComponentName}} {{customPropName}}={resourceData.{{name}} } />}
-{{else}}
+{{#if wrap}}
             {hasValue(resourceData.{{name}}) && (
                 <Container title={{{json displayName}}} count={resourceData.{{name}}.length} collapsible defaultOpen={ {{defaultOpen}} }>
                     <{{customComponentName}} {{customPropName}}={resourceData.{{name}} } />
                 </Container>
             )}
+{{else}}
+            {hasValue(resourceData.{{name}}) && <{{customComponentName}} {{customPropName}}={resourceData.{{name}} }{{#if passTitle}} title={{{json displayName}}}{{/if}} />}
 {{/if}}
 {{else}}
             {hasValue(resourceData.{{name}}) && (
@@ -86,7 +86,15 @@ export const {{componentName}} = ({ resourceData{{#unless hasAnyProperty}}: _res
 {{/if}}
 {{else}}
 {{#if hasCustomRenderer}}
-            {hasValue(resourceData.{{name}}) && <{{customComponentName}} {{customPropName}}={resourceData.{{name}} } />}
+{{#if wrap}}
+            {hasValue(resourceData.{{name}}) && (
+                <Container title={{{json displayName}}} collapsible defaultOpen={ {{defaultOpen}} }>
+                    <{{customComponentName}} {{customPropName}}={resourceData.{{name}} } />
+                </Container>
+            )}
+{{else}}
+            {hasValue(resourceData.{{name}}) && <{{customComponentName}} {{customPropName}}={resourceData.{{name}} }{{#if passTitle}} title={{{json displayName}}}{{/if}} />}
+{{/if}}
 {{else if isSpec}}
             {hasValue(resourceData.{{name}}) && <{{componentName}} resourceData={resourceData.{{name}} } />}
 {{else}}

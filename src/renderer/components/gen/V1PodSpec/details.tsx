@@ -3,7 +3,7 @@ import { Container } from "@components/base/container";
 import type { V1PodSpec } from "@kubernetes/client-node";
 import { ContainerDetails } from "../V1Container/details";
 import { EphemeralContainerDetails } from "../V1EphemeralContainer/details";
-import { VolumeDetails } from "../V1Volume/details";
+import { VolumesTable } from "@components/workloads/pod/volumes-table";
 import { PodDNSConfigDetails } from "../V1PodDNSConfig/details";
 import { AffinityDetails } from "../V1Affinity/details";
 import { TolerationDetails } from "../V1Toleration/details";
@@ -133,11 +133,7 @@ export const PodSpecDetails = ({ resourceData }: { resourceData: V1PodSpec }): J
 
             {hasValue(resourceData.volumes) && (
                 <Container title="Volumes" count={resourceData.volumes.length} collapsible defaultOpen={ true }>
-                    {resourceData.volumes.map((item, index) => (
-                        <PanelListItem key={index} title={item.name }>
-                            <VolumeDetails resourceData={item} />
-                        </PanelListItem>
-                    ))}
+                    <VolumesTable volumes={resourceData.volumes } />
                 </Container>
             )}
 

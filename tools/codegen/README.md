@@ -29,6 +29,11 @@ The command runs three steps in order:
   component instead of the generated one, for example service ports and condition tables.
 - `config/object-overrides.yaml`: the same for a specific map property of a specific type, for
   example Secret data.
+- `config/type-overrides.yaml`: a hand-written component for a single nested object wherever its
+  type appears, for example probes and resource requirements. Overrides can set `wrap` (fold the
+  component in a titled Container) and `passTitle` (hand the property's display name to the
+  component as `title`).
+- `config/display.yaml`: which nested sections start folded.
 
 ## Changing the output
 

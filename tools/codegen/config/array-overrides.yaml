@@ -23,77 +23,119 @@ overrides:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1Condition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V2HorizontalPodAutoscalerCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1StatefulSetCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1JobCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1NodeCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1PersistentVolumeClaimCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1ReplicationControllerCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1ComponentCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1APIServiceCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1FlowSchemaCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1CustomResourceDefinitionCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
     
   V1CertificateSigningRequestCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
   V1DeploymentCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
 
   V1DaemonSetCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
 
   V1ReplicaSetCondition:
     componentName: ConditionsTable
     propName: conditions
     importPath: "@components/base/conditions-table"
+    wrap: false
+
+  # Container widgets
+  V1EnvVar:
+    componentName: EnvTable
+    propName: env
+    importPath: "@components/workloads/container/env-table"
+
+  V1EnvFromSource:
+    componentName: EnvFromTable
+    propName: envFrom
+    importPath: "@components/workloads/container/env-from-table"
+
+  V1ContainerPort:
+    componentName: ContainerPortsTable
+    propName: ports
+    importPath: "@components/workloads/container/ports-table"
+
+  V1VolumeMount:
+    componentName: VolumeMountsTable
+    propName: volumeMounts
+    importPath: "@components/workloads/container/volume-mounts-table"
+
+  V1Volume:
+    componentName: VolumesTable
+    propName: volumes
+    importPath: "@components/workloads/pod/volumes-table"

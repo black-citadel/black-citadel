@@ -1,14 +1,14 @@
 import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1Container } from "@kubernetes/client-node";
-import { ContainerPortDetails } from "../V1ContainerPort/details";
-import { EnvVarDetails } from "../V1EnvVar/details";
-import { EnvFromSourceDetails } from "../V1EnvFromSource/details";
-import { ResourceRequirementsDetails } from "../V1ResourceRequirements/details";
+import { ContainerPortsTable } from "@components/workloads/container/ports-table";
+import { EnvTable } from "@components/workloads/container/env-table";
+import { EnvFromTable } from "@components/workloads/container/env-from-table";
+import { ResourcesTable } from "@components/workloads/container/resources-table";
 import { ContainerResizePolicyDetails } from "../V1ContainerResizePolicy/details";
-import { VolumeMountDetails } from "../V1VolumeMount/details";
+import { VolumeMountsTable } from "@components/workloads/container/volume-mounts-table";
 import { VolumeDeviceDetails } from "../V1VolumeDevice/details";
-import { ProbeDetails } from "../V1Probe/details";
+import { ProbeSummary } from "@components/workloads/container/probe-summary";
 import { LifecycleDetails } from "../V1Lifecycle/details";
 import { SecurityContextDetails } from "../V1SecurityContext/details";
 
@@ -68,37 +68,25 @@ export const ContainerDetails = ({ resourceData }: { resourceData: V1Container }
 
             {hasValue(resourceData.ports) && (
                 <Container title="Ports" count={resourceData.ports.length} collapsible defaultOpen={ true }>
-                    {resourceData.ports.map((item, index) => (
-                        <PanelListItem key={index} title={item.name }>
-                            <ContainerPortDetails resourceData={item} />
-                        </PanelListItem>
-                    ))}
+                    <ContainerPortsTable ports={resourceData.ports } />
                 </Container>
             )}
 
             {hasValue(resourceData.env) && (
                 <Container title="Env" count={resourceData.env.length} collapsible defaultOpen={ true }>
-                    {resourceData.env.map((item, index) => (
-                        <PanelListItem key={index} title={item.name }>
-                            <EnvVarDetails resourceData={item} />
-                        </PanelListItem>
-                    ))}
+                    <EnvTable env={resourceData.env } />
                 </Container>
             )}
 
             {hasValue(resourceData.envFrom) && (
                 <Container title="Env From" count={resourceData.envFrom.length} collapsible defaultOpen={ true }>
-                    {resourceData.envFrom.map((item, index) => (
-                        <PanelListItem key={index}>
-                            <EnvFromSourceDetails resourceData={item} />
-                        </PanelListItem>
-                    ))}
+                    <EnvFromTable envFrom={resourceData.envFrom } />
                 </Container>
             )}
 
             {hasValue(resourceData.resources) && (
                 <Container title="Resources" collapsible defaultOpen={ true }>
-                    <ResourceRequirementsDetails resourceData={resourceData.resources } />
+                    <ResourcesTable resources={resourceData.resources } />
                 </Container>
             )}
 
@@ -114,11 +102,7 @@ export const ContainerDetails = ({ resourceData }: { resourceData: V1Container }
 
             {hasValue(resourceData.volumeMounts) && (
                 <Container title="Volume Mounts" count={resourceData.volumeMounts.length} collapsible defaultOpen={ true }>
-                    {resourceData.volumeMounts.map((item, index) => (
-                        <PanelListItem key={index} title={item.name }>
-                            <VolumeMountDetails resourceData={item} />
-                        </PanelListItem>
-                    ))}
+                    <VolumeMountsTable volumeMounts={resourceData.volumeMounts } />
                 </Container>
             )}
 
@@ -132,23 +116,11 @@ export const ContainerDetails = ({ resourceData }: { resourceData: V1Container }
                 </Container>
             )}
 
-            {hasValue(resourceData.livenessProbe) && (
-                <Container title="Liveness Probe" collapsible defaultOpen={ true }>
-                    <ProbeDetails resourceData={resourceData.livenessProbe } />
-                </Container>
-            )}
+            {hasValue(resourceData.livenessProbe) && <ProbeSummary probe={resourceData.livenessProbe } title="Liveness Probe" />}
 
-            {hasValue(resourceData.readinessProbe) && (
-                <Container title="Readiness Probe" collapsible defaultOpen={ true }>
-                    <ProbeDetails resourceData={resourceData.readinessProbe } />
-                </Container>
-            )}
+            {hasValue(resourceData.readinessProbe) && <ProbeSummary probe={resourceData.readinessProbe } title="Readiness Probe" />}
 
-            {hasValue(resourceData.startupProbe) && (
-                <Container title="Startup Probe" collapsible defaultOpen={ true }>
-                    <ProbeDetails resourceData={resourceData.startupProbe } />
-                </Container>
-            )}
+            {hasValue(resourceData.startupProbe) && <ProbeSummary probe={resourceData.startupProbe } title="Startup Probe" />}
 
             {hasValue(resourceData.lifecycle) && (
                 <Container title="Lifecycle" collapsible defaultOpen={ false }>

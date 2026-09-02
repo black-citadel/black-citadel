@@ -2,7 +2,7 @@ import { PanelGrid, PanelListItem, hasValue } from "@components/layout/panel";
 import { Container } from "@components/base/container";
 import type { V1ContainerStatus } from "@kubernetes/client-node";
 import { ContainerStateDetails } from "../V1ContainerState/details";
-import { ResourceRequirementsDetails } from "../V1ResourceRequirements/details";
+import { ResourcesTable } from "@components/workloads/container/resources-table";
 import { VolumeMountStatusDetails } from "../V1VolumeMountStatus/details";
 
 export const ContainerStatusDetails = ({ resourceData }: { resourceData: V1ContainerStatus }): JSX.Element => {
@@ -59,7 +59,7 @@ export const ContainerStatusDetails = ({ resourceData }: { resourceData: V1Conta
 
             {hasValue(resourceData.resources) && (
                 <Container title="Resources" collapsible defaultOpen={ true }>
-                    <ResourceRequirementsDetails resourceData={resourceData.resources } />
+                    <ResourcesTable resources={resourceData.resources } />
                 </Container>
             )}
 
